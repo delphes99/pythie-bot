@@ -11,6 +11,7 @@ import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.VIPParser
 import fr.delphes.configuration.Configuration
 import fr.delphes.event.eventHandler.EventHandler
+import fr.delphes.event.eventHandler.handleEvent
 import fr.delphes.event.incoming.IncomingEvent
 import fr.delphes.event.incoming.MessageReceived
 import fr.delphes.event.incoming.RewardRedemption
@@ -84,7 +85,7 @@ data class Bot(
     private val messageReceivedHandlers = features.flatMap(Feature::messageReceivedHandlers)
 
     private fun handleRewardRedeemedEvent(event: RewardRedeemedEvent) {
-        rewardRedeptionHandlers.handleEvent(RewardRedemption(event))
+        rewardRedeptionHandlers.handleEventAndApply(RewardRedemption(event))
     }
 
     private fun handleIRCMessage(event: IRCMessageEvent) {
@@ -94,7 +95,7 @@ data class Bot(
                 if(vipResult is VIPParser.VIPResult.VIPList) {
                     val vipListReceived = VIPListReceived(vipResult.users)
 
-                    vipListReceivedHandlers.handleEvent(vipListReceived)
+                    vipListReceivedHandlers.handleEventAndApply(vipListReceived)
                 }
             }
         }
@@ -103,11 +104,11 @@ data class Bot(
     private fun handleChannelMessage(event: ChannelMessageEvent) {
         val incomingEvent = MessageReceived(event.user.name, event.message)
 
-        messageReceivedHandlers.handleEvent(incomingEvent)
+        messageReceivedHandlers.handleEventAndApply(incomingEvent)
     }
 
-    private fun <T: IncomingEvent> List<EventHandler<T>>.handleEvent(rewardRedemption: T) {
-        val outgoingEvents = flatMap { handler -> handler.handle(rewardRedemption) }
+    private fun <T: IncomingEvent> List<EventHandler<T>>.handleEventAndApply(event: T) {
+        val outgoingEvents = this.handleEvent(event)
 
         outgoingEvents.forEach { e ->
             e.applyOnTwitch(chat, ownerChat, channel)
