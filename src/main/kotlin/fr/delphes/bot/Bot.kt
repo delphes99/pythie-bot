@@ -37,8 +37,6 @@ data class Bot(
 
     companion object {
         fun build(
-            channel: String,
-            channelId: String,
             configuration: Configuration,
             features: List<Feature>
         ): Bot {
@@ -64,14 +62,14 @@ data class Bot(
             val chat = twitchClient.chat
 
             chat.connect()
-            chat.joinChannel(channel);
+            chat.joinChannel(configuration.ownerChannel);
 
             twitchClient.pubSub.eventManager
             twitchClient.pubSub.connect()
-            twitchClient.pubSub.listenForChannelPointsRedemptionEvents(botCredential, channelId)
+            twitchClient.pubSub.listenForChannelPointsRedemptionEvents(botCredential, configuration.ownerChannelId)
 
             return Bot(
-                channel,
+                configuration.ownerChannel,
                 features,
                 twitchClient,
                 ownerTwitchClient

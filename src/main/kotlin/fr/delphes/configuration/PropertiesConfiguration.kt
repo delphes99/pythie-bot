@@ -7,6 +7,8 @@ class PropertiesConfiguration(
     override val clientId: String
     override val secretKey: String
     override val ownerAccountOauth: String
+    override val ownerChannel: String
+    override val ownerChannelId: String
     override val botAccountOauth: String
 
     init {
@@ -15,6 +17,8 @@ class PropertiesConfiguration(
         clientId = properties.getProperty("client.id")
         secretKey = properties.getProperty("secret.key")
         ownerAccountOauth = properties.getProperty("owner.account.OAuth")
+        ownerChannel = properties.getProperty("owner.channel.name")
+        ownerChannelId = properties.getProperty("owner.channel.id")
         botAccountOauth = properties.getProperty("bot.account.OAuth")
     }
 }
