@@ -64,7 +64,6 @@ data class Bot(
             chat.connect()
             chat.joinChannel(configuration.ownerChannel);
 
-            twitchClient.pubSub.eventManager
             twitchClient.pubSub.connect()
             twitchClient.pubSub.listenForChannelPointsRedemptionEvents(botCredential, configuration.ownerChannelId)
 
