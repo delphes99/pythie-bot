@@ -1,10 +1,11 @@
-package fr.delphes.feature
+package fr.delphes.feature.command
 
 import fr.delphes.time.Clock
 import fr.delphes.event.eventHandler.EventHandler
 import fr.delphes.event.incoming.MessageReceived
 import fr.delphes.event.outgoing.OutgoingEvent
 import fr.delphes.event.outgoing.SendMessage
+import fr.delphes.feature.AbstractFeature
 import fr.delphes.time.SystemClock
 import java.time.Duration
 import java.time.LocalDateTime

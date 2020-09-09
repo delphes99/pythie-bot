@@ -1,4 +1,4 @@
-package fr.delphes.feature
+package fr.delphes.feature.voth
 
 import fr.delphes.event.eventHandler.EventHandler
 import fr.delphes.event.incoming.RewardRedemption
@@ -8,6 +8,7 @@ import fr.delphes.event.outgoing.PromoteVIP
 import fr.delphes.event.outgoing.RemoveVIP
 import fr.delphes.event.outgoing.RetrieveVip
 import fr.delphes.event.outgoing.SendMessage
+import fr.delphes.feature.AbstractFeature
 import fr.delphes.time.Clock
 import fr.delphes.time.SystemClock
 

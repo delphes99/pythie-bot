@@ -2,6 +2,7 @@ package fr.delphes.feature
 
 import fr.delphes.event.incoming.MessageReceived
 import fr.delphes.event.outgoing.SendMessage
+import fr.delphes.feature.command.Command
 import fr.delphes.time.Clock
 import io.mockk.clearAllMocks
 import io.mockk.every

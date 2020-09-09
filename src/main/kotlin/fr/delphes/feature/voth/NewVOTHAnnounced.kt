@@ -1,4 +1,4 @@
-package fr.delphes.feature
+package fr.delphes.feature.voth
 
 import fr.delphes.event.incoming.RewardRedemption
 import java.time.Duration

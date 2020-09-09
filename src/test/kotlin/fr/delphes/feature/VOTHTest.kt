@@ -6,6 +6,8 @@ import fr.delphes.event.incoming.VIPListReceived
 import fr.delphes.event.outgoing.PromoteVIP
 import fr.delphes.event.outgoing.RemoveVIP
 import fr.delphes.event.outgoing.RetrieveVip
+import fr.delphes.feature.voth.VOTH
+import fr.delphes.feature.voth.VOTHWinner
 import fr.delphes.time.TestClock
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName

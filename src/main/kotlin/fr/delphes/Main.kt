@@ -2,9 +2,8 @@ package fr.delphes
 
 import fr.delphes.bot.Bot
 import fr.delphes.configuration.PropertiesConfiguration
-import fr.delphes.feature.Command
-import fr.delphes.feature.DisplayChat
-import fr.delphes.feature.VOTH
+import fr.delphes.feature.command.Command
+import fr.delphes.feature.voth.VOTH
 import fr.delphes.time.prettyPrint
 import java.time.Duration
 
@@ -16,7 +15,6 @@ fun main() {
                 val announceOldVOTH = announce.oldVOTH?.let { oldVOTH -> " \r\nRIP @${oldVOTH.user}, ancien VIP depuis ${announce.durationOfReign?.prettyPrint()} !" } ?: ""
                 "@${announce.rewardRedemption.displayName} est le nouveau VIP.$announceOldVOTH"
             },
-            DisplayChat(),
             Command(
                 "!bot",
                 "C'est moi : https://github.com/delphes99/pythie-bot",

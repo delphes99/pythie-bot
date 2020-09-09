@@ -1,4 +1,4 @@
-package fr.delphes.feature
+package fr.delphes.feature.voth
 
 import fr.delphes.User
 import java.time.LocalDateTime
