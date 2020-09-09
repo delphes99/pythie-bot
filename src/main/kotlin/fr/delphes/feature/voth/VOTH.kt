@@ -68,7 +68,7 @@ class VOTH(
     private inner class CommandStats : EventHandler<MessageReceived> {
         override fun handle(event: MessageReceived): List<OutgoingEvent> {
             return if (event.text.toLowerCase() == "!vothstats") {
-                val stats = vothState.getReignsFor(event.user)
+                val stats = vothState.getReignsFor(event.user, clock.now())
                 listOf(
                     SendMessage(
                         "Temps passé en tant que VOTH : ${stats.totalTime.prettyPrint()} --- " +

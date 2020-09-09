@@ -25,7 +25,17 @@ class VOTHState(
         return vothWinner
     }
 
-    fun getReignsFor(user: User): Stats {
-        return Stats(previousReigns.filter { reign -> reign.voth == user })
+    fun getReignsFor(user: User, now: LocalDateTime): Stats {
+        val currentVip = currentVip
+        val previousReigns = previousReigns.filter { reign -> reign.voth == user }
+
+        val reigns = if (currentVip?.user == user) {
+            val currentReign = VOTHReign(user, currentVip.since, now, currentVip.cost)
+            previousReigns + currentReign
+        } else {
+            previousReigns
+        }
+
+        return Stats(reigns)
     }
 }
