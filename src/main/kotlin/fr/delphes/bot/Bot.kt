@@ -102,7 +102,7 @@ data class Bot(
     }
 
     private fun handleChannelMessage(event: ChannelMessageEvent) {
-        val incomingEvent = MessageReceived(event.user.name, event.message)
+        val incomingEvent = MessageReceived(event)
 
         messageReceivedHandlers.handleEventAndApply(incomingEvent)
     }

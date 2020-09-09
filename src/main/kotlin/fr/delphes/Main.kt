@@ -13,7 +13,7 @@ fun main() {
         listOf(
             VOTH("27e063b4-b6f8-44c0-8d1b-039745a4772a") { announce ->
                 val announceOldVOTH = announce.oldVOTH?.let { oldVOTH -> " \r\nRIP @${oldVOTH.user}, ancien VIP depuis ${announce.durationOfReign?.prettyPrint()} !" } ?: ""
-                "@${announce.rewardRedemption.displayName} est le nouveau VIP.$announceOldVOTH"
+                "@${announce.rewardRedemption.user.name} est le nouveau VIP.$announceOldVOTH"
             },
             Command(
                 "!bot",

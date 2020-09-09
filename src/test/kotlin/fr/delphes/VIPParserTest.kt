@@ -14,14 +14,19 @@ class VIPParserTest {
     fun `vip list with one name`() {
         val extractVips = VIPParser.extractVips("The VIPs of this channel are: glacios_.")
 
-        assertThat((extractVips as VIPParser.VIPResult.VIPList).users).containsExactlyInAnyOrder("glacios_")
+        assertThat((extractVips as VIPParser.VIPResult.VIPList).users).containsExactlyInAnyOrder(User("glacios_"))
     }
 
     @Test
     fun `vip list with several names`() {
         val extractVips = VIPParser.extractVips("The VIPs of this channel are: glacios_, crazymeal, ghostcatfr, jimmy_fr_60.")
 
-        assertThat((extractVips as VIPParser.VIPResult.VIPList).users).containsExactlyInAnyOrder("glacios_", "crazymeal", "ghostcatfr", "jimmy_fr_60")
+        assertThat((extractVips as VIPParser.VIPResult.VIPList).users).containsExactlyInAnyOrder(
+            User("glacios_"),
+            User("crazymeal"),
+            User("ghostcatfr"),
+            User("jimmy_fr_60")
+        )
     }
 
     @Test

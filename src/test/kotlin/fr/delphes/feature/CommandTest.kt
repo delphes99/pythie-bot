@@ -25,7 +25,7 @@ internal class CommandTest {
     }
 
     private fun `given now`(now: LocalDateTime) {
-        every { clock.now() } returns this.now
+        every { clock.now() } returns now
     }
 
     @Test
@@ -69,8 +69,27 @@ internal class CommandTest {
         val messages = handler.handle(event)
         assertThat(messages).isNotEmpty()
 
-        `given now`(now.plusMinutes(15))
+        `given now`(now.plusMinutes(5))
         val messageBeforeCooldownFaded = handler.handle(event)
         assertThat(messageBeforeCooldownFaded).isEmpty()
+    }
+
+    @Test
+    internal fun `trigger command if after cooldown`() {
+        val event = MessageReceived("user", "!cmd")
+        val handler = Command(
+            trigger = "!cmd",
+            response = "response",
+            cooldown = Duration.ofMinutes(10),
+            clock = clock
+        ).CommandMessageReceivedHandler()
+
+        `given now`(now)
+        val messages = handler.handle(event)
+        assertThat(messages).isNotEmpty()
+
+        `given now`(now.plusMinutes(15))
+        val messageAfterCooldownFaded = handler.handle(event)
+        assertThat(messageAfterCooldownFaded).isNotEmpty()
     }
 }

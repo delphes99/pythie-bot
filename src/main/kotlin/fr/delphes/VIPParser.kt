@@ -15,6 +15,7 @@ object VIPParser {
                 matcher.group(1)
                     .split(",")
                     .map(String::trim)
+                    .map(::User)
             )
         }
 
