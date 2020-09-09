@@ -8,7 +8,7 @@ import fr.delphes.feature.VOTH
 import fr.delphes.time.prettyPrint
 import java.time.Duration
 
-fun main(args: Array<String>) {
+fun main() {
     Bot.build(
         PropertiesConfiguration(),
         listOf(
