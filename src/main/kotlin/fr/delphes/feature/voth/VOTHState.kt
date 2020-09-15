@@ -2,14 +2,16 @@ package fr.delphes.feature.voth
 
 import fr.delphes.User
 import fr.delphes.event.incoming.RewardRedemption
+import fr.delphes.feature.State
+import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
+@Serializable
 class VOTHState(
     var vothChanged: Boolean = false,
     var currentVip: VOTHWinner? = null,
     val previousReigns: MutableList<VOTHReign> = mutableListOf()
-) {
-
+) : State {
     fun newVOTH(newVOTH: RewardRedemption, now: LocalDateTime): VOTHWinner {
         val currentVip = this.currentVip
         if(currentVip != null) {

@@ -27,7 +27,7 @@ internal class VOTHTest {
     inner class RewardRedemptionHandlers {
         @Test
         internal fun `promote vip`() {
-            val voth = VOTH(featureID, clock) { "response" }
+            val voth = VOTH(featureID, clock, stateManager = TestStateManager()) { "response" }
 
             voth.rewardHandlers.handleEvent(RewardRedemption(featureID, "user", 50))
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now, 50))
@@ -37,7 +37,7 @@ internal class VOTHTest {
         @Test
         internal fun `don't promote vip if already VOTH`() {
             val state = VOTHState(currentVip = VOTHWinner("user", now.minusMinutes(1), 50))
-            val voth = VOTH(featureID, clock, state) { "response" }
+            val voth = VOTH(featureID, clock, state, stateManager = TestStateManager()) { "response" }
 
             voth.rewardHandlers.handleEvent(RewardRedemption(featureID, "user", 50))
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now.minusMinutes(1), 50))
@@ -81,7 +81,7 @@ internal class VOTHTest {
         @Test
         internal fun `do nothing when on vip change`() {
             val state = VOTHState(false, VOTHWinner("user", now.minusMinutes(1), 50))
-            val voth = VOTH(featureID, clock, state) { "response" }
+            val voth = VOTH(featureID, clock, state, stateManager = TestStateManager()) { "response" }
 
             val messages = voth.vipListReceivedHandlers.handleEvent(VIPListReceived("oldVip", "oldVip2"))
             assertThat(messages).isEmpty()
@@ -89,6 +89,6 @@ internal class VOTHTest {
     }
 
     private fun voth(state: VOTHState = DEFAULT_STATE): VOTH {
-        return VOTH(featureID, clock, state) { "response" }
+        return VOTH(featureID, clock, state, stateManager = TestStateManager()) { "response" }
     }
 }
