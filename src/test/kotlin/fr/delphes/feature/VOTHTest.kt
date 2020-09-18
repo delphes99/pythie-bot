@@ -7,6 +7,7 @@ import fr.delphes.event.outgoing.PromoteVIP
 import fr.delphes.event.outgoing.RemoveVIP
 import fr.delphes.event.outgoing.RetrieveVip
 import fr.delphes.feature.voth.VOTH
+import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.feature.voth.VOTHState
 import fr.delphes.feature.voth.VOTHWinner
 import fr.delphes.time.TestClock
@@ -21,13 +22,14 @@ internal class VOTHTest {
     val now = LocalDateTime.of(2020, 1, 1, 0, 0)
     val clock = TestClock(now)
     val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", now.minusMinutes(5), 50))
+    val configuration = VOTHConfiguration(featureID, { emptyList() }, "!cmdstats", { emptyList() })
 
     @Nested
     @DisplayName("RewardRedemption")
     inner class RewardRedemptionHandlers {
         @Test
         internal fun `promote vip`() {
-            val voth = VOTH(featureID, clock, stateManager = TestStateManager()) { "response" }
+            val voth = VOTH(configuration, stateRepository = TestStateRepository({VOTHState()}), clock = clock)
 
             voth.rewardHandlers.handleEvent(RewardRedemption(featureID, "user", 50))
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now, 50))
@@ -37,7 +39,7 @@ internal class VOTHTest {
         @Test
         internal fun `don't promote vip if already VOTH`() {
             val state = VOTHState(currentVip = VOTHWinner("user", now.minusMinutes(1), 50))
-            val voth = VOTH(featureID, clock, state, stateManager = TestStateManager()) { "response" }
+            val voth = VOTH(configuration, stateRepository = TestStateRepository({state}), state = state, clock = clock)
 
             voth.rewardHandlers.handleEvent(RewardRedemption(featureID, "user", 50))
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now.minusMinutes(1), 50))
@@ -81,7 +83,7 @@ internal class VOTHTest {
         @Test
         internal fun `do nothing when on vip change`() {
             val state = VOTHState(false, VOTHWinner("user", now.minusMinutes(1), 50))
-            val voth = VOTH(featureID, clock, state, stateManager = TestStateManager()) { "response" }
+            val voth = VOTH(configuration, stateRepository = TestStateRepository({state}), state = state, clock = clock)
 
             val messages = voth.vipListReceivedHandlers.handleEvent(VIPListReceived("oldVip", "oldVip2"))
             assertThat(messages).isEmpty()
@@ -89,6 +91,6 @@ internal class VOTHTest {
     }
 
     private fun voth(state: VOTHState = DEFAULT_STATE): VOTH {
-        return VOTH(featureID, clock, state, stateManager = TestStateManager()) { "response" }
+        return VOTH(configuration, stateRepository = TestStateRepository({state}), state = state, clock = clock)
     }
 }

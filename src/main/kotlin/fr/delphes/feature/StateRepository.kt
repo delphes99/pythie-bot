@@ -1,6 +1,6 @@
 package fr.delphes.feature
 
-interface StateManager<T : State> {
+interface StateRepository<T : State> {
     fun save(state : T)
     fun load(): T
 }

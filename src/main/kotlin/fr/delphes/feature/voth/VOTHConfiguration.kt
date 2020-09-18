@@ -1,0 +1,10 @@
+package fr.delphes.feature.voth
+
+import fr.delphes.event.outgoing.OutgoingEvent
+
+data class VOTHConfiguration(
+    val featureId: String,
+    val newVipAnnouncer: (NewVOTHAnnounced) -> List<OutgoingEvent>,
+    val statsCommand: String,
+    val statsResponseEvents: (Stats) -> List<OutgoingEvent>
+)

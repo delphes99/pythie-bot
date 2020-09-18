@@ -8,20 +8,17 @@ import fr.delphes.event.outgoing.OutgoingEvent
 import fr.delphes.event.outgoing.PromoteVIP
 import fr.delphes.event.outgoing.RemoveVIP
 import fr.delphes.event.outgoing.RetrieveVip
-import fr.delphes.event.outgoing.SendMessage
 import fr.delphes.feature.AbstractFeature
 import fr.delphes.feature.HaveState
-import fr.delphes.feature.StateManager
+import fr.delphes.feature.StateRepository
 import fr.delphes.time.Clock
 import fr.delphes.time.SystemClock
-import fr.delphes.time.prettyPrint
 
 class VOTH(
-    private val feature: String,
-    private val clock: Clock = SystemClock,
-    override val state: VOTHState = VOTHState(),
-    override val stateManager: StateManager<VOTHState>,
-    private val newVipAnnouncer: ((NewVOTHAnnounced) -> String)?
+    private val configuration: VOTHConfiguration,
+    override val stateRepository: StateRepository<VOTHState>,
+    override val state: VOTHState = stateRepository.load(),
+    private val clock: Clock = SystemClock
 ) : AbstractFeature(), HaveState<VOTHState> {
     override val rewardHandlers: List<EventHandler<RewardRedemption>> = listOf(VOTHRewardRedemptionHandler())
     override val vipListReceivedHandlers: List<EventHandler<VIPListReceived>> = listOf(VOTHVIPListReceivedHandler())
@@ -33,24 +30,17 @@ class VOTH(
     private inner class VOTHRewardRedemptionHandler : EventHandler<RewardRedemption> {
         override fun handle(event: RewardRedemption): List<OutgoingEvent> {
             val redeemUser = event.user
-            return if (event.rewardId == feature && currentVip?.user != redeemUser) {
+            return if (event.rewardId == configuration.featureId && currentVip?.user != redeemUser) {
                 val oldVOTH = currentVip
                 val newVOTH = state.newVOTH(event, clock.now())
 
-                listOfNotNull(
-                    newVipAnnouncer?.let { announcer ->
-                        SendMessage(
-                            announcer(
-                                NewVOTHAnnounced(
-                                    oldVOTH,
-                                    newVOTH,
-                                    event
-                                )
-                            )
-                        )
-                    },
-                    RetrieveVip
-                )
+                configuration.newVipAnnouncer(
+                    NewVOTHAnnounced(
+                        oldVOTH,
+                        newVOTH,
+                        event
+                    )
+                ) + RetrieveVip
             } else {
                 emptyList()
             }
@@ -72,15 +62,9 @@ class VOTH(
 
     private inner class CommandStats : EventHandler<MessageReceived> {
         override fun handle(event: MessageReceived): List<OutgoingEvent> {
-            return if (event.text.toLowerCase() == "!vothstats") {
+            return if (event.text.toLowerCase() == configuration.statsCommand) {
                 val stats = state.getReignsFor(event.user, clock.now())
-                listOf(
-                    SendMessage(
-                        "Temps passé en tant que VOTH : ${stats.totalTime.prettyPrint()} --- " +
-                                "Nombre de victoires : ${stats.numberOfReigns} --- " +
-                                "Total de points dépensés : ${stats.totalCost}"
-                    )
-                )
+                configuration.statsResponseEvents(stats)
             } else {
                 emptyList()
             }

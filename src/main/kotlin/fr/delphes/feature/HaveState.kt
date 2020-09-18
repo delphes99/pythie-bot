@@ -2,13 +2,13 @@ package fr.delphes.feature
 
 interface HaveState<T : State> {
     val state : T
-    val stateManager: StateManager<T>
+    val stateRepository: StateRepository<T>
 
     fun save() {
-        stateManager.save(state)
+        stateRepository.save(state)
     }
 
     fun load(): T {
-        return stateManager.load()
+        return stateRepository.load()
     }
 }

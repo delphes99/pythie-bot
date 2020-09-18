@@ -2,12 +2,12 @@ package fr.delphes.feature
 
 import java.io.File
 
-class FileStateManager<T : State>(
+open class FileStateRepository<T : State>(
     filePath: String,
     val serializer: (T) -> String,
     val deserializer: (String) -> T,
     val initializer: () -> T
-) : StateManager<T> {
+) : StateRepository<T> {
     private val file: File = File(filePath)
 
     override fun save(state: T) {
