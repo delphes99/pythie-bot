@@ -44,13 +44,17 @@ fun main() {
             ),
             Command(
                 "!bot",
-                "C'est moi : https://github.com/delphes99/pythie-bot",
-                cooldown = Duration.ofMinutes(2)
+                cooldown = Duration.ofMinutes(2),
+                reponses = listOf(
+                    SendMessage("C'est moi : https://github.com/delphes99/pythie-bot")
+                )
             ),
             Command(
                 "!discord",
-                "https://discord.com/invite/SAdBhbu",
-                cooldown = Duration.ofSeconds(10)
+                cooldown = Duration.ofSeconds(10),
+                reponses = listOf(
+                    SendMessage("https://discord.com/invite/SAdBhbu")
+                )
             )
         )
     )

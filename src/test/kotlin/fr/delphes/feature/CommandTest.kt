@@ -33,8 +33,8 @@ internal class CommandTest {
         val event = MessageReceived("user", "!cmd")
         val messages = Command(
             "!cmd",
-            "response",
-            clock = clock
+            clock = clock,
+            reponses = listOf(SendMessage("response"))
         ).CommandMessageReceivedHandler().handle(event)
 
         assertThat(messages).containsExactlyInAnyOrder(
@@ -46,8 +46,8 @@ internal class CommandTest {
     internal fun `don't trigger command`() {
         val command = Command(
             trigger = "!otherCmd",
-            response = "response",
-            clock = clock
+            clock = clock,
+            reponses = listOf(SendMessage("response"))
         )
         val event = MessageReceived("user", "!cmd")
         val messages = command.CommandMessageReceivedHandler().handle(event)
@@ -60,9 +60,9 @@ internal class CommandTest {
         val event = MessageReceived("user", "!cmd")
         val handler = Command(
             trigger = "!cmd",
-            response = "response",
+            clock = clock,
             cooldown = Duration.ofMinutes(10),
-            clock = clock
+            reponses = listOf(SendMessage("response"))
         ).CommandMessageReceivedHandler()
 
         `given now`(now)
@@ -79,9 +79,9 @@ internal class CommandTest {
         val event = MessageReceived("user", "!cmd")
         val handler = Command(
             trigger = "!cmd",
-            response = "response",
+            clock = clock,
             cooldown = Duration.ofMinutes(10),
-            clock = clock
+            reponses = listOf(SendMessage("response"))
         ).CommandMessageReceivedHandler()
 
         `given now`(now)

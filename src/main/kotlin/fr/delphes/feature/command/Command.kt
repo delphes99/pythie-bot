@@ -12,10 +12,10 @@ import java.time.LocalDateTime
 
 class Command(
     private val trigger: String,
-    private val response: String,
     private var lastActivation: LocalDateTime = LocalDateTime.MIN,
     private val clock: Clock = SystemClock,
-    private val cooldown: Duration? = null
+    private val cooldown: Duration? = null,
+    private val reponses: List<OutgoingEvent>
 ) : AbstractFeature() {
     override val messageReceivedHandlers: List<EventHandler<MessageReceived>> = listOf(CommandMessageReceivedHandler())
 
@@ -23,7 +23,7 @@ class Command(
         override fun handle(event: MessageReceived): List<OutgoingEvent> {
             return if(event.text == trigger && cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false) {
                 lastActivation = clock.now()
-                listOf(SendMessage(response))
+                reponses
             } else {
                 emptyList()
             }
