@@ -1,6 +1,8 @@
 package fr.delphes.feature
 
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 
 open class FileStateRepository<T : State>(
     filePath: String,
@@ -12,6 +14,7 @@ open class FileStateRepository<T : State>(
 
     override fun save(state: T) {
         if (!file.isFile) {
+            Files.createDirectories(Path.of(file.parent))
             file.createNewFile()
         }
         file.writeText(serializer(state))
