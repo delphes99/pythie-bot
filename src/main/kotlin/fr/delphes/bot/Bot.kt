@@ -11,7 +11,7 @@ import com.github.twitch4j.helix.webhooks.domain.WebhookRequest
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.User
 import fr.delphes.VIPParser
-import fr.delphes.bot.webserver.payload.NewFollowPayload
+import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
 import fr.delphes.bot.webserver.webhook.TwitchWebhook
 import fr.delphes.configuration.Configuration
 import fr.delphes.event.eventHandler.EventHandler
@@ -179,7 +179,7 @@ data class Bot(
             request.call.receive<NewFollowPayload>()
         }
         payload.data.forEach { newFollowPayload ->
-            newFollowHandlers.handleEventAndApply(NewFollow(User(newFollowPayload)))
+            newFollowHandlers.handleEventAndApply(NewFollow(newFollowPayload))
         }
     }
 

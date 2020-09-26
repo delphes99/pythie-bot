@@ -1,14 +1,10 @@
 package fr.delphes
 
-import fr.delphes.bot.webserver.payload.NewFollowPayloadData
+import fr.delphes.bot.webserver.payload.newFollow.NewFollowData
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(val name: String) {
-    constructor(payload: NewFollowPayloadData) : this(
-        payload.from_name
-    )
-
     val normalizeName = name.toLowerCase()
 
     override fun toString(): String {

@@ -1,7 +1,10 @@
 package fr.delphes.event.incoming
 
 import fr.delphes.User
+import fr.delphes.bot.webserver.payload.newFollow.NewFollowData
 
 data class NewFollow(
     val follower: User
-) : IncomingEvent
+) : IncomingEvent {
+    constructor(payload: NewFollowData) : this(User(payload.from_name))
+}

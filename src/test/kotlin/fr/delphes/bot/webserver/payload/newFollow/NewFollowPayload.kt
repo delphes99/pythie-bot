@@ -1,9 +1,10 @@
-package fr.delphes.bot.webserver.payload
+package fr.delphes.bot.webserver.payload.newFollow
 
 import fr.delphes.storage.serialization.Serializer
 import org.junit.jupiter.api.Test
 import kotlinx.serialization.decodeFromString
 import org.assertj.core.api.Assertions.assertThat
+import java.time.LocalDateTime
 
 internal class NewFollowPayloadTest {
     @Test
@@ -26,14 +27,12 @@ internal class NewFollowPayloadTest {
             )
         ).isEqualTo(
             NewFollowPayload(
-                listOf(
-                    NewFollowPayloadData(
-                        "1336",
-                        "ebi",
-                        "1337",
-                        "oliver0823nagy",
-                        "2017-08-22T22:55:24Z"
-                    )
+                NewFollowData(
+                    "1336",
+                    "ebi",
+                    "1337",
+                    "oliver0823nagy",
+                    LocalDateTime.of(2017, 8, 22, 22, 55, 24)
                 )
             )
         )
