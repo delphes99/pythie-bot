@@ -8,11 +8,11 @@ import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent
 import com.github.twitch4j.helix.webhooks.domain.WebhookRequest
-import com.github.twitch4j.helix.webhooks.topics.TwitchWebhookTopic
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.User
 import fr.delphes.VIPParser
 import fr.delphes.bot.webserver.payload.NewFollowPayload
+import fr.delphes.bot.webserver.webhook.TwitchWebhook
 import fr.delphes.configuration.Configuration
 import fr.delphes.event.eventHandler.EventHandler
 import fr.delphes.event.eventHandler.handleEvent
@@ -23,6 +23,7 @@ import fr.delphes.event.incoming.RewardRedemption
 import fr.delphes.event.incoming.VIPListReceived
 import fr.delphes.feature.Feature
 import fr.delphes.storage.serialization.Serializer
+import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -37,8 +38,8 @@ import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.runBlocking
-import java.time.Duration
 
 data class Bot(
     val channel: String,
@@ -58,20 +59,33 @@ data class Bot(
                     json = Serializer
                 )
             }
+            //TODO verify secret send on subscription
             //TODO manage duplicate event
             routing {
-                get("/follow") {
-                    call.respondText(this.context.parameters["hub.challenge"] ?: "No challenge provided", ContentType.Text.Html)
-                }
-                post("/follow") {
-                    handleNewFollow(this.context.request)
-                    this.context.response.status(HttpStatusCode.OK)
+                TwitchWebhook.forEach { webhook ->
+                    get("/${webhook.callSuffix}") {
+                        challengeWebHook()
+                    }
+                    post("/${webhook.callSuffix}") {
+                        webhook.notificationHandler(this@Bot ,this)
+                        this.context.response.status(HttpStatusCode.OK)
+                    }
                 }
             }
         }.start(wait = false)
     }
 
+    private suspend fun PipelineContext<Unit, ApplicationCall>.challengeWebHook() {
+        call.respondText(
+            this.context.parameters["hub.challenge"] ?: "No challenge provided",
+            ContentType.Text.Html
+        )
+    }
+
     companion object {
+        //private val WEBHOOK_DURATION = Duration.ofDays(1).toSeconds().toInt()
+        private val WEBHOOK_DURATION = 60
+
         fun build(
             configuration: Configuration,
             features: List<Feature>
@@ -103,21 +117,24 @@ data class Bot(
             twitchClient.pubSub.connect()
             twitchClient.pubSub.listenForChannelPointsRedemptionEvents(botCredential, configuration.ownerChannelId)
 
-            val userId = twitchClient.helix.getUsers(null, null, listOf(configuration.ownerChannel)).execute().users[0].id
+            val userId =
+                twitchClient.helix.getUsers(null, null, listOf(configuration.ownerChannel)).execute().users[0].id
             val tunnel = Ngrok.createHttpTunnel(80, "bot")
 
             //TODO cron refresh sub
-            twitchClient.helix.requestWebhookSubscription(
-                WebhookRequest(
-                    "${tunnel.publicUrl}/follow",
-                    "subscribe",
-                    TwitchWebhookTopic.fromUrl("https://api.twitch.tv/helix/users/follows?first=1&to_id=$userId"),
-                    Duration.ofDays(1).toSeconds().toInt(),
-                    "toto"
-                ),
-                configuration.ownerAccountOauth
-            ).execute()
-            ownerTwitchClient.clientHelper
+            TwitchWebhook.forEach { twitchWebhook ->
+                twitchClient.helix.requestWebhookSubscription(
+                    WebhookRequest(
+                        "${tunnel.publicUrl}/${twitchWebhook.callSuffix}",
+                        "subscribe",
+                        twitchWebhook.topic(userId),
+                        WEBHOOK_DURATION,
+                        "toto"
+                    ),
+                    configuration
+                        .ownerAccountOauth
+                ).execute()
+            }
 
             return Bot(
                 configuration.ownerChannel,
@@ -144,7 +161,7 @@ data class Bot(
         event.message?.also {
             if (it.isPresent) {
                 val vipResult = VIPParser.extractVips(it.get())
-                if(vipResult is VIPParser.VIPResult.VIPList) {
+                if (vipResult is VIPParser.VIPResult.VIPList) {
                     val vipListReceived = VIPListReceived(vipResult.users)
 
                     vipListReceivedHandlers.handleEventAndApply(vipListReceived)
@@ -157,16 +174,26 @@ data class Bot(
         messageReceivedHandlers.handleEventAndApply(MessageReceived(event))
     }
 
-    private fun handleNewFollow(request: ApplicationRequest) {
+    fun handleNewFollow(request: ApplicationRequest) {
         val payload = runBlocking {
             request.call.receive<NewFollowPayload>()
         }
-        payload.data.forEach {
-            newFollowPayload -> newFollowHandlers.handleEventAndApply(NewFollow(User(newFollowPayload)))
+        payload.data.forEach { newFollowPayload ->
+            newFollowHandlers.handleEventAndApply(NewFollow(User(newFollowPayload)))
         }
     }
 
-    private fun <T: IncomingEvent> List<EventHandler<T>>.handleEventAndApply(event: T) {
+    fun handleStreamInfos(request: ApplicationRequest) {
+        //TODO handle stream on / stream off
+        /*val payload = runBlocking {
+            request.call.receive<NewFollowPayload>()
+        }
+        payload.data.forEach { newFollowPayload ->
+            newFollowHandlers.handleEventAndApply(NewFollow(User(newFollowPayload)))
+        }*/
+    }
+
+    private fun <T : IncomingEvent> List<EventHandler<T>>.handleEventAndApply(event: T) {
         val outgoingEvents = this.handleEvent(event)
 
         outgoingEvents.forEach { e ->
