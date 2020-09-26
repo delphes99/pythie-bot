@@ -4,6 +4,7 @@ import fr.delphes.User
 import fr.delphes.event.incoming.RewardRedemption
 import fr.delphes.feature.State
 import kotlinx.serialization.Serializable
+import java.time.Duration
 import java.time.LocalDateTime
 
 @Serializable
@@ -14,8 +15,8 @@ class VOTHState(
 ) : State {
     fun newVOTH(newVOTH: RewardRedemption, now: LocalDateTime): VOTHWinner {
         val currentVip = this.currentVip
-        if(currentVip != null) {
-            val reign = VOTHReign(currentVip.user, currentVip.since, now, currentVip.cost)
+        if (currentVip != null) {
+            val reign = VOTHReign(currentVip.user, currentVip.duration(now), currentVip.cost)
             previousReigns.add(reign)
         }
 
@@ -27,12 +28,27 @@ class VOTHState(
         return vothWinner
     }
 
+    fun pause(now: LocalDateTime) {
+        val currentVip = currentVip
+        if (currentVip != null) {
+            val currentPeriod = Duration.between(currentVip.since, now)
+            this.currentVip = currentVip.copy(
+                since = null,
+                previousPeriods = currentVip.previousPeriods.plus(currentPeriod)
+            )
+        }
+    }
+
+    fun unpause(now: LocalDateTime) {
+        this.currentVip = this.currentVip?.copy(since = now)
+    }
+
     fun getReignsFor(user: User, now: LocalDateTime): Stats {
         val currentVip = currentVip
         val previousReigns = previousReigns.filter { reign -> reign.voth == user }
 
         val reigns = if (currentVip?.user == user) {
-            val currentReign = VOTHReign(user, currentVip.since, now, currentVip.cost)
+            val currentReign = VOTHReign(user, currentVip.duration(now), currentVip.cost)
             previousReigns + currentReign
         } else {
             previousReigns

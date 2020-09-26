@@ -3,6 +3,8 @@ package fr.delphes.feature.voth
 import fr.delphes.event.eventHandler.EventHandler
 import fr.delphes.event.incoming.MessageReceived
 import fr.delphes.event.incoming.RewardRedemption
+import fr.delphes.event.incoming.StreamOffline
+import fr.delphes.event.incoming.StreamOnline
 import fr.delphes.event.incoming.VIPListReceived
 import fr.delphes.event.outgoing.OutgoingEvent
 import fr.delphes.event.outgoing.PromoteVIP
@@ -23,6 +25,8 @@ class VOTH(
     override val rewardHandlers: List<EventHandler<RewardRedemption>> = listOf(VOTHRewardRedemptionHandler())
     override val vipListReceivedHandlers: List<EventHandler<VIPListReceived>> = listOf(VOTHVIPListReceivedHandler())
     override val messageReceivedHandlers: List<EventHandler<MessageReceived>> = listOf(CommandStats())
+    override val streamOnlineHandlers: List<EventHandler<StreamOnline>> = listOf(StreamOnlineHandler())
+    override val streamOffLineHandlers: List<EventHandler<StreamOffline>> = listOf(StreamOfflineHandler())
 
     val currentVip get() = state.currentVip
     val vothChanged get() = state.vothChanged
@@ -68,6 +72,20 @@ class VOTH(
             } else {
                 emptyList()
             }
+        }
+    }
+
+    private inner class StreamOnlineHandler : EventHandler<StreamOnline> {
+        override fun handle(event: StreamOnline): List<OutgoingEvent> {
+            state.unpause(clock.now())
+            return emptyList()
+        }
+    }
+
+    private inner class StreamOfflineHandler : EventHandler<StreamOffline> {
+        override fun handle(event: StreamOffline): List<OutgoingEvent> {
+            state.pause(clock.now())
+            return emptyList()
         }
     }
 }

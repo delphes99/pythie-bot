@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.configuration.PropertiesConfiguration
 import fr.delphes.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
+import fr.delphes.feature.newFollow.NewFollowFeature
 import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
@@ -39,7 +40,7 @@ fun main() {
                     }
                 ),
                 stateRepository = FileVOTHStateRepository(
-                    "C:\\Users\\laure\\IdeaProjects\\twitch-bot\\target\\vothstate.json"
+                    "A:\\pythiebot\\vothstate.json"
                 )
             ),
             Command(
@@ -55,7 +56,10 @@ fun main() {
                 reponses = listOf(
                     SendMessage("https://discord.com/invite/SAdBhbu")
                 )
-            )
+            ),
+            NewFollowFeature {
+                newFollow -> listOf(SendMessage("Merci du follow ${newFollow.follower.name}"))
+            }
         )
     )
 }
