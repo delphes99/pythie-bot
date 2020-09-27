@@ -14,5 +14,5 @@ abstract class AbstractFeature : Feature {
     override val vipListReceivedHandlers: List<EventHandler<VIPListReceived>> = emptyList()
     override val newFollowHandlers: List<EventHandler<NewFollow>> = emptyList()
     override val streamOnlineHandlers: List<EventHandler<StreamOnline>> = emptyList()
-    override val streamOffLineHandlers: List<EventHandler<StreamOffline>> = emptyList()
+    override val streamOfflineHandlers: List<EventHandler<StreamOffline>> = emptyList()
 }

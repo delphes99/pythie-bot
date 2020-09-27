@@ -9,9 +9,9 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent
 import com.github.twitch4j.helix.webhooks.domain.WebhookRequest
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
-import fr.delphes.User
 import fr.delphes.VIPParser
 import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
+import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.bot.webserver.webhook.TwitchWebhook
 import fr.delphes.configuration.Configuration
 import fr.delphes.event.eventHandler.EventHandler
@@ -20,6 +20,8 @@ import fr.delphes.event.incoming.IncomingEvent
 import fr.delphes.event.incoming.MessageReceived
 import fr.delphes.event.incoming.NewFollow
 import fr.delphes.event.incoming.RewardRedemption
+import fr.delphes.event.incoming.StreamOffline
+import fr.delphes.event.incoming.StreamOnline
 import fr.delphes.event.incoming.VIPListReceived
 import fr.delphes.feature.Feature
 import fr.delphes.storage.serialization.Serializer
@@ -152,6 +154,8 @@ data class Bot(
     private val vipListReceivedHandlers = features.flatMap(Feature::vipListReceivedHandlers)
     private val messageReceivedHandlers = features.flatMap(Feature::messageReceivedHandlers)
     private val newFollowHandlers = features.flatMap(Feature::newFollowHandlers)
+    private val streamOfflineHandlers = features.flatMap(Feature::streamOfflineHandlers)
+    private val streamOnlineHandlers = features.flatMap(Feature::streamOnlineHandlers)
 
     private fun handleRewardRedeemedEvent(event: RewardRedeemedEvent) {
         rewardRedeptionHandlers.handleEventAndApply(RewardRedemption(event))
@@ -184,20 +188,28 @@ data class Bot(
     }
 
     fun handleStreamInfos(request: ApplicationRequest) {
-        //TODO handle stream on / stream off
-        /*val payload = runBlocking {
-            request.call.receive<NewFollowPayload>()
+        val payload = runBlocking {
+            request.call.receive<StreamInfosPayload>()
         }
-        payload.data.forEach { newFollowPayload ->
-            newFollowHandlers.handleEventAndApply(NewFollow(User(newFollowPayload)))
-        }*/
+        val streamInfos = payload.data
+        if(streamInfos.isEmpty()) {
+            streamOfflineHandlers.handleEventAndApply(StreamOffline())
+        } else {
+            streamInfos.forEach { streamInfosData ->
+                streamOnlineHandlers.handleEventAndApply(StreamOnline())
+            }
+        }
     }
 
     private fun <T : IncomingEvent> List<EventHandler<T>>.handleEventAndApply(event: T) {
         val outgoingEvents = this.handleEvent(event)
 
         outgoingEvents.forEach { e ->
-            e.applyOnTwitch(chat, ownerChat, channel)
+            try {
+                e.applyOnTwitch(chat, ownerChat, channel)
+            } catch (e:Exception) {
+                println("Erreur : ${e.message}")
+            }
         }
     }
 }

@@ -5,6 +5,8 @@ import fr.delphes.configuration.PropertiesConfiguration
 import fr.delphes.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
 import fr.delphes.feature.newFollow.NewFollowFeature
+import fr.delphes.feature.streamOffline.StreamOfflineFeature
+import fr.delphes.feature.streamOnline.StreamOnlineFeature
 import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
@@ -59,7 +61,9 @@ fun main() {
             ),
             NewFollowFeature {
                 newFollow -> listOf(SendMessage("Merci du follow ${newFollow.follower.name}"))
-            }
+            },
+            StreamOfflineFeature { listOf(SendMessage("Le stream est fini, au revoir !")) },
+            StreamOnlineFeature { listOf(SendMessage("Le stream démarre, ravi de vous revoir !")) }
         )
     )
 }

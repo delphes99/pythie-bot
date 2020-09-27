@@ -26,7 +26,7 @@ class VOTH(
     override val vipListReceivedHandlers: List<EventHandler<VIPListReceived>> = listOf(VOTHVIPListReceivedHandler())
     override val messageReceivedHandlers: List<EventHandler<MessageReceived>> = listOf(CommandStats())
     override val streamOnlineHandlers: List<EventHandler<StreamOnline>> = listOf(StreamOnlineHandler())
-    override val streamOffLineHandlers: List<EventHandler<StreamOffline>> = listOf(StreamOfflineHandler())
+    override val streamOfflineHandlers: List<EventHandler<StreamOffline>> = listOf(StreamOfflineHandler())
 
     val currentVip get() = state.currentVip
     val vothChanged get() = state.vothChanged

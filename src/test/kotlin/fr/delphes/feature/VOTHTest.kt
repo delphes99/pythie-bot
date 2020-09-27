@@ -99,7 +99,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.streamOffLineHandlers.handleEvent(StreamOffline())
+        val messages = voth.streamOfflineHandlers.handleEvent(StreamOffline())
 
         verify(exactly = 1) { state.pause(any()) }
         assertThat(messages).isEmpty()

@@ -14,5 +14,5 @@ interface Feature {
     val vipListReceivedHandlers: List<EventHandler<VIPListReceived>>
     val newFollowHandlers: List<EventHandler<NewFollow>>
     val streamOnlineHandlers: List<EventHandler<StreamOnline>>
-    val streamOffLineHandlers: List<EventHandler<StreamOffline>>
+    val streamOfflineHandlers: List<EventHandler<StreamOffline>>
 }
