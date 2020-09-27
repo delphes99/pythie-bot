@@ -23,6 +23,7 @@
         <junit-jupiter.version>5.7.0-RC1</junit-jupiter.version>
         <mockk.version>1.10.0</mockk.version>
         <kotlin.compiler.jvmTarget>14</kotlin.compiler.jvmTarget>
+        <kotlin-logging.version>1.12.0</kotlin-logging.version>
     </properties>
 
     <repositories>
@@ -48,11 +49,13 @@
             <artifactId>kotlinx-serialization-core</artifactId>
             <version>${serialization.version}</version>
         </dependency>
+        <!-- Twitch -->
         <dependency>
             <groupId>com.github.twitch4j</groupId>
             <artifactId>twitch4j</artifactId>
             <version>${twitch4j.version}</version>
         </dependency>
+        <!-- Http server -->
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-core</artifactId>
@@ -68,6 +71,7 @@
             <artifactId>ktor-serialization</artifactId>
             <version>${ktor.version}</version>
         </dependency>
+        <!-- Http client -->
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client</artifactId>
@@ -88,11 +92,18 @@
             <artifactId>ktor-client-serialization-jvm</artifactId>
             <version>${ktor.version}</version>
         </dependency>
+        <!-- Logs -->
+        <dependency>
+            <groupId>io.github.microutils</groupId>
+            <artifactId>kotlin-logging</artifactId>
+            <version>${kotlin-logging.version}</version>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback-classic.version}</version>
         </dependency>
+        <!-- Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

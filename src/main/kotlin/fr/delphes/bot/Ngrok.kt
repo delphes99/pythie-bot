@@ -12,10 +12,12 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
+import mu.KotlinLogging
 
 class Ngrok {
     companion object {
         const val API_URL = "http://localhost:4040/api"
+        private val LOGGER = KotlinLogging.logger {}
 
         fun createHttpTunnel(port: Int, name: String): Tunnel {
             val tunnel = Tunnel(port, name)
@@ -44,17 +46,28 @@ class Ngrok {
 
 
         internal suspend fun kill(httpClient: HttpClient) {
-            httpClient.delete<HttpResponse>("$API_URL/tunnels/$name")
-            httpClient.delete<HttpResponse>("$API_URL/tunnels/$name%20(http)")
+            try {
+                LOGGER.debug { "Delete tunnels : $name" }
+                httpClient.delete<HttpResponse>("$API_URL/tunnels/$name")
+                httpClient.delete<HttpResponse>("$API_URL/tunnels/$name%20(http)")
+            } catch (e: Exception) {
+                LOGGER.error(e) { "Failed to delete tunnel : $name" }
+            }
         }
 
         private suspend fun create(httpClient: HttpClient): String {
-            val response = httpClient.post<String> {
-                url("$API_URL/tunnels")
-                contentType(ContentType.parse("application/json"))
-                body = CreateTunnelBody(port.toString(), "http", name)
+            LOGGER.debug { "Create tunnel : $name" }
+            try {
+                val response = httpClient.post<String> {
+                    url("$API_URL/tunnels")
+                    contentType(ContentType.parse("application/json"))
+                    body = CreateTunnelBody(port.toString(), "http", name)
+                }
+                return EXTRACT_PUBLIC_URL.find(response)!!.groups[1]!!.value
+            } catch (e: Exception) {
+                LOGGER.debug { "Failed creation of tunnel : $name" }
+                throw e
             }
-            return EXTRACT_PUBLIC_URL.find(response)!!.groups[1]!!.value
         }
 
         companion object {
@@ -64,8 +77,8 @@ class Ngrok {
 
     @Serializable
     private data class CreateTunnelBody(
-        val addr : String,
-        val proto : String,
-        val name : String
+        val addr: String,
+        val proto: String,
+        val name: String
     )
 }

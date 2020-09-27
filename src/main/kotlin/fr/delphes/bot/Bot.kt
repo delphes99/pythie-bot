@@ -42,6 +42,8 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.runBlocking
+import mu.KotlinLogging
+import java.time.Duration
 
 data class Bot(
     val channel: String,
@@ -69,7 +71,7 @@ data class Bot(
                         challengeWebHook()
                     }
                     post("/${webhook.callSuffix}") {
-                        webhook.notificationHandler(this@Bot ,this)
+                        webhook.notificationHandler(this@Bot, this)
                         this.context.response.status(HttpStatusCode.OK)
                     }
                 }
@@ -85,8 +87,8 @@ data class Bot(
     }
 
     companion object {
-        //private val WEBHOOK_DURATION = Duration.ofDays(1).toSeconds().toInt()
-        private val WEBHOOK_DURATION = 60
+        private val WEBHOOK_DURATION = Duration.ofDays(1).toSeconds().toInt()
+        private val LOGGER = KotlinLogging.logger {}
 
         fun build(
             configuration: Configuration,
@@ -121,21 +123,29 @@ data class Bot(
 
             val userId =
                 twitchClient.helix.getUsers(null, null, listOf(configuration.ownerChannel)).execute().users[0].id
+            LOGGER.debug { "Retrieved owner user id : $userId" }
+
             val tunnel = Ngrok.createHttpTunnel(80, "bot")
+            LOGGER.debug { "Opened ngrok tunnel with public url : ${tunnel.publicUrl}" }
 
             //TODO cron refresh sub
             TwitchWebhook.forEach { twitchWebhook ->
-                twitchClient.helix.requestWebhookSubscription(
-                    WebhookRequest(
-                        "${tunnel.publicUrl}/${twitchWebhook.callSuffix}",
-                        "subscribe",
-                        twitchWebhook.topic(userId),
-                        WEBHOOK_DURATION,
-                        "toto"
-                    ),
-                    configuration
-                        .ownerAccountOauth
-                ).execute()
+                try {
+                    twitchClient.helix.requestWebhookSubscription(
+                        WebhookRequest(
+                            "${tunnel.publicUrl}/${twitchWebhook.callSuffix}",
+                            "subscribe",
+                            twitchWebhook.topic(userId),
+                            WEBHOOK_DURATION,
+                            "toto"
+                        ),
+                        configuration
+                            .ownerAccountOauth
+                    ).execute()
+                    LOGGER.info { "Subscription for twich webhook ${twitchWebhook.name} ok" }
+                } catch (e: Exception) {
+                    LOGGER.info(e) { "Subscription for twich webhook ${twitchWebhook.name} failed" }
+                }
             }
 
             return Bot(
@@ -192,7 +202,7 @@ data class Bot(
             request.call.receive<StreamInfosPayload>()
         }
         val streamInfos = payload.data
-        if(streamInfos.isEmpty()) {
+        if (streamInfos.isEmpty()) {
             streamOfflineHandlers.handleEventAndApply(StreamOffline())
         } else {
             streamInfos.forEach { streamInfosData ->
@@ -202,13 +212,14 @@ data class Bot(
     }
 
     private fun <T : IncomingEvent> List<EventHandler<T>>.handleEventAndApply(event: T) {
+        LOGGER.debug { "Handle event : ${event.javaClass} \n $event" }
         val outgoingEvents = this.handleEvent(event)
 
         outgoingEvents.forEach { e ->
             try {
                 e.applyOnTwitch(chat, ownerChat, channel)
-            } catch (e:Exception) {
-                println("Erreur : ${e.message}")
+            } catch (e: Exception) {
+                LOGGER.error(e) { "Error while handling event ${e.message}" }
             }
         }
     }
