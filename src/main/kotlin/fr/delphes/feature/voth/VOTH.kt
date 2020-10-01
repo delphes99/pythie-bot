@@ -85,6 +85,7 @@ class VOTH(
     private inner class StreamOfflineHandler : EventHandler<StreamOffline> {
         override fun handle(event: StreamOffline): List<OutgoingEvent> {
             state.pause(clock.now())
+            save()
             return emptyList()
         }
     }
