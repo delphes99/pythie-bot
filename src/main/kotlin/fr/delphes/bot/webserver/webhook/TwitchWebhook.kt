@@ -2,13 +2,15 @@ package fr.delphes.bot.webserver.webhook
 
 import com.github.twitch4j.helix.webhooks.topics.TwitchWebhookTopic
 import fr.delphes.bot.Bot
+import fr.delphes.bot.Channel
+import fr.delphes.bot.ClientBot
 import io.ktor.application.ApplicationCall
 import io.ktor.util.pipeline.PipelineContext
 
 enum class TwitchWebhook(
     private val topicUrl: (OwnerId) -> String,
     val callSuffix: String,
-    val notificationHandler: Bot.(PipelineContext<Unit, ApplicationCall>) -> Unit
+    val notificationHandler: Channel.(PipelineContext<Unit, ApplicationCall>) -> Unit
 ) {
     FOLLOW(
         { userId -> "https://api.twitch.tv/helix/users/follows?first=1&to_id=$userId" },

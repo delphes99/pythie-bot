@@ -8,5 +8,5 @@ data class NewVOTHAnnounced(
     val currentVOTH: VOTHWinner,
     val rewardRedemption: RewardRedemption
 ) {
-    val durationOfReign get() = oldVOTH?.let { old -> Duration.between(old.since, currentVOTH.since).abs() }
+    val durationOfReign get() = oldVOTH?.let { old -> old.since?.let { Duration.between(old.since, currentVOTH.since).abs() } }
 }
