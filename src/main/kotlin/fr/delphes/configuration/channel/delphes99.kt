@@ -4,6 +4,7 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
 import fr.delphes.feature.newFollow.NewFollowFeature
+import fr.delphes.feature.newSub.NewSubFeature
 import fr.delphes.feature.streamOffline.StreamOfflineFeature
 import fr.delphes.feature.streamOnline.StreamOnlineFeature
 import fr.delphes.feature.voth.FileVOTHStateRepository
@@ -64,6 +65,9 @@ val delphes99Channel = ChannelConfiguration.build("./configuration-delphes99.pro
         ),
         NewFollowFeature { newFollow ->
             listOf(SendMessage("Merci du follow ${newFollow.follower.name}"))
+        },
+        NewSubFeature { newSub ->
+            listOf(SendMessage("Merci pour le sub ${newSub.sub.name}"))
         },
         StreamOfflineFeature { listOf(SendMessage("Le stream est fini, au revoir !")) },
         StreamOnlineFeature { listOf(SendMessage("Le stream démarre, ravi de vous revoir !")) }

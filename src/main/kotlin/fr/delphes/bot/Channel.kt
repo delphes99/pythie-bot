@@ -5,6 +5,7 @@ import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.TwitchChat
 import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
+import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.event.eventHandler.EventHandler
@@ -12,6 +13,7 @@ import fr.delphes.event.eventHandler.handleEvent
 import fr.delphes.event.incoming.IncomingEvent
 import fr.delphes.event.incoming.MessageReceived
 import fr.delphes.event.incoming.NewFollow
+import fr.delphes.event.incoming.NewSub
 import fr.delphes.event.incoming.RewardRedemption
 import fr.delphes.event.incoming.StreamOffline
 import fr.delphes.event.incoming.StreamOnline
@@ -37,6 +39,7 @@ class Channel(
     private val rewardRedeptionHandlers = features.flatMap(Feature::rewardHandlers)
     private val vipListReceivedHandlers = features.flatMap(Feature::vipListReceivedHandlers)
     private val newFollowHandlers = features.flatMap(Feature::newFollowHandlers)
+    private val newSubHandlers = features.flatMap(Feature::newSubHandlers)
     private val streamOfflineHandlers = features.flatMap(Feature::streamOfflineHandlers)
     private val streamOnlineHandlers = features.flatMap(Feature::streamOnlineHandlers)
 
@@ -64,6 +67,15 @@ class Channel(
         }
         payload.data.forEach { newFollowPayload ->
             newFollowHandlers.handleEventAndApply(NewFollow(newFollowPayload))
+        }
+    }
+
+    fun handleNewSub(request: ApplicationRequest) {
+        val payload = runBlocking {
+            request.call.receive<NewSubPayload>()
+        }
+        payload.data.forEach { newSubPayload ->
+            newSubHandlers.handleEventAndApply(NewSub(newSubPayload))
         }
     }
 

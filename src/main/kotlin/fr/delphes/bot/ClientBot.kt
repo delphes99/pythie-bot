@@ -87,7 +87,6 @@ class ClientBot(
     }
 
     private fun handleIRCMessage(event: IRCMessageEvent) {
-        //TODO check
         val channel = findChannelByName(event.channelName.get())
         event.message?.also {
             if (it.isPresent) {

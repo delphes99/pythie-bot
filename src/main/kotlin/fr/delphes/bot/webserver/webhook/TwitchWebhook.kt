@@ -17,6 +17,11 @@ enum class TwitchWebhook(
         "follow",
         { context -> handleNewFollow(context.context.request) }
     ),
+    SUB(
+        { userId -> "https://api.twitch.tv/helix/subscriptions/events?broadcaster_id=$userId&first=1" },
+        "sub",
+        { context -> handleNewSub(context.context.request) }
+    ),
     STREAM(
         { userId -> "https://api.twitch.tv/helix/streams?user_id=$userId" },
         "streamstatus",

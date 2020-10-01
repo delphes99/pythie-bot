@@ -3,6 +3,7 @@ package fr.delphes.feature
 import fr.delphes.event.eventHandler.EventHandler
 import fr.delphes.event.incoming.MessageReceived
 import fr.delphes.event.incoming.NewFollow
+import fr.delphes.event.incoming.NewSub
 import fr.delphes.event.incoming.RewardRedemption
 import fr.delphes.event.incoming.StreamOffline
 import fr.delphes.event.incoming.StreamOnline
@@ -13,6 +14,7 @@ interface Feature {
     val rewardHandlers: List<EventHandler<RewardRedemption>>
     val vipListReceivedHandlers: List<EventHandler<VIPListReceived>>
     val newFollowHandlers: List<EventHandler<NewFollow>>
+    val newSubHandlers: List<EventHandler<NewSub>>
     val streamOnlineHandlers: List<EventHandler<StreamOnline>>
     val streamOfflineHandlers: List<EventHandler<StreamOffline>>
 }
