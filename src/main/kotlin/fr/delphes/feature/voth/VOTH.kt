@@ -11,7 +11,7 @@ import fr.delphes.event.outgoing.PromoteVIP
 import fr.delphes.event.outgoing.RemoveVIP
 import fr.delphes.event.outgoing.RetrieveVip
 import fr.delphes.feature.AbstractFeature
-import fr.delphes.feature.HaveState
+import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.StateRepository
 import fr.delphes.time.Clock
 import fr.delphes.time.SystemClock
@@ -21,7 +21,7 @@ class VOTH(
     override val stateRepository: StateRepository<VOTHState>,
     override val state: VOTHState = stateRepository.load(),
     private val clock: Clock = SystemClock
-) : AbstractFeature(), HaveState<VOTHState> {
+) : AbstractFeature(), HavePersistantState<VOTHState> {
     override val rewardHandlers: List<EventHandler<RewardRedemption>> = listOf(VOTHRewardRedemptionHandler())
     override val vipListReceivedHandlers: List<EventHandler<VIPListReceived>> = listOf(VOTHVIPListReceivedHandler())
     override val messageReceivedHandlers: List<EventHandler<MessageReceived>> = listOf(CommandStats())
