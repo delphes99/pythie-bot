@@ -20,6 +20,8 @@ fun StatisticsModule(
                     "<table>" +
                             "<tr><td>Number of chatters</td><td>${state.numberOfChatters}</td></tr>" +
                             "<tr><td>Number of messages</td><td>${state.numberMessages}</td></tr>" +
+                            "<tr><td>Number of follow</td><td>${state.numberOfFollow}</td></tr>" +
+                            "<tr><td>Number of sub</td><td>${state.numberOfSub}</td></tr>" +
                             "</table>",
                     ContentType.parse("text/html")
                 )
