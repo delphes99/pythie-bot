@@ -34,7 +34,7 @@ class Channel(
     val name = configuration.ownerChannel
     val userId : String
     val oAuth = configuration.ownerAccountOauth
-    private val features = configuration.features
+    val features = configuration.features
     private val ownerCredential = OAuth2Credential("twitch", "oauth:$oAuth")
 
     private val messageReceivedHandlers = features.flatMap(Feature::messageReceivedHandlers)
