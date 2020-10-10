@@ -14,7 +14,7 @@ class Statistics(
 ) : AbstractFeature(), HaveState<StatisticsState> {
     private val statsCommand = CommandHandler(
         "!stats"
-    ) {
+    ) { _, _ ->
         listOf(
             SendMessage(
                 "Number of chatters : ${state.numberOfChatters}" +

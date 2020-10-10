@@ -25,7 +25,7 @@ class VOTH(
 ) : AbstractFeature(), HavePersistantState<VOTHState> {
     private val commandStats = CommandHandler(
         configuration.statsCommand
-    ) { user ->
+    ) { user, _ ->
         val stats = state.getReignsFor(user, clock.now())
         configuration.statsResponseEvents(stats)
     }

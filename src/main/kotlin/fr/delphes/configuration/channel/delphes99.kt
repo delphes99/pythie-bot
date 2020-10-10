@@ -12,6 +12,7 @@ import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.bot.time.prettyPrint
+import fr.delphes.feature.commandList.CommandList
 import java.time.Duration
 
 /**
@@ -71,6 +72,15 @@ val delphes99Channel = ChannelConfiguration.build("./configuration-delphes99.pro
         },
         StreamOfflineFeature { listOf(SendMessage("Le stream est fini, au revoir !")) },
         StreamOnlineFeature { listOf(SendMessage("Le stream démarre, ravi de vous revoir !")) },
-        Statistics()
+        Statistics(),
+        CommandList(
+            "!help"
+        ) { commands ->
+            listOf(
+                SendMessage(
+                    "Liste des commandes : ${commands.joinToString(", ")}"
+                )
+            )
+        }
     )
 }

@@ -3,7 +3,9 @@ package fr.delphes.configuration.channel
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
+import fr.delphes.feature.commandList.CommandList
 import fr.delphes.feature.newFollow.NewFollowFeature
+import fr.delphes.feature.statistics.Statistics
 import fr.delphes.feature.streamOffline.StreamOfflineFeature
 import fr.delphes.feature.streamOnline.StreamOnlineFeature
 import java.time.Duration
@@ -26,6 +28,16 @@ val delphestestChannel = ChannelConfiguration.build("./configuration-delphestest
             listOf(SendMessage("Merci du follow ${newFollow.follower.name}"))
         },
         StreamOfflineFeature { listOf(SendMessage("Le stream est fini, au revoir !")) },
-        StreamOnlineFeature { listOf(SendMessage("Le stream démarre, ravi de vous revoir !")) }
+        StreamOnlineFeature { listOf(SendMessage("Le stream démarre, ravi de vous revoir !")) },
+        Statistics(),
+        CommandList(
+            "!help"
+        ) { commands ->
+            listOf(
+                SendMessage(
+                    "Liste des commandes : ${commands.joinToString(", ")}"
+                )
+            )
+        }
     )
 }

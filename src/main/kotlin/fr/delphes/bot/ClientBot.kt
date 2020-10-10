@@ -87,7 +87,7 @@ class ClientBot(
         val command = channel.commands.find { it.triggerMessage == event.message }
 
         if(command != null) {
-            channel.executeEvents(command.execute(User(event.user.name)))
+            channel.executeEvents(command.execute(User(event.user.name), channel))
         } else {
             channel.handleChannelMessage(MessageReceived(event))
         }

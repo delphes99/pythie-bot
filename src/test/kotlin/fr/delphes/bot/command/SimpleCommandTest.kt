@@ -1,6 +1,7 @@
 package fr.delphes.bot.command
 
 import fr.delphes.User
+import fr.delphes.bot.Channel
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.time.Clock
 import io.mockk.clearAllMocks
@@ -15,6 +16,7 @@ import java.time.LocalDateTime
 internal class SimpleCommandTest {
     private val clock = mockk<Clock>()
     private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
+    private val channel = mockk<Channel>()
 
     @BeforeEach
     internal fun setUp() {
@@ -35,7 +37,7 @@ internal class SimpleCommandTest {
             responses = listOf(SendMessage("response"))
         )
 
-        assertThat(simpleCommand.execute(User("user"))).containsExactlyInAnyOrder(
+        assertThat(simpleCommand.execute(User("user"), channel)).containsExactlyInAnyOrder(
             SendMessage("response")
         )
     }
@@ -50,10 +52,10 @@ internal class SimpleCommandTest {
         )
 
         `given now`(now)
-        assertThat(simpleCommand.execute(User("user"))).isNotEmpty
+        assertThat(simpleCommand.execute(User("user"), channel)).isNotEmpty
 
         `given now`(now.plusMinutes(5))
-        assertThat(simpleCommand.execute(User("user"))).isEmpty()
+        assertThat(simpleCommand.execute(User("user"), channel)).isEmpty()
     }
 
     @Test
@@ -66,9 +68,9 @@ internal class SimpleCommandTest {
         )
 
         `given now`(now)
-        assertThat(simpleCommand.execute(User("user"))).isNotEmpty
+        assertThat(simpleCommand.execute(User("user"), channel)).isNotEmpty
 
         `given now`(now.plusMinutes(15))
-        assertThat(simpleCommand.execute(User("user"))).isNotEmpty
+        assertThat(simpleCommand.execute(User("user"), channel)).isNotEmpty
     }
 }
