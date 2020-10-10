@@ -7,12 +7,13 @@ import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent
 import com.github.twitch4j.helix.webhooks.domain.WebhookRequest
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
+import fr.delphes.User
 import fr.delphes.VIPParser
 import fr.delphes.bot.webserver.webhook.TwitchWebhook
 import fr.delphes.configuration.BotConfiguration
-import fr.delphes.event.incoming.MessageReceived
-import fr.delphes.event.incoming.RewardRedemption
-import fr.delphes.event.incoming.VIPListReceived
+import fr.delphes.bot.event.incoming.MessageReceived
+import fr.delphes.bot.event.incoming.RewardRedemption
+import fr.delphes.bot.event.incoming.VIPListReceived
 import mu.KotlinLogging
 import java.time.Duration
 
@@ -83,7 +84,13 @@ class ClientBot(
 
     private fun handleChannelMessageEvent(event: ChannelMessageEvent) {
         val channel = findChannelByName(event.channel.name)
-        channel.handleChannelMessage(MessageReceived(event))
+        val command = channel.commands.find { it.triggerMessage == event.message }
+
+        if(command != null) {
+            channel.executeEvents(command.execute(User(event.user.name)))
+        } else {
+            channel.handleChannelMessage(MessageReceived(event))
+        }
     }
 
     private fun handleIRCMessage(event: IRCMessageEvent) {

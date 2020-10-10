@@ -1,32 +1,28 @@
 package fr.delphes.feature.command
 
-import fr.delphes.time.Clock
-import fr.delphes.event.eventHandler.EventHandler
-import fr.delphes.event.incoming.MessageReceived
-import fr.delphes.event.outgoing.OutgoingEvent
-import fr.delphes.event.outgoing.SendMessage
+import fr.delphes.bot.command.Command
+import fr.delphes.bot.command.SimpleCommand
+import fr.delphes.bot.time.Clock
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
-import fr.delphes.time.SystemClock
+import fr.delphes.bot.time.SystemClock
 import java.time.Duration
 import java.time.LocalDateTime
 
 class Command(
-    private val trigger: String,
-    private var lastActivation: LocalDateTime = LocalDateTime.MIN,
-    private val clock: Clock = SystemClock,
-    private val cooldown: Duration? = null,
-    private val reponses: List<OutgoingEvent>
+    trigger: String,
+    lastActivation: LocalDateTime = LocalDateTime.MIN,
+    clock: Clock = SystemClock,
+    cooldown: Duration? = null,
+    responses: List<OutgoingEvent>
 ) : AbstractFeature() {
-    override val messageReceivedHandlers: List<EventHandler<MessageReceived>> = listOf(CommandMessageReceivedHandler())
+    private val command = SimpleCommand(
+        trigger,
+        lastActivation,
+        clock,
+        cooldown,
+        responses
+    )
 
-    inner class CommandMessageReceivedHandler: EventHandler<MessageReceived> {
-        override fun handle(event: MessageReceived): List<OutgoingEvent> {
-            return if(event.text == trigger && cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false) {
-                lastActivation = clock.now()
-                reponses
-            } else {
-                emptyList()
-            }
-        }
-    }
+    override val commands: Iterable<Command> = listOf(command)
 }

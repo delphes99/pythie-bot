@@ -1,8 +1,8 @@
 package fr.delphes.feature.newFollow
 
-import fr.delphes.event.eventHandler.EventHandler
-import fr.delphes.event.incoming.NewFollow
-import fr.delphes.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.incoming.NewFollow
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
 class NewFollowFeature(

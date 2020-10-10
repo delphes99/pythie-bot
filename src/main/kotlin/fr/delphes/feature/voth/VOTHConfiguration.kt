@@ -1,6 +1,6 @@
 package fr.delphes.feature.voth
 
-import fr.delphes.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 
 data class VOTHConfiguration(
     val featureId: String,

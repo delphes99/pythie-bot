@@ -1,7 +1,7 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.webserver.webhook.TwitchWebhook
-import fr.delphes.storage.serialization.Serializer
+import fr.delphes.bot.storage.serialization.Serializer
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install

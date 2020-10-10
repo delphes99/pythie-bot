@@ -1,18 +1,18 @@
 package fr.delphes.feature
 
-import fr.delphes.event.eventHandler.handleEvent
-import fr.delphes.event.incoming.RewardRedemption
-import fr.delphes.event.incoming.StreamOffline
-import fr.delphes.event.incoming.StreamOnline
-import fr.delphes.event.incoming.VIPListReceived
-import fr.delphes.event.outgoing.PromoteVIP
-import fr.delphes.event.outgoing.RemoveVIP
-import fr.delphes.event.outgoing.RetrieveVip
+import fr.delphes.bot.event.eventHandler.handleEvent
+import fr.delphes.bot.event.incoming.RewardRedemption
+import fr.delphes.bot.event.incoming.StreamOffline
+import fr.delphes.bot.event.incoming.StreamOnline
+import fr.delphes.bot.event.incoming.VIPListReceived
+import fr.delphes.bot.event.outgoing.PromoteVIP
+import fr.delphes.bot.event.outgoing.RemoveVIP
+import fr.delphes.bot.event.outgoing.RetrieveVip
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.feature.voth.VOTHState
 import fr.delphes.feature.voth.VOTHWinner
-import fr.delphes.time.TestClock
+import fr.delphes.bot.time.TestClock
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat

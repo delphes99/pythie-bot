@@ -2,7 +2,7 @@
 
 package fr.delphes.bot.webserver.payload.newSub
 
-import fr.delphes.storage.serialization.LocalDateTimeAsInstantSerializer
+import fr.delphes.bot.storage.serialization.LocalDateTimeAsInstantSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.time.LocalDateTime

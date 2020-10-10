@@ -1,6 +1,6 @@
 package fr.delphes.bot.webserver.payload.newFollow
 
-import fr.delphes.storage.serialization.Serializer
+import fr.delphes.bot.storage.serialization.Serializer
 import org.junit.jupiter.api.Test
 import kotlinx.serialization.decodeFromString
 import org.assertj.core.api.Assertions.assertThat

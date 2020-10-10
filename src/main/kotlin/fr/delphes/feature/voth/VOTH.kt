@@ -1,20 +1,21 @@
 package fr.delphes.feature.voth
 
-import fr.delphes.event.eventHandler.EventHandler
-import fr.delphes.event.incoming.MessageReceived
-import fr.delphes.event.incoming.RewardRedemption
-import fr.delphes.event.incoming.StreamOffline
-import fr.delphes.event.incoming.StreamOnline
-import fr.delphes.event.incoming.VIPListReceived
-import fr.delphes.event.outgoing.OutgoingEvent
-import fr.delphes.event.outgoing.PromoteVIP
-import fr.delphes.event.outgoing.RemoveVIP
-import fr.delphes.event.outgoing.RetrieveVip
+import fr.delphes.bot.command.Command
+import fr.delphes.bot.command.CommandHandler
+import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.incoming.RewardRedemption
+import fr.delphes.bot.event.incoming.StreamOffline
+import fr.delphes.bot.event.incoming.StreamOnline
+import fr.delphes.bot.event.incoming.VIPListReceived
+import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.outgoing.PromoteVIP
+import fr.delphes.bot.event.outgoing.RemoveVIP
+import fr.delphes.bot.event.outgoing.RetrieveVip
+import fr.delphes.bot.time.Clock
+import fr.delphes.bot.time.SystemClock
 import fr.delphes.feature.AbstractFeature
 import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.StateRepository
-import fr.delphes.time.Clock
-import fr.delphes.time.SystemClock
 
 class VOTH(
     private val configuration: VOTHConfiguration,
@@ -22,9 +23,17 @@ class VOTH(
     override val state: VOTHState = stateRepository.load(),
     private val clock: Clock = SystemClock
 ) : AbstractFeature(), HavePersistantState<VOTHState> {
+    private val commandStats = CommandHandler(
+        configuration.statsCommand
+    ) { user ->
+        val stats = state.getReignsFor(user, clock.now())
+        configuration.statsResponseEvents(stats)
+    }
+
+    override val commands: Iterable<Command> = listOf(commandStats)
+
     override val rewardHandlers: List<EventHandler<RewardRedemption>> = listOf(VOTHRewardRedemptionHandler())
     override val vipListReceivedHandlers: List<EventHandler<VIPListReceived>> = listOf(VOTHVIPListReceivedHandler())
-    override val messageReceivedHandlers: List<EventHandler<MessageReceived>> = listOf(CommandStats())
     override val streamOnlineHandlers: List<EventHandler<StreamOnline>> = listOf(StreamOnlineHandler())
     override val streamOfflineHandlers: List<EventHandler<StreamOffline>> = listOf(StreamOfflineHandler())
 
@@ -58,17 +67,6 @@ class VOTH(
                 val events = event.vips.map(::RemoveVIP) + PromoteVIP(currentVip!!.user)
                 save()
                 events
-            } else {
-                emptyList()
-            }
-        }
-    }
-
-    private inner class CommandStats : EventHandler<MessageReceived> {
-        override fun handle(event: MessageReceived): List<OutgoingEvent> {
-            return if (event.text.toLowerCase() == configuration.statsCommand) {
-                val stats = state.getReignsFor(event.user, clock.now())
-                configuration.statsResponseEvents(stats)
             } else {
                 emptyList()
             }

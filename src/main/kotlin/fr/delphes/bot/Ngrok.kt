@@ -1,6 +1,6 @@
 package fr.delphes.bot
 
-import fr.delphes.storage.serialization.Serializer
+import fr.delphes.bot.storage.serialization.Serializer
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer

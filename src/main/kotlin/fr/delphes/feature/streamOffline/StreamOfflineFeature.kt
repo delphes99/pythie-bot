@@ -1,8 +1,8 @@
 package fr.delphes.feature.streamOffline
 
-import fr.delphes.event.eventHandler.EventHandler
-import fr.delphes.event.incoming.StreamOffline
-import fr.delphes.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.incoming.StreamOffline
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
 class StreamOfflineFeature(

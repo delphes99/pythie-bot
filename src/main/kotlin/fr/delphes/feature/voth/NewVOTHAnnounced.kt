@@ -1,6 +1,6 @@
 package fr.delphes.feature.voth
 
-import fr.delphes.event.incoming.RewardRedemption
+import fr.delphes.bot.event.incoming.RewardRedemption
 import java.time.Duration
 
 data class NewVOTHAnnounced(

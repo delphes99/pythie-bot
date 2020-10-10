@@ -1,15 +1,17 @@
 package fr.delphes.feature
 
-import fr.delphes.event.eventHandler.EventHandler
-import fr.delphes.event.incoming.MessageReceived
-import fr.delphes.event.incoming.NewFollow
-import fr.delphes.event.incoming.NewSub
-import fr.delphes.event.incoming.RewardRedemption
-import fr.delphes.event.incoming.StreamOffline
-import fr.delphes.event.incoming.StreamOnline
-import fr.delphes.event.incoming.VIPListReceived
+import fr.delphes.bot.command.Command
+import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.incoming.MessageReceived
+import fr.delphes.bot.event.incoming.NewFollow
+import fr.delphes.bot.event.incoming.NewSub
+import fr.delphes.bot.event.incoming.RewardRedemption
+import fr.delphes.bot.event.incoming.StreamOffline
+import fr.delphes.bot.event.incoming.StreamOnline
+import fr.delphes.bot.event.incoming.VIPListReceived
 
 abstract class AbstractFeature : Feature {
+    override val commands: Iterable<Command> = emptyList()
     override val messageReceivedHandlers: List<EventHandler<MessageReceived>> = emptyList()
     override val rewardHandlers: List<EventHandler<RewardRedemption>> = emptyList()
     override val vipListReceivedHandlers: List<EventHandler<VIPListReceived>> = emptyList()

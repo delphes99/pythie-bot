@@ -4,21 +4,22 @@ import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.TwitchChat
+import fr.delphes.bot.command.Command
 import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
 import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.event.eventHandler.EventHandler
-import fr.delphes.event.eventHandler.handleEvent
-import fr.delphes.event.incoming.IncomingEvent
-import fr.delphes.event.incoming.MessageReceived
-import fr.delphes.event.incoming.NewFollow
-import fr.delphes.event.incoming.NewSub
-import fr.delphes.event.incoming.RewardRedemption
-import fr.delphes.event.incoming.StreamOffline
-import fr.delphes.event.incoming.StreamOnline
-import fr.delphes.event.incoming.VIPListReceived
-import fr.delphes.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.eventHandler.handleEvent
+import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.incoming.MessageReceived
+import fr.delphes.bot.event.incoming.NewFollow
+import fr.delphes.bot.event.incoming.NewSub
+import fr.delphes.bot.event.incoming.RewardRedemption
+import fr.delphes.bot.event.incoming.StreamOffline
+import fr.delphes.bot.event.incoming.StreamOnline
+import fr.delphes.bot.event.incoming.VIPListReceived
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.Feature
 import io.ktor.request.ApplicationRequest
 import io.ktor.request.receive
@@ -29,6 +30,7 @@ class Channel(
     configuration: ChannelConfiguration,
     val bot: ClientBot
 ) {
+    val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     val name = configuration.ownerChannel
     val userId : String
     val oAuth = configuration.ownerAccountOauth
@@ -109,13 +111,17 @@ class Channel(
         LOGGER.debug { "Handle event : ${event.javaClass} \n $event" }
         val outgoingEvents = this.handleEvent(event)
 
-        outgoingEvents.apply()
+        outgoingEvents.execute()
     }
 
-    private fun List<OutgoingEvent>.apply() {
+    fun executeEvents(outgoingEvents: List<OutgoingEvent>) {
+        outgoingEvents.execute()
+    }
+
+    private fun List<OutgoingEvent>.execute() {
         forEach { e ->
             try {
-                e.applyOnTwitch(bot.chat, chat, name)
+                e.executeOnTwitch(bot.chat, chat, name)
             } catch (e: Exception) {
                 LOGGER.error(e) { "Error while handling event ${e.message}" }
             }

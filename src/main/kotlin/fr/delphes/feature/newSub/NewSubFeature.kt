@@ -1,8 +1,8 @@
 package fr.delphes.feature.newSub
 
-import fr.delphes.event.eventHandler.EventHandler
-import fr.delphes.event.incoming.NewSub
-import fr.delphes.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.incoming.NewSub
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
 class NewSubFeature(

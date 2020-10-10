@@ -1,7 +1,7 @@
 package fr.delphes.feature.voth
 
 import fr.delphes.User
-import fr.delphes.event.incoming.RewardRedemption
+import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.feature.State
 import kotlinx.serialization.Serializable
 import java.time.Duration

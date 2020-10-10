@@ -1,17 +1,12 @@
 package fr.delphes.configuration.channel
 
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.event.outgoing.SendMessage
+import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
 import fr.delphes.feature.newFollow.NewFollowFeature
 import fr.delphes.feature.streamOffline.StreamOfflineFeature
 import fr.delphes.feature.streamOnline.StreamOnlineFeature
-import fr.delphes.feature.voth.FileVOTHStateRepository
-import fr.delphes.feature.voth.VOTH
-import fr.delphes.feature.voth.VOTHConfiguration
-import fr.delphes.time.prettyPrint
 import java.time.Duration
-import java.util.*
 
 /**
  * Example for delphestest channel : https://www.twitch.tv/delphestest
@@ -23,7 +18,7 @@ val delphestestChannel = ChannelConfiguration.build("./configuration-delphestest
         Command(
             "!test",
             cooldown = Duration.ofSeconds(10),
-            reponses = listOf(
+            responses = listOf(
                 SendMessage("Compte de test opérationnel !")
             )
         ),

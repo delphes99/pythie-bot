@@ -1,15 +1,17 @@
 package fr.delphes.feature
 
-import fr.delphes.event.eventHandler.EventHandler
-import fr.delphes.event.incoming.MessageReceived
-import fr.delphes.event.incoming.NewFollow
-import fr.delphes.event.incoming.NewSub
-import fr.delphes.event.incoming.RewardRedemption
-import fr.delphes.event.incoming.StreamOffline
-import fr.delphes.event.incoming.StreamOnline
-import fr.delphes.event.incoming.VIPListReceived
+import fr.delphes.bot.command.Command
+import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.incoming.MessageReceived
+import fr.delphes.bot.event.incoming.NewFollow
+import fr.delphes.bot.event.incoming.NewSub
+import fr.delphes.bot.event.incoming.RewardRedemption
+import fr.delphes.bot.event.incoming.StreamOffline
+import fr.delphes.bot.event.incoming.StreamOnline
+import fr.delphes.bot.event.incoming.VIPListReceived
 
 interface Feature {
+    val commands: Iterable<Command>
     val messageReceivedHandlers: List<EventHandler<MessageReceived>>
     val rewardHandlers: List<EventHandler<RewardRedemption>>
     val vipListReceivedHandlers: List<EventHandler<VIPListReceived>>

@@ -3,9 +3,9 @@
 package fr.delphes.feature.voth
 
 import fr.delphes.User
-import fr.delphes.event.incoming.RewardCost
-import fr.delphes.storage.serialization.DurationSerializer
-import fr.delphes.storage.serialization.LocalDateTimeSerializer
+import fr.delphes.bot.event.incoming.RewardCost
+import fr.delphes.bot.storage.serialization.DurationSerializer
+import fr.delphes.bot.storage.serialization.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.time.Duration
