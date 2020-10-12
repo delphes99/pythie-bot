@@ -32,6 +32,11 @@ class Ngrok {
                 if (process.waitFor(1, TimeUnit.SECONDS)) {
                     throw IllegalStateException("Ngrok early termination")
                 }
+                atShutdown {
+                    process.waitFor(1, TimeUnit.SECONDS)
+                    LOGGER.info { "destroying ngrok" }
+                    process.destroy()
+                }
             } catch (e: Exception) {
                 val error = process?.errorStream?.bufferedReader()?.readText()?.let { "Error : $it" }
                 val output = process?.inputStream?.bufferedReader()?.readText()?.let { "Output : $it" }
@@ -44,8 +49,12 @@ class Ngrok {
         fun createHttpTunnel(port: Int, name: String): Tunnel {
             val tunnel = Tunnel(port, name)
             LOGGER.debug { "Opened ngrok tunnel with public url : ${tunnel.publicUrl}" }
-            Runtime.getRuntime().addShutdownHook(Thread { runBlocking { tunnel.kill(HttpClient()) } })
+            atShutdown { runBlocking { tunnel.kill(HttpClient()) } }
             return tunnel
+        }
+
+        private fun atShutdown(doStuff: () -> Unit) {
+            Runtime.getRuntime().addShutdownHook(Thread { doStuff() })
         }
     }
 
