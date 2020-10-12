@@ -13,14 +13,37 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
+import java.lang.IllegalStateException
+import java.util.concurrent.TimeUnit
 
 class Ngrok {
     companion object {
         const val API_URL = "http://localhost:4040/api"
         private val LOGGER = KotlinLogging.logger {}
 
+        fun launch(pathToNgrok: String) {
+            var process: Process? = null
+            try {
+                LOGGER.info { "starting ngrok" }
+                process = ProcessBuilder(pathToNgrok, "start", "--none")
+                    .redirectOutput(ProcessBuilder.Redirect.PIPE)
+                    .redirectError(ProcessBuilder.Redirect.PIPE)
+                    .start()
+                if (process.waitFor(1, TimeUnit.SECONDS)) {
+                    throw IllegalStateException("Ngrok early termination")
+                }
+            } catch (e: Exception) {
+                val error = process?.errorStream?.bufferedReader()?.readText()?.let { "Error : $it" }
+                val output = process?.inputStream?.bufferedReader()?.readText()?.let { "Output : $it" }
+                val messages = listOfNotNull("Ngrok start failure : ${e.message}", error, output)
+                LOGGER.error(e) { messages.joinToString("\n\n") }
+                throw e
+            }
+        }
+
         fun createHttpTunnel(port: Int, name: String): Tunnel {
             val tunnel = Tunnel(port, name)
+            LOGGER.debug { "Opened ngrok tunnel with public url : ${tunnel.publicUrl}" }
             Runtime.getRuntime().addShutdownHook(Thread { runBlocking { tunnel.kill(HttpClient()) } })
             return tunnel
         }
