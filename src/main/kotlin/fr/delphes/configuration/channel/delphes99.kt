@@ -18,7 +18,7 @@ import java.time.Duration
 /**
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
-val delphes99Channel = ChannelConfiguration.build("./configuration-delphes99.properties") { properties ->
+val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(
         properties.getProperty("channel.name"),
         properties.getProperty("account.oAuth"),

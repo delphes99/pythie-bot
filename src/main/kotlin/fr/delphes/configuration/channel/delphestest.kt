@@ -13,7 +13,7 @@ import java.time.Duration
 /**
  * Example for delphestest channel : https://www.twitch.tv/delphestest
  */
-val delphestestChannel = ChannelConfiguration.build("./configuration-delphestest.properties") { properties ->
+val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.properties") { properties ->
     ChannelConfiguration(
         properties.getProperty("channel.name"),
         properties.getProperty("account.oAuth"),

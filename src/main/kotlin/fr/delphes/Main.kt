@@ -8,7 +8,7 @@ import fr.delphes.configuration.channel.delphestestChannel
 import fr.delphes.configuration.loadProperties
 
 fun main() {
-    val props = loadProperties("./configuration-pythiebot.properties")
+    val props = loadProperties("configuration-pythiebot.properties")
 
     Ngrok.launch(props.getProperty("ngrok.path"))
     val tunnel = Ngrok.createHttpTunnel(80, props.getProperty("ngrok.tunnel.name"))
@@ -16,9 +16,7 @@ fun main() {
     Bot.build(
         PropertiesBotConfiguration(),
         tunnel.publicUrl,
-        listOf(
-            delphes99Channel,
-            delphestestChannel
-        )
+        delphes99Channel,
+        delphestestChannel
     )
 }

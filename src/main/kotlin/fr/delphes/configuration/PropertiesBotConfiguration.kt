@@ -7,7 +7,7 @@ class PropertiesBotConfiguration(
     override val botAccountOauth: String
 
     init {
-        val properties = loadProperties("./configuration-pythiebot.properties")
+        val properties = loadProperties("configuration-pythiebot.properties")
         clientId = properties.getProperty("client.id")
         secretKey = properties.getProperty("secret.key")
         botAccountOauth = properties.getProperty("bot.account.OAuth")

@@ -19,9 +19,7 @@ data class ChannelConfiguration(
             path: String,
             buildConfiguration: (Properties) -> ChannelConfiguration
         ): ChannelConfiguration {
-            val properties = Properties()
-            properties.load(ChannelConfiguration::class.java.classLoader.getResourceAsStream(path))
-            return buildConfiguration(properties)
+            return buildConfiguration(loadProperties(path))
         }
     }
 }

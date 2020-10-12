@@ -7,7 +7,7 @@ object Bot {
     fun build(
         configuration: BotConfiguration,
         publicUrl: String,
-        channelConfigurations: List<ChannelConfiguration>
+        vararg channelConfigurations: ChannelConfiguration
     ) {
         val bot = ClientBot(configuration, publicUrl)
 
