@@ -53,7 +53,7 @@ class Channel(
         this.userId = bot.client.helix.getUsers(null, null, listOf(name)).execute().users[0].id
 
         client = TwitchClientBuilder.builder()
-            .withClientId(userId)
+            .withClientId(bot.clientId)
             .withClientSecret(bot.secretKey)
             .withEnableChat(true)
             .withChatAccount(ownerCredential)

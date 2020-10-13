@@ -23,10 +23,12 @@ class ClientBot(
 ) {
     val channels = mutableListOf<Channel>()
     private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
+
+    val clientId = configuration.clientId
     val secretKey = configuration.secretKey
 
     val client = TwitchClientBuilder.builder()
-        .withClientId(configuration.clientId)
+        .withClientId(clientId)
         .withClientSecret(secretKey)
         .withEnablePubSub(true)
         .withEnableHelix(true)
