@@ -3,6 +3,7 @@ package fr.delphes.feature.voth
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.command.CommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.incoming.StreamOnline
@@ -23,6 +24,13 @@ class VOTH(
     override val state: VOTHState = stateRepository.load(),
     private val clock: Clock = SystemClock
 ) : AbstractFeature(), HavePersistantState<VOTHState> {
+    override fun registerHandlers(eventHandlers: EventHandlers) {
+        eventHandlers.addHandler(VOTHRewardRedemptionHandler())
+        eventHandlers.addHandler(VOTHVIPListReceivedHandler())
+        eventHandlers.addHandler(StreamOnlineHandler())
+        eventHandlers.addHandler(StreamOfflineHandler())
+    }
+
     private val commandStats = CommandHandler(
         configuration.statsCommand
     ) { user, _ ->
@@ -32,15 +40,10 @@ class VOTH(
 
     override val commands: Iterable<Command> = listOf(commandStats)
 
-    override val rewardHandlers: List<EventHandler<RewardRedemption>> = listOf(VOTHRewardRedemptionHandler())
-    override val vipListReceivedHandlers: List<EventHandler<VIPListReceived>> = listOf(VOTHVIPListReceivedHandler())
-    override val streamOnlineHandlers: List<EventHandler<StreamOnline>> = listOf(StreamOnlineHandler())
-    override val streamOfflineHandlers: List<EventHandler<StreamOffline>> = listOf(StreamOfflineHandler())
+    internal val currentVip get() = state.currentVip
+    internal val vothChanged get() = state.vothChanged
 
-    val currentVip get() = state.currentVip
-    val vothChanged get() = state.vothChanged
-
-    private inner class VOTHRewardRedemptionHandler : EventHandler<RewardRedemption> {
+    internal inner class VOTHRewardRedemptionHandler : EventHandler<RewardRedemption> {
         override fun handle(event: RewardRedemption): List<OutgoingEvent> {
             val redeemUser = event.user
             return if (event.rewardId == configuration.featureId && currentVip?.user != redeemUser) {
@@ -60,7 +63,7 @@ class VOTH(
         }
     }
 
-    private inner class VOTHVIPListReceivedHandler : EventHandler<VIPListReceived> {
+    internal inner class VOTHVIPListReceivedHandler : EventHandler<VIPListReceived> {
         override fun handle(event: VIPListReceived): List<OutgoingEvent> {
             return if (vothChanged) {
                 state.vothChanged = false
@@ -73,14 +76,14 @@ class VOTH(
         }
     }
 
-    private inner class StreamOnlineHandler : EventHandler<StreamOnline> {
+    internal inner class StreamOnlineHandler : EventHandler<StreamOnline> {
         override fun handle(event: StreamOnline): List<OutgoingEvent> {
             state.unpause(clock.now())
             return emptyList()
         }
     }
 
-    private inner class StreamOfflineHandler : EventHandler<StreamOffline> {
+    internal inner class StreamOfflineHandler : EventHandler<StreamOffline> {
         override fun handle(event: StreamOffline): List<OutgoingEvent> {
             state.pause(clock.now())
             save()

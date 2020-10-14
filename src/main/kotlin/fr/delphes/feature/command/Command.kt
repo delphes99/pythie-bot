@@ -2,6 +2,7 @@ package fr.delphes.feature.command
 
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.command.SimpleCommand
+import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.time.Clock
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
@@ -16,6 +17,8 @@ class Command(
     cooldown: Duration? = null,
     responses: List<OutgoingEvent>
 ) : AbstractFeature() {
+    override fun registerHandlers(eventHandlers: EventHandlers) {}
+
     private val command = SimpleCommand(
         trigger,
         lastActivation,

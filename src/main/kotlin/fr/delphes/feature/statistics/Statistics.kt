@@ -2,6 +2,7 @@ package fr.delphes.feature.statistics
 
 import fr.delphes.bot.Channel
 import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.MessageReceived
 import fr.delphes.bot.event.incoming.NewFollow
 import fr.delphes.bot.event.incoming.NewSub
@@ -18,9 +19,11 @@ class Statistics(
         StatisticsModule(this, channel.name)
     }
 
-    override val messageReceivedHandlers: List<EventHandler<MessageReceived>> = listOf(MessageReceivedHandler())
-    override val newFollowHandlers: List<EventHandler<NewFollow>> = listOf(NewFollowHandler())
-    override val newSubHandlers: List<EventHandler<NewSub>> = listOf(NewSubHandler())
+    override fun registerHandlers(eventHandlers: EventHandlers) {
+        eventHandlers.addHandler(MessageReceivedHandler())
+        eventHandlers.addHandler(NewFollowHandler())
+        eventHandlers.addHandler(NewSubHandler())
+    }
 
     inner class NewFollowHandler : EventHandler<NewFollow> {
         override fun handle(event: NewFollow): List<OutgoingEvent> {

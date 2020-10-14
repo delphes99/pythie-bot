@@ -5,13 +5,7 @@ import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.TwitchChat
 import fr.delphes.bot.command.Command
-import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
-import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
-import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
-import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.bot.event.eventHandler.EventHandler
-import fr.delphes.bot.event.eventHandler.handleEvent
-import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.MessageReceived
 import fr.delphes.bot.event.incoming.NewFollow
 import fr.delphes.bot.event.incoming.NewSub
@@ -20,6 +14,10 @@ import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.incoming.StreamOnline
 import fr.delphes.bot.event.incoming.VIPListReceived
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
+import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
+import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
+import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import io.ktor.request.ApplicationRequest
 import io.ktor.request.receive
@@ -36,17 +34,9 @@ class Channel(
     val oAuth = configuration.ownerAccountOauth
     val features = configuration.features
     private val ownerCredential = OAuth2Credential("twitch", "oauth:$oAuth")
+    private val eventHandlers = EventHandlers()
 
-    private val messageReceivedHandlers = features.flatMap(Feature::messageReceivedHandlers)
-    private val rewardRedeptionHandlers = features.flatMap(Feature::rewardHandlers)
-    private val vipListReceivedHandlers = features.flatMap(Feature::vipListReceivedHandlers)
-    private val newFollowHandlers = features.flatMap(Feature::newFollowHandlers)
-    private val newSubHandlers = features.flatMap(Feature::newSubHandlers)
-    private val streamOfflineHandlers = features.flatMap(Feature::streamOfflineHandlers)
-    private val streamOnlineHandlers = features.flatMap(Feature::streamOnlineHandlers)
-
-    val client: TwitchClient
-
+    private val client: TwitchClient
     private val chat: TwitchChat
 
     init {
@@ -61,6 +51,10 @@ class Channel(
 
         chat = client.chat
         LOGGER.debug { "Retrieved owner user id : $userId" }
+
+        features.forEach { feature ->
+            feature.registerHandlers(eventHandlers)
+        }
     }
 
     fun handleNewFollow(request: ApplicationRequest) {
@@ -68,7 +62,7 @@ class Channel(
             request.call.receive<NewFollowPayload>()
         }
         payload.data.forEach { newFollowPayload ->
-            newFollowHandlers.handleEventAndApply(NewFollow(newFollowPayload))
+            eventHandlers.handleEvent(NewFollow(newFollowPayload)).execute()
         }
     }
 
@@ -77,7 +71,7 @@ class Channel(
             request.call.receive<NewSubPayload>()
         }
         payload.data.forEach { newSubPayload ->
-            newSubHandlers.handleEventAndApply(NewSub(newSubPayload))
+            eventHandlers.handleEvent(NewSub(newSubPayload)).execute()
         }
     }
 
@@ -87,31 +81,24 @@ class Channel(
         }
         val streamInfos = payload.data
         if (streamInfos.isEmpty()) {
-            streamOfflineHandlers.handleEventAndApply(StreamOffline())
+            eventHandlers.handleEvent(StreamOffline()).execute()
         } else {
             streamInfos.forEach { streamInfosData ->
-                streamOnlineHandlers.handleEventAndApply(StreamOnline())
+                eventHandlers.handleEvent(StreamOnline()).execute()
             }
         }
     }
 
     fun handleVIPListReceived(event: VIPListReceived) {
-        vipListReceivedHandlers.handleEventAndApply(event)
+        eventHandlers.handleEvent(event).execute()
     }
 
     fun handleRewardRedeemedEvent(rewardRedemption: RewardRedemption) {
-        rewardRedeptionHandlers.handleEventAndApply(rewardRedemption)
+        eventHandlers.handleEvent(rewardRedemption).execute()
     }
 
     fun handleChannelMessage(messageReceived: MessageReceived) {
-        messageReceivedHandlers.handleEventAndApply(messageReceived)
-    }
-
-    private fun <T : IncomingEvent> List<EventHandler<T>>.handleEventAndApply(event: T) {
-        LOGGER.debug { "Handle event : ${event.javaClass} \n $event" }
-        val outgoingEvents = this.handleEvent(event)
-
-        outgoingEvents.execute()
+        eventHandlers.handleEvent(messageReceived).execute()
     }
 
     fun executeEvents(outgoingEvents: List<OutgoingEvent>) {
