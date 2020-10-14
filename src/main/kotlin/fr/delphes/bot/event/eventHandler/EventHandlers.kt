@@ -13,8 +13,13 @@ class EventHandlers {
         return map[U::class]?.let { it as List<EventHandler<U>> } ?: emptyList()
     }
 
-    inline fun <reified T: IncomingEvent> handleEvent(event: T) : List<OutgoingEvent> =
-        getHandlers<T>().flatMap { handler -> handler.handle(event) }
+    @Suppress("UNCHECKED_CAST")
+    fun handleEvent(event: IncomingEvent) : List<OutgoingEvent> {
+        return map[event::class]
+            ?.map { it as EventHandler<IncomingEvent> }
+            ?.let { it.flatMap { handler -> handler.handle(event) } }
+            ?: emptyList()
+    }
 
     inline fun <reified U : IncomingEvent> addHandler(handler: EventHandler<U>) {
         map.putIfAbsent(U::class, mutableListOf())

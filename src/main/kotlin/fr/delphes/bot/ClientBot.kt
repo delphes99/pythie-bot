@@ -1,19 +1,10 @@
 package fr.delphes.bot
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
-import com.github.philippheuer.events4j.simple.SimpleEventHandler
 import com.github.twitch4j.TwitchClientBuilder
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
-import com.github.twitch4j.chat.events.channel.IRCMessageEvent
 import com.github.twitch4j.helix.webhooks.domain.WebhookRequest
-import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
-import fr.delphes.User
-import fr.delphes.VIPParser
 import fr.delphes.bot.webserver.webhook.TwitchWebhook
 import fr.delphes.configuration.BotConfiguration
-import fr.delphes.bot.event.incoming.MessageReceived
-import fr.delphes.bot.event.incoming.RewardRedemption
-import fr.delphes.bot.event.incoming.VIPListReceived
 import mu.KotlinLogging
 import java.time.Duration
 
@@ -22,7 +13,7 @@ class ClientBot(
     val publicUrl: String
 ) {
     val channels = mutableListOf<Channel>()
-    private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
+    val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
 
     val clientId = configuration.clientId
     val secretKey = configuration.secretKey
@@ -30,7 +21,6 @@ class ClientBot(
     val client = TwitchClientBuilder.builder()
         .withClientId(clientId)
         .withClientSecret(secretKey)
-        .withEnablePubSub(true)
         .withEnableHelix(true)
         .withEnableChat(true)
         .withChatAccount(botCredential)
@@ -40,19 +30,12 @@ class ClientBot(
 
     init {
         chat.connect()
-        client.pubSub.connect()
-
-        val eventHandler = client.eventManager.getEventHandler(SimpleEventHandler::class.java)
-        eventHandler.onEvent(ChannelMessageEvent::class.java, ::handleChannelMessageEvent)
-        eventHandler.onEvent(RewardRedeemedEvent::class.java, ::handleRewardRedeemedEvent)
-        eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
     }
 
     fun register(channel: Channel) {
         channels.add(channel)
 
         chat.joinChannel(channel.name);
-        client.pubSub.listenForChannelPointsRedemptionEvents(botCredential, channel.userId)
     }
 
     fun subscribeWebhooks() {
@@ -78,42 +61,6 @@ class ClientBot(
             }
         }
     }
-
-    private fun handleRewardRedeemedEvent(event: RewardRedeemedEvent) {
-        val channel = findChannelById(event.redemption.channelId)
-        channel.handleRewardRedeemedEvent(RewardRedemption(event))
-    }
-
-    private fun handleChannelMessageEvent(event: ChannelMessageEvent) {
-        val channel = findChannelByName(event.channel.name)
-        val command = channel.commands.find { it.triggerMessage == event.message }
-
-        if(command != null) {
-            channel.executeEvents(command.execute(User(event.user.name), channel))
-        } else {
-            channel.handleChannelMessage(MessageReceived(event))
-        }
-    }
-
-    private fun handleIRCMessage(event: IRCMessageEvent) {
-        val channel = findChannelByName(event.channelName.get())
-        event.message?.also {
-            if (it.isPresent) {
-                val vipResult = VIPParser.extractVips(it.get())
-                if (vipResult is VIPParser.VIPResult.VIPList) {
-                    val vipListReceived = VIPListReceived(vipResult.users)
-
-                    channel.handleVIPListReceived(vipListReceived)
-                }
-            }
-        }
-    }
-
-    private fun findChannelByName(name: String) =
-        channels.first { channel -> channel.name == name }
-
-    private fun findChannelById(id: String) =
-        channels.first { channel -> channel.userId == id }
 
     companion object {
         //private val WEBHOOK_DURATION = Duration.ofDays(1).toSeconds().toInt()

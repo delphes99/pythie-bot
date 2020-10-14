@@ -1,27 +1,26 @@
 package fr.delphes.bot
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
+import com.github.philippheuer.events4j.simple.SimpleEventHandler
 import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.TwitchChat
+import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
+import com.github.twitch4j.chat.events.channel.IRCMessageEvent
+import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
+import fr.delphes.User
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
-import fr.delphes.bot.event.incoming.MessageReceived
-import fr.delphes.bot.event.incoming.NewFollow
-import fr.delphes.bot.event.incoming.NewSub
-import fr.delphes.bot.event.incoming.RewardRedemption
-import fr.delphes.bot.event.incoming.StreamOffline
-import fr.delphes.bot.event.incoming.StreamOnline
-import fr.delphes.bot.event.incoming.VIPListReceived
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
-import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
-import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
+import fr.delphes.bot.twitch.adapter.ChannelMessageHandler
+import fr.delphes.bot.twitch.adapter.IRCMessageHandler
+import fr.delphes.bot.twitch.adapter.NewFollowHandler
+import fr.delphes.bot.twitch.adapter.NewSubHandler
+import fr.delphes.bot.twitch.adapter.RewardRedeemedHandler
+import fr.delphes.bot.twitch.adapter.StreamInfosHandler
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import io.ktor.request.ApplicationRequest
-import io.ktor.request.receive
-import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 
 class Channel(
@@ -45,6 +44,7 @@ class Channel(
         client = TwitchClientBuilder.builder()
             .withClientId(bot.clientId)
             .withClientSecret(bot.secretKey)
+            .withEnablePubSub(true)
             .withEnableChat(true)
             .withChatAccount(ownerCredential)
             .build()!!
@@ -55,50 +55,59 @@ class Channel(
         features.forEach { feature ->
             feature.registerHandlers(eventHandlers)
         }
+
+        chat.connect()
+        client.pubSub.connect()
+
+        //TODO subscribe only when feature requires
+        val eventHandler = client.eventManager.getEventHandler(SimpleEventHandler::class.java)
+        eventHandler.onEvent(ChannelMessageEvent::class.java, ::handleChannelMessageEvent)
+        eventHandler.onEvent(RewardRedeemedEvent::class.java, ::handleRewardRedeemedEvent)
+        eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
+
+        client.pubSub.listenForChannelPointsRedemptionEvents(bot.botCredential, userId)
     }
 
     fun handleNewFollow(request: ApplicationRequest) {
-        val payload = runBlocking {
-            request.call.receive<NewFollowPayload>()
-        }
-        payload.data.forEach { newFollowPayload ->
-            eventHandlers.handleEvent(NewFollow(newFollowPayload)).execute()
+        NewFollowHandler().transform(request).forEach { newFollow ->
+            eventHandlers.handleEvent(newFollow).execute()
         }
     }
 
     fun handleNewSub(request: ApplicationRequest) {
-        val payload = runBlocking {
-            request.call.receive<NewSubPayload>()
-        }
-        payload.data.forEach { newSubPayload ->
-            eventHandlers.handleEvent(NewSub(newSubPayload)).execute()
+        NewSubHandler().transform(request).forEach { newFollow ->
+            eventHandlers.handleEvent(newFollow).execute()
         }
     }
 
     fun handleStreamInfos(request: ApplicationRequest) {
-        val payload = runBlocking {
-            request.call.receive<StreamInfosPayload>()
+        StreamInfosHandler().transform(request).forEach { event ->
+            eventHandlers.handleEvent(event).execute()
         }
-        val streamInfos = payload.data
-        if (streamInfos.isEmpty()) {
-            eventHandlers.handleEvent(StreamOffline()).execute()
+    }
+
+    private fun handleRewardRedeemedEvent(event: RewardRedeemedEvent) {
+        RewardRedeemedHandler().transform(event).forEach { event ->
+            eventHandlers.handleEvent(event).execute()
+        }
+    }
+
+    private fun handleChannelMessageEvent(event: ChannelMessageEvent) {
+        val command = commands.find { it.triggerMessage == event.message }
+
+        if(command != null) {
+            executeEvents(command.execute(User(event.user.name), this))
         } else {
-            streamInfos.forEach { streamInfosData ->
-                eventHandlers.handleEvent(StreamOnline()).execute()
+            ChannelMessageHandler().transform(event).forEach { event ->
+                eventHandlers.handleEvent(event).execute()
             }
         }
     }
 
-    fun handleVIPListReceived(event: VIPListReceived) {
-        eventHandlers.handleEvent(event).execute()
-    }
-
-    fun handleRewardRedeemedEvent(rewardRedemption: RewardRedemption) {
-        eventHandlers.handleEvent(rewardRedemption).execute()
-    }
-
-    fun handleChannelMessage(messageReceived: MessageReceived) {
-        eventHandlers.handleEvent(messageReceived).execute()
+    private fun handleIRCMessage(event: IRCMessageEvent) {
+        IRCMessageHandler().transform(event).forEach { event ->
+            eventHandlers.handleEvent(event).execute()
+        }
     }
 
     fun executeEvents(outgoingEvents: List<OutgoingEvent>) {
