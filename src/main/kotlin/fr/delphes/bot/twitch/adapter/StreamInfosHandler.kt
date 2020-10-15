@@ -1,5 +1,6 @@
 package fr.delphes.bot.twitch.adapter
 
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.incoming.StreamOnline
@@ -10,7 +11,7 @@ import io.ktor.request.receive
 import kotlinx.coroutines.runBlocking
 
 class StreamInfosHandler : TwitchIncomingEventHandler<ApplicationRequest> {
-    override fun transform(twitchEvent: ApplicationRequest): List<IncomingEvent> {
+    override fun handle(twitchEvent: ApplicationRequest, channel: ChannelInfo): List<IncomingEvent> {
         val payload = runBlocking {
             twitchEvent.call.receive<StreamInfosPayload>()
         }

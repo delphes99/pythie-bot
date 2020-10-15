@@ -11,6 +11,7 @@ import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.adapter.ChannelMessageHandler
 import fr.delphes.bot.twitch.adapter.IRCMessageHandler
 import fr.delphes.bot.twitch.adapter.NewFollowHandler
@@ -24,7 +25,13 @@ import mu.KotlinLogging
 
 class Channel(
     configuration: ChannelConfiguration,
-    val bot: ClientBot
+    val bot: ClientBot,
+    private val newFollowHandler: TwitchIncomingEventHandler<ApplicationRequest> = NewFollowHandler(),
+    private val newSubHandler: TwitchIncomingEventHandler<ApplicationRequest> = NewSubHandler(),
+    private val streamInfosHandler: TwitchIncomingEventHandler<ApplicationRequest> = StreamInfosHandler(),
+    private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedeemedEvent> = RewardRedeemedHandler(),
+    private val channelMessageHandler: TwitchIncomingEventHandler<ChannelMessageEvent> = ChannelMessageHandler(),
+    private val ircMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> = IRCMessageHandler()
 ) : ChannelInfo {
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     val name = configuration.ownerChannel
@@ -68,43 +75,33 @@ class Channel(
     }
 
     fun handleNewFollow(request: ApplicationRequest) {
-        NewFollowHandler().transform(request).forEach { newFollow ->
-            eventHandlers.handleEvent(newFollow, this).execute()
-        }
+        newFollowHandler.handleTwitchEvent(request)
     }
 
     fun handleNewSub(request: ApplicationRequest) {
-        NewSubHandler().transform(request).forEach { newFollow ->
-            eventHandlers.handleEvent(newFollow, this).execute()
-        }
+        newSubHandler.handleTwitchEvent(request)
     }
 
     fun handleStreamInfos(request: ApplicationRequest) {
-        StreamInfosHandler().transform(request).forEach { event ->
-            eventHandlers.handleEvent(event, this).execute()
-        }
+        streamInfosHandler.handleTwitchEvent(request)
     }
 
-    private fun handleRewardRedeemedEvent(event: RewardRedeemedEvent) {
-        RewardRedeemedHandler().transform(event).forEach { event ->
-            eventHandlers.handleEvent(event, this).execute()
-        }
+    private fun handleRewardRedeemedEvent(request: RewardRedeemedEvent) {
+        rewardRedeemedHandler.handleTwitchEvent(request)
     }
 
-    private fun handleChannelMessageEvent(channelMessageEvent: ChannelMessageEvent) {
-        ChannelMessageHandler(this).transform(channelMessageEvent).forEach { event ->
-            eventHandlers.handleEvent(event, this).execute()
-        }
+    private fun handleChannelMessageEvent(request: ChannelMessageEvent) {
+        channelMessageHandler.handleTwitchEvent(request)
     }
 
-    private fun handleIRCMessage(event: IRCMessageEvent) {
-        IRCMessageHandler().transform(event).forEach { event ->
-            eventHandlers.handleEvent(event, this).execute()
-        }
+    private fun handleIRCMessage(request: IRCMessageEvent) {
+        ircMessageHandler.handleTwitchEvent(request)
     }
 
-    fun executeEvents(outgoingEvents: List<OutgoingEvent>) {
-        outgoingEvents.execute()
+    private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {
+        this.handle(request, this@Channel).forEach { incomingEvent ->
+            eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
+        }
     }
 
     private fun List<OutgoingEvent>.execute() {

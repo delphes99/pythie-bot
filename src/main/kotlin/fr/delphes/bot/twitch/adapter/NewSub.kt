@@ -1,5 +1,6 @@
 package fr.delphes.bot.twitch.adapter
 
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.NewSub
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
@@ -9,7 +10,7 @@ import io.ktor.request.receive
 import kotlinx.coroutines.runBlocking
 
 class NewSubHandler : TwitchIncomingEventHandler<ApplicationRequest> {
-    override fun transform(twitchEvent: ApplicationRequest): List<IncomingEvent> {
+    override fun handle(twitchEvent: ApplicationRequest, channel: ChannelInfo): List<IncomingEvent> {
         val payload = runBlocking {
             twitchEvent.call.receive<NewSubPayload>()
         }
