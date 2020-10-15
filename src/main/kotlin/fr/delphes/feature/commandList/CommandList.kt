@@ -10,7 +10,9 @@ class CommandList(
     triggerMessage: String,
     displayCommands: (List<String>) -> List<OutgoingEvent>
 ) : AbstractFeature() {
-    override fun registerHandlers(eventHandlers: EventHandlers) {}
+    override fun registerHandlers(eventHandlers: EventHandlers) {
+        eventHandlers.addHandler(command)
+    }
 
     private val command = CommandHandler(
         triggerMessage

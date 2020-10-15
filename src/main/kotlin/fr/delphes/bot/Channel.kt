@@ -8,7 +8,6 @@ import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
-import fr.delphes.User
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -26,8 +25,8 @@ import mu.KotlinLogging
 class Channel(
     configuration: ChannelConfiguration,
     val bot: ClientBot
-) {
-    val commands: List<Command> = configuration.features.flatMap(Feature::commands)
+) : ChannelInfo {
+    override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     val name = configuration.ownerChannel
     val userId : String
     val oAuth = configuration.ownerAccountOauth
@@ -70,43 +69,37 @@ class Channel(
 
     fun handleNewFollow(request: ApplicationRequest) {
         NewFollowHandler().transform(request).forEach { newFollow ->
-            eventHandlers.handleEvent(newFollow).execute()
+            eventHandlers.handleEvent(newFollow, this).execute()
         }
     }
 
     fun handleNewSub(request: ApplicationRequest) {
         NewSubHandler().transform(request).forEach { newFollow ->
-            eventHandlers.handleEvent(newFollow).execute()
+            eventHandlers.handleEvent(newFollow, this).execute()
         }
     }
 
     fun handleStreamInfos(request: ApplicationRequest) {
         StreamInfosHandler().transform(request).forEach { event ->
-            eventHandlers.handleEvent(event).execute()
+            eventHandlers.handleEvent(event, this).execute()
         }
     }
 
     private fun handleRewardRedeemedEvent(event: RewardRedeemedEvent) {
         RewardRedeemedHandler().transform(event).forEach { event ->
-            eventHandlers.handleEvent(event).execute()
+            eventHandlers.handleEvent(event, this).execute()
         }
     }
 
-    private fun handleChannelMessageEvent(event: ChannelMessageEvent) {
-        val command = commands.find { it.triggerMessage == event.message }
-
-        if(command != null) {
-            executeEvents(command.execute(User(event.user.name), this))
-        } else {
-            ChannelMessageHandler().transform(event).forEach { event ->
-                eventHandlers.handleEvent(event).execute()
-            }
+    private fun handleChannelMessageEvent(channelMessageEvent: ChannelMessageEvent) {
+        ChannelMessageHandler(this).transform(channelMessageEvent).forEach { event ->
+            eventHandlers.handleEvent(event, this).execute()
         }
     }
 
     private fun handleIRCMessage(event: IRCMessageEvent) {
         IRCMessageHandler().transform(event).forEach { event ->
-            eventHandlers.handleEvent(event).execute()
+            eventHandlers.handleEvent(event, this).execute()
         }
     }
 

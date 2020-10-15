@@ -17,7 +17,9 @@ class Command(
     cooldown: Duration? = null,
     responses: List<OutgoingEvent>
 ) : AbstractFeature() {
-    override fun registerHandlers(eventHandlers: EventHandlers) {}
+    override fun registerHandlers(eventHandlers: EventHandlers) {
+        eventHandlers.addHandler(command)
+    }
 
     private val command = SimpleCommand(
         trigger,

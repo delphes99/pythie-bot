@@ -1,5 +1,6 @@
 package fr.delphes.feature.newFollow
 
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.NewFollow
@@ -14,6 +15,6 @@ class NewFollowFeature(
     }
 
     inner class NewFollowHandler : EventHandler<NewFollow> {
-        override fun handle(event: NewFollow): List<OutgoingEvent> = newFollowResponse(event)
+        override fun handle(event: NewFollow, channel: ChannelInfo): List<OutgoingEvent> = newFollowResponse(event)
     }
 }

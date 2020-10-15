@@ -1,5 +1,6 @@
 package fr.delphes.feature.streamOffline
 
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.StreamOffline
@@ -14,6 +15,6 @@ class StreamOfflineFeature(
     }
 
     inner class StreamOfflineHandler : EventHandler<StreamOffline> {
-        override fun handle(event: StreamOffline): List<OutgoingEvent> = streamOfflineResponse(event)
+        override fun handle(event: StreamOffline, channel: ChannelInfo): List<OutgoingEvent> = streamOfflineResponse(event)
     }
 }

@@ -1,5 +1,6 @@
 package fr.delphes.bot.event.eventHandler
 
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import kotlin.reflect.KClass
@@ -14,10 +15,10 @@ class EventHandlers {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun handleEvent(event: IncomingEvent) : List<OutgoingEvent> {
+    fun handleEvent(event: IncomingEvent, channel: ChannelInfo) : List<OutgoingEvent> {
         return map[event::class]
             ?.map { it as EventHandler<IncomingEvent> }
-            ?.let { it.flatMap { handler -> handler.handle(event) } }
+            ?.let { it.flatMap { handler -> handler.handle(event, channel) } }
             ?: emptyList()
     }
 

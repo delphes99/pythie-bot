@@ -1,5 +1,6 @@
 package fr.delphes.feature.streamOnline
 
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.StreamOnline
@@ -14,6 +15,6 @@ class StreamOnlineFeature(
     }
 
     inner class StreamOnlineHandler : EventHandler<StreamOnline> {
-        override fun handle(event: StreamOnline): List<OutgoingEvent> = streamOnlineResponse(event)
+        override fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> = streamOnlineResponse(event)
     }
 }

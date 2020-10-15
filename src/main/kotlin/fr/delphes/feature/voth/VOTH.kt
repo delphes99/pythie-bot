@@ -1,5 +1,6 @@
 package fr.delphes.feature.voth
 
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.command.CommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandler
@@ -29,6 +30,7 @@ class VOTH(
         eventHandlers.addHandler(VOTHVIPListReceivedHandler())
         eventHandlers.addHandler(StreamOnlineHandler())
         eventHandlers.addHandler(StreamOfflineHandler())
+        eventHandlers.addHandler(commandStats)
     }
 
     private val commandStats = CommandHandler(
@@ -44,7 +46,7 @@ class VOTH(
     internal val vothChanged get() = state.vothChanged
 
     internal inner class VOTHRewardRedemptionHandler : EventHandler<RewardRedemption> {
-        override fun handle(event: RewardRedemption): List<OutgoingEvent> {
+        override fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
             val redeemUser = event.user
             return if (event.rewardId == configuration.featureId && currentVip?.user != redeemUser) {
                 val oldVOTH = currentVip
@@ -64,7 +66,7 @@ class VOTH(
     }
 
     internal inner class VOTHVIPListReceivedHandler : EventHandler<VIPListReceived> {
-        override fun handle(event: VIPListReceived): List<OutgoingEvent> {
+        override fun handle(event: VIPListReceived, channel: ChannelInfo): List<OutgoingEvent> {
             return if (vothChanged) {
                 state.vothChanged = false
                 val events = event.vips.map(::RemoveVIP) + PromoteVIP(currentVip!!.user)
@@ -77,14 +79,14 @@ class VOTH(
     }
 
     internal inner class StreamOnlineHandler : EventHandler<StreamOnline> {
-        override fun handle(event: StreamOnline): List<OutgoingEvent> {
+        override fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> {
             state.unpause(clock.now())
             return emptyList()
         }
     }
 
     internal inner class StreamOfflineHandler : EventHandler<StreamOffline> {
-        override fun handle(event: StreamOffline): List<OutgoingEvent> {
+        override fun handle(event: StreamOffline, channel: ChannelInfo): List<OutgoingEvent> {
             state.pause(clock.now())
             save()
             return emptyList()

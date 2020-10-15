@@ -32,8 +32,8 @@ internal class EventHandlersTest {
         eventHandlers.addHandler(handlerA)
 
         val event = EventA()
-        eventHandlers.handleEvent(event)
+        eventHandlers.handleEvent(event, mockk())
 
-        verify(exactly = 1) { handlerA.handle(event) }
+        verify(exactly = 1) { handlerA.handle(event, any()) }
     }
 }

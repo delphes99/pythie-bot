@@ -1,6 +1,6 @@
 package fr.delphes.feature
 
-import fr.delphes.bot.event.eventHandler.handleEvent
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.incoming.StreamOnline
@@ -27,6 +27,7 @@ internal class VOTHTest {
     val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", NOW.minusMinutes(5), 50))
     val CLOCK = TestClock(NOW)
     val CONFIGURATION = VOTHConfiguration(FEATURE_ID, { emptyList() }, "!cmdstats", { emptyList() })
+    val channelInfo = mockk<ChannelInfo>()
 
     @Nested
     @DisplayName("RewardRedemption")
@@ -35,7 +36,7 @@ internal class VOTHTest {
         internal fun `promote vip`() {
             val voth = voth(VOTHState())
 
-            voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50))
+            voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", NOW, 50))
             assertThat(voth.vothChanged).isTrue()
         }
@@ -45,7 +46,7 @@ internal class VOTHTest {
             val state = VOTHState(currentVip = VOTHWinner("user", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50))
+            voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", NOW.minusMinutes(1), 50))
             assertThat(voth.vothChanged).isFalse()
         }
@@ -54,7 +55,7 @@ internal class VOTHTest {
         internal fun `redeem launch vip list`() {
             val voth = voth()
 
-            val messages = voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50))
+            val messages = voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
             assertThat(messages).contains(RetrieveVip)
         }
     }
@@ -66,7 +67,7 @@ internal class VOTHTest {
         internal fun `remove all old vip`() {
             val voth = voth()
 
-            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"))
+            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
             assertThat(messages).contains(
                 RemoveVIP("oldVip"),
                 RemoveVIP("oldVip2")
@@ -78,7 +79,7 @@ internal class VOTHTest {
             val state = VOTHState(true, VOTHWinner("newVip", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"))
+            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
             assertThat(messages).contains(
                 PromoteVIP("newVip")
             )
@@ -89,7 +90,7 @@ internal class VOTHTest {
             val state = VOTHState(false, VOTHWinner("user", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"))
+            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
             assertThat(messages).isEmpty()
         }
     }
@@ -99,7 +100,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.StreamOfflineHandler().handle(StreamOffline())
+        val messages = voth.StreamOfflineHandler().handle(StreamOffline(), channelInfo)
 
         verify(exactly = 1) { state.pause(any()) }
         assertThat(messages).isEmpty()
@@ -110,7 +111,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.StreamOnlineHandler().handle(StreamOnline())
+        val messages = voth.StreamOnlineHandler().handle(StreamOnline(), channelInfo)
 
         verify(exactly = 1) { state.unpause(any()) }
         assertThat(messages).isEmpty()

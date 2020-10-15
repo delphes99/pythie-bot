@@ -1,5 +1,6 @@
 package fr.delphes.feature.newSub
 
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.NewSub
@@ -14,6 +15,6 @@ class NewSubFeature(
     }
 
     inner class NewSubHandler() : EventHandler<NewSub> {
-        override fun handle(event: NewSub): List<OutgoingEvent> = newSubResponse(event)
+        override fun handle(event: NewSub, channel: ChannelInfo): List<OutgoingEvent> = newSubResponse(event)
     }
 }

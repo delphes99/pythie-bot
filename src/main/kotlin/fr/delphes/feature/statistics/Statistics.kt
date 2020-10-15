@@ -1,6 +1,7 @@
 package fr.delphes.feature.statistics
 
 import fr.delphes.bot.Channel
+import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.MessageReceived
@@ -26,21 +27,21 @@ class Statistics(
     }
 
     inner class NewFollowHandler : EventHandler<NewFollow> {
-        override fun handle(event: NewFollow): List<OutgoingEvent> {
+        override fun handle(event: NewFollow, channel: ChannelInfo): List<OutgoingEvent> {
             state.newFollow(event.follower)
             return emptyList()
         }
     }
 
     inner class NewSubHandler : EventHandler<NewSub> {
-        override fun handle(event: NewSub): List<OutgoingEvent> {
+        override fun handle(event: NewSub, channel: ChannelInfo): List<OutgoingEvent> {
             state.newSub(event.sub)
             return emptyList()
         }
     }
 
     inner class MessageReceivedHandler : EventHandler<MessageReceived> {
-        override fun handle(event: MessageReceived): List<OutgoingEvent> {
+        override fun handle(event: MessageReceived, channel: ChannelInfo): List<OutgoingEvent> {
             state.addMessage(UserMessage(event.user, event.text))
             return emptyList()
         }

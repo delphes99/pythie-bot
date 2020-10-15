@@ -2,6 +2,7 @@ package fr.delphes.bot.command
 
 import fr.delphes.User
 import fr.delphes.bot.Channel
+import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.time.Clock
 import io.mockk.clearAllMocks
@@ -36,8 +37,9 @@ internal class SimpleCommandTest {
             clock = clock,
             responses = listOf(SendMessage("response"))
         )
+        val event = CommandAsked(simpleCommand, User("user"))
 
-        assertThat(simpleCommand.execute(User("user"), channel)).containsExactlyInAnyOrder(
+        assertThat(simpleCommand.handle(event, channel)).containsExactlyInAnyOrder(
             SendMessage("response")
         )
     }
@@ -50,12 +52,13 @@ internal class SimpleCommandTest {
             cooldown = Duration.ofMinutes(10),
             responses = listOf(SendMessage("response"))
         )
+        val event = CommandAsked(simpleCommand, User("user"))
 
         `given now`(now)
-        assertThat(simpleCommand.execute(User("user"), channel)).isNotEmpty
+        assertThat(simpleCommand.handle(event, channel)).isNotEmpty
 
         `given now`(now.plusMinutes(5))
-        assertThat(simpleCommand.execute(User("user"), channel)).isEmpty()
+        assertThat(simpleCommand.handle(event, channel)).isEmpty()
     }
 
     @Test
@@ -66,11 +69,12 @@ internal class SimpleCommandTest {
             cooldown = Duration.ofMinutes(10),
             responses = listOf(SendMessage("response"))
         )
+        val event = CommandAsked(simpleCommand, User("user"))
 
         `given now`(now)
-        assertThat(simpleCommand.execute(User("user"), channel)).isNotEmpty
+        assertThat(simpleCommand.handle(event, channel)).isNotEmpty
 
         `given now`(now.plusMinutes(15))
-        assertThat(simpleCommand.execute(User("user"), channel)).isNotEmpty
+        assertThat(simpleCommand.handle(event, channel)).isNotEmpty
     }
 }

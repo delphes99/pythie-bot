@@ -1,7 +1,8 @@
 package fr.delphes.bot.command
 
-import fr.delphes.User
-import fr.delphes.bot.Channel
+import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.time.Clock
 import fr.delphes.bot.time.SystemClock
@@ -14,9 +15,9 @@ class SimpleCommand(
     private val clock: Clock = SystemClock,
     private val cooldown: Duration? = null,
     private val responses: List<OutgoingEvent>
-) : Command {
-    override fun execute(user: User, channel: Channel): List<OutgoingEvent> {
-        return if(cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false) {
+) : Command, EventHandler<CommandAsked> {
+    override fun handle(event: CommandAsked, channel: ChannelInfo): List<OutgoingEvent> {
+        return if(event.command == this && cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false) {
             lastActivation = clock.now()
             responses
         } else {
