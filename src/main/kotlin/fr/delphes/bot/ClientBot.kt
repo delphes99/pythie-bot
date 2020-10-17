@@ -54,6 +54,7 @@ class ClientBot(
                         ),
                         channel.oAuth
                     ).execute()
+                    //TODO catch failed subscription
                     LOGGER.info { "Subscription for twich webhook ${twitchWebhook.name} for ${channel.name} ok" }
                 } catch (e: Exception) {
                     LOGGER.info(e) { "Subscription for twich webhook ${twitchWebhook.name} for ${channel.name} failed" }

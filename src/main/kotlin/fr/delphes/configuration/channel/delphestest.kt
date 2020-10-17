@@ -1,5 +1,6 @@
 package fr.delphes.configuration.channel
 
+import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
@@ -8,6 +9,7 @@ import fr.delphes.feature.newFollow.NewFollowFeature
 import fr.delphes.feature.statistics.Statistics
 import fr.delphes.feature.streamOffline.StreamOfflineFeature
 import fr.delphes.feature.streamOnline.StreamOnlineFeature
+import fr.delphes.feature.streamUpdate.StreamUpdateFeature
 import java.time.Duration
 
 /**
@@ -36,6 +38,22 @@ val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.p
             listOf(
                 SendMessage(
                     "Liste des commandes : ${commands.joinToString(", ")}"
+                )
+            )
+        },
+        StreamUpdateFeature { changes ->
+            listOf(
+                SendMessage(
+                    changes.joinToString(" | ") { change ->
+                        when (change) {
+                            is StreamChanges.Title -> {
+                                "Nouveau titre : ${change.newTitle}"
+                            }
+                            is StreamChanges.Game -> {
+                                "${change.oldGame.label} ➡ ${change.newGame.label}"
+                            }
+                        }
+                    }
                 )
             )
         }

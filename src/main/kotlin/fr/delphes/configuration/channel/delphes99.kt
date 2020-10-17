@@ -1,5 +1,6 @@
 package fr.delphes.configuration.channel
 
+import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
@@ -13,6 +14,7 @@ import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.bot.time.prettyPrint
 import fr.delphes.feature.commandList.CommandList
+import fr.delphes.feature.streamUpdate.StreamUpdateFeature
 import java.time.Duration
 
 /**
@@ -79,6 +81,22 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             listOf(
                 SendMessage(
                     "Liste des commandes : ${commands.joinToString(", ")}"
+                )
+            )
+        },
+        StreamUpdateFeature { changes ->
+            listOf(
+                SendMessage(
+                    changes.joinToString(" | ") { change ->
+                        when (change) {
+                            is StreamChanges.Title -> {
+                                "\uD83D\uDCDD Nouveau titre : ${change.newTitle}"
+                            }
+                            is StreamChanges.Game -> {
+                                "\uD83D\uDD04 ${change.oldGame.label} ➡ ${change.newGame.label}"
+                            }
+                        }
+                    }
                 )
             )
         }

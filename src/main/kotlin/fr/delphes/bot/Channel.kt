@@ -11,29 +11,32 @@ import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.state.ChannelState
+import fr.delphes.bot.state.CurrentStream
+import fr.delphes.bot.time.toLocalDateTime
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
-import fr.delphes.bot.twitch.adapter.ChannelMessageHandler
-import fr.delphes.bot.twitch.adapter.IRCMessageHandler
-import fr.delphes.bot.twitch.adapter.NewFollowHandler
-import fr.delphes.bot.twitch.adapter.NewSubHandler
-import fr.delphes.bot.twitch.adapter.RewardRedeemedHandler
-import fr.delphes.bot.twitch.adapter.StreamInfosHandler
+import fr.delphes.bot.twitch.game.Game
+import fr.delphes.bot.twitch.game.TwitchGameRepository
+import fr.delphes.bot.twitch.handler.ChannelMessageHandler
+import fr.delphes.bot.twitch.handler.IRCMessageHandler
+import fr.delphes.bot.twitch.handler.NewFollowHandler
+import fr.delphes.bot.twitch.handler.NewSubHandler
+import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
+import fr.delphes.bot.twitch.handler.StreamInfosHandler
+import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
+import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
+import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
-import io.ktor.request.ApplicationRequest
 import mu.KotlinLogging
 
 class Channel(
     configuration: ChannelConfiguration,
     val bot: ClientBot,
-    private val newFollowHandler: TwitchIncomingEventHandler<ApplicationRequest> = NewFollowHandler(),
-    private val newSubHandler: TwitchIncomingEventHandler<ApplicationRequest> = NewSubHandler(),
-    private val streamInfosHandler: TwitchIncomingEventHandler<ApplicationRequest> = StreamInfosHandler(),
-    private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedeemedEvent> = RewardRedeemedHandler(),
-    private val channelMessageHandler: TwitchIncomingEventHandler<ChannelMessageEvent> = ChannelMessageHandler(),
-    private val ircMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> = IRCMessageHandler()
+    private val state: ChannelState = ChannelState()
 ) : ChannelInfo {
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
+    override val currentStream: CurrentStream? get() = state.currentStream
     val name = configuration.ownerChannel
     val userId : String
     val oAuth = configuration.ownerAccountOauth
@@ -44,6 +47,28 @@ class Channel(
     private val client: TwitchClient
     private val chat: TwitchChat
 
+    private val newFollowHandler: TwitchIncomingEventHandler<NewFollowPayload> = NewFollowHandler()
+    private val newSubHandler: TwitchIncomingEventHandler<NewSubPayload> = NewSubHandler()
+    private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedeemedEvent> = RewardRedeemedHandler()
+    private val channelMessageHandler: TwitchIncomingEventHandler<ChannelMessageEvent> = ChannelMessageHandler()
+    private val ircMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> = IRCMessageHandler()
+    private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload> = StreamInfosHandler(TwitchGameRepository(this::getGame))
+
+    private fun getGame(id: String) : Game {
+        val game = client.helix.getGames(oAuth, listOf(id), null).execute().games.first()
+
+        return Game(game.id, game.name)
+    }
+
+    private fun getStream(userId: String): CurrentStream? {
+        return client.helix.getStreams(oAuth, null, null, 1, null, null, null, listOf(userId), null).execute()
+            .streams
+            .firstOrNull()
+            ?.let {
+                CurrentStream(it.title, it.startedAt.toLocalDateTime(), getGame(it.gameId))
+            }
+    }
+
     init {
         this.userId = bot.client.helix.getUsers(null, null, listOf(name)).execute().users[0].id
 
@@ -51,6 +76,7 @@ class Channel(
             .withClientId(bot.clientId)
             .withClientSecret(bot.secretKey)
             .withEnablePubSub(true)
+            .withEnableHelix(true)
             .withEnableChat(true)
             .withChatAccount(ownerCredential)
             .build()!!
@@ -61,6 +87,8 @@ class Channel(
         features.forEach { feature ->
             feature.registerHandlers(eventHandlers)
         }
+
+        state.init(getStream(userId))
 
         chat.connect()
         client.pubSub.connect()
@@ -74,15 +102,15 @@ class Channel(
         client.pubSub.listenForChannelPointsRedemptionEvents(bot.botCredential, userId)
     }
 
-    fun handleNewFollow(request: ApplicationRequest) {
+    fun handleNewFollow(request: NewFollowPayload) {
         newFollowHandler.handleTwitchEvent(request)
     }
 
-    fun handleNewSub(request: ApplicationRequest) {
+    fun handleNewSub(request: NewSubPayload) {
         newSubHandler.handleTwitchEvent(request)
     }
 
-    fun handleStreamInfos(request: ApplicationRequest) {
+    fun handleStreamInfos(request: StreamInfosPayload) {
         streamInfosHandler.handleTwitchEvent(request)
     }
 
@@ -99,7 +127,7 @@ class Channel(
     }
 
     private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {
-        this.handle(request, this@Channel).forEach { incomingEvent ->
+        this.handle(request, this@Channel, this@Channel.state).forEach { incomingEvent ->
             eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
         }
     }
