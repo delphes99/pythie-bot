@@ -1,4 +1,4 @@
-package fr.delphes.bot.storage.serialization
+package fr.delphes.bot.util.serialization
 
 import kotlinx.serialization.json.Json
 

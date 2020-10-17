@@ -1,6 +1,5 @@
-package fr.delphes.bot.time
+package fr.delphes.bot.util.time
 
-import fr.delphes.bot.time.prettyPrint
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.Duration

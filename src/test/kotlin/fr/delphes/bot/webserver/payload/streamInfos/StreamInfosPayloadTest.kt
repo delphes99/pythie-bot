@@ -1,6 +1,6 @@
 package fr.delphes.bot.webserver.payload.streamInfos
 
-import fr.delphes.bot.storage.serialization.Serializer
+import fr.delphes.bot.util.serialization.Serializer
 import kotlinx.serialization.decodeFromString
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

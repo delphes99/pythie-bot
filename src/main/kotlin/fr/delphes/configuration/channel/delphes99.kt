@@ -12,7 +12,7 @@ import fr.delphes.feature.streamOnline.StreamOnlineFeature
 import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
-import fr.delphes.bot.time.prettyPrint
+import fr.delphes.bot.util.time.prettyPrint
 import fr.delphes.feature.commandList.CommandList
 import fr.delphes.feature.streamUpdate.StreamUpdateFeature
 import java.time.Duration

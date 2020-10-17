@@ -4,8 +4,8 @@ import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.bot.time.Clock
-import fr.delphes.bot.time.SystemClock
+import fr.delphes.bot.util.time.Clock
+import fr.delphes.bot.util.time.SystemClock
 import java.time.Duration
 import java.time.LocalDateTime
 

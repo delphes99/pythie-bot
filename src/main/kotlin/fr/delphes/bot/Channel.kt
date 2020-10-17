@@ -13,7 +13,7 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.state.CurrentStream
-import fr.delphes.bot.time.toLocalDateTime
+import fr.delphes.bot.util.time.toLocalDateTime
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.game.Game
 import fr.delphes.bot.twitch.game.TwitchGameRepository

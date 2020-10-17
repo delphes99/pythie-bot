@@ -12,7 +12,7 @@ import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.feature.voth.VOTHState
 import fr.delphes.feature.voth.VOTHWinner
-import fr.delphes.bot.time.TestClock
+import fr.delphes.bot.util.time.TestClock
 import fr.delphes.bot.twitch.game.Game
 import io.mockk.mockk
 import io.mockk.verify

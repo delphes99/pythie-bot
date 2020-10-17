@@ -4,7 +4,7 @@ import fr.delphes.User
 import fr.delphes.bot.Channel
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.SendMessage
-import fr.delphes.bot.time.Clock
+import fr.delphes.bot.util.time.Clock
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk

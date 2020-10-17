@@ -1,4 +1,4 @@
-package fr.delphes.bot.time
+package fr.delphes.bot.util.time
 
 import java.time.Duration
 
