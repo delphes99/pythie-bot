@@ -8,7 +8,11 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
 
 class NewFollowHandler : TwitchIncomingEventHandler<NewFollowPayload> {
-    override fun handle(twitchEvent: NewFollowPayload, channel: ChannelInfo, changeState: ChannelChangeState): List<IncomingEvent> {
+    override fun handle(
+        twitchEvent: NewFollowPayload,
+        channel: ChannelInfo,
+        changeState: ChannelChangeState
+    ): List<IncomingEvent> {
         return twitchEvent.data.map { d -> NewFollow(d) }
     }
 }

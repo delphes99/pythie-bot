@@ -10,7 +10,11 @@ import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 
 class ChannelMessageHandler : TwitchIncomingEventHandler<ChannelMessageEvent> {
-    override fun handle(twitchEvent: ChannelMessageEvent, channel: ChannelInfo, changeState: ChannelChangeState): List<IncomingEvent> {
+    override fun handle(
+        twitchEvent: ChannelMessageEvent,
+        channel: ChannelInfo,
+        changeState: ChannelChangeState
+    ): List<IncomingEvent> {
         val command = channel.commands.find { it.triggerMessage == twitchEvent.message }
 
         return listOf(

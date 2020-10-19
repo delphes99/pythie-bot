@@ -16,7 +16,11 @@ import mu.KotlinLogging
 class StreamInfosHandler(
     private val gameRepository: GameRepository
 ) : TwitchIncomingEventHandler<StreamInfosPayload> {
-    override fun handle(twitchEvent: StreamInfosPayload, channel: ChannelInfo, changeState: ChannelChangeState): List<IncomingEvent> {
+    override fun handle(
+        twitchEvent: StreamInfosPayload,
+        channel: ChannelInfo,
+        changeState: ChannelChangeState
+    ): List<IncomingEvent> {
         val streamInfos = twitchEvent.data
         val currentStream = channel.currentStream
 
@@ -40,7 +44,7 @@ class StreamInfosHandler(
                         }
                     )
 
-                    if(changes.isNotEmpty()) {
+                    if (changes.isNotEmpty()) {
                         StreamChanged(changes)
                     } else {
                         null
@@ -50,7 +54,7 @@ class StreamInfosHandler(
         }
 
         events.forEach { event ->
-            when(event) {
+            when (event) {
                 is StreamOnline -> {
                     changeState.changeCurrentStream(CurrentStream(event.title, event.start, event.game))
                 }

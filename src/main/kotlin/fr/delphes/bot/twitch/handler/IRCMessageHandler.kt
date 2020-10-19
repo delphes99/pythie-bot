@@ -8,8 +8,12 @@ import fr.delphes.bot.event.incoming.VIPListReceived
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 
-class IRCMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> {
-    override fun handle(twitchEvent: IRCMessageEvent, channel: ChannelInfo, changeState: ChannelChangeState): List<IncomingEvent> {
+class IRCMessageHandler : TwitchIncomingEventHandler<IRCMessageEvent> {
+    override fun handle(
+        twitchEvent: IRCMessageEvent,
+        channel: ChannelInfo,
+        changeState: ChannelChangeState
+    ): List<IncomingEvent> {
         return twitchEvent.message?.map { message ->
             val vipResult = VIPParser.extractVips(message)
             if (vipResult is VIPParser.VIPResult.VIPList) {

@@ -8,7 +8,11 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 
 class NewSubHandler : TwitchIncomingEventHandler<NewSubPayload> {
-    override fun handle(twitchEvent: NewSubPayload, channel: ChannelInfo, changeState: ChannelChangeState): List<IncomingEvent> {
+    override fun handle(
+        twitchEvent: NewSubPayload,
+        channel: ChannelInfo,
+        changeState: ChannelChangeState
+    ): List<IncomingEvent> {
         return twitchEvent.data.map { d -> NewSub(d) }
     }
 }
