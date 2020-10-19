@@ -32,8 +32,8 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                     listOf(
                         SendMessage(
                             listOfNotNull(
-                                "@${announce.rewardRedemption.user.name} est le nouveau VIP.",
-                                announce.oldVOTH?.let { oldVOTH -> " \r\nRIP @${oldVOTH.user}, ancien VIP depuis ${announce.durationOfReign?.prettyPrint()} !" }
+                                "\uD83D\uDC51 @${announce.rewardRedemption.user.name} est le nouveau VIP. \uD83D\uDC51",
+                                announce.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP @${oldVOTH.user} [règne : ${announce.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
                             ).joinToString(" ")
                         )
                     )
@@ -42,9 +42,9 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                 statsResponseEvents = { stats ->
                     listOf(
                         SendMessage(
-                            "Temps passé en tant que VOTH : ${stats.totalTime.prettyPrint()} --- " +
-                                    "Nombre de victoires : ${stats.numberOfReigns} --- " +
-                                    "Total de points dépensés : ${stats.totalCost}"
+                            "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +
+                                    "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
+                                    "\uD83D\uDCB8 Dépensés : ${stats.totalCost}"
                         )
                     )
                 }
@@ -57,7 +57,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             "!bot",
             cooldown = Duration.ofMinutes(2),
             responses = listOf(
-                SendMessage("C'est moi : https://github.com/delphes99/pythie-bot")
+                SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot")
             )
         ),
         Command(
@@ -68,20 +68,20 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             )
         ),
         NewFollowFeature { newFollow ->
-            listOf(SendMessage("Merci du follow ${newFollow.follower.name}"))
+            listOf(SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F"))
         },
         NewSubFeature { newSub ->
-            listOf(SendMessage("Merci pour le sub ${newSub.sub.name}"))
+            listOf(SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F"))
         },
-        StreamOfflineFeature { listOf(SendMessage("Le stream est fini, au revoir !")) },
-        StreamOnlineFeature { listOf(SendMessage("Le stream démarre, ravi de vous revoir !")) },
+        StreamOfflineFeature { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")) },
+        StreamOnlineFeature { listOf(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !")) },
         Statistics(),
         CommandList(
             "!help"
         ) { commands ->
             listOf(
                 SendMessage(
-                    "Liste des commandes : ${commands.joinToString(", ")}"
+                    "ℹ️ Commandes : ${commands.joinToString(", ")}"
                 )
             )
         },
@@ -91,7 +91,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                     changes.joinToString(" | ") { change ->
                         when (change) {
                             is StreamChanges.Title -> {
-                                "\uD83D\uDCDD Nouveau titre : ${change.newTitle}"
+                                "\uD83D\uDCDD ${change.newTitle}"
                             }
                             is StreamChanges.Game -> {
                                 "\uD83D\uDD04 ${change.oldGame.label} ➡ ${change.newGame.label}"
