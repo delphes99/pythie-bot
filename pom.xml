@@ -18,13 +18,13 @@
         <ktor.version>1.4.1</ktor.version>
         <serialization.version>1.0.0-RC</serialization.version>
         <kotlin.code.style>official</kotlin.code.style>
-        <assertj-core.version>3.17.0</assertj-core.version>
-        <twitch4j.version>1.1.0</twitch4j.version>
+        <assertj-core.version>3.17.2</assertj-core.version>
+        <twitch4j.version>1.1.3</twitch4j.version>
         <logback-classic.version>1.2.3</logback-classic.version>
-        <junit-jupiter.version>5.7.0-RC1</junit-jupiter.version>
+        <junit-jupiter.version>5.7.0</junit-jupiter.version>
         <mockk.version>1.10.0</mockk.version>
-        <kotlin.compiler.jvmTarget>14</kotlin.compiler.jvmTarget>
         <kotlin-logging.version>1.12.0</kotlin-logging.version>
+        <kotlin.compiler.jvmTarget>14</kotlin.compiler.jvmTarget>
     </properties>
 
     <repositories>

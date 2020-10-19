@@ -29,6 +29,8 @@ import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import mu.KotlinLogging
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class Channel(
     configuration: ChannelConfiguration,
@@ -62,11 +64,11 @@ class Channel(
     }
 
     private fun getStream(userId: String): CurrentStream? {
-        return client.helix.getStreams(bot.appToken, null, null, 1, null, null, null, listOf(userId), null).execute()
+        return client.helix.getStreams(bot.appToken, null, null, 1, null, null, listOf(userId), null).execute()
             .streams
             .firstOrNull()
             ?.let {
-                CurrentStream(it.title, it.startedAt.toLocalDateTime(), getGame(it.gameId))
+                CurrentStream(it.title, LocalDateTime.ofInstant(it.startedAtInstant, ZoneOffset.UTC), getGame(it.gameId))
             }
     }
 

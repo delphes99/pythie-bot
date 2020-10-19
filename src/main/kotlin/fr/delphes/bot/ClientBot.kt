@@ -39,7 +39,7 @@ class ClientBot(
     fun register(channel: Channel) {
         channels.add(channel)
 
-        chat.joinChannel(channel.name);
+        chat.joinChannel(channel.name)
     }
 
     fun subscribeWebhooks() {
