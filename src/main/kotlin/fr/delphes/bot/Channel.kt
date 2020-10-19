@@ -7,16 +7,17 @@ import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent
+import com.github.twitch4j.pubsub.events.ChannelBitsEvent
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.state.CurrentStream
-import fr.delphes.bot.util.time.toLocalDateTime
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.game.Game
 import fr.delphes.bot.twitch.game.TwitchGameRepository
+import fr.delphes.bot.twitch.handler.ChannelBitsHandler
 import fr.delphes.bot.twitch.handler.ChannelMessageHandler
 import fr.delphes.bot.twitch.handler.IRCMessageHandler
 import fr.delphes.bot.twitch.handler.NewFollowHandler
@@ -52,6 +53,7 @@ class Channel(
 
     private val newFollowHandler: TwitchIncomingEventHandler<NewFollowPayload> = NewFollowHandler()
     private val newSubHandler: TwitchIncomingEventHandler<NewSubPayload> = NewSubHandler()
+    private val channelBitsHandler: TwitchIncomingEventHandler<ChannelBitsEvent> = ChannelBitsHandler()
     private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedeemedEvent> = RewardRedeemedHandler()
     private val channelMessageHandler: TwitchIncomingEventHandler<ChannelMessageEvent> = ChannelMessageHandler()
     private val ircMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> = IRCMessageHandler()
@@ -101,8 +103,14 @@ class Channel(
         eventHandler.onEvent(ChannelMessageEvent::class.java, ::handleChannelMessageEvent)
         eventHandler.onEvent(RewardRedeemedEvent::class.java, ::handleRewardRedeemedEvent)
         eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
+        eventHandler.onEvent(ChannelBitsEvent::class.java, ::handleBitsEvent)
 
         client.pubSub.listenForChannelPointsRedemptionEvents(bot.botCredential, userId)
+        client.pubSub.listenForCheerEvents(bot.botCredential, userId)
+    }
+
+    fun handleBitsEvent(request: ChannelBitsEvent) {
+        channelBitsHandler.handleTwitchEvent(request)
     }
 
     fun handleNewFollow(request: NewFollowPayload) {

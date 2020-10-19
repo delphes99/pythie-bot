@@ -13,6 +13,7 @@ import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.bot.util.time.prettyPrint
+import fr.delphes.feature.bitCheer.BitCheerFeature
 import fr.delphes.feature.commandList.CommandList
 import fr.delphes.feature.streamUpdate.StreamUpdateFeature
 import java.time.Duration
@@ -98,6 +99,11 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                         }
                     }
                 )
+            )
+        },
+        BitCheerFeature { bitCheered ->
+            listOf(
+                SendMessage("💎 ${bitCheered.cheerer.name} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎")
             )
         }
     )
