@@ -11,7 +11,7 @@ internal class DurationExtKtTest {
     }
 
     @Test
-    internal fun `zero`() {
+    internal fun zero() {
         assertThat(Duration.ZERO.prettyPrint()).isEqualTo("0s")
     }
 }

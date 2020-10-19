@@ -40,6 +40,7 @@ class Channel(
     val name = configuration.ownerChannel
     val userId : String
     val oAuth = configuration.ownerAccountOauth
+
     val features = configuration.features
     private val ownerCredential = OAuth2Credential("twitch", "oauth:$oAuth")
     private val eventHandlers = EventHandlers()
@@ -55,13 +56,13 @@ class Channel(
     private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload> = StreamInfosHandler(TwitchGameRepository(this::getGame))
 
     private fun getGame(id: String) : Game {
-        val game = client.helix.getGames(oAuth, listOf(id), null).execute().games.first()
+        val game = client.helix.getGames(bot.appToken, listOf(id), null).execute().games.first()
 
         return Game(game.id, game.name)
     }
 
     private fun getStream(userId: String): CurrentStream? {
-        return client.helix.getStreams(oAuth, null, null, 1, null, null, null, listOf(userId), null).execute()
+        return client.helix.getStreams(bot.appToken, null, null, 1, null, null, null, listOf(userId), null).execute()
             .streams
             .firstOrNull()
             ?.let {

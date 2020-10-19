@@ -2,6 +2,8 @@ package fr.delphes.bot
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClientBuilder
+import com.github.twitch4j.auth.providers.TwitchIdentityProvider
+import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.helix.webhooks.domain.WebhookRequest
 import fr.delphes.bot.webserver.webhook.TwitchWebhook
 import fr.delphes.configuration.BotConfiguration
@@ -26,7 +28,9 @@ class ClientBot(
         .withChatAccount(botCredential)
         .build()!!
 
-    val chat = client.chat
+    val appToken: String = TwitchIdentityProvider(clientId, secretKey, null).appAccessToken.accessToken
+
+    val chat: TwitchChat = client.chat
 
     init {
         chat.connect()
@@ -52,12 +56,12 @@ class ClientBot(
                             WEBHOOK_DURATION,
                             "toto"
                         ),
-                        channel.oAuth
+                        appToken
                     ).execute()
                     //TODO catch failed subscription
-                    LOGGER.info { "Subscription for twich webhook ${twitchWebhook.name} for ${channel.name} ok" }
+                    LOGGER.debug { "Twich webhook ${twitchWebhook.name} for ${channel.name} : Subscription request sent" }
                 } catch (e: Exception) {
-                    LOGGER.info(e) { "Subscription for twich webhook ${twitchWebhook.name} for ${channel.name} failed" }
+                    LOGGER.error (e) { "Twich webhook ${twitchWebhook.name} for ${channel.name} : Subscription request failed" }
                 }
             }
         }
@@ -65,7 +69,7 @@ class ClientBot(
 
     companion object {
         //private val WEBHOOK_DURATION = Duration.ofDays(1).toSeconds().toInt()
-        private val WEBHOOK_DURATION = Duration.ofMinutes(5).toSeconds().toInt()
+        private val WEBHOOK_DURATION = Duration.ofMinutes(400).toSeconds().toInt()
         private val LOGGER = KotlinLogging.logger {}
     }
 }

@@ -13,6 +13,7 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.util.pipeline.PipelineContext
+import mu.KotlinLogging
 
 fun Application.WebhookModule(bot: ClientBot) {
     routing {
@@ -27,7 +28,13 @@ private fun Routing.startWebhooks(channel: Channel) {
     //TODO manage duplicate event
     TwitchWebhook.forEach { webhook ->
         get("/${channel.name}/${webhook.callSuffix}") {
-            challengeWebHook()
+            if(getParameter("hub.mode") == "denied") {
+                LOGGER.error { "Twich webhook ${webhook.name} for ${channel.name} : Subscription denied : ${getParameter("hub.reason")}" }
+                this.context.response.status(HttpStatusCode.OK)
+            } else {
+                LOGGER.info { "Twich webhook ${webhook.name} for ${channel.name} : Subscription ok" }
+                challengeWebHook()
+            }
         }
         post("/${channel.name}/${webhook.callSuffix}") {
             webhook.notificationHandler(channel, this)
@@ -36,9 +43,14 @@ private fun Routing.startWebhooks(channel: Channel) {
     }
 }
 
+private fun PipelineContext<Unit, ApplicationCall>.getParameter(parameterName: String) =
+    this.context.parameters[parameterName]
+
 private suspend fun PipelineContext<Unit, ApplicationCall>.challengeWebHook() {
     call.respondText(
         this.context.parameters["hub.challenge"] ?: "No challenge provided",
         ContentType.Text.Html
     )
 }
+
+private val LOGGER = KotlinLogging.logger {}

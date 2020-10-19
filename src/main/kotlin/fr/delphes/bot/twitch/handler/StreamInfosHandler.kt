@@ -20,7 +20,7 @@ class StreamInfosHandler(
         val streamInfos = twitchEvent.data
         val currentStream = channel.currentStream
 
-        val event = if (streamInfos.isEmpty()) {
+        val events = if (streamInfos.isEmpty()) {
             listOf(StreamOffline)
         } else {
             streamInfos.mapNotNull { newInfos ->
@@ -49,7 +49,7 @@ class StreamInfosHandler(
             }
         }
 
-        event.forEach { event ->
+        events.forEach { event ->
             when(event) {
                 is StreamOnline -> {
                     changeState.changeCurrentStream(CurrentStream(event.title, event.start, event.game))
@@ -66,7 +66,7 @@ class StreamInfosHandler(
             }
         }
 
-        return event
+        return events
     }
 
     private fun CurrentStream.applyChanges(
