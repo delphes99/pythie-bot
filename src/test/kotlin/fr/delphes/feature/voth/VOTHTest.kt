@@ -47,7 +47,7 @@ internal class VOTHTest {
         internal fun `promote vip`() {
             val voth = voth(VOTHState())
 
-            voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
+            voth.handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", NOW, 50))
             assertThat(voth.vothChanged).isTrue()
         }
@@ -57,7 +57,7 @@ internal class VOTHTest {
             val state = VOTHState(currentVip = VOTHWinner("user", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
+            voth.handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", NOW.minusMinutes(1), 50))
             assertThat(voth.vothChanged).isFalse()
         }
@@ -66,8 +66,7 @@ internal class VOTHTest {
         internal fun `redeem launch vip list`() {
             val voth = voth()
 
-            val messages =
-                voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
+            val messages = voth.handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
             assertThat(messages).contains(RetrieveVip)
         }
     }
@@ -79,7 +78,7 @@ internal class VOTHTest {
         internal fun `remove all old vip`() {
             val voth = voth()
 
-            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
+            val messages = voth.handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
             assertThat(messages).contains(
                 RemoveVIP("oldVip"),
                 RemoveVIP("oldVip2")
@@ -91,7 +90,7 @@ internal class VOTHTest {
             val state = VOTHState(true, VOTHWinner("newVip", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
+            val messages = voth.handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
             assertThat(messages).contains(
                 PromoteVIP("newVip")
             )
@@ -102,7 +101,7 @@ internal class VOTHTest {
             val state = VOTHState(false, VOTHWinner("user", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.VOTHVIPListReceivedHandler().handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
+            val messages = voth.handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
             assertThat(messages).isEmpty()
         }
     }
@@ -112,7 +111,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.StreamOfflineHandler().handle(StreamOffline, channelInfo)
+        val messages = voth.handle(StreamOffline, channelInfo)
 
         verify(exactly = 1) { state.pause(any()) }
         assertThat(messages).isEmpty()
@@ -123,8 +122,8 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.StreamOnlineHandler()
-            .handle(StreamOnline("title", NOW, Game(SimpleGameId("gameId"), "game title")), channelInfo)
+        val incomingEvent = StreamOnline("title", NOW, Game(SimpleGameId("gameId"), "game title"))
+        val messages = voth.handle(incomingEvent, channelInfo)
 
         verify(exactly = 1) { state.unpause(any()) }
         assertThat(messages).isEmpty()
