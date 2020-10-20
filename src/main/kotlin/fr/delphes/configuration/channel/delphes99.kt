@@ -41,7 +41,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                     )
                 },
                 statsCommand = "!vothstats",
-                statsResponseEvents = { stats ->
+                statsResponse = { stats ->
                     listOf(
                         SendMessage(
                             "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +
@@ -49,6 +49,22 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                                     "\uD83D\uDCB8 Dépensés : ${stats.totalCost}"
                         )
                     )
+                },
+                top3Command = "!vothtop",
+                top3Response = { top1, top2, top3 ->
+                    if(top1 == null) {
+                        emptyList()
+                    } else {
+                        listOf(
+                            SendMessage(
+                                listOfNotNull(
+                                    top1?.let { "\uD83E\uDD47 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
+                                    top2?.let { "\uD83E\uDD48 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
+                                    top3?.let { "\uD83E\uDD49 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
+                                ).joinToString(" ")
+                            )
+                        )
+                    }
                 }
             ),
             stateRepository = FileVOTHStateRepository(

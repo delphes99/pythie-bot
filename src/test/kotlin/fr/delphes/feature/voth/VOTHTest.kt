@@ -1,6 +1,9 @@
-package fr.delphes.feature
+package fr.delphes.feature.voth
 
+import fr.delphes.User
 import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.command.Command
+import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.incoming.StreamOnline
@@ -8,13 +11,13 @@ import fr.delphes.bot.event.incoming.VIPListReceived
 import fr.delphes.bot.event.outgoing.PromoteVIP
 import fr.delphes.bot.event.outgoing.RemoveVIP
 import fr.delphes.bot.event.outgoing.RetrieveVip
-import fr.delphes.feature.voth.VOTH
-import fr.delphes.feature.voth.VOTHConfiguration
-import fr.delphes.feature.voth.VOTHState
-import fr.delphes.feature.voth.VOTHWinner
+import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.util.time.TestClock
 import fr.delphes.bot.twitch.game.Game
 import fr.delphes.bot.twitch.game.SimpleGameId
+import fr.delphes.feature.TestStateRepository
+import fr.delphes.feature.handle
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -28,7 +31,13 @@ internal class VOTHTest {
     val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
     val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", NOW.minusMinutes(5), 50))
     val CLOCK = TestClock(NOW)
-    val CONFIGURATION = VOTHConfiguration(FEATURE_ID, { emptyList() }, "!cmdstats", { emptyList() })
+    val CONFIGURATION = VOTHConfiguration(
+        FEATURE_ID,
+        { emptyList() },
+        "!cmdstats",
+        { emptyList() },
+        "!top3",
+        { _, _, _ -> emptyList() })
     val channelInfo = mockk<ChannelInfo>()
 
     @Nested
@@ -57,7 +66,8 @@ internal class VOTHTest {
         internal fun `redeem launch vip list`() {
             val voth = voth()
 
-            val messages = voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
+            val messages =
+                voth.VOTHRewardRedemptionHandler().handle(RewardRedemption(FEATURE_ID, "user", 50), channelInfo)
             assertThat(messages).contains(RetrieveVip)
         }
     }
@@ -113,13 +123,37 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.StreamOnlineHandler().handle(StreamOnline("title", NOW, Game(SimpleGameId("gameId"), "game title")), channelInfo)
+        val messages = voth.StreamOnlineHandler()
+            .handle(StreamOnline("title", NOW, Game(SimpleGameId("gameId"), "game title")), channelInfo)
 
         verify(exactly = 1) { state.unpause(any()) }
         assertThat(messages).isEmpty()
     }
 
+    @Test
+    internal fun `display top 3`() {
+        val state = mockk<VOTHState>(relaxed = true)
+        every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
+
+        val voth = VOTH(
+            VOTHConfiguration(
+                FEATURE_ID,
+                { emptyList() },
+                "!cmdstats",
+                { emptyList() },
+                "!top3",
+                { top1, top2, top3 -> listOf(SendMessage("${top1?.user?.name}, ${top2?.user?.name}, ${top3?.user?.name}")) }),
+            stateRepository = TestStateRepository({ state }),
+            state = state,
+            clock = CLOCK
+        )
+
+        val events = voth.handle(CommandAsked(Command("!top3"), User("user")), mockk())
+
+        assertThat(events).contains(SendMessage("user1, user2, user3"))
+    }
+
     private fun voth(state: VOTHState = DEFAULT_STATE): VOTH {
-        return VOTH(CONFIGURATION, stateRepository = TestStateRepository({state}), state = state, clock = CLOCK)
+        return VOTH(CONFIGURATION, stateRepository = TestStateRepository({ state }), state = state, clock = CLOCK)
     }
 }

@@ -31,16 +31,24 @@ class VOTH(
         eventHandlers.addHandler(StreamOnlineHandler())
         eventHandlers.addHandler(StreamOfflineHandler())
         eventHandlers.addHandler(commandStatsHandler)
+        eventHandlers.addHandler(commandTop3Handler)
     }
 
     private val commandStatsHandler = CommandHandler(
         Command(configuration.statsCommand)
     ) { user, _ ->
         val stats = state.getReignsFor(user, clock.now())
-        configuration.statsResponseEvents(stats)
+        configuration.statsResponse(stats)
     }
 
-    override val commands: Iterable<Command> = listOf(commandStatsHandler.command)
+    private val commandTop3Handler = CommandHandler(
+        Command(configuration.top3Command)
+    ) { user, _ ->
+        val tops = state.top3(clock.now())
+        configuration.top3Response(tops.getOrNull(0), tops.getOrNull(1), tops.getOrNull(2))
+    }
+
+    override val commands: Iterable<Command> = listOf(commandStatsHandler.command, commandTop3Handler.command)
 
     internal val currentVip get() = state.currentVip
     internal val vothChanged get() = state.vothChanged

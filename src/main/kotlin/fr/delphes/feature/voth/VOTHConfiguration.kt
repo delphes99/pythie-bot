@@ -6,5 +6,7 @@ data class VOTHConfiguration(
     val featureId: String,
     val newVipAnnouncer: (NewVOTHAnnounced) -> List<OutgoingEvent>,
     val statsCommand: String,
-    val statsResponseEvents: (Stats) -> List<OutgoingEvent>
+    val statsResponse: (Stats) -> List<OutgoingEvent>,
+    val top3Command: String,
+    val top3Response: (Stats?, Stats?, Stats?) -> List<OutgoingEvent>
 )

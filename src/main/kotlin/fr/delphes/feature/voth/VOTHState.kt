@@ -54,6 +54,14 @@ class VOTHState(
             previousReigns
         }
 
-        return Stats(reigns)
+        return Stats(user, reigns)
+    }
+
+    fun top3(now: LocalDateTime): List<Stats> {
+        return allWinners().map { getReignsFor(it, now) }.sortedByDescending { it.totalTime }.take(3)
+    }
+
+    private fun allWinners(): List<User> {
+        return previousReigns.map { reign -> reign.voth }.plus(currentVip?.user).filterNotNull().distinct()
     }
 }
