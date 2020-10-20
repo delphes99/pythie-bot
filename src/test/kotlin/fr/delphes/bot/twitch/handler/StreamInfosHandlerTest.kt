@@ -9,6 +9,7 @@ import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.state.CurrentStream
 import fr.delphes.bot.twitch.game.Game
 import fr.delphes.bot.twitch.game.GameRepository
+import fr.delphes.bot.twitch.game.SimpleGameId
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosData
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import io.mockk.clearAllMocks
@@ -41,15 +42,18 @@ internal class StreamInfosHandlerTest {
         "fr",
         "url..."
     )
-    private val GAME = Game("game", "game title")
-    private val NEW_GAME = Game("new game", "new game title")
+
+    private val GAME_ID = SimpleGameId("game")
+    private val NEW_GAME_ID = SimpleGameId("new game")
+    private val GAME = Game(GAME_ID, "game title")
+    private val NEW_GAME = Game(NEW_GAME_ID, "new game title")
 
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
 
-        every { gameRepository.get("game") } returns GAME
-        every { gameRepository.get("new game") } returns NEW_GAME
+        every { gameRepository.get(GAME_ID) } returns GAME
+        every { gameRepository.get(NEW_GAME_ID) } returns NEW_GAME
     }
 
     @Nested
@@ -59,7 +63,13 @@ internal class StreamInfosHandlerTest {
         internal fun `return event online`() {
             `given offline stream`()
 
-            assertThat(StreamInfosHandler(gameRepository).handle(StreamInfosPayload(ONLINE_DATA), channelInfo, changeState))
+            assertThat(
+                StreamInfosHandler(gameRepository).handle(
+                    StreamInfosPayload(ONLINE_DATA),
+                    channelInfo,
+                    changeState
+                )
+            )
                 .contains(
                     StreamOnline(
                         "current stream title",
@@ -75,7 +85,15 @@ internal class StreamInfosHandlerTest {
 
             StreamInfosHandler(gameRepository).handle(StreamInfosPayload(ONLINE_DATA), channelInfo, changeState)
 
-            verify(exactly = 1) { changeState.changeCurrentStream(CurrentStream("current stream title", STARTED_AT, GAME)) }
+            verify(exactly = 1) {
+                changeState.changeCurrentStream(
+                    CurrentStream(
+                        "current stream title",
+                        STARTED_AT,
+                        GAME
+                    )
+                )
+            }
         }
     }
 
@@ -86,7 +104,13 @@ internal class StreamInfosHandlerTest {
         internal fun `return offline event`() {
             `given online stream`()
 
-            assertThat(StreamInfosHandler(gameRepository).handle(StreamInfosPayload(), channelInfo, changeState)).contains(
+            assertThat(
+                StreamInfosHandler(gameRepository).handle(
+                    StreamInfosPayload(),
+                    channelInfo,
+                    changeState
+                )
+            ).contains(
                 StreamOffline
             )
         }

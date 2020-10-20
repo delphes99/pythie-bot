@@ -10,6 +10,7 @@ import fr.delphes.feature.statistics.Statistics
 import fr.delphes.feature.streamOffline.StreamOfflineFeature
 import fr.delphes.feature.streamOnline.StreamOnlineFeature
 import fr.delphes.feature.streamUpdate.StreamUpdateFeature
+import fr.delphes.feature.gameDescription.GameDescriptionFeature
 import java.time.Duration
 
 /**
@@ -56,6 +57,11 @@ val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.p
                     }
                 )
             )
-        }
+        },
+        GameDescriptionFeature(
+            "!tufekoi",
+            Games.SCIENCE_TECHNOLOGY to "development",
+            Games.JUST_CHATTING to "just chatting"
+        )
     )
 }

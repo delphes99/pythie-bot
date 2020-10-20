@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.LocalDateTime
 
-internal class SimpleCommandTest {
+internal class SimpleCommandHandlerTest {
     private val clock = mockk<Clock>()
     private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
     private val channel = mockk<Channel>()
@@ -32,12 +32,13 @@ internal class SimpleCommandTest {
 
     @Test
     internal fun `trigger command`() {
-        val simpleCommand = SimpleCommand(
-            "!cmd",
+        val command = Command("!cmd")
+        val simpleCommand = SimpleCommandHandler(
+            command,
             clock = clock,
             responses = listOf(SendMessage("response"))
         )
-        val event = CommandAsked(simpleCommand, User("user"))
+        val event = CommandAsked(command, User("user"))
 
         assertThat(simpleCommand.handle(event, channel)).containsExactlyInAnyOrder(
             SendMessage("response")
@@ -46,13 +47,14 @@ internal class SimpleCommandTest {
 
     @Test
     internal fun `don't trigger command if too frequent`() {
-        val simpleCommand = SimpleCommand(
-            triggerMessage = "!cmd",
+        val command = Command("!cmd")
+        val simpleCommand = SimpleCommandHandler(
+            command = command,
             clock = clock,
             cooldown = Duration.ofMinutes(10),
             responses = listOf(SendMessage("response"))
         )
-        val event = CommandAsked(simpleCommand, User("user"))
+        val event = CommandAsked(command, User("user"))
 
         `given now`(now)
         assertThat(simpleCommand.handle(event, channel)).isNotEmpty
@@ -63,13 +65,14 @@ internal class SimpleCommandTest {
 
     @Test
     internal fun `trigger command if after cooldown`() {
-        val simpleCommand = SimpleCommand(
-            triggerMessage = "!cmd",
+        val command = Command("!cmd")
+        val simpleCommand = SimpleCommandHandler(
+            command = command,
             clock = clock,
             cooldown = Duration.ofMinutes(10),
             responses = listOf(SendMessage("response"))
         )
-        val event = CommandAsked(simpleCommand, User("user"))
+        val event = CommandAsked(command, User("user"))
 
         `given now`(now)
         assertThat(simpleCommand.handle(event, channel)).isNotEmpty

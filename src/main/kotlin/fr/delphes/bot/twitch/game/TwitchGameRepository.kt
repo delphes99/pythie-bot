@@ -1,9 +1,9 @@
 package fr.delphes.bot.twitch.game
 
 class TwitchGameRepository(
-    private val getGame: (String) -> Game
+    private val getGame: (GameId) -> Game
 ): GameRepository {
-    override fun get(id: String): Game {
-        return getGame(id)
+    override fun get(gameId: GameId): Game {
+        return getGame(gameId)
     }
 }

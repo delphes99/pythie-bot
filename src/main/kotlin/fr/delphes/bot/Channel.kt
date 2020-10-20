@@ -16,6 +16,8 @@ import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.state.CurrentStream
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.game.Game
+import fr.delphes.bot.twitch.game.GameId
+import fr.delphes.bot.twitch.game.SimpleGameId
 import fr.delphes.bot.twitch.game.TwitchGameRepository
 import fr.delphes.bot.twitch.handler.ChannelBitsHandler
 import fr.delphes.bot.twitch.handler.ChannelMessageHandler
@@ -59,10 +61,10 @@ class Channel(
     private val ircMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> = IRCMessageHandler()
     private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload> = StreamInfosHandler(TwitchGameRepository(this::getGame))
 
-    private fun getGame(id: String) : Game {
-        val game = client.helix.getGames(bot.appToken, listOf(id), null).execute().games.first()
+    private fun getGame(gameId: GameId) : Game {
+        val game = client.helix.getGames(bot.appToken, listOf(gameId.id), null).execute().games.first()
 
-        return Game(game.id, game.name)
+        return Game(gameId, game.name)
     }
 
     private fun getStream(userId: String): CurrentStream? {
@@ -70,7 +72,7 @@ class Channel(
             .streams
             .firstOrNull()
             ?.let {
-                CurrentStream(it.title, LocalDateTime.ofInstant(it.startedAtInstant, ZoneOffset.UTC), getGame(it.gameId))
+                CurrentStream(it.title, LocalDateTime.ofInstant(it.startedAtInstant, ZoneOffset.UTC), getGame(SimpleGameId(it.gameId)))
             }
     }
 

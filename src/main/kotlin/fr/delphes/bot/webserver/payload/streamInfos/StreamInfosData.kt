@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.time.LocalDateTime
 
+//TODO game_id > GameID type
+
 @Serializable
 data class StreamInfosData(
     val id: String,

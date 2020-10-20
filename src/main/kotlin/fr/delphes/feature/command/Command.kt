@@ -1,7 +1,7 @@
 package fr.delphes.feature.command
 
 import fr.delphes.bot.command.Command
-import fr.delphes.bot.command.SimpleCommand
+import fr.delphes.bot.command.SimpleCommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.util.time.Clock
 import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -18,16 +18,16 @@ class Command(
     responses: List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(command)
+        eventHandlers.addHandler(commandHandler)
     }
 
-    private val command = SimpleCommand(
-        trigger,
+    private val commandHandler = SimpleCommandHandler(
+        Command(trigger),
         lastActivation,
         clock,
         cooldown,
         responses
     )
 
-    override val commands: Iterable<Command> = listOf(command)
+    override val commands: Iterable<Command> = listOf(commandHandler.command)
 }

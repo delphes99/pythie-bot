@@ -10,6 +10,7 @@ import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.state.CurrentStream
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.game.GameRepository
+import fr.delphes.bot.twitch.game.SimpleGameId
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import mu.KotlinLogging
 
@@ -29,7 +30,7 @@ class StreamInfosHandler(
         } else {
             streamInfos.mapNotNull { newInfos ->
                 if (currentStream == null) {
-                    StreamOnline(newInfos.title, newInfos.started_at, gameRepository.get(newInfos.game_id))
+                    StreamOnline(newInfos.title, newInfos.started_at, gameRepository.get(SimpleGameId(newInfos.game_id)))
                 } else {
                     val changes = listOfNotNull(
                         if (currentStream.title != newInfos.title) {
@@ -37,8 +38,8 @@ class StreamInfosHandler(
                         } else {
                             null
                         },
-                        if (currentStream.game.id != newInfos.game_id) {
-                            StreamChanges.Game(currentStream.game, gameRepository.get(newInfos.game_id))
+                        if (currentStream.game.id.id != newInfos.game_id) {
+                            StreamChanges.Game(currentStream.game, gameRepository.get(SimpleGameId(newInfos.game_id)))
                         } else {
                             null
                         }

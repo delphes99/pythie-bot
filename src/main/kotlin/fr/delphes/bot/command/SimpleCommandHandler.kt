@@ -9,15 +9,17 @@ import fr.delphes.bot.util.time.SystemClock
 import java.time.Duration
 import java.time.LocalDateTime
 
-class SimpleCommand(
-    override val triggerMessage: String,
+class SimpleCommandHandler(
+    val command: Command,
     private var lastActivation: LocalDateTime = LocalDateTime.MIN,
     private val clock: Clock = SystemClock,
     private val cooldown: Duration? = null,
     private val responses: List<OutgoingEvent>
-) : Command, EventHandler<CommandAsked> {
+) : EventHandler<CommandAsked> {
     override fun handle(event: CommandAsked, channel: ChannelInfo): List<OutgoingEvent> {
-        return if(event.command == this && cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false) {
+        return if(event.command == command &&
+            cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false
+        ) {
             lastActivation = clock.now()
             responses
         } else {

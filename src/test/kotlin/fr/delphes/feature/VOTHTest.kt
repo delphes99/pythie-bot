@@ -14,6 +14,7 @@ import fr.delphes.feature.voth.VOTHState
 import fr.delphes.feature.voth.VOTHWinner
 import fr.delphes.bot.util.time.TestClock
 import fr.delphes.bot.twitch.game.Game
+import fr.delphes.bot.twitch.game.SimpleGameId
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -112,7 +113,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.StreamOnlineHandler().handle(StreamOnline("title", NOW, Game("gameId", "game title")), channelInfo)
+        val messages = voth.StreamOnlineHandler().handle(StreamOnline("title", NOW, Game(SimpleGameId("gameId"), "game title")), channelInfo)
 
         verify(exactly = 1) { state.unpause(any()) }
         assertThat(messages).isEmpty()

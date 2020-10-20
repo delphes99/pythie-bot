@@ -1,5 +1,5 @@
 package fr.delphes.bot.command
 
-interface Command {
+data class Command(
     val triggerMessage: String
-}
+)

@@ -16,11 +16,13 @@ import fr.delphes.bot.util.time.prettyPrint
 import fr.delphes.feature.bitCheer.BitCheerFeature
 import fr.delphes.feature.commandList.CommandList
 import fr.delphes.feature.streamUpdate.StreamUpdateFeature
+import fr.delphes.feature.gameDescription.GameDescriptionFeature
 import java.time.Duration
 
 /**
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
+//TODO naming feature coherence
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(
         properties.getProperty("channel.name"),
@@ -105,6 +107,12 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             listOf(
                 SendMessage("💎 ${bitCheered.cheerer.name} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎")
             )
-        }
+        },
+        GameDescriptionFeature(
+            "!tufekoi",
+            Games.SCIENCE_TECHNOLOGY to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
+            Games.JUST_CHATTING to "\uD83D\uDDE3️bla bla bla",
+            Games.SATISFACTORY to "Jeu de construction d'usine \uD83C\uDFED où on doit coloniser une planète inconnue"
+        )
     )
 }

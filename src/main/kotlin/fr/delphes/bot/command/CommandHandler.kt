@@ -7,11 +7,11 @@ import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 
 class CommandHandler(
-    override val triggerMessage: String,
+    val command: Command,
     private val doCommand: (User, ChannelInfo) -> List<OutgoingEvent>
-) : Command, EventHandler<CommandAsked> {
+) : EventHandler<CommandAsked> {
     override fun handle(event: CommandAsked, channel: ChannelInfo): List<OutgoingEvent> {
-        return if(event.command == this) {
+        return if(event.command == command) {
             doCommand(event.by, channel)
         } else {
             emptyList()

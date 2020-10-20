@@ -11,16 +11,16 @@ class CommandList(
     displayCommands: (List<String>) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(command)
+        eventHandlers.addHandler(commandHandler)
     }
 
-    private val command = CommandHandler(
-        triggerMessage
+    private val commandHandler = CommandHandler(
+        Command(triggerMessage)
     ) { _, channel ->
         val commands = channel.commands.map(Command::triggerMessage)
 
         displayCommands(commands)
     }
 
-    override val commands: Iterable<Command> = listOf(command)
+    override val commands: Iterable<Command> = listOf(commandHandler.command)
 }
