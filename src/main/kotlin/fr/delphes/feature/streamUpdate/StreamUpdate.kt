@@ -8,7 +8,7 @@ import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
-class StreamUpdateFeature(
+class StreamUpdate(
     private val handleChanges: (List<StreamChanges>) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {

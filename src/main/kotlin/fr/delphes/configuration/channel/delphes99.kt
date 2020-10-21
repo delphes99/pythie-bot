@@ -4,25 +4,24 @@ import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
-import fr.delphes.feature.newFollow.NewFollowFeature
-import fr.delphes.feature.newSub.NewSubFeature
+import fr.delphes.feature.newFollow.NewFollow
+import fr.delphes.feature.newSub.NewSub
 import fr.delphes.feature.statistics.Statistics
-import fr.delphes.feature.streamOffline.StreamOfflineFeature
-import fr.delphes.feature.streamOnline.StreamOnlineFeature
+import fr.delphes.feature.streamOffline.StreamOffline
+import fr.delphes.feature.streamOnline.StreamOnline
 import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.bot.util.time.prettyPrint
-import fr.delphes.feature.bitCheer.BitCheerFeature
+import fr.delphes.feature.bitCheer.BitCheer
 import fr.delphes.feature.commandList.CommandList
-import fr.delphes.feature.streamUpdate.StreamUpdateFeature
-import fr.delphes.feature.gameDescription.GameDescriptionFeature
+import fr.delphes.feature.streamUpdate.StreamUpdate
+import fr.delphes.feature.gameDescription.GameDescription
 import java.time.Duration
 
 /**
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
-//TODO naming feature coherence
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(
         properties.getProperty("channel.name"),
@@ -85,14 +84,14 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                 SendMessage("https://discord.com/invite/SAdBhbu")
             )
         ),
-        NewFollowFeature { newFollow ->
+        NewFollow { newFollow ->
             listOf(SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F"))
         },
-        NewSubFeature { newSub ->
+        NewSub { newSub ->
             listOf(SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F"))
         },
-        StreamOfflineFeature { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")) },
-        StreamOnlineFeature { listOf(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !")) },
+        StreamOffline { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")) },
+        StreamOnline { listOf(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !")) },
         Statistics(),
         CommandList(
             "!help"
@@ -103,7 +102,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                 )
             )
         },
-        StreamUpdateFeature { changes ->
+        StreamUpdate { changes ->
             listOf(
                 SendMessage(
                     changes.joinToString(" | ") { change ->
@@ -119,12 +118,12 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                 )
             )
         },
-        BitCheerFeature { bitCheered ->
+        BitCheer { bitCheered ->
             listOf(
                 SendMessage("💎 ${bitCheered.cheerer.name} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎")
             )
         },
-        GameDescriptionFeature(
+        GameDescription(
             "!tufekoi",
             Games.SCIENCE_TECHNOLOGY to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
             Games.JUST_CHATTING to "\uD83D\uDDE3️bla bla bla",

@@ -7,7 +7,7 @@ import fr.delphes.bot.event.incoming.StreamOnline
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
-class StreamOnlineFeature(
+class StreamOnline(
     val streamOnlineResponse: (StreamOnline) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {

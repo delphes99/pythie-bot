@@ -7,7 +7,7 @@ import fr.delphes.bot.event.incoming.NewFollow
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
-class NewFollowFeature(
+class NewFollow(
     val newFollowResponse: (NewFollow) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {

@@ -7,7 +7,7 @@ import fr.delphes.bot.event.incoming.BitCheered
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
-class BitCheerFeature(
+class BitCheer(
     val bitCheeredResponse: (BitCheered) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {

@@ -10,7 +10,7 @@ import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.twitch.game.GameId
 import fr.delphes.feature.AbstractFeature
 
-class GameDescriptionFeature(commandTrigger: String, vararg descriptions: Pair<GameId, String>) : AbstractFeature() {
+class GameDescription(commandTrigger: String, vararg descriptions: Pair<GameId, String>) : AbstractFeature() {
     private val descriptions = mapOf(*descriptions).mapKeys { entry -> entry.key.id }
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(commandHandler)

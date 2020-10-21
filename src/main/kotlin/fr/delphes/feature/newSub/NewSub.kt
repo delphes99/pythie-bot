@@ -7,7 +7,7 @@ import fr.delphes.bot.event.incoming.NewSub
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
-class NewSubFeature(
+class NewSub(
     val newSubResponse: (NewSub) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {

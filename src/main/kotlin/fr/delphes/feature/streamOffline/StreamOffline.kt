@@ -7,7 +7,7 @@ import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
-class StreamOfflineFeature(
+class StreamOffline(
     val streamOfflineResponse: (StreamOffline) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {

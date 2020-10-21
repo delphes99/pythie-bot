@@ -8,14 +8,14 @@ import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.twitch.game.Game
 import fr.delphes.bot.twitch.game.GameId
 import fr.delphes.bot.twitch.game.SimpleGameId
-import fr.delphes.feature.gameDescription.GameDescriptionFeature
+import fr.delphes.feature.gameDescription.GameDescription
 import fr.delphes.feature.handle
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class GameDescriptionFeatureTest {
+internal class GameDescriptionTest {
     private val channelInfo = mockk<ChannelInfo>()
 
     private val GAME_ID = SimpleGameId("id")
@@ -28,7 +28,7 @@ internal class GameDescriptionFeatureTest {
 
     @Test
     internal fun `describe the current`() {
-        val feature = GameDescriptionFeature("!tufekoi", GAME_ID to "description")
+        val feature = GameDescription("!tufekoi", GAME_ID to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(Command("!tufekoi"), User("user"))
 
@@ -39,7 +39,7 @@ internal class GameDescriptionFeatureTest {
 
     @Test
     internal fun `describe the current (with other gameId implementation)`() {
-        val feature = GameDescriptionFeature("!tufekoi", GameEnum.GAME to "description")
+        val feature = GameDescription("!tufekoi", GameEnum.GAME to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(Command("!tufekoi"), User("user"))
 
@@ -50,7 +50,7 @@ internal class GameDescriptionFeatureTest {
 
     @Test
     internal fun `do nothing when no description`() {
-        val feature = GameDescriptionFeature("!tufekoi", GAME_ID to "description")
+        val feature = GameDescription("!tufekoi", GAME_ID to "description")
         `current game is`(OTHER_GAME)
         val commandAsked = CommandAsked(Command("!tufekoi"), User("user"))
 
