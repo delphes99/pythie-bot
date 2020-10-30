@@ -7,6 +7,7 @@ import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.MessageReceived
 import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.bot.state.UserMessage
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 
 class ChannelMessageHandler : TwitchIncomingEventHandler<ChannelMessageEvent> {
@@ -15,12 +16,16 @@ class ChannelMessageHandler : TwitchIncomingEventHandler<ChannelMessageEvent> {
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
-        val command = channel.commands.find { it.triggerMessage == twitchEvent.message }
+        val user = User(twitchEvent.user.name)
+        val message = twitchEvent.message
+
+        val command = channel.commands.find { it.triggerMessage == message }
 
         return listOf(
             if (command != null) {
-                CommandAsked(command, User(twitchEvent.user.name))
+                CommandAsked(command, user)
             } else {
+                changeState.addMessage(UserMessage(user, message))
                 MessageReceived(twitchEvent)
             }
         )

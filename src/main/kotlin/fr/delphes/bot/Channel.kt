@@ -14,6 +14,7 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.state.CurrentStream
+import fr.delphes.bot.state.Statistics
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.game.Game
 import fr.delphes.bot.twitch.game.GameId
@@ -42,6 +43,7 @@ class Channel(
 ) : ChannelInfo {
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     override val currentStream: CurrentStream? get() = state.currentStream
+    override val statistics: Statistics? get() = state.statistics
     val name = configuration.ownerChannel
     val userId : String
     val oAuth = configuration.ownerAccountOauth

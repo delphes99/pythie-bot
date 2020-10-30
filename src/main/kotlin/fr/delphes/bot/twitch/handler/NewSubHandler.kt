@@ -13,6 +13,10 @@ class NewSubHandler : TwitchIncomingEventHandler<NewSubPayload> {
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
-        return twitchEvent.data.map { d -> NewSub(d) }
+        val incomingEvents = twitchEvent.data.map { d -> NewSub(d) }
+        incomingEvents.forEach { newSub ->
+            changeState.newSub(newSub.sub)
+        }
+        return incomingEvents
     }
 }

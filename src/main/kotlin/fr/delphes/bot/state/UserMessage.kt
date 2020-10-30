@@ -1,4 +1,4 @@
-package fr.delphes.feature.statistics
+package fr.delphes.bot.state
 
 import fr.delphes.User
 

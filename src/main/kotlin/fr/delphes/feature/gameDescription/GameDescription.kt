@@ -11,6 +11,7 @@ import fr.delphes.bot.twitch.game.GameId
 import fr.delphes.feature.AbstractFeature
 
 class GameDescription(commandTrigger: String, vararg descriptions: Pair<GameId, String>) : AbstractFeature() {
+    //TODO dynamics description (file / commands / ... ?)
     private val descriptions = mapOf(*descriptions).mapKeys { entry -> entry.key.id }
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(commandHandler)

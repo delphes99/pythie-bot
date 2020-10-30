@@ -1,11 +1,11 @@
-package fr.delphes.feature.statistics
+package fr.delphes.bot.state
 
 import fr.delphes.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class StatisticsStateTest {
+internal class StatisticsTest {
     private val USER_1 = User("user1")
     private val USER_2 = User("user2")
 
@@ -14,7 +14,7 @@ internal class StatisticsStateTest {
         @Test
         internal fun `one chatter`() {
             assertThat(
-                StatisticsState(
+                Statistics(
                     mutableListOf(
                         UserMessage(USER_1, "message user1"),
                         UserMessage(USER_1, "second message user1")
@@ -26,7 +26,7 @@ internal class StatisticsStateTest {
         @Test
         internal fun `two chatter`() {
             assertThat(
-                StatisticsState(
+                Statistics(
                     mutableListOf(
                         UserMessage(USER_1, "message user1"),
                         UserMessage(USER_2, "second message user1")
@@ -41,7 +41,7 @@ internal class StatisticsStateTest {
         @Test
         internal fun `count message`() {
             assertThat(
-                StatisticsState(
+                Statistics(
                     mutableListOf(
                         UserMessage(USER_1, "message user1"),
                         UserMessage(USER_1, "second message user1"),
@@ -56,7 +56,7 @@ internal class StatisticsStateTest {
     inner class NewFollow {
         @Test
         internal fun `new follow`() {
-            val state = StatisticsState()
+            val state = Statistics()
             state.newFollow(USER_1)
 
             assertThat(state.numberOfFollow).isEqualTo(1)
@@ -64,7 +64,7 @@ internal class StatisticsStateTest {
 
         @Test
         internal fun `don't increment new follow twice for the user`() {
-            val state = StatisticsState()
+            val state = Statistics()
             state.newFollow(USER_1)
             state.newFollow(USER_1)
 
@@ -76,7 +76,7 @@ internal class StatisticsStateTest {
     inner class NewSub {
         @Test
         internal fun `new sub`() {
-            val state = StatisticsState()
+            val state = Statistics()
             state.newSub(USER_1)
 
             assertThat(state.numberOfSub).isEqualTo(1)
@@ -84,7 +84,7 @@ internal class StatisticsStateTest {
 
         @Test
         internal fun `don't increment new sub twice for the user`() {
-            val state = StatisticsState()
+            val state = Statistics()
             state.newSub(USER_1)
             state.newSub(USER_1)
 

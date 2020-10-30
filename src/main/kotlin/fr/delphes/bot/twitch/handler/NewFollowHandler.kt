@@ -13,6 +13,10 @@ class NewFollowHandler : TwitchIncomingEventHandler<NewFollowPayload> {
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
-        return twitchEvent.data.map { d -> NewFollow(d) }
+        val incomingEvents = twitchEvent.data.map { d -> NewFollow(d) }
+        incomingEvents.forEach { newFollow ->
+            changeState.newFollow(newFollow.follower)
+        }
+        return incomingEvents
     }
 }
