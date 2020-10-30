@@ -1,7 +1,7 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.util.serialization.Serializer
-import fr.delphes.bot.webserver.admin.AdminModule
+import fr.delphes.bot.webserver.admin.FeaturesModule
 import fr.delphes.bot.webserver.webhook.WebhookModule
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -19,7 +19,7 @@ class WebServer(
         }
 
         launchServer(8080) {
-            AdminModule(bot)
+            FeaturesModule(bot)
         }
     }
 
