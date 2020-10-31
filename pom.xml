@@ -93,6 +93,12 @@
             <artifactId>ktor-client-serialization-jvm</artifactId>
             <version>${ktor.version}</version>
         </dependency>
+        <!-- Word cloud -->
+        <dependency>
+            <groupId>com.kennycason</groupId>
+            <artifactId>kumo-core</artifactId>
+            <version>1.27</version>
+        </dependency>
         <!-- Logs -->
         <dependency>
             <groupId>io.github.microutils</groupId>

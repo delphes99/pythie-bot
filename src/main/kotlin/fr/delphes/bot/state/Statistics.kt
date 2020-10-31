@@ -12,6 +12,8 @@ class Statistics(
     val numberMessages: Int get() = userMessages.count()
     val numberOfChatters: Int get() = userMessages.map(UserMessage::user).distinct().count()
 
+    val messages: List<UserMessage> get() = userMessages
+
     override fun addMessage(userMessage: UserMessage) {
         userMessages.add(userMessage)
     }

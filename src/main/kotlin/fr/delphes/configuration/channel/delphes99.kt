@@ -15,6 +15,7 @@ import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.bot.util.time.prettyPrint
 import fr.delphes.feature.bitCheer.BitCheer
 import fr.delphes.feature.commandList.CommandList
+import fr.delphes.feature.endCredits.EndCredits
 import fr.delphes.feature.streamUpdate.StreamUpdate
 import fr.delphes.feature.gameDescription.GameDescription
 import java.time.Duration
@@ -93,6 +94,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         StreamOffline { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")) },
         StreamOnline { listOf(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !")) },
         Statistics(),
+        EndCredits(),
         CommandList(
             "!help"
         ) { commands ->
