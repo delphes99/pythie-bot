@@ -66,6 +66,10 @@ fun EndCreditsModule(
 }
 
 private fun Statistics.wordFrequencies(numberOfWords: Int): List<WordFrequency> {
+    if(messages.isEmpty()) {
+        return emptyList()
+    }
+
     val occurrences = messages.map(UserMessage::user).groupingBy(User::name).eachCount()
 
     return occurrences.map { entry ->
