@@ -18,6 +18,7 @@ import fr.delphes.feature.commandList.CommandList
 import fr.delphes.feature.endCredits.EndCredits
 import fr.delphes.feature.streamUpdate.StreamUpdate
 import fr.delphes.feature.gameDescription.GameDescription
+import fr.delphes.feature.overlay.Overlay
 import java.time.Duration
 
 /**
@@ -95,6 +96,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         StreamOnline { listOf(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !")) },
         Statistics(),
         EndCredits(),
+        Overlay(),
         CommandList(
             "!help"
         ) { commands ->

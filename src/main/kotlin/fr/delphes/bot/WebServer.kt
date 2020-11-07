@@ -5,6 +5,7 @@ import fr.delphes.bot.webserver.admin.FeaturesModule
 import fr.delphes.bot.webserver.webhook.WebhookModule
 import io.ktor.application.Application
 import io.ktor.application.install
+import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
@@ -19,6 +20,9 @@ class WebServer(
         }
 
         launchServer(8080) {
+            install(CORS) {
+                anyHost()
+            }
             FeaturesModule(bot)
         }
     }

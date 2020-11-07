@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<head>
+	<link rel="stylesheet" href="overlay.css" />
+	<script src="https://unpkg.com/vue@next"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="overlay">
+	<ul>
+		<event-list
+			v-for="item in events"
+			:key="item.type"
+			:last_events="item.events"
+			:type="item.type"
+			:id="item.type"></event-list>
+	</ul>
+</div>
+</body>
+</html>
+
+<script type="application/javascript">
+	function emptyEventsFor(type) {
+		return {
+			type: type,
+			events: []
+		}
+	}
+
+	const Overlay = {
+		data() {
+			return {
+				events: [
+					emptyEventsFor("last_follow"),
+					emptyEventsFor("last_sub"),
+					emptyEventsFor("last_cheer"),
+					{
+						type: "current_voth",
+						events: ["toto"]
+					}
+				]
+			}
+		},
+		methods: {
+			load() {
+				axios.get('http://localhost:8080/delphes99/overlay/infos')
+						.then(response => {
+							const data = response.data;
+							this.events = [
+								{
+									type: "last_follow",
+									events: data.last_follow
+								},
+								emptyEventsFor("last_sub"),
+								emptyEventsFor("last_cheer"),
+								emptyEventsFor("current_voth")
+							]
+						})
+						.catch(error => console.error(error));
+			}
+		},
+		mounted: function () {
+			this.load();
+		}
+	}
+
+	let app = Vue.createApp(Overlay);
+	app.component('event-list', {
+		props: ['last_events', 'type'],
+		template: `<li>{{ last_events[0] }} {{ last_events[1] }} {{ last_events[2] }}</li>`
+	})
+	let vm = app.mount('#overlay')
+	setInterval(() => {
+		vm.load()
+	}, 1000);
+
+</script>

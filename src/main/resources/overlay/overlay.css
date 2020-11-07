@@ -1,0 +1,21 @@
+#overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: aquamarine;
+}
+#overlay > ul {
+    margin: 0;
+}
+
+#overlay > ul > li {
+    display: inline-block;
+    width: 15em;
+    padding: 1em 0.5em 1em 55px;
+    background-color: blueviolet;
+}
+
+#last_follow {
+    background: url("img/follow.jpg") no-repeat;
+}
