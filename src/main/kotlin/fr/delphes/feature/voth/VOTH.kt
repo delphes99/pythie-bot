@@ -15,9 +15,12 @@ import fr.delphes.bot.event.outgoing.RemoveVIP
 import fr.delphes.bot.event.outgoing.RetrieveVip
 import fr.delphes.bot.util.time.Clock
 import fr.delphes.bot.util.time.SystemClock
+import fr.delphes.bot.webserver.alert.Alert
 import fr.delphes.feature.AbstractFeature
 import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.StateRepository
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class VOTH(
     private val configuration: VOTHConfiguration,
@@ -77,6 +80,10 @@ class VOTH(
         override fun handle(event: VIPListReceived, channel: ChannelInfo): List<OutgoingEvent> {
             return if (vothChanged) {
                 state.vothChanged = false
+                //TODO make suspendable
+                GlobalScope.launch {
+                    channel.alerts.send(Alert("new voth"))
+                }
                 val events = event.vips.map(::RemoveVIP) + PromoteVIP(currentVip!!.user)
                 save()
                 events

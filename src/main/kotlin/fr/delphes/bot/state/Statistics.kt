@@ -13,7 +13,7 @@ class Statistics(
     val numberOfChatters: Int get() = userMessages.map(UserMessage::user).distinct().count()
 
     val messages: List<UserMessage> get() = userMessages
-    val lastFollows: List<User> get() = newFollows.takeLast(3).reversed()
+    val lastFollows: List<User> get() = newFollows.reversed()
 
     override fun addMessage(userMessage: UserMessage) {
         userMessages.add(userMessage)

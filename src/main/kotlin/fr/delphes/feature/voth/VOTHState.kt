@@ -64,4 +64,15 @@ class VOTHState(
     private fun allWinners(): List<User> {
         return previousReigns.map { reign -> reign.voth }.plus(currentVip?.user).filterNotNull().distinct()
     }
+
+    fun lastReigns(now: LocalDateTime): List<VOTHReign> {
+        val currentVip = currentVip
+
+        return if (currentVip != null) {
+            val currentReign = VOTHReign(currentVip.user, currentVip.duration(now), currentVip.cost)
+            previousReigns + currentReign
+        } else {
+            previousReigns
+        }.reversed()
+    }
 }

@@ -72,6 +72,12 @@
             <artifactId>ktor-serialization</artifactId>
             <version>${ktor.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-websockets</artifactId>
+            <version>${ktor.version}</version>
+        </dependency>
+
         <!-- Http client -->
         <dependency>
             <groupId>io.ktor</groupId>

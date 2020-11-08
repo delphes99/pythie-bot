@@ -3,19 +3,51 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: aquamarine;
-}
-#overlay > ul {
-    margin: 0;
 }
 
-#overlay > ul > li {
-    display: inline-block;
-    width: 15em;
-    padding: 1em 0.5em 1em 55px;
-    background-color: blueviolet;
+#footer {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
 }
 
-#last_follow {
-    background: url("img/follow.jpg") no-repeat;
+.event-list {
+    justify-self: center;
+    display: grid;
+    grid-template-columns: 50px auto;
+    grid-template-rows: 10px 10px 50px;
+    grid-template-areas:
+        ".          third"
+        ".          second"
+        "event-logo first";
+    width: 350px;
+}
+.event-list > img {
+    grid-area: event-logo;
+}
+
+.event-list > div {
+    justify-self: center;
+    align-self: center;
+    font-family: LaserCut;
+}
+
+.event-list > .first {
+    grid-area: first;
+    font-size: 30px;
+}
+
+.event-list > .second {
+    grid-area: second;
+    font-size: 10px;
+}
+
+.event-list > .third {
+    grid-area: third;
+    font-size: 10px;
+}
+
+.alert {
+    position: fixed;
+    right: 30px;
+    top: 30px;
 }

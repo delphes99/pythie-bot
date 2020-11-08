@@ -29,11 +29,13 @@ import fr.delphes.bot.twitch.handler.NewFollowHandler
 import fr.delphes.bot.twitch.handler.NewSubHandler
 import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
 import fr.delphes.bot.twitch.handler.StreamInfosHandler
+import fr.delphes.bot.webserver.alert.Alert
 import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
 import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
+import kotlinx.coroutines.channels.Channel
 import mu.KotlinLogging
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -46,6 +48,7 @@ class Channel(
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     override val currentStream: CurrentStream? get() = state.currentStream
     override val statistics: Statistics? get() = state.statistics
+    override val alerts = Channel<Alert>()
 
     val name = configuration.ownerChannel
     val userId : String
@@ -115,9 +118,7 @@ class Channel(
         eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
         eventHandler.onEvent(ChannelBitsEvent::class.java, ::handleBitsEvent)
 
-        println("point redemp ${name}")
         client.pubSub.listenForChannelPointsRedemptionEvents(channelCredential.toCredential(), userId)
-        println("cheer ${name}")
         client.pubSub.listenForCheerEvents(channelCredential.toCredential(), userId)
     }
 

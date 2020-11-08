@@ -35,8 +35,8 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                     listOf(
                         SendMessage(
                             listOfNotNull(
-                                "\uD83D\uDC51 @${announce.rewardRedemption.user.name} est le nouveau VIP. \uD83D\uDC51",
-                                announce.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP @${oldVOTH.user} [règne : ${announce.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
+                                "\uD83D\uDC51 ${announce.rewardRedemption.user.name} est le nouveau VIP. \uD83D\uDC51",
+                                announce.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP ${oldVOTH.user} [règne : ${announce.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
                             ).joinToString(" ")
                         )
                     )

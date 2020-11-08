@@ -4,22 +4,31 @@
 	<link rel="stylesheet" href="overlay.css" />
 	<script src="https://unpkg.com/vue@next"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<title>Overlay</title>
 </head>
 <body>
 <div id="overlay">
-	<ul>
+	<div class="alert">
+		{{ alert }}
+	</div>
+	<div id="footer">
 		<event-list
 			v-for="item in events"
 			:key="item.type"
 			:last_events="item.events"
 			:type="item.type"
-			:id="item.type"></event-list>
-	</ul>
+			:id="item.type.name"/>
+	</div>
 </div>
 </body>
 </html>
 
 <script type="application/javascript">
+	const LAST_FOLLOW = { name:"last_follow", img:"img/follow.jpg" };
+	const LAST_SUB = { name: "last_sub", img: "img/sub.jpg" };
+	const LAST_CHEER = { name:"last_cheer", img:"img/cheer.jpg" };
+	const LAST_VOTH = { name:"last_voth", img:"img/voth.jpg" };
+
 	function emptyEventsFor(type) {
 		return {
 			type: type,
@@ -31,14 +40,12 @@
 		data() {
 			return {
 				events: [
-					emptyEventsFor("last_follow"),
-					emptyEventsFor("last_sub"),
-					emptyEventsFor("last_cheer"),
-					{
-						type: "current_voth",
-						events: ["toto"]
-					}
-				]
+					emptyEventsFor(LAST_FOLLOW),
+					emptyEventsFor(LAST_SUB),
+					emptyEventsFor(LAST_CHEER),
+					emptyEventsFor(LAST_VOTH)
+				],
+				alert: null
 			}
 		},
 		methods: {
@@ -48,12 +55,15 @@
 							const data = response.data;
 							this.events = [
 								{
-									type: "last_follow",
+									type: LAST_FOLLOW,
 									events: data.last_follow
 								},
-								emptyEventsFor("last_sub"),
-								emptyEventsFor("last_cheer"),
-								emptyEventsFor("current_voth")
+								emptyEventsFor(LAST_SUB),
+								emptyEventsFor(LAST_CHEER),
+								{
+									type: LAST_VOTH,
+									events: data.last_voth
+								}
 							]
 						})
 						.catch(error => console.error(error));
@@ -67,11 +77,25 @@
 	let app = Vue.createApp(Overlay);
 	app.component('event-list', {
 		props: ['last_events', 'type'],
-		template: `<li>{{ last_events[0] }} {{ last_events[1] }} {{ last_events[2] }}</li>`
+		template: `<div class="event-list">
+					<img :src="type.img" />
+					<div class="first">{{ last_events[0] }}</div>
+					<div class="second">{{ last_events[1] }}</div>
+					<div class="third">{{ last_events[2] }}</div>
+					</div>`
 	})
 	let vm = app.mount('#overlay')
 	setInterval(() => {
 		vm.load()
 	}, 1000);
 
+
+	let socket = new WebSocket("ws://localhost:8080/delphes99");
+
+	socket.onopen = function() {
+		this.onmessage = function(event) {
+			vm.alert = event.data
+			setTimeout(() => { vm.alert = null }, 3000)
+		};
+	};
 </script>

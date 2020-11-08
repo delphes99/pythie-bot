@@ -11,7 +11,7 @@ internal class VOTHStateTest {
     private val USER = User("user")
 
     @Test
-    internal fun `list previous reigns`() {
+    internal fun `list previous reigns for user`() {
         val reign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val state =
             VOTHState(previousReigns = mutableListOf(reign))
@@ -60,7 +60,8 @@ internal class VOTHStateTest {
         val state =
             VOTHState(
                 currentVip = currentReign,
-                previousReigns = previousReignForUser1.plus(previousReignForUser2).plus(previousReignForUser3).toMutableList()
+                previousReigns = previousReignForUser1.plus(previousReignForUser2).plus(previousReignForUser3)
+                    .toMutableList()
             )
 
         assertThat(state.top3(NOW)).isEqualTo(
@@ -152,6 +153,31 @@ internal class VOTHStateTest {
                     Duration.ofMinutes(60)
                 )
             )
+        )
+    }
+
+    @Test
+    internal fun `last reigns`() {
+        val previousReign1 = VOTHReign(USER, Duration.ofMinutes(5), 50)
+        val previousReign2 = VOTHReign(User("user2"), Duration.ofMinutes(5), 50)
+        val previousReign3 = VOTHReign(USER, Duration.ofMinutes(5), 50)
+        val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), 25)
+
+        val state =
+            VOTHState(
+                currentVip = currentReign,
+                previousReigns = mutableListOf(
+                    previousReign1,
+                    previousReign2,
+                    previousReign3,
+                )
+            )
+
+        assertThat(state.lastReigns(NOW)).containsExactly(
+            VOTHReign(USER, Duration.ofMinutes(15), 25),
+            previousReign3,
+            previousReign2,
+            previousReign1
         )
     }
 }

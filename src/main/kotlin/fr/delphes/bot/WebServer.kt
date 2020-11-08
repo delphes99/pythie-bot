@@ -2,6 +2,7 @@ package fr.delphes.bot
 
 import fr.delphes.bot.util.serialization.Serializer
 import fr.delphes.bot.webserver.admin.FeaturesModule
+import fr.delphes.bot.webserver.alert.AlertModule
 import fr.delphes.bot.webserver.auth.AuthInternalModule
 import fr.delphes.bot.webserver.auth.AuthModule
 import fr.delphes.bot.webserver.webhook.WebhookModule
@@ -28,6 +29,7 @@ class WebServer(
             }
             FeaturesModule(bot)
             AuthInternalModule(bot)
+            AlertModule(bot)
         }
     }
 
