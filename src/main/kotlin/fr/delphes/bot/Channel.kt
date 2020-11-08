@@ -54,7 +54,7 @@ class Channel(
     private val oAuth = configuration.ownerAccountOauth
 
     val features = configuration.features
-    private val ownerCredential = OAuth2Credential("twitch", "oauth:$oAuth")
+    private val ownerCredential = OAuth2Credential("twitch", oAuth)
     private val eventHandlers = EventHandlers()
 
     private val client: TwitchClient
@@ -93,6 +93,7 @@ class Channel(
             .withEnableHelix(true)
             .withEnableChat(true)
             .withChatAccount(ownerCredential)
+            .withDefaultAuthToken(channelCredential.toCredential())
             .build()!!
 
         chat = client.chat
@@ -114,8 +115,10 @@ class Channel(
         eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
         eventHandler.onEvent(ChannelBitsEvent::class.java, ::handleBitsEvent)
 
-        client.pubSub.listenForChannelPointsRedemptionEvents(OAuth2Credential("twitch", channelCredential.access_token), userId)
-        client.pubSub.listenForCheerEvents(OAuth2Credential("twitch", channelCredential.access_token), userId)
+        println("point redemp ${name}")
+        client.pubSub.listenForChannelPointsRedemptionEvents(channelCredential.toCredential(), userId)
+        println("cheer ${name}")
+        client.pubSub.listenForCheerEvents(channelCredential.toCredential(), userId)
     }
 
     fun handleBitsEvent(request: ChannelBitsEvent) {
@@ -163,8 +166,13 @@ class Channel(
     }
 
     fun newAuth(auth: ChannelAuth) {
+        LOGGER.info { "Save new credentials for channel : ${name}" }
         channelAuthRepository.save(auth)
         channelCredential = auth
+    }
+
+    private fun ChannelAuth.toCredential(): OAuth2Credential {
+        return OAuth2Credential("twitch", access_token)
     }
 
     companion object {
