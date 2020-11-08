@@ -12,10 +12,11 @@ import java.time.Duration
 
 class ClientBot(
     configuration: BotConfiguration,
-    val publicUrl: String
+    private val publicUrl: String,
+    val configFilepath: String
 ) {
     val channels = mutableListOf<Channel>()
-    val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
+    private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
 
     val clientId = configuration.clientId
     val secretKey = configuration.secretKey
@@ -34,6 +35,10 @@ class ClientBot(
 
     init {
         chat.connect()
+    }
+
+    fun findChannelBy(name: String): Channel? {
+        return channels.find { channel -> channel.name == name }
     }
 
     fun register(channel: Channel) {
@@ -56,7 +61,7 @@ class ClientBot(
                             WEBHOOK_DURATION,
                             "toto"
                         ),
-                        appToken
+                        channel.channelCredential.access_token
                     ).execute()
                     //TODO catch failed subscription
                     LOGGER.debug { "Twich webhook ${twitchWebhook.name} for ${channel.name} : Subscription request sent" }
@@ -69,7 +74,7 @@ class ClientBot(
 
     companion object {
         //private val WEBHOOK_DURATION = Duration.ofDays(1).toSeconds().toInt()
-        private val WEBHOOK_DURATION = Duration.ofMinutes(400).toSeconds().toInt()
+        private val WEBHOOK_DURATION = Duration.ofMinutes(3).toSeconds().toInt()
         private val LOGGER = KotlinLogging.logger {}
     }
 }

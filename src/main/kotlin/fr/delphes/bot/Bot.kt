@@ -7,9 +7,10 @@ object Bot {
     fun build(
         configuration: BotConfiguration,
         publicUrl: String,
+        configFilepath: String,
         vararg channelConfigurations: ChannelConfiguration
     ) {
-        val bot = ClientBot(configuration, publicUrl)
+        val bot = ClientBot(configuration, publicUrl, configFilepath)
 
         channelConfigurations.forEach { channelConfiguration ->
             bot.register(Channel(channelConfiguration, bot))

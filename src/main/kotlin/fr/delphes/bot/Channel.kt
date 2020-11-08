@@ -12,6 +12,8 @@ import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.state.ChannelAuth
+import fr.delphes.bot.state.ChannelAuthRepository
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.state.CurrentStream
 import fr.delphes.bot.state.Statistics
@@ -44,9 +46,12 @@ class Channel(
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     override val currentStream: CurrentStream? get() = state.currentStream
     override val statistics: Statistics? get() = state.statistics
+
     val name = configuration.ownerChannel
     val userId : String
-    val oAuth = configuration.ownerAccountOauth
+    private val channelAuthRepository = ChannelAuthRepository("${bot.configFilepath}\\${name}\\channelAuth.json")
+    var channelCredential = channelAuthRepository.load()
+    private val oAuth = configuration.ownerAccountOauth
 
     val features = configuration.features
     private val ownerCredential = OAuth2Credential("twitch", "oauth:$oAuth")
@@ -109,8 +114,8 @@ class Channel(
         eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
         eventHandler.onEvent(ChannelBitsEvent::class.java, ::handleBitsEvent)
 
-        client.pubSub.listenForChannelPointsRedemptionEvents(bot.botCredential, userId)
-        client.pubSub.listenForCheerEvents(bot.botCredential, userId)
+        client.pubSub.listenForChannelPointsRedemptionEvents(OAuth2Credential("twitch", channelCredential.access_token), userId)
+        client.pubSub.listenForCheerEvents(OAuth2Credential("twitch", channelCredential.access_token), userId)
     }
 
     fun handleBitsEvent(request: ChannelBitsEvent) {
@@ -155,6 +160,11 @@ class Channel(
                 LOGGER.error(e) { "Error while handling event ${e.message}" }
             }
         }
+    }
+
+    fun newAuth(auth: ChannelAuth) {
+        channelAuthRepository.save(auth)
+        channelCredential = auth
     }
 
     companion object {

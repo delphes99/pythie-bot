@@ -1,9 +1,6 @@
 package fr.delphes.bot
 
-import fr.delphes.bot.util.serialization.Serializer
-import io.ktor.client.HttpClient
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
+import fr.delphes.bot.util.http.httpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.post
 import io.ktor.client.request.url
@@ -13,7 +10,6 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
-import java.lang.IllegalStateException
 import java.util.concurrent.TimeUnit
 
 class Ngrok {
@@ -49,7 +45,7 @@ class Ngrok {
         fun createHttpTunnel(port: Int, name: String): Tunnel {
             val tunnel = Tunnel(port, name)
             LOGGER.debug { "Opened ngrok tunnel with public url : ${tunnel.publicUrl}" }
-            atShutdown { runBlocking { tunnel.kill(HttpClient()) } }
+            atShutdown { runBlocking { tunnel.kill() } }
             return tunnel
         }
 
@@ -66,18 +62,13 @@ class Ngrok {
 
         init {
             publicUrl = runBlocking {
-                val httpClient = HttpClient() {
-                    install(JsonFeature) {
-                        serializer = KotlinxSerializer(Serializer)
-                    }
-                }
-                kill(httpClient)
-                create(httpClient)
+                kill()
+                create()
             }
         }
 
 
-        internal suspend fun kill(httpClient: HttpClient) {
+        internal suspend fun kill() {
             try {
                 LOGGER.debug { "Delete tunnels : $name" }
                 httpClient.delete<HttpResponse>("$API_URL/tunnels/$name")
@@ -87,7 +78,7 @@ class Ngrok {
             }
         }
 
-        private suspend fun create(httpClient: HttpClient): String {
+        private suspend fun create(): String {
             LOGGER.debug { "Create tunnel : $name" }
             try {
                 val response = httpClient.post<String> {

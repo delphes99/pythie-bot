@@ -16,6 +16,7 @@ fun main() {
     Bot.build(
         PropertiesBotConfiguration(),
         tunnel.publicUrl,
+        "A:\\pythiebot\\configuration\\",
         delphes99Channel,
         delphestestChannel
     )

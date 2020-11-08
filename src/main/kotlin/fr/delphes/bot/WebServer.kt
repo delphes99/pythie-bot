@@ -2,6 +2,8 @@ package fr.delphes.bot
 
 import fr.delphes.bot.util.serialization.Serializer
 import fr.delphes.bot.webserver.admin.FeaturesModule
+import fr.delphes.bot.webserver.auth.AuthInternalModule
+import fr.delphes.bot.webserver.auth.AuthModule
 import fr.delphes.bot.webserver.webhook.WebhookModule
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -17,6 +19,7 @@ class WebServer(
     init {
         launchServer(80) {
             WebhookModule(bot)
+            AuthModule(bot)
         }
 
         launchServer(8080) {
@@ -24,6 +27,7 @@ class WebServer(
                 anyHost()
             }
             FeaturesModule(bot)
+            AuthInternalModule(bot)
         }
     }
 

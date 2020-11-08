@@ -1,29 +1,15 @@
 package fr.delphes.feature
 
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
+import fr.delphes.bot.util.FileRepository
 
 open class FileStateRepository<T : State>(
     filePath: String,
-    val serializer: (T) -> String,
-    val deserializer: (String) -> T,
-    val initializer: () -> T
-) : StateRepository<T> {
-    private val file: File = File(filePath)
-
-    override fun save(state: T) {
-        if (!file.isFile) {
-            Files.createDirectories(Path.of(file.parent))
-            file.createNewFile()
-        }
-        file.writeText(serializer(state))
-    }
-
-    override fun load(): T {
-        if (!file.isFile) {
-            return initializer()
-        }
-        return deserializer(file.readText())
-    }
-}
+    serializer: (T) -> String,
+    deserializer: (String) -> T,
+    initializer: () -> T
+) : FileRepository<T>(
+    filePath,
+    serializer,
+    deserializer,
+    initializer
+), StateRepository<T>
