@@ -11,7 +11,9 @@ import com.github.twitch4j.pubsub.events.ChannelBitsEvent
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.outgoing.TwitchOutgoingEvent
 import fr.delphes.bot.state.ChannelAuth
 import fr.delphes.bot.state.ChannelAuthRepository
 import fr.delphes.bot.state.ChannelState
@@ -29,13 +31,15 @@ import fr.delphes.bot.twitch.handler.NewFollowHandler
 import fr.delphes.bot.twitch.handler.NewSubHandler
 import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
 import fr.delphes.bot.twitch.handler.StreamInfosHandler
-import fr.delphes.bot.webserver.alert.Alert
+import fr.delphes.bot.util.exhaustive
 import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
 import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -48,7 +52,7 @@ class Channel(
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     override val currentStream: CurrentStream? get() = state.currentStream
     override val statistics: Statistics? get() = state.statistics
-    override val alerts = Channel<Alert>()
+    val alerts = Channel<Alert>()
 
     val name = configuration.ownerChannel
     val userId : String
@@ -158,11 +162,20 @@ class Channel(
 
     private fun List<OutgoingEvent>.execute() {
         forEach { e ->
-            try {
-                e.executeOnTwitch(bot.chat, chat, name)
-            } catch (e: Exception) {
-                LOGGER.error(e) { "Error while handling event ${e.message}" }
-            }
+            when(e) {
+                is TwitchOutgoingEvent -> {
+                    try {
+                        e.executeOnTwitch(bot.chat, chat, name)
+                    } catch (e: Exception) {
+                        LOGGER.error(e) { "Error while handling event ${e.message}" }
+                    }
+                }
+                is Alert -> {
+                    GlobalScope.launch {
+                        alerts.send(e)
+                    }
+                }
+            }.exhaustive()
         }
     }
 
