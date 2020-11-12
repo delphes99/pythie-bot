@@ -8,16 +8,15 @@
 </head>
 <body>
 <div id="overlay">
-	<div class="alert">
-		{{ alert }}
-	</div>
+	<alert :data="alert"></alert>
 	<div id="footer">
 		<event-list
 			v-for="item in events"
 			:key="item.type"
 			:last_events="item.events"
 			:type="item.type"
-			:id="item.type.name"/>
+			:id="item.type.name">
+		</event-list>
 	</div>
 </div>
 </body>
@@ -83,18 +82,34 @@
 					<div class="second">{{ last_events[1] }}</div>
 					<div class="third">{{ last_events[2] }}</div>
 					</div>`
+	});
+	app.component('alert', {
+		props: ['data'],
+		computed: {
+			alertText: function () {
+				if(this.data) {
+					console.log(this.data)
+					if (this.data.type === "newVip") {
+						return "Nouveau VIP : " + this.data.parameters["newVIP"]
+					}
+				}
+			}
+		},
+		template: `<div class="alert">
+					{{ alertText }}
+					</div>`
 	})
+
 	let vm = app.mount('#overlay')
 	setInterval(() => {
 		vm.load()
 	}, 1000);
 
-
 	let socket = new WebSocket("ws://localhost:8080/delphes99");
 
 	socket.onopen = function() {
 		this.onmessage = function(event) {
-			vm.alert = event.data
+			vm.alert = JSON.parse(event.data)
 			setTimeout(() => { vm.alert = null }, 3000)
 		};
 	};
