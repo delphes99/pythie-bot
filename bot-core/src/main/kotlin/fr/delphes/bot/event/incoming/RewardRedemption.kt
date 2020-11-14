@@ -4,25 +4,37 @@ import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.User
 
 data class RewardRedemption(
-    val rewardId: String,
+    val feature: Feature,
     val user: User,
     val cost: RewardCost
-): IncomingEvent {
+) : IncomingEvent {
     constructor(event: RewardRedeemedEvent) : this(
-        event.redemption.reward.id,
+        Feature(
+            event.redemption.reward.id,
+            event.redemption.reward.title
+        ),
         User(event.redemption.user.displayName),
         event.redemption.reward.cost
     )
 
     constructor(
-        rewardId: String,
+        feature: Feature,
         user: String,
         cost: RewardCost
     ) : this(
-        rewardId,
+        feature,
         User(user),
         cost
     )
 }
 
 typealias RewardCost = Long
+
+data class Feature(
+    val rewardId: String,
+    val rewardTitle: String,
+) {
+    fun isEquals(featureName: String): Boolean {
+        return rewardId == featureName || rewardTitle == featureName
+    }
+}
