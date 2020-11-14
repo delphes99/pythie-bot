@@ -15,7 +15,7 @@
     <name>pythie-bot</name>
 
     <properties>
-        <main.class>fr.delphes.MainKt</main.class>
+        <main.class>fr.delphes.LaunchBotKt</main.class>
     </properties>
 
     <dependencies>
