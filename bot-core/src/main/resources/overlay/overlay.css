@@ -1,3 +1,16 @@
+body {
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 47%, rgba(255,255,255,1) 100%);
+}
+
+:root {
+    --main-bg-color: 27, 70, 126;
+    --main-font-color: 0, 0, 0;
+    --main-font: Beckman;
+    --event-list-children-height: 18px;
+}
+
+
 #overlay {
     position: fixed;
     bottom: 0;
@@ -8,46 +21,92 @@
 #footer {
     display: grid;
     grid-template-columns: auto auto auto auto;
+    background: linear-gradient(
+            180deg,
+            rgba(var(--main-font-color), 0) calc(var(--event-list-children-height) * 2),
+            rgba(var(--main-font-color), 1) calc(var(--event-list-children-height) * 2 + 1px),
+            rgba(var(--main-bg-color), 1) calc(var(--event-list-children-height) * 2 + 2px)
+    );
 }
 
 .event-list {
     justify-self: center;
     display: grid;
     grid-template-columns: 50px auto;
-    grid-template-rows: 10px 10px 50px;
+    grid-template-rows: var(--event-list-children-height) var(--event-list-children-height) 30px;
     grid-template-areas:
         ".          third"
         ".          second"
         "event-logo first";
     width: 350px;
 }
+
 .event-list > img {
+    justify-self: center;
+    align-self: center;
     grid-area: event-logo;
 }
 
 .event-list > div {
     justify-self: center;
     align-self: center;
-    font-family: LaserCut;
+    font-family: var(--main-font);
 }
 
 .event-list > .first {
     grid-area: first;
-    font-size: 30px;
+    font-size: 20px;
+}
+
+
+.event-list > .second,
+.event-list > .third {
+    margin-bottom: 5px;
+    padding: 2px 5px 0 5px;
+    /*background: linear-gradient(180deg, rgba(var(--main-font-color), 0) 0%, rgba(var(--main-font-color), 0.1) 5%, var(--main-bg-color) 100%);*/
+    background: linear-gradient(
+            180deg,
+            rgba(125, 125, 125, 0) 0%,
+            rgba(var(--main-bg-color), 0.1) 5%,
+            rgba(var(--main-bg-color), 0.4) 6%,
+            rgba(var(--main-bg-color), 0.8) 100%
+    );
+    border-radius: 1px;
 }
 
 .event-list > .second {
     grid-area: second;
-    font-size: 10px;
+    font-size: 14px;
+    color: rgba(var(--main-font-color), 0.9);
 }
 
 .event-list > .third {
     grid-area: third;
     font-size: 10px;
+    color: rgba(var(--main-font-color), 0.8);
 }
 
 .alert {
     position: fixed;
     right: 30px;
     top: 30px;
+    width: 200px;
+    height: 60px;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border: black 2px solid;
+    background-color: rgb(var(--main-bg-color));
+    font-size: 20px;
+    font-family: var(--main-font);
+}
+
+.alert > .alert-title {
+    font-size: 12px;
+    background-color: cornflowerblue;
+}
+
+.alert > img {
+    display: inline-block;
 }

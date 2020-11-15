@@ -23,10 +23,10 @@
 </html>
 
 <script type="application/javascript">
-	const LAST_FOLLOW = { name:"last_follow", img:"img/follow.jpg" };
-	const LAST_SUB = { name: "last_sub", img: "img/sub.jpg" };
-	const LAST_CHEER = { name:"last_cheer", img:"img/cheer.jpg" };
-	const LAST_VOTH = { name:"last_voth", img:"img/voth.jpg" };
+	const LAST_FOLLOW = { name:"last_follow", img:"img/follow.png" };
+	const LAST_SUB = { name: "last_sub", img: "img/sub.png" };
+	const LAST_CHEER = { name:"last_cheer", img:"img/cheer.png" };
+	const LAST_VOTH = { name:"last_voth", img:"img/voth.png" };
 
 	function emptyEventsFor(type) {
 		return {
@@ -44,7 +44,7 @@
 					emptyEventsFor(LAST_CHEER),
 					emptyEventsFor(LAST_VOTH)
 				],
-				alert: null
+				alert: {"type":"test","parameters":{}}
 			}
 		},
 		methods: {
@@ -55,10 +55,16 @@
 							this.events = [
 								{
 									type: LAST_FOLLOW,
-									events: data.last_follow
+									events: data.last_voth
 								},
-								emptyEventsFor(LAST_SUB),
-								emptyEventsFor(LAST_CHEER),
+								{
+									type: LAST_SUB,
+									events: data.last_voth
+								},
+								{
+									type: LAST_CHEER,
+									events: data.last_voth
+								},
 								{
 									type: LAST_VOTH,
 									events: data.last_voth
@@ -91,12 +97,30 @@
 					console.log(this.data)
 					if (this.data.type === "newVip") {
 						return "Nouveau VIP : " + this.data.parameters["newVIP"]
+					} else if (this.data.type === "test") {
+						return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam dictum ut ante id fringilla. Morbi hendrerit in sem quis rhoncus. Quisque in interdum ipsum, vel aliquet nulla. Nam sagittis massa mauris, a venenatis eros auctor vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis egestas, orci et auctor mattis, purus ipsum ultricies augue, vitae blandit ipsum lorem id felis. Vivamus nulla purus, aliquet vel fermentum sit amet, cursus in felis. Nulla nec varius mauris, eu facilisis libero. Donec dictum porta posuere. Pellentesque viverra enim vel vehicula rhoncus. Aenean elit enim, vehicula id mollis in, imperdiet id leo. Mauris tincidunt nisi rutrum sagittis ultricies. Ut sagittis lacus eu orci sodales rhoncus. Integer aliquet tellus tellus, eget volutpat justo ullamcorper eget. Quisque non accumsan nisi."
 					}
+				}
+			},
+			img: function () {
+				if(this.data) {
+					return "img/voth.png"
+				}
+			},
+			title: function () {
+				if(this.data) {
+					return "Nouveau VIP"
 				}
 			}
 		},
 		template: `<div class="alert">
-					{{ alertText }}
+						<div class="alert-title">
+							<img :src="img" />
+							{{title}}
+						</div>
+						<div class="alert-content">
+							{{ alertText }}
+						</div>
 					</div>`
 	})
 
