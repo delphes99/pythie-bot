@@ -1,9 +1,8 @@
-package fr.delphes.bot.state
+package fr.delphes.twitch.model
 
-import fr.delphes.bot.twitch.game.Game
 import java.time.LocalDateTime
 
-data class CurrentStream(
+data class Stream(
     val title: String,
     val start: LocalDateTime,
     val game: Game

@@ -1,4 +1,4 @@
-package fr.delphes.bot.twitch.game
+package fr.delphes.twitch.model
 
 data class Game(
     val id: GameId,

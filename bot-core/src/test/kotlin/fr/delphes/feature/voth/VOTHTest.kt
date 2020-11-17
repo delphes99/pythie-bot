@@ -14,10 +14,10 @@ import fr.delphes.bot.event.outgoing.RemoveVIP
 import fr.delphes.bot.event.outgoing.RetrieveVip
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.util.time.TestClock
-import fr.delphes.bot.twitch.game.Game
-import fr.delphes.bot.twitch.game.SimpleGameId
 import fr.delphes.feature.TestStateRepository
 import fr.delphes.feature.handle
+import fr.delphes.twitch.model.Game
+import fr.delphes.twitch.model.SimpleGameId
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

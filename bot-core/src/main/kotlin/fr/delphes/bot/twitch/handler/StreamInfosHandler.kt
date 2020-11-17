@@ -7,11 +7,11 @@ import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.incoming.StreamOnline
 import fr.delphes.bot.state.ChannelChangeState
-import fr.delphes.bot.state.CurrentStream
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.game.GameRepository
-import fr.delphes.bot.twitch.game.SimpleGameId
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
+import fr.delphes.twitch.model.SimpleGameId
+import fr.delphes.twitch.model.Stream
 import mu.KotlinLogging
 
 class StreamInfosHandler(
@@ -57,7 +57,7 @@ class StreamInfosHandler(
         events.forEach { event ->
             when (event) {
                 is StreamOnline -> {
-                    changeState.changeCurrentStream(CurrentStream(event.title, event.start, event.game))
+                    changeState.changeCurrentStream(Stream(event.title, event.start, event.game))
                 }
                 is StreamOffline -> {
                     changeState.changeCurrentStream(null)
@@ -74,9 +74,9 @@ class StreamInfosHandler(
         return events
     }
 
-    private fun CurrentStream.applyChanges(
+    private fun Stream.applyChanges(
         changes: List<StreamChanges>
-    ): CurrentStream {
+    ): Stream {
         return changes.fold(this) { acc, change ->
             when (change) {
                 is StreamChanges.Title -> acc.copy(title = change.newTitle)

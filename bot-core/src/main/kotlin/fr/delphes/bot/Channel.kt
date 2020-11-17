@@ -2,7 +2,6 @@ package fr.delphes.bot
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.philippheuer.events4j.simple.SimpleEventHandler
-import com.github.twitch4j.TwitchClient
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
@@ -17,12 +16,8 @@ import fr.delphes.bot.event.outgoing.TwitchOutgoingEvent
 import fr.delphes.bot.state.ChannelAuth
 import fr.delphes.bot.state.ChannelAuthRepository
 import fr.delphes.bot.state.ChannelState
-import fr.delphes.bot.state.CurrentStream
 import fr.delphes.bot.state.Statistics
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
-import fr.delphes.bot.twitch.game.Game
-import fr.delphes.bot.twitch.game.GameId
-import fr.delphes.bot.twitch.game.SimpleGameId
 import fr.delphes.bot.twitch.game.TwitchGameRepository
 import fr.delphes.bot.twitch.handler.ChannelBitsHandler
 import fr.delphes.bot.twitch.handler.ChannelMessageHandler
@@ -37,12 +32,14 @@ import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
+import fr.delphes.twitch.TwitchApi
+import fr.delphes.twitch.TwitchClient
+import fr.delphes.twitch.model.Stream
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 class Channel(
     configuration: ChannelConfiguration,
@@ -50,7 +47,7 @@ class Channel(
     private val state: ChannelState = ChannelState()
 ) : ChannelInfo {
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
-    override val currentStream: CurrentStream? get() = state.currentStream
+    override val currentStream: Stream? get() = state.currentStream
     override val statistics: Statistics? get() = state.statistics
     val alerts = Channel<Alert>()
 
@@ -64,8 +61,10 @@ class Channel(
     private val ownerCredential = OAuth2Credential("twitch", oAuth)
     private val eventHandlers = EventHandlers()
 
-    private val client: TwitchClient
+    private val client: com.github.twitch4j.TwitchClient
     private val chat: TwitchChat
+
+    private val twitchApi: TwitchApi
 
     private val newFollowHandler: TwitchIncomingEventHandler<NewFollowPayload> = NewFollowHandler()
     private val newSubHandler: TwitchIncomingEventHandler<NewSubPayload> = NewSubHandler()
@@ -73,31 +72,16 @@ class Channel(
     private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedeemedEvent> = RewardRedeemedHandler()
     private val channelMessageHandler: TwitchIncomingEventHandler<ChannelMessageEvent> = ChannelMessageHandler()
     private val ircMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> = IRCMessageHandler()
-    private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload> = StreamInfosHandler(TwitchGameRepository(this::getGame))
-
-    private fun getGame(gameId: GameId) : Game {
-        val game = client.helix.getGames(bot.appToken, listOf(gameId.id), null).execute().games.first()
-
-        return Game(gameId, game.name)
-    }
-
-    private fun getStream(userId: String): CurrentStream? {
-        return client.helix.getStreams(bot.appToken, null, null, 1, null, null, listOf(userId), null).execute()
-            .streams
-            .firstOrNull()
-            ?.let {
-                CurrentStream(it.title, LocalDateTime.ofInstant(it.startedAtInstant, ZoneOffset.UTC), getGame(SimpleGameId(it.gameId)))
-            }
-    }
+    private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload>
 
     init {
-        this.userId = bot.client.helix.getUsers(null, null, listOf(name)).execute().users[0].id
+        twitchApi = TwitchClient.build(bot.clientId, channelCredential.access_token, name)
+        userId = twitchApi.userId
 
         client = TwitchClientBuilder.builder()
             .withClientId(bot.clientId)
             .withClientSecret(bot.secretKey)
             .withEnablePubSub(true)
-            .withEnableHelix(true)
             .withEnableChat(true)
             .withChatAccount(ownerCredential)
             .withDefaultAuthToken(channelCredential.toCredential())
@@ -110,7 +94,11 @@ class Channel(
             feature.registerHandlers(eventHandlers)
         }
 
-        state.init(getStream(userId))
+        streamInfosHandler = StreamInfosHandler(TwitchGameRepository(twitchApi::getGame))
+
+        runBlocking {
+            state.init(twitchApi.getStream(userId))
+        }
 
         chat.connect()
         client.pubSub.connect()
@@ -118,12 +106,13 @@ class Channel(
         //TODO subscribe only when feature requires
         val eventHandler = client.eventManager.getEventHandler(SimpleEventHandler::class.java)
         eventHandler.onEvent(ChannelMessageEvent::class.java, ::handleChannelMessageEvent)
-        eventHandler.onEvent(RewardRedeemedEvent::class.java, ::handleRewardRedeemedEvent)
         eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
-        eventHandler.onEvent(ChannelBitsEvent::class.java, ::handleBitsEvent)
 
         client.pubSub.listenForChannelPointsRedemptionEvents(channelCredential.toCredential(), userId)
+        eventHandler.onEvent(RewardRedeemedEvent::class.java, ::handleRewardRedeemedEvent)
+
         client.pubSub.listenForCheerEvents(channelCredential.toCredential(), userId)
+        eventHandler.onEvent(ChannelBitsEvent::class.java, ::handleBitsEvent)
     }
 
     fun handleBitsEvent(request: ChannelBitsEvent) {
@@ -162,6 +151,7 @@ class Channel(
 
     private fun List<OutgoingEvent>.execute() {
         forEach { e ->
+            @Suppress("IMPLICIT_CAST_TO_ANY")
             when(e) {
                 is TwitchOutgoingEvent -> {
                     try {
@@ -180,7 +170,7 @@ class Channel(
     }
 
     fun newAuth(auth: ChannelAuth) {
-        LOGGER.info { "Save new credentials for channel : ${name}" }
+        LOGGER.info { "Save new credentials for channel : $name" }
         channelAuthRepository.save(auth)
         channelCredential = auth
     }

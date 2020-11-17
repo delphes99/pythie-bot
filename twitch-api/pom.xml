@@ -9,83 +9,38 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>bot-core</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>twitch-api</artifactId>
 
-    <name>bot-core</name>
+    <name>twitch-api</name>
 
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-serialization</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlinx</groupId>
-            <artifactId>kotlinx-serialization-core</artifactId>
-        </dependency>
-        <!-- Twitch -->
-        <dependency>
-            <groupId>com.github.twitch4j</groupId>
-            <artifactId>twitch4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>fr.delphes</groupId>
-            <artifactId>twitch-api</artifactId>
-        </dependency>
-        <!-- Http server -->
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-netty</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-serialization</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-websockets</artifactId>
-        </dependency>
 
-        <!-- Http client -->
+        <!-- http client -->
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client</artifactId>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-client-apache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-client-serialization</artifactId>
+            <artifactId>ktor-client-cio-jvm</artifactId>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client-serialization-jvm</artifactId>
         </dependency>
-        <!-- Word cloud -->
         <dependency>
-            <groupId>com.kennycason</groupId>
-            <artifactId>kumo-core</artifactId>
-            <version>1.27</version>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-client-logging-jvm</artifactId>
         </dependency>
-        <!-- Logs -->
         <dependency>
             <groupId>io.github.microutils</groupId>
             <artifactId>kotlin-logging</artifactId>
         </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -98,13 +53,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.mockk</groupId>
-            <artifactId>mockk</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

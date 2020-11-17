@@ -13,7 +13,7 @@ sealed class StreamChanges {
     ) : StreamChanges()
 
     data class Game(
-        val oldGame: fr.delphes.bot.twitch.game.Game,
-        val newGame: fr.delphes.bot.twitch.game.Game
+        val oldGame: fr.delphes.twitch.model.Game,
+        val newGame: fr.delphes.twitch.model.Game
     ) : StreamChanges()
 }

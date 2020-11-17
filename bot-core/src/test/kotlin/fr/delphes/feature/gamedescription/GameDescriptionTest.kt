@@ -5,11 +5,11 @@ import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.SendMessage
-import fr.delphes.bot.twitch.game.Game
-import fr.delphes.bot.twitch.game.GameId
-import fr.delphes.bot.twitch.game.SimpleGameId
 import fr.delphes.feature.gameDescription.GameDescription
 import fr.delphes.feature.handle
+import fr.delphes.twitch.model.Game
+import fr.delphes.twitch.model.GameId
+import fr.delphes.twitch.model.SimpleGameId
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat

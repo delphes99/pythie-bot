@@ -1,6 +1,6 @@
 package fr.delphes.configuration.channel
 
-import fr.delphes.bot.twitch.game.GameId
+import fr.delphes.twitch.model.GameId
 
 enum class Games(override val id: String) : GameId {
     SCIENCE_TECHNOLOGY("509670"),

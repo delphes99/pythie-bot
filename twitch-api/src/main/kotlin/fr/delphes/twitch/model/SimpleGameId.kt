@@ -1,3 +1,3 @@
-package fr.delphes.bot.twitch.game
+package fr.delphes.twitch.model
 
 data class SimpleGameId(override val id: String) : GameId

@@ -6,12 +6,12 @@ import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.incoming.StreamOnline
 import fr.delphes.bot.state.ChannelChangeState
-import fr.delphes.bot.state.CurrentStream
-import fr.delphes.bot.twitch.game.Game
 import fr.delphes.bot.twitch.game.GameRepository
-import fr.delphes.bot.twitch.game.SimpleGameId
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosData
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
+import fr.delphes.twitch.model.Game
+import fr.delphes.twitch.model.SimpleGameId
+import fr.delphes.twitch.model.Stream
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -87,7 +87,7 @@ internal class StreamInfosHandlerTest {
 
             verify(exactly = 1) {
                 changeState.changeCurrentStream(
-                    CurrentStream(
+                    Stream(
                         "current stream title",
                         STARTED_AT,
                         GAME
@@ -174,6 +174,6 @@ internal class StreamInfosHandlerTest {
     }
 
     private fun `given online stream`() {
-        every { channelInfo.currentStream } returns CurrentStream("current stream title", STARTED_AT, GAME)
+        every { channelInfo.currentStream } returns Stream("current stream title", STARTED_AT, GAME)
     }
 }

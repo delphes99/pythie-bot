@@ -1,6 +1,6 @@
 package fr.delphes.bot.event.incoming
 
-import fr.delphes.bot.twitch.game.Game
+import fr.delphes.twitch.model.Game
 import java.time.LocalDateTime
 
 data class StreamOnline(
