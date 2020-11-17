@@ -1,6 +1,7 @@
 package fr.delphes.configuration.channel
 
 import fr.delphes.bot.event.incoming.StreamChanges
+import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
@@ -19,6 +20,7 @@ import fr.delphes.feature.endCredits.EndCredits
 import fr.delphes.feature.streamUpdate.StreamUpdate
 import fr.delphes.feature.gameDescription.GameDescription
 import fr.delphes.feature.overlay.Overlay
+import fr.delphes.feature.rewardRedeem.RewardRedeem
 import java.time.Duration
 
 /**
@@ -53,7 +55,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                 },
                 top3Command = "!vothtop",
                 top3Response = { top1, top2, top3 ->
-                    if(top1 == null) {
+                    if (top1 == null) {
                         emptyList()
                     } else {
                         listOf(
@@ -130,8 +132,17 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         GameDescription(
             "!tufekoi",
             Games.SCIENCE_TECHNOLOGY to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
-            Games.JUST_CHATTING to "\uD83D\uDDE3️bla bla bla",
-            Games.SATISFACTORY to "Jeu de construction d'usine \uD83C\uDFED où on doit coloniser une planète inconnue"
-        )
+            Games.JUST_CHATTING to "\uD83D\uDDE3️ bla bla bla",
+            Games.SATISFACTORY to "Jeu de construction d'usine \uD83C\uDFED où on doit coloniser une planète inconnue",
+            Games.PATH_OF_EXILE to "⚔️Hack'n slash free to play, avec un système de ligue de quelques mois. Constellation de talent, lien entre gemmes, craft, mécaniques... complexe mais passionnant",
+            Games.GEOGUESSR to "Vous entrez dans un streetview dans un lieu aléatoire, vous devez vous retrouver sur une carte \uD83D\uDDFA️"
+        ),
+        RewardRedeem(
+            "Test dev"
+        ) { event ->
+            listOf(
+                Alert("test")
+            )
+        }
     )
 }
