@@ -1,6 +1,6 @@
 package fr.delphes.bot.state
 
-import fr.delphes.User
+import fr.delphes.twitch.model.User
 
 interface UpdateStatistics {
     fun addMessage(userMessage: UserMessage)

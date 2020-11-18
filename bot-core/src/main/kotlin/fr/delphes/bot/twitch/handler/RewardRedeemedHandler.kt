@@ -1,18 +1,21 @@
 package fr.delphes.bot.twitch.handler
 
-import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 
-class RewardRedeemedHandler : TwitchIncomingEventHandler<RewardRedeemedEvent> {
+class RewardRedeemedHandler : TwitchIncomingEventHandler<fr.delphes.twitch.model.RewardRedemption> {
     override fun handle(
-        twitchEvent: RewardRedeemedEvent,
+        twitchEvent: fr.delphes.twitch.model.RewardRedemption,
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
-        return listOf(RewardRedemption(twitchEvent))
+        return listOf(
+            RewardRedemption(
+                twitchEvent
+            )
+        )
     }
 }

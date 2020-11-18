@@ -1,6 +1,6 @@
 package fr.delphes.feature.voth
 
-import fr.delphes.User
+import fr.delphes.twitch.model.User
 import java.time.Duration
 
 data class Stats(

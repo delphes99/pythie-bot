@@ -1,9 +1,9 @@
 package fr.delphes.feature.rewardRedeem
 
-import fr.delphes.bot.event.incoming.Feature
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.handle
+import fr.delphes.twitch.model.Feature
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

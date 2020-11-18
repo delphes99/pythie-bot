@@ -1,6 +1,6 @@
 package fr.delphes.bot.state
 
-import fr.delphes.User
+import fr.delphes.twitch.model.User
 import fr.delphes.twitch.model.Stream
 
 interface ChannelChangeState {

@@ -34,6 +34,7 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.TwitchApi
 import fr.delphes.twitch.TwitchClient
+import fr.delphes.twitch.model.RewardRedemption
 import fr.delphes.twitch.model.Stream
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
@@ -69,13 +70,15 @@ class Channel(
     private val newFollowHandler: TwitchIncomingEventHandler<NewFollowPayload> = NewFollowHandler()
     private val newSubHandler: TwitchIncomingEventHandler<NewSubPayload> = NewSubHandler()
     private val channelBitsHandler: TwitchIncomingEventHandler<ChannelBitsEvent> = ChannelBitsHandler()
-    private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedeemedEvent> = RewardRedeemedHandler()
+    private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedemption> = RewardRedeemedHandler()
     private val channelMessageHandler: TwitchIncomingEventHandler<ChannelMessageEvent> = ChannelMessageHandler()
     private val ircMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> = IRCMessageHandler()
     private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload>
 
     init {
-        twitchApi = TwitchClient.build(bot.clientId, channelCredential.access_token, name)
+        twitchApi = TwitchClient.builder(bot.clientId, channelCredential.access_token, name)
+            .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
+            .build()
         userId = twitchApi.userId
 
         client = TwitchClientBuilder.builder()
@@ -108,9 +111,6 @@ class Channel(
         eventHandler.onEvent(ChannelMessageEvent::class.java, ::handleChannelMessageEvent)
         eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
 
-        client.pubSub.listenForChannelPointsRedemptionEvents(channelCredential.toCredential(), userId)
-        eventHandler.onEvent(RewardRedeemedEvent::class.java, ::handleRewardRedeemedEvent)
-
         client.pubSub.listenForCheerEvents(channelCredential.toCredential(), userId)
         eventHandler.onEvent(ChannelBitsEvent::class.java, ::handleBitsEvent)
     }
@@ -129,10 +129,6 @@ class Channel(
 
     fun handleStreamInfos(request: StreamInfosPayload) {
         streamInfosHandler.handleTwitchEvent(request)
-    }
-
-    private fun handleRewardRedeemedEvent(request: RewardRedeemedEvent) {
-        rewardRedeemedHandler.handleTwitchEvent(request)
     }
 
     private fun handleChannelMessageEvent(request: ChannelMessageEvent) {

@@ -1,7 +1,7 @@
 package fr.delphes.bot.event.outgoing
 
 import com.github.twitch4j.chat.TwitchChat
-import fr.delphes.User
+import fr.delphes.twitch.model.User
 
 sealed class OutgoingEvent
 

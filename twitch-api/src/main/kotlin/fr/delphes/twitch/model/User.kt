@@ -1,6 +1,5 @@
-package fr.delphes
+package fr.delphes.twitch.model
 
-import fr.delphes.bot.webserver.payload.newFollow.NewFollowData
 import kotlinx.serialization.Serializable
 
 @Serializable

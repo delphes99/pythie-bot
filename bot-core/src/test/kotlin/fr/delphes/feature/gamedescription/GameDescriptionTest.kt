@@ -1,6 +1,6 @@
 package fr.delphes.feature.gamedescription
 
-import fr.delphes.User
+import fr.delphes.twitch.model.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.incoming.CommandAsked

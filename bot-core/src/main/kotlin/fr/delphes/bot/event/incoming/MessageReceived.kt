@@ -1,7 +1,7 @@
 package fr.delphes.bot.event.incoming
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
-import fr.delphes.User
+import fr.delphes.twitch.model.User
 
 data class MessageReceived(
     val user: User,

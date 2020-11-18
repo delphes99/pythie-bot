@@ -1,6 +1,6 @@
 package fr.delphes.bot.state
 
-import fr.delphes.User
+import fr.delphes.twitch.model.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
