@@ -1,5 +1,6 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.model.Feature
 import fr.delphes.twitch.model.RewardRedemption
 import fr.delphes.twitch.model.User
@@ -10,7 +11,7 @@ import fr.delphes.twitch.payload.pubsub.FramePayload
 import fr.delphes.twitch.payload.pubsub.FrameResponse
 import fr.delphes.twitch.payload.pubsub.RewardRedeemed
 import fr.delphes.twitch.serialization.Serializer
-import fr.delphes.twitch.util.exhaustive
+import fr.delphes.utils.exhaustive
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JsonFeature
@@ -32,7 +33,7 @@ import mu.KotlinLogging
 
 @KtorExperimentalAPI
 internal class PubSubClient(
-    private val authToken: String,
+    private val userCredential: TwitchUserCredential,
     private val userId: String,
     private val listenToReward: ((RewardRedemption) -> Unit)?
 ) : PubSubApi {
@@ -62,7 +63,7 @@ internal class PubSubClient(
                                 "LISTEN",
                                 "community-points-channel-v1.$userId",
                                 ListenToData(
-                                    authToken,
+                                    userCredential.authToken!!.access_token,
                                     "community-points-channel-v1.$userId"
                                 )
                             )

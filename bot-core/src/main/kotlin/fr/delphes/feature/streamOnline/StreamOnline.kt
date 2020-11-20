@@ -15,6 +15,6 @@ class StreamOnline(
     }
 
     inner class StreamOnlineHandler : EventHandler<StreamOnline> {
-        override fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> = streamOnlineResponse(event)
+        override suspend fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> = streamOnlineResponse(event)
     }
 }

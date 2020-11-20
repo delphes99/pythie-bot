@@ -1,5 +1,7 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.auth.TwitchAppCredential
+import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.model.Game
 import fr.delphes.twitch.model.GameId
 import fr.delphes.twitch.model.RewardRedemption
@@ -29,17 +31,17 @@ class TwitchClient(
 
     companion object {
         fun builder(
-            clientId: String,
-            authToken: String,
+            appCredential: TwitchAppCredential,
+            userCredential: TwitchUserCredential,
             userName: String
         ): Builder {
-            return Builder(clientId, authToken, userName)
+            return Builder(appCredential, userCredential, userName)
         }
     }
 
     class Builder(
-        private val clientId: String,
-        private val authToken: String,
+        private val appCredential: TwitchAppCredential,
+        private val userCredential: TwitchUserCredential,
         private val userName: String
     ) {
         private var listenReward: ((RewardRedemption) -> Unit)? = null
@@ -50,13 +52,13 @@ class TwitchClient(
         }
 
         fun build(): TwitchClient {
-            val helixApi = HelixClient(clientId, authToken)
+            val helixApi = HelixClient(appCredential, userCredential)
 
             val userId = runBlocking {
                 helixApi.getUser(userName)!!.id
             }
 
-            val pubSubApi = PubSubClient(authToken, userId, listenReward)
+            val pubSubApi = PubSubClient(userCredential, userId, listenReward)
 
             GlobalScope.launch {
                 pubSubApi.listen()

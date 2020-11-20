@@ -31,7 +31,7 @@ internal class SimpleCommandHandlerTest {
     }
 
     @Test
-    internal fun `trigger command`() {
+    internal suspend fun `trigger command`() {
         val command = Command("!cmd")
         val simpleCommand = SimpleCommandHandler(
             command,
@@ -46,7 +46,7 @@ internal class SimpleCommandHandlerTest {
     }
 
     @Test
-    internal fun `don't trigger command if too frequent`() {
+    internal suspend fun `don't trigger command if too frequent`() {
         val command = Command("!cmd")
         val simpleCommand = SimpleCommandHandler(
             command = command,
@@ -64,7 +64,7 @@ internal class SimpleCommandHandlerTest {
     }
 
     @Test
-    internal fun `trigger command if after cooldown`() {
+    internal suspend fun `trigger command if after cooldown`() {
         val command = Command("!cmd")
         val simpleCommand = SimpleCommandHandler(
             command = command,

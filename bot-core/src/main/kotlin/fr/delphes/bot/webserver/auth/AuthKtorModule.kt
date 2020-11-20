@@ -1,7 +1,7 @@
 package fr.delphes.bot.webserver.auth
 
 import fr.delphes.bot.ClientBot
-import fr.delphes.bot.state.ChannelAuth
+import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.bot.util.http.httpClient
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -34,7 +34,7 @@ fun Application.AuthInternalModule(bot: ClientBot) {
                 call.respondRedirect(permanent = false) {
                     takeFrom("https://id.twitch.tv/oauth2/authorize")
                     parameters.append("response_type", "code")
-                    parameters.append("client_id", bot.clientId)
+                    parameters.append("client_id", bot.appCredential.clientId)
                     parameters.append("redirect_uri", "http://localhost:8080/authFlow/")
                     parameters.append("scope", "bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions")
                     parameters.append("state", channel.name)
@@ -49,11 +49,11 @@ fun Application.AuthInternalModule(bot: ClientBot) {
             if(channel != null) {
                 val auth = (httpClient.post<HttpResponse>("https://id.twitch.tv/oauth2/token") {
                     this.parameter("code", code)
-                    this.parameter("client_id", bot.clientId)
-                    this.parameter("client_secret", bot.secretKey)
+                    this.parameter("client_id", bot.appCredential.clientId)
+                    this.parameter("client_secret", bot.appCredential.clientSecret)
                     this.parameter("grant_type", "authorization_code")
                     this.parameter("redirect_uri", "http://localhost:8080/authFlow/")
-                }.receive<ChannelAuth>())
+                }.receive<AuthToken>())
 
                 channel.newAuth(auth)
             }

@@ -15,6 +15,6 @@ class NewFollow(
     }
 
     inner class NewFollowHandler : EventHandler<NewFollow> {
-        override fun handle(event: NewFollow, channel: ChannelInfo): List<OutgoingEvent> = newFollowResponse(event)
+        override suspend fun handle(event: NewFollow, channel: ChannelInfo): List<OutgoingEvent> = newFollowResponse(event)
     }
 }

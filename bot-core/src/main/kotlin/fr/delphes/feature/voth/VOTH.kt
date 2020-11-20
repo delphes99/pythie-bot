@@ -19,11 +19,12 @@ import fr.delphes.bot.util.time.SystemClock
 import fr.delphes.feature.AbstractFeature
 import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.StateRepository
+import kotlinx.coroutines.runBlocking
 
 class VOTH(
     private val configuration: VOTHConfiguration,
     override val stateRepository: StateRepository<VOTHState>,
-    override val state: VOTHState = stateRepository.load(),
+    override val state: VOTHState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock
 ) : AbstractFeature(), HavePersistantState<VOTHState> {
     override fun registerHandlers(eventHandlers: EventHandlers) {
@@ -55,7 +56,7 @@ class VOTH(
     internal val vothChanged get() = state.vothChanged
 
     internal inner class VOTHRewardRedemptionHandler : EventHandler<RewardRedemption> {
-        override fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
             val redeemUser = event.user
             return if (event.feature.isEquals(configuration.featureId) && currentVip?.user != redeemUser) {
                 val oldVOTH = currentVip
@@ -75,7 +76,7 @@ class VOTH(
     }
 
     internal inner class VOTHVIPListReceivedHandler : EventHandler<VIPListReceived> {
-        override fun handle(event: VIPListReceived, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: VIPListReceived, channel: ChannelInfo): List<OutgoingEvent> {
             return if (vothChanged) {
                 state.vothChanged = false
 
@@ -92,14 +93,14 @@ class VOTH(
     }
 
     internal inner class StreamOnlineHandler : EventHandler<StreamOnline> {
-        override fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> {
             state.unpause(clock.now())
             return emptyList()
         }
     }
 
     internal inner class StreamOfflineHandler : EventHandler<StreamOffline> {
-        override fun handle(event: StreamOffline, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: StreamOffline, channel: ChannelInfo): List<OutgoingEvent> {
             state.pause(clock.now())
             save()
             return emptyList()

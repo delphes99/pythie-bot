@@ -1,4 +1,4 @@
-package fr.delphes.twitch.util
+package fr.delphes.utils
 
 @Suppress("unused")
 fun <T> T.exhaustive(): T { return this }

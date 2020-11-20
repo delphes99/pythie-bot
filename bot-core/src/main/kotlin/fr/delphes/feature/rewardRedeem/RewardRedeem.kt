@@ -16,7 +16,7 @@ class RewardRedeem(
     }
 
     inner class RewardRedemptionHandler : EventHandler<RewardRedemption> {
-        override fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
             return if(event.feature.isEquals(featureName)) {
                 rewardRedeemResponse(event)
             } else {

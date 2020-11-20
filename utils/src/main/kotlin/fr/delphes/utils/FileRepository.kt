@@ -1,4 +1,4 @@
-package fr.delphes.bot.util
+package fr.delphes.utils
 
 import java.io.File
 import java.nio.file.Files
@@ -8,19 +8,19 @@ open class FileRepository<T>(
     filePath: String,
     val serializer: (T) -> String,
     val deserializer: (String) -> T,
-    val initializer: () -> T
-) {
+    val initializer: suspend () -> T
+): Repository<T> {
     private val file: File = File(filePath)
 
-    fun save(state: T) {
+    override suspend fun save(item: T) {
         if (!file.isFile) {
             Files.createDirectories(Path.of(file.parent))
             file.createNewFile()
         }
-        file.writeText(serializer(state))
+        file.writeText(serializer(item))
     }
 
-    fun load(): T {
+    override suspend fun load(): T {
         if (!file.isFile) {
             return initializer()
         }

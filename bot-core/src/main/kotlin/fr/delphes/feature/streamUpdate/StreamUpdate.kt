@@ -16,7 +16,7 @@ class StreamUpdate(
     }
 
     inner class Handler : EventHandler<StreamChanged> {
-        override fun handle(event: StreamChanged, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: StreamChanged, channel: ChannelInfo): List<OutgoingEvent> {
             return handleChanges(event.changes)
         }
     }

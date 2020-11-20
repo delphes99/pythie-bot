@@ -15,6 +15,6 @@ class StreamOffline(
     }
 
     inner class StreamOfflineHandler : EventHandler<StreamOffline> {
-        override fun handle(event: StreamOffline, channel: ChannelInfo): List<OutgoingEvent> = streamOfflineResponse(event)
+        override suspend fun handle(event: StreamOffline, channel: ChannelInfo): List<OutgoingEvent> = streamOfflineResponse(event)
     }
 }

@@ -15,6 +15,6 @@ class BitCheer(
     }
 
     inner class BitCheeredHandler : EventHandler<BitCheered> {
-        override fun handle(event: BitCheered, channel: ChannelInfo): List<OutgoingEvent> = bitCheeredResponse(event)
+        override suspend fun handle(event: BitCheered, channel: ChannelInfo): List<OutgoingEvent> = bitCheeredResponse(event)
     }
 }

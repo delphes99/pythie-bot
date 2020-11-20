@@ -16,7 +16,7 @@ class SimpleCommandHandler(
     private val cooldown: Duration? = null,
     private val responses: List<OutgoingEvent>
 ) : EventHandler<CommandAsked> {
-    override fun handle(event: CommandAsked, channel: ChannelInfo): List<OutgoingEvent> {
+    override suspend fun handle(event: CommandAsked, channel: ChannelInfo): List<OutgoingEvent> {
         return if(event.command == command &&
             cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false
         ) {

@@ -2,11 +2,12 @@ package fr.delphes.bot
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClientBuilder
-import com.github.twitch4j.auth.providers.TwitchIdentityProvider
 import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.helix.webhooks.domain.WebhookRequest
 import fr.delphes.bot.webserver.webhook.TwitchWebhook
 import fr.delphes.configuration.BotConfiguration
+import fr.delphes.twitch.auth.AuthTokenRepository
+import fr.delphes.twitch.auth.TwitchAppCredential
 import mu.KotlinLogging
 import java.time.Duration
 
@@ -18,18 +19,19 @@ class ClientBot(
     val channels = mutableListOf<Channel>()
     private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
 
-    val clientId = configuration.clientId
-    val secretKey = configuration.secretKey
+    val appCredential = TwitchAppCredential.of(
+        configuration.clientId,
+        configuration.secretKey,
+        tokenRepository = { getToken -> AuthTokenRepository("${configFilepath}\\auth\\bot.json", getToken) }
+    )
 
     val client = TwitchClientBuilder.builder()
-        .withClientId(clientId)
-        .withClientSecret(secretKey)
+        .withClientId(appCredential.clientId)
+        .withClientSecret(appCredential.clientSecret)
         .withEnableHelix(true)
         .withEnableChat(true)
         .withChatAccount(botCredential)
         .build()!!
-
-    val appToken: String = TwitchIdentityProvider(clientId, secretKey, null).appAccessToken.accessToken
 
     val chat: TwitchChat = client.chat
 
@@ -61,7 +63,7 @@ class ClientBot(
                             WEBHOOK_DURATION,
                             "toto"
                         ),
-                        channel.channelCredential.access_token
+                        channel.channelCredential.authToken!!.access_token
                     ).execute()
                     //TODO catch failed subscription
                     LOGGER.debug { "Twich webhook ${twitchWebhook.name} for ${channel.name} : Subscription request sent" }
@@ -74,7 +76,7 @@ class ClientBot(
 
     companion object {
         //private val WEBHOOK_DURATION = Duration.ofDays(1).toSeconds().toInt()
-        private val WEBHOOK_DURATION = Duration.ofMinutes(3).toSeconds().toInt()
+        private val WEBHOOK_DURATION = Duration.ofMinutes(2).toSeconds().toInt()
         private val LOGGER = KotlinLogging.logger {}
     }
 }

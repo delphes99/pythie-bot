@@ -1,6 +1,8 @@
 package fr.delphes.feature
 
-interface StateRepository<T : State> {
-    fun save(state : T)
-    fun load(): T
+import fr.delphes.utils.Repository
+
+interface StateRepository<T : State>: Repository<T> {
+    override suspend fun save(item : T)
+    override suspend fun load(): T
 }

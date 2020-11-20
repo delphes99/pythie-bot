@@ -7,14 +7,12 @@ import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent
 import com.github.twitch4j.pubsub.events.ChannelBitsEvent
-import com.github.twitch4j.pubsub.events.RewardRedeemedEvent
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.TwitchOutgoingEvent
-import fr.delphes.bot.state.ChannelAuth
-import fr.delphes.bot.state.ChannelAuthRepository
+import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.state.Statistics
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
@@ -26,7 +24,6 @@ import fr.delphes.bot.twitch.handler.NewFollowHandler
 import fr.delphes.bot.twitch.handler.NewSubHandler
 import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
 import fr.delphes.bot.twitch.handler.StreamInfosHandler
-import fr.delphes.bot.util.exhaustive
 import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
 import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
@@ -34,8 +31,11 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.TwitchApi
 import fr.delphes.twitch.TwitchClient
+import fr.delphes.twitch.auth.AuthToken
+import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.model.RewardRedemption
 import fr.delphes.twitch.model.Stream
+import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -54,8 +54,13 @@ class Channel(
 
     val name = configuration.ownerChannel
     val userId : String
-    private val channelAuthRepository = ChannelAuthRepository("${bot.configFilepath}\\${name}\\channelAuth.json")
-    var channelCredential = channelAuthRepository.load()
+    val channelCredential = TwitchUserCredential.of(
+        bot.appCredential,
+        AuthTokenRepository(
+            "${bot.configFilepath}\\auth\\channel-$name.json"
+        )
+    )
+
     private val oAuth = configuration.ownerAccountOauth
 
     val features = configuration.features
@@ -76,14 +81,14 @@ class Channel(
     private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload>
 
     init {
-        twitchApi = TwitchClient.builder(bot.clientId, channelCredential.access_token, name)
+        twitchApi = TwitchClient.builder(bot.appCredential, channelCredential, name)
             .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
             .build()
         userId = twitchApi.userId
 
         client = TwitchClientBuilder.builder()
-            .withClientId(bot.clientId)
-            .withClientSecret(bot.secretKey)
+            .withClientId(bot.appCredential.clientId)
+            .withClientSecret(bot.appCredential.clientSecret)
             .withEnablePubSub(true)
             .withEnableChat(true)
             .withChatAccount(ownerCredential)
@@ -115,7 +120,7 @@ class Channel(
         eventHandler.onEvent(ChannelBitsEvent::class.java, ::handleBitsEvent)
     }
 
-    fun handleBitsEvent(request: ChannelBitsEvent) {
+    private fun handleBitsEvent(request: ChannelBitsEvent) {
         channelBitsHandler.handleTwitchEvent(request)
     }
 
@@ -141,7 +146,9 @@ class Channel(
 
     private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {
         this.handle(request, this@Channel, this@Channel.state).forEach { incomingEvent ->
-            eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
+            GlobalScope.launch {
+                eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
+            }
         }
     }
 
@@ -165,14 +172,13 @@ class Channel(
         }
     }
 
-    fun newAuth(auth: ChannelAuth) {
+    suspend fun newAuth(auth: AuthToken) {
         LOGGER.info { "Save new credentials for channel : $name" }
-        channelAuthRepository.save(auth)
-        channelCredential = auth
+        this.channelCredential.newAuth(auth)
     }
 
-    private fun ChannelAuth.toCredential(): OAuth2Credential {
-        return OAuth2Credential("twitch", access_token)
+    private fun TwitchUserCredential.toCredential(): OAuth2Credential {
+        return OAuth2Credential("twitch", this.authToken!!.access_token)
     }
 
     companion object {

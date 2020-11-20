@@ -10,7 +10,7 @@ class CommandHandler(
     val command: Command,
     private val doCommand: (User, ChannelInfo) -> List<OutgoingEvent>
 ) : EventHandler<CommandAsked> {
-    override fun handle(event: CommandAsked, channel: ChannelInfo): List<OutgoingEvent> {
+    override suspend fun handle(event: CommandAsked, channel: ChannelInfo): List<OutgoingEvent> {
         return if(event.command == command) {
             doCommand(event.by, channel)
         } else {

@@ -27,7 +27,7 @@ internal class GameDescriptionTest {
     }
 
     @Test
-    internal fun `describe the current`() {
+    internal suspend fun `describe the current`() {
         val feature = GameDescription("!tufekoi", GAME_ID to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(Command("!tufekoi"), User("user"))
@@ -38,7 +38,7 @@ internal class GameDescriptionTest {
     }
 
     @Test
-    internal fun `describe the current (with other gameId implementation)`() {
+    internal suspend fun `describe the current (with other gameId implementation)`() {
         val feature = GameDescription("!tufekoi", GameEnum.GAME to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(Command("!tufekoi"), User("user"))
@@ -49,7 +49,7 @@ internal class GameDescriptionTest {
     }
 
     @Test
-    internal fun `do nothing when no description`() {
+    internal suspend fun `do nothing when no description`() {
         val feature = GameDescription("!tufekoi", GAME_ID to "description")
         `current game is`(OTHER_GAME)
         val commandAsked = CommandAsked(Command("!tufekoi"), User("user"))

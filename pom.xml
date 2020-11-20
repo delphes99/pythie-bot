@@ -11,6 +11,7 @@
         <module>bot-core</module>
         <module>pythie-bot</module>
         <module>twitch-api</module>
+        <module>utils</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -18,7 +19,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.4.10</kotlin.version>
+        <kotlin.version>1.4.20</kotlin.version>
         <ktor.version>1.4.1</ktor.version>
         <serialization.version>1.0.0-RC</serialization.version>
         <kotlin.code.style>official</kotlin.code.style>
@@ -59,6 +60,11 @@
                 <groupId>org.jetbrains.kotlinx</groupId>
                 <artifactId>kotlinx-serialization-core</artifactId>
                 <version>${serialization.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>fr.delphes</groupId>
+                <artifactId>utils</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <!-- Twitch -->
             <dependency>
@@ -169,4 +175,47 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

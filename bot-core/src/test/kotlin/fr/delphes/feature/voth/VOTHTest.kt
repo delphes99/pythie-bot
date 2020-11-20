@@ -46,7 +46,7 @@ internal class VOTHTest {
     @DisplayName("RewardRedemption")
     inner class RewardRedemptionHandlers {
         @Test
-        internal fun `promote vip`() {
+        internal suspend fun `promote vip`() {
             val voth = voth(VOTHState())
 
             voth.handle(RewardRedemption(FEATURE, "user", 50), channelInfo)
@@ -55,7 +55,7 @@ internal class VOTHTest {
         }
 
         @Test
-        internal fun `don't promote vip if already VOTH`() {
+        internal suspend fun `don't promote vip if already VOTH`() {
             val state = VOTHState(currentVip = VOTHWinner("user", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
@@ -65,7 +65,7 @@ internal class VOTHTest {
         }
 
         @Test
-        internal fun `redeem launch vip list`() {
+        internal suspend fun `redeem launch vip list`() {
             val voth = voth()
 
             val messages = voth.handle(RewardRedemption(FEATURE, "user", 50), channelInfo)
@@ -77,7 +77,7 @@ internal class VOTHTest {
     @DisplayName("VIPListReceived")
     inner class VipListReceivedHandlers {
         @Test
-        internal fun `remove all old vip`() {
+        internal suspend fun `remove all old vip`() {
             val voth = voth()
 
             val messages = voth.handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
@@ -88,7 +88,7 @@ internal class VOTHTest {
         }
 
         @Test
-        internal fun `promote vip`() {
+        internal suspend fun `promote vip`() {
             val state = VOTHState(true, VOTHWinner("newVip", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
@@ -99,7 +99,7 @@ internal class VOTHTest {
         }
 
         @Test
-        internal fun `do nothing when on vip change`() {
+        internal suspend fun `do nothing when on vip change`() {
             val state = VOTHState(false, VOTHWinner("user", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
@@ -109,7 +109,7 @@ internal class VOTHTest {
     }
 
     @Test
-    internal fun `pause when stream goes offline`() {
+    internal suspend fun `pause when stream goes offline`() {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
@@ -120,7 +120,7 @@ internal class VOTHTest {
     }
 
     @Test
-    internal fun `unpause when stream goes online`() {
+    internal suspend fun `unpause when stream goes online`() {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
@@ -132,7 +132,7 @@ internal class VOTHTest {
     }
 
     @Test
-    internal fun `display top 3`() {
+    internal suspend fun `display top 3`() {
         val state = mockk<VOTHState>(relaxed = true)
         every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
 

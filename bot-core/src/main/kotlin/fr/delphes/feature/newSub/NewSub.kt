@@ -15,6 +15,6 @@ class NewSub(
     }
 
     inner class NewSubHandler() : EventHandler<NewSub> {
-        override fun handle(event: NewSub, channel: ChannelInfo): List<OutgoingEvent> = newSubResponse(event)
+        override suspend fun handle(event: NewSub, channel: ChannelInfo): List<OutgoingEvent> = newSubResponse(event)
     }
 }

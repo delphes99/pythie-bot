@@ -1,8 +1,8 @@
 package fr.delphes.bot.event.eventHandler
 
 import fr.delphes.bot.event.incoming.IncomingEvent
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -25,7 +25,7 @@ internal class EventHandlersTest {
     }
 
     @Test
-    internal fun `handle event by event type`() {
+    internal suspend fun `handle event by event type`() {
         val eventHandlers = EventHandlers()
         val handlerA = mockk<EventHandler<EventA>>(relaxed = true)
 
@@ -34,6 +34,6 @@ internal class EventHandlersTest {
         val event = EventA()
         eventHandlers.handleEvent(event, mockk())
 
-        verify(exactly = 1) { handlerA.handle(event, any()) }
+        coVerify (exactly = 1) { handlerA.handle(event, any()) }
     }
 }
