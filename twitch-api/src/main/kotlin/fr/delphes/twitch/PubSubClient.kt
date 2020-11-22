@@ -16,20 +16,18 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.DEFAULT
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logger
-import io.ktor.client.features.logging.Logging
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.wss
 import io.ktor.http.HttpMethod
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
 import io.ktor.util.KtorExperimentalAPI
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.isActive
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import mu.KotlinLogging
+import kotlin.coroutines.coroutineContext
 
 @KtorExperimentalAPI
 internal class PubSubClient(
@@ -44,13 +42,19 @@ internal class PubSubClient(
         install(WebSockets) {
             maxFrameSize = Long.MAX_VALUE
         }
-        install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.BODY
-        }
     }
 
     override suspend fun listen() {
+        while (coroutineContext.isActive) {
+            try {
+                connect()
+            } catch (e: ClosedReceiveChannelException) {
+                LOGGER.info { "restart pubsub connection" }
+            }
+        }
+    }
+
+    suspend fun connect() {
         httpClient.wss(
             method = HttpMethod.Get,
             host = "pubsub-edge.twitch.tv",
@@ -76,6 +80,8 @@ internal class PubSubClient(
                 try {
                     val frame = incoming.receive()
                     parseFrame(frame)
+                } catch (e: ClosedReceiveChannelException) {
+                    throw e
                 } catch (e: Exception) {
                     LOGGER.error(e) { "error receiving frame" }
                 }
