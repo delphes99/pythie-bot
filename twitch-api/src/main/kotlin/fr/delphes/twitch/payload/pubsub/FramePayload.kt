@@ -18,3 +18,11 @@ data class FrameResponse(
     val error: String,
     val nonce: String
 ): FramePayload()
+
+@Serializable
+@SerialName("PONG")
+object Pong : FramePayload()
+
+@Serializable
+@SerialName("RECONNECT")
+object Reconnect : FramePayload()
