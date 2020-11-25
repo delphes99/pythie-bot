@@ -60,6 +60,7 @@ class TwitchClient(
 
             val pubSubApi = PubSubClient(userCredential, userId, listenReward)
 
+            //TODO move somewhere else
             GlobalScope.launch {
                 pubSubApi.listen()
             }

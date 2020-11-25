@@ -36,8 +36,8 @@ import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.model.RewardRedemption
 import fr.delphes.twitch.model.Stream
 import fr.delphes.utils.exhaustive
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -49,7 +49,7 @@ class Channel(
 ) : ChannelInfo {
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     override val currentStream: Stream? get() = state.currentStream
-    override val statistics: Statistics? get() = state.statistics
+    override val statistics: Statistics get() = state.statistics
     val alerts = Channel<Alert>()
 
     val name = configuration.ownerChannel
@@ -146,29 +146,32 @@ class Channel(
 
     private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {
         this.handle(request, this@Channel, this@Channel.state).forEach { incomingEvent ->
-            GlobalScope.launch {
+            //TODO make suspendable
+            runBlocking {
                 eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
             }
         }
     }
 
-    private fun List<OutgoingEvent>.execute() {
-        forEach { e ->
-            @Suppress("IMPLICIT_CAST_TO_ANY")
-            when(e) {
-                is TwitchOutgoingEvent -> {
-                    try {
-                        e.executeOnTwitch(bot.chat, chat, name)
-                    } catch (e: Exception) {
-                        LOGGER.error(e) { "Error while handling event ${e.message}" }
+    private suspend fun List<OutgoingEvent>.execute() {
+        coroutineScope {
+            forEach { e ->
+                @Suppress("IMPLICIT_CAST_TO_ANY")
+                when (e) {
+                    is TwitchOutgoingEvent -> {
+                        try {
+                            e.executeOnTwitch(bot.chat, chat, name)
+                        } catch (e: Exception) {
+                            LOGGER.error(e) { "Error while handling event ${e.message}" }
+                        }
                     }
-                }
-                is Alert -> {
-                    GlobalScope.launch {
-                        alerts.send(e)
+                    is Alert -> {
+                        launch {
+                            alerts.send(e)
+                        }
                     }
-                }
-            }.exhaustive()
+                }.exhaustive()
+            }
         }
     }
 
