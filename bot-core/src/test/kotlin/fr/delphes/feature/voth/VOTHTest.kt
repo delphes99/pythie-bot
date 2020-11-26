@@ -15,7 +15,7 @@ import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.util.time.TestClock
 import fr.delphes.feature.TestStateRepository
 import fr.delphes.feature.handle
-import fr.delphes.twitch.model.Feature
+import fr.delphes.twitch.model.Reward
 import fr.delphes.twitch.model.Game
 import fr.delphes.twitch.model.SimpleGameId
 import io.mockk.every
@@ -29,7 +29,7 @@ import java.time.LocalDateTime
 
 internal class VOTHTest {
     val FEATURE_ID = "featureID"
-    val FEATURE = Feature(FEATURE_ID, "feature")
+    val FEATURE = Reward(FEATURE_ID, "feature")
     val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
     val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", NOW.minusMinutes(5), 50))
     val CLOCK = TestClock(NOW)

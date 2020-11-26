@@ -36,7 +36,7 @@ fun Application.AuthInternalModule(bot: ClientBot) {
                     parameters.append("response_type", "code")
                     parameters.append("client_id", bot.appCredential.clientId)
                     parameters.append("redirect_uri", "http://localhost:8080/authFlow/")
-                    parameters.append("scope", "bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions")
+                    parameters.append("scope", "bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions channel:manage:redemptions")
                     parameters.append("state", channel.name)
                 }
             }

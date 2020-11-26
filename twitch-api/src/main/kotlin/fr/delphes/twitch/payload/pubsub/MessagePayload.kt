@@ -12,3 +12,11 @@ sealed class MessagePayload
 data class RewardRedeemed(
     val data: RewardRedeemedPayload
 ): MessagePayload()
+
+@Serializable
+@SerialName("custom-reward-updated")
+class CustomRewardUpdated: MessagePayload()
+
+@Serializable
+@SerialName("automatic-reward-updated")
+class AutomaticRewardUpdated: MessagePayload()

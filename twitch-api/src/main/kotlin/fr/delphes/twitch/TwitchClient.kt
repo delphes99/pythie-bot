@@ -4,6 +4,7 @@ import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.model.Game
 import fr.delphes.twitch.model.GameId
+import fr.delphes.twitch.model.Reward
 import fr.delphes.twitch.model.RewardRedemption
 import fr.delphes.twitch.model.SimpleGameId
 import fr.delphes.twitch.model.Stream
@@ -27,6 +28,15 @@ class TwitchClient(
         val game = helixApi.getGameById(id.id)
 
         return Game(SimpleGameId(game!!.id), game.name)
+    }
+
+    //TODO inject userId in client
+    override suspend fun desactivateReward(reward: Reward, userId: String) {
+        helixApi.updateCustomReward(reward, false, userId)
+    }
+
+    override suspend fun activateReward(reward: Reward, userId: String) {
+        helixApi.updateCustomReward(reward, true, userId)
     }
 
     companion object {

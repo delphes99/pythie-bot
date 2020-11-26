@@ -1,11 +1,13 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.auth.TwitchUserCredential
-import fr.delphes.twitch.model.Feature
+import fr.delphes.twitch.model.Reward
 import fr.delphes.twitch.model.RewardRedemption
 import fr.delphes.twitch.model.User
 import fr.delphes.twitch.payload.ListenTo
 import fr.delphes.twitch.payload.ListenToData
+import fr.delphes.twitch.payload.pubsub.AutomaticRewardUpdated
+import fr.delphes.twitch.payload.pubsub.CustomRewardUpdated
 import fr.delphes.twitch.payload.pubsub.FrameMessage
 import fr.delphes.twitch.payload.pubsub.FramePayload
 import fr.delphes.twitch.payload.pubsub.FrameResponse
@@ -129,7 +131,7 @@ internal class PubSubClient(
                                     val reward = redemption.reward
 
                                     val rewardRedemption = RewardRedemption(
-                                        Feature(
+                                        Reward(
                                             reward.id,
                                             reward.title
                                         ),
@@ -139,6 +141,8 @@ internal class PubSubClient(
 
                                     listenToReward?.invoke(rewardRedemption)
                                 }
+                                is CustomRewardUpdated -> { /* NOTHING */ }
+                                is AutomaticRewardUpdated -> { /* NOTHING */ }
                             }.exhaustive()
                         }
                         is FrameResponse -> {

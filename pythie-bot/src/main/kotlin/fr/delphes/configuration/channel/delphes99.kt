@@ -2,6 +2,7 @@ package fr.delphes.configuration.channel
 
 import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.outgoing.Alert
+import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.command.Command
@@ -19,8 +20,10 @@ import fr.delphes.feature.commandList.CommandList
 import fr.delphes.feature.endCredits.EndCredits
 import fr.delphes.feature.streamUpdate.StreamUpdate
 import fr.delphes.feature.gameDescription.GameDescription
+import fr.delphes.feature.gameReward.GameReward
 import fr.delphes.feature.overlay.Overlay
 import fr.delphes.feature.rewardRedeem.RewardRedeem
+import fr.delphes.twitch.model.Reward
 import java.time.Duration
 
 /**
@@ -143,6 +146,19 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             listOf(
                 Alert("test")
             )
-        }
+        },
+        GameReward(
+            mapOf(
+                Games.SCIENCE_TECHNOLOGY to listOf(Reward("676834c5-fb74-4e9e-96bf-d10605d3f2b1", "Test dev"))
+            )
+        ),
+        Command(
+            "!test",
+            responses = listOf(DesactivateReward(Reward("676834c5-fb74-4e9e-96bf-d10605d3f2b1", "Test dev")))
+        ),
+        Command(
+            "!ping",
+            responses = listOf(SendMessage("pong"))
+        )
     )
 }

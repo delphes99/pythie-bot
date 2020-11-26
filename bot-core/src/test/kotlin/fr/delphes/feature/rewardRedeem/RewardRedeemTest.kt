@@ -3,7 +3,7 @@ package fr.delphes.feature.rewardRedeem
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.handle
-import fr.delphes.twitch.model.Feature
+import fr.delphes.twitch.model.Reward
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,7 +16,7 @@ internal class RewardRedeemTest {
         val outgoingEvents = RewardRedeem("featureID") { listOf(response) }
             .handle(
                 RewardRedemption(
-                    Feature("featureID", "featureName"),
+                    Reward("featureID", "featureName"),
                     "user",
                     50
                 ),
@@ -33,7 +33,7 @@ internal class RewardRedeemTest {
         val outgoingEvents = RewardRedeem("featureName") { listOf(response) }
             .handle(
                 RewardRedemption(
-                    Feature("featureID", "featureName"),
+                    Reward("featureID", "featureName"),
                     "user",
                     50
                 ),
@@ -50,7 +50,7 @@ internal class RewardRedeemTest {
         val outgoingEvents = RewardRedeem("otherFeatureName") { listOf(response) }
             .handle(
                 RewardRedemption(
-                    Feature("featureID", "featureName"),
+                    Reward("featureID", "featureName"),
                     "user",
                     50
                 ),

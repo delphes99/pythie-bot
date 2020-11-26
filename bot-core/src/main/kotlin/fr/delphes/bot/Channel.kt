@@ -160,7 +160,7 @@ class Channel(
                 when (e) {
                     is TwitchOutgoingEvent -> {
                         try {
-                            e.executeOnTwitch(bot.chat, chat, name)
+                            e.executeOnTwitch(bot.chat, chat, twitchApi, this@Channel)
                         } catch (e: Exception) {
                             LOGGER.error(e) { "Error while handling event ${e.message}" }
                         }

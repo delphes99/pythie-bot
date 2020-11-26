@@ -8,7 +8,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 
 class RewardRedeem(
-    private val featureName: String,
+    private val rewardName: String,
     private val rewardRedeemResponse: (RewardRedemption) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {
@@ -17,7 +17,7 @@ class RewardRedeem(
 
     inner class RewardRedemptionHandler : EventHandler<RewardRedemption> {
         override suspend fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
-            return if(event.feature.isEquals(featureName)) {
+            return if(event.reward.isEquals(rewardName)) {
                 rewardRedeemResponse(event)
             } else {
                 emptyList()

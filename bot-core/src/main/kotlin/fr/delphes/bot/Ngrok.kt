@@ -83,7 +83,7 @@ class Ngrok {
             try {
                 val response = httpClient.post<String> {
                     url("$API_URL/tunnels")
-                    contentType(ContentType.parse("application/json"))
+                    contentType(ContentType.Application.Json)
                     body = CreateTunnelBody(port.toString(), "http", name)
                 }
                 return EXTRACT_PUBLIC_URL.find(response)!!.groups[1]!!.value

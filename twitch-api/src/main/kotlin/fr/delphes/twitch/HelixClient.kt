@@ -3,8 +3,10 @@ package fr.delphes.twitch
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.auth.WithAuthToken
+import fr.delphes.twitch.model.Reward
 import fr.delphes.twitch.payload.games.GetGamesDataPayload
 import fr.delphes.twitch.payload.games.GetGamesPayload
+import fr.delphes.twitch.payload.reward.UpdateCustomRewardPayload
 import fr.delphes.twitch.payload.streams.StreamInfos
 import fr.delphes.twitch.payload.streams.StreamPayload
 import fr.delphes.twitch.payload.users.GetUsersDataPayload
@@ -20,8 +22,13 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
+import io.ktor.client.request.patch
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 
+//TODO split request with userId / with app id / others
 internal class HelixClient(
     private val appCredential: TwitchAppCredential,
     private val userCredential: TwitchUserCredential
@@ -38,14 +45,28 @@ internal class HelixClient(
     ): T {
         return authorizeCall(twitchUserCredential) {
             httpClient.get(this) {
-                headers(parameters, twitchUserCredential)
+                headers(twitchUserCredential, *parameters)
+            }
+        }
+    }
+
+    private suspend inline fun <reified T> String.patch(
+        payload: Any,
+        twitchUserCredential: WithAuthToken,
+        vararg parameters: Pair<String, String>
+    ): T {
+        return authorizeCall(twitchUserCredential) {
+            httpClient.patch(this) {
+                headers(twitchUserCredential, *parameters)
+                contentType(ContentType.Application.Json)
+                body = payload
             }
         }
     }
 
     private fun HttpRequestBuilder.headers(
-        parameters: Array<out Pair<String, String>>,
-        credentials: WithAuthToken
+        credentials: WithAuthToken,
+        vararg parameters: Pair<String, String>
     ) {
         header("Authorization", "Bearer ${credentials.authToken!!.access_token}")
         header("Client-Id", appCredential.clientId)
@@ -112,5 +133,14 @@ internal class HelixClient(
         )
 
         return payload.data
+    }
+
+    override suspend fun updateCustomReward(reward: Reward, activate: Boolean, userId: String) {
+        "https://api.twitch.tv/helix/channel_points/custom_rewards".patch<HttpResponse>(
+            UpdateCustomRewardPayload(activate),
+            userCredential,
+            "broadcaster_id" to userId,
+            "id" to reward.rewardId
+        )
     }
 }
