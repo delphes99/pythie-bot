@@ -1,7 +1,7 @@
 package fr.delphes.bot.twitch.handler
 
 import com.github.twitch4j.pubsub.events.ChannelBitsEvent
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.BitCheered
 import fr.delphes.bot.event.incoming.IncomingEvent

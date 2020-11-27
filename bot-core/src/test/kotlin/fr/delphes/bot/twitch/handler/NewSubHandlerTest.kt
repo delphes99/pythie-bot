@@ -1,6 +1,6 @@
 package fr.delphes.bot.twitch.handler
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.webserver.payload.newSub.NewSubData

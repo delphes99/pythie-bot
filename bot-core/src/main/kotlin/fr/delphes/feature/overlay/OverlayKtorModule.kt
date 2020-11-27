@@ -1,6 +1,6 @@
 package fr.delphes.feature.overlay
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.Channel
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHReign

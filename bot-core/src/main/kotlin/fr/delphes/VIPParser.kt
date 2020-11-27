@@ -1,6 +1,6 @@
 package fr.delphes
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import java.util.regex.Pattern
 
 object VIPParser {

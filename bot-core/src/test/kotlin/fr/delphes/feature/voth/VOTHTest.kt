@@ -1,6 +1,6 @@
 package fr.delphes.feature.voth
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.incoming.CommandAsked
@@ -15,9 +15,9 @@ import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.util.time.TestClock
 import fr.delphes.feature.TestStateRepository
 import fr.delphes.feature.handle
-import fr.delphes.twitch.model.Reward
-import fr.delphes.twitch.model.Game
-import fr.delphes.twitch.model.SimpleGameId
+import fr.delphes.twitch.api.reward.Reward
+import fr.delphes.twitch.api.games.Game
+import fr.delphes.twitch.api.games.SimpleGameId
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

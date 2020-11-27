@@ -1,6 +1,6 @@
 package fr.delphes.bot.command
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.Channel
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.SendMessage

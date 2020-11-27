@@ -1,7 +1,7 @@
 package fr.delphes.bot.twitch.game
 
-import fr.delphes.twitch.model.Game
-import fr.delphes.twitch.model.GameId
+import fr.delphes.twitch.api.games.Game
+import fr.delphes.twitch.api.games.GameId
 import kotlinx.coroutines.runBlocking
 
 class TwitchGameRepository(

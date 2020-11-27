@@ -1,6 +1,6 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.payload.webhook.GetWebhookSubscriptionsDataPayload
+import fr.delphes.twitch.webhook.GetWebhookSubscriptionsDataPayload
 
 interface AppHelixApi {
     suspend fun getWebhook(): List<GetWebhookSubscriptionsDataPayload>

@@ -2,11 +2,11 @@ package fr.delphes.twitch
 
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
-import fr.delphes.twitch.model.Game
-import fr.delphes.twitch.model.GameId
-import fr.delphes.twitch.model.Reward
-import fr.delphes.twitch.model.RewardRedemption
-import fr.delphes.twitch.model.SimpleGameId
+import fr.delphes.twitch.api.games.Game
+import fr.delphes.twitch.api.games.GameId
+import fr.delphes.twitch.api.reward.Reward
+import fr.delphes.twitch.api.reward.RewardRedemption
+import fr.delphes.twitch.api.games.SimpleGameId
 import fr.delphes.twitch.model.Stream
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

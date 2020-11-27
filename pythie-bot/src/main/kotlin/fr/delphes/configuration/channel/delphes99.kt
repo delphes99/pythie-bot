@@ -23,7 +23,7 @@ import fr.delphes.feature.gameDescription.GameDescription
 import fr.delphes.feature.gameReward.GameReward
 import fr.delphes.feature.overlay.Overlay
 import fr.delphes.feature.rewardRedeem.RewardRedeem
-import fr.delphes.twitch.model.Reward
+import fr.delphes.twitch.api.reward.Reward
 import java.time.Duration
 
 /**

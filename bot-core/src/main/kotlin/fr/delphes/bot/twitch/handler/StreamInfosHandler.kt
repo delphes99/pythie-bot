@@ -10,7 +10,7 @@ import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.game.GameRepository
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
-import fr.delphes.twitch.model.SimpleGameId
+import fr.delphes.twitch.api.games.SimpleGameId
 import fr.delphes.twitch.model.Stream
 import mu.KotlinLogging
 

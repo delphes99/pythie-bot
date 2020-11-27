@@ -1,6 +1,6 @@
 package fr.delphes.bot.event.incoming
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 
 data class BitCheered(
     val cheerer: User,

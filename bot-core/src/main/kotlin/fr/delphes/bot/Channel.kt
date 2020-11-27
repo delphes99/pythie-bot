@@ -33,7 +33,7 @@ import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.TwitchUserCredential
-import fr.delphes.twitch.model.RewardRedemption
+import fr.delphes.twitch.api.reward.RewardRedemption
 import fr.delphes.twitch.model.Stream
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.channels.Channel

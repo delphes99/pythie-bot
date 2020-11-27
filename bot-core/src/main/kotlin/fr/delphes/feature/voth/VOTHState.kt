@@ -1,6 +1,6 @@
 package fr.delphes.feature.voth
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.feature.State
 import kotlinx.serialization.Serializable

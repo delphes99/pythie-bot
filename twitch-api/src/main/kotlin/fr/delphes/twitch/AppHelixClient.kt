@@ -1,10 +1,10 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.auth.TwitchAppCredential
-import fr.delphes.twitch.payload.webhook.GetWebhookSubscriptionsDataPayload
-import fr.delphes.twitch.payload.webhook.GetWebhookSubscriptionsPayload
-import fr.delphes.twitch.payload.webhook.SubscribeWebhookMode
-import fr.delphes.twitch.payload.webhook.SubscribeWebhookPayload
+import fr.delphes.twitch.webhook.GetWebhookSubscriptionsDataPayload
+import fr.delphes.twitch.webhook.GetWebhookSubscriptionsPayload
+import fr.delphes.twitch.webhook.SubscribeWebhookMode
+import fr.delphes.twitch.webhook.SubscribeWebhookPayload
 import io.ktor.client.statement.HttpResponse
 import java.time.Duration
 

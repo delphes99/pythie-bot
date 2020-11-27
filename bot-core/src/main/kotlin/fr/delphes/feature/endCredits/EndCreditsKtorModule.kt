@@ -8,7 +8,7 @@ import com.kennycason.kumo.font.FontWeight
 import com.kennycason.kumo.font.KumoFont
 import com.kennycason.kumo.font.scale.LinearFontScalar
 import com.kennycason.kumo.palette.ColorPalette
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.Channel
 import fr.delphes.bot.state.Statistics
 import fr.delphes.bot.state.UserMessage

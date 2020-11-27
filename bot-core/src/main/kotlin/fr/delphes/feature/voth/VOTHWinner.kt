@@ -2,10 +2,10 @@
 
 package fr.delphes.feature.voth
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.util.serialization.DurationSerializer
 import fr.delphes.bot.util.serialization.LocalDateTimeSerializer
-import fr.delphes.twitch.model.RewardCost
+import fr.delphes.twitch.api.reward.RewardCost
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.time.Duration

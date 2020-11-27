@@ -1,6 +1,6 @@
 package fr.delphes
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

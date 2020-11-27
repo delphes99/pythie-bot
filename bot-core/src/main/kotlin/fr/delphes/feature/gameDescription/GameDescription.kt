@@ -1,6 +1,6 @@
 package fr.delphes.feature.gameDescription
 
-import fr.delphes.twitch.model.User
+import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.command.CommandHandler
@@ -8,7 +8,7 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.AbstractFeature
-import fr.delphes.twitch.model.GameId
+import fr.delphes.twitch.api.games.GameId
 
 class GameDescription(commandTrigger: String, vararg descriptions: Pair<GameId, String>) : AbstractFeature() {
     //TODO dynamics description (file / commands / ... ?)

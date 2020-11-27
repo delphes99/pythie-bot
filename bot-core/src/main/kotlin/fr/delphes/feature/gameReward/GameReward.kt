@@ -10,9 +10,9 @@ import fr.delphes.bot.event.outgoing.ActivateReward
 import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
-import fr.delphes.twitch.model.Game
-import fr.delphes.twitch.model.Reward
-import fr.delphes.twitch.model.GameId
+import fr.delphes.twitch.api.games.Game
+import fr.delphes.twitch.api.reward.Reward
+import fr.delphes.twitch.api.games.GameId
 
 class GameReward(
     private val gameRewards: Map<GameId, List<Reward>>
