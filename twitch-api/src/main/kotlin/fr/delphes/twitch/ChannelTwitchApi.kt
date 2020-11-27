@@ -5,14 +5,14 @@ import fr.delphes.twitch.model.GameId
 import fr.delphes.twitch.model.Reward
 import fr.delphes.twitch.model.Stream
 
-interface TwitchApi {
+interface ChannelTwitchApi {
     val userId: String
 
-    suspend fun getStream(userId: String): Stream?
+    suspend fun getStream(): Stream?
 
     suspend fun getGame(id: GameId): Game
 
-    suspend fun desactivateReward(reward: Reward, userId: String)
+    suspend fun deactivateReward(reward: Reward)
 
-    suspend fun activateReward(reward: Reward, userId: String)
+    suspend fun activateReward(reward: Reward)
 }

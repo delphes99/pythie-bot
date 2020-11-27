@@ -6,8 +6,10 @@ import com.github.twitch4j.chat.TwitchChat
 import com.github.twitch4j.helix.webhooks.domain.WebhookRequest
 import fr.delphes.bot.webserver.webhook.TwitchWebhook
 import fr.delphes.configuration.BotConfiguration
+import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.TwitchAppCredential
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import java.time.Duration
 
@@ -25,6 +27,9 @@ class ClientBot(
         tokenRepository = { getToken -> AuthTokenRepository("${configFilepath}\\auth\\bot.json", getToken) }
     )
 
+    //TODO manage secret sign
+    private val twitchApi = AppTwitchClient.build(appCredential, "secret")
+
     val client = TwitchClientBuilder.builder()
         .withClientId(appCredential.clientId)
         .withClientSecret(appCredential.clientSecret)
@@ -37,6 +42,9 @@ class ClientBot(
 
     init {
         chat.connect()
+        runBlocking {
+            twitchApi.removeAllWebhooks()
+        }
     }
 
     fun findChannelBy(name: String): Channel? {

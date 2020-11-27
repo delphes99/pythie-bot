@@ -12,12 +12,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class TwitchClient(
-    private val helixApi: HelixApi,
+class ChannelTwitchClient(
+    private val helixApi: ChannelHelixApi,
     private val pubSubApi: PubSubApi,
     override val userId: String
-) : TwitchApi {
-    override suspend fun getStream(userId: String): Stream? {
+) : ChannelTwitchApi {
+    override suspend fun getStream(): Stream? {
         val stream = helixApi.getStreamByUserId(userId) ?: return null
         val game = getGame(SimpleGameId(stream.game_id))
 
@@ -30,12 +30,11 @@ class TwitchClient(
         return Game(SimpleGameId(game!!.id), game.name)
     }
 
-    //TODO inject userId in client
-    override suspend fun desactivateReward(reward: Reward, userId: String) {
+    override suspend fun deactivateReward(reward: Reward) {
         helixApi.updateCustomReward(reward, false, userId)
     }
 
-    override suspend fun activateReward(reward: Reward, userId: String) {
+    override suspend fun activateReward(reward: Reward) {
         helixApi.updateCustomReward(reward, true, userId)
     }
 
@@ -61,8 +60,8 @@ class TwitchClient(
             return this
         }
 
-        fun build(): TwitchClient {
-            val helixApi = HelixClient(appCredential, userCredential)
+        fun build(): ChannelTwitchClient {
+            val helixApi = ChannelHelixClient(appCredential, userCredential)
 
             val userId = runBlocking {
                 helixApi.getUser(userName)!!.id
@@ -75,7 +74,7 @@ class TwitchClient(
                 pubSubApi.listen()
             }
 
-            return TwitchClient(
+            return ChannelTwitchClient(
                 helixApi,
                 pubSubApi,
                 userId

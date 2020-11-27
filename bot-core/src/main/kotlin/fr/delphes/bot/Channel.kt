@@ -29,8 +29,8 @@ import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
-import fr.delphes.twitch.TwitchApi
-import fr.delphes.twitch.TwitchClient
+import fr.delphes.twitch.ChannelTwitchApi
+import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.model.RewardRedemption
@@ -70,7 +70,7 @@ class Channel(
     private val client: com.github.twitch4j.TwitchClient
     private val chat: TwitchChat
 
-    private val twitchApi: TwitchApi
+    private val twitchApi: ChannelTwitchApi
 
     private val newFollowHandler: TwitchIncomingEventHandler<NewFollowPayload> = NewFollowHandler()
     private val newSubHandler: TwitchIncomingEventHandler<NewSubPayload> = NewSubHandler()
@@ -81,7 +81,7 @@ class Channel(
     private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload>
 
     init {
-        twitchApi = TwitchClient.builder(bot.appCredential, channelCredential, name)
+        twitchApi = ChannelTwitchClient.builder(bot.appCredential, channelCredential, name)
             .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
             .build()
         userId = twitchApi.userId
@@ -105,7 +105,7 @@ class Channel(
         streamInfosHandler = StreamInfosHandler(TwitchGameRepository(twitchApi::getGame))
 
         runBlocking {
-            state.init(twitchApi.getStream(userId))
+            state.init(twitchApi.getStream())
         }
 
         chat.connect()
