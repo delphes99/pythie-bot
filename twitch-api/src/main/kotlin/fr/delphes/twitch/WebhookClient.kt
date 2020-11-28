@@ -1,9 +1,11 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.newFollow.NewFollow
-import fr.delphes.twitch.api.newFollow.payload.NewFollowPayload
+import fr.delphes.twitch.api.newFollow.payload.NewFollowCondition
+import fr.delphes.twitch.api.newFollow.payload.NewFollowEventPayload
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
+import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.ContentType
@@ -29,7 +31,7 @@ class WebhookClient(
         //TODO manage duplicate event
         val webhookName = "newFollow"
         routing.post("/$channel/$webhookName") {
-            val newFollowPayload = this.call.receive<NewFollowPayload>()
+            val newFollowPayload = this.call.receive<NotificationPayload<NewFollowEventPayload, NewFollowCondition>>()
             //TODO  Verify the request signature  to make sure it came from Twitch.
             when {
                 newFollowPayload.challenge != null -> {

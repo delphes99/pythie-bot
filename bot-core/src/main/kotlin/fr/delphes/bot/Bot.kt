@@ -23,12 +23,11 @@ object Bot {
 
         bot.subscribeWebhooks()
         runBlocking {
+            bot.twitchApi.removeAllSubscriptions()
+
             bot.channels.map {
                 launch { it.twitchApi.registerWebhooks() }
             }.joinAll()
-
-            val allSubscriptions = bot.twitchApi.getAllSubscriptions()
-            allSubscriptions
         }
     }
 }

@@ -1,7 +1,8 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.auth.TwitchAppCredential
-import fr.delphes.twitch.eventSub.payload.ListSubscriptionsPayload
+import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
+import fr.delphes.twitch.eventSub.payload.subscription.SubscriptionPayload
 import fr.delphes.twitch.webhook.GetWebhookSubscriptionsDataPayload
 import fr.delphes.twitch.webhook.GetWebhookSubscriptionsPayload
 import fr.delphes.twitch.webhook.SubscribeWebhookMode
@@ -37,6 +38,13 @@ class AppHelixClient(
     override suspend fun getEventSubSubscriptions(): ListSubscriptionsPayload {
         return "https://api.twitch.tv/helix/eventsub/subscriptions".get(
             appCredential
+        )
+    }
+
+    override suspend fun removeEventSubSubscription(subscription: SubscriptionPayload) {
+        "https://api.twitch.tv/helix/eventsub/subscriptions".delete<HttpResponse>(
+            appCredential,
+            "id" to subscription.id
         )
     }
 }

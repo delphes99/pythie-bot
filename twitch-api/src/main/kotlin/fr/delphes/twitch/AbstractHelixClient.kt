@@ -8,6 +8,7 @@ import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
@@ -62,6 +63,17 @@ abstract class AbstractHelixClient(
                 headersAndParameters(twitchUserCredential, *parameters)
                 contentType(ContentType.Application.Json)
                 body = payload
+            }
+        }
+    }
+
+    protected suspend inline fun <reified T> String.delete(
+        twitchUserCredential: WithAuthToken,
+        vararg parameters: Pair<String, String>
+    ): T {
+        return authorizeCall(twitchUserCredential) {
+            httpClient.delete(this) {
+                headersAndParameters(twitchUserCredential, *parameters)
             }
         }
     }

@@ -10,11 +10,12 @@ import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
 import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
 import fr.delphes.twitch.api.user.payload.GetUsersPayload
-import fr.delphes.twitch.eventSub.payload.Condition
-import fr.delphes.twitch.eventSub.payload.EventSubSubscribePayload
+import fr.delphes.twitch.api.newFollow.payload.NewFollowCondition
+import fr.delphes.twitch.api.newFollow.payload.SubscribeNewFollow
 import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
-import fr.delphes.twitch.eventSub.payload.Transport
+import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.client.statement.HttpResponse
+import io.ktor.utils.io.readUTF8Line
 
 internal class ChannelHelixClient(
     appCredential: TwitchAppCredential,
@@ -69,10 +70,10 @@ internal class ChannelHelixClient(
     override suspend fun subscribeEventSub(channelFollow: EventSubSubscriptionType, callback: String, userId: String, secret: String) {
         //TODO manage errors
         "https://api.twitch.tv/helix/eventsub/subscriptions".post<HttpResponse>(
-            EventSubSubscribePayload(
+            SubscribeNewFollow(
                 type = channelFollow,
-                condition = Condition(userId),
-                transport = Transport(
+                condition = NewFollowCondition(userId),
+                transport = SubscribeTransport(
                     callback = callback,
                     secret = secret
                 )
