@@ -1,5 +1,7 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateCondition
+import fr.delphes.twitch.api.channelUpdate.payload.SubscribeChannelUpdate
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.api.reward.Reward
@@ -15,7 +17,6 @@ import fr.delphes.twitch.api.newFollow.payload.SubscribeNewFollow
 import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.client.statement.HttpResponse
-import io.ktor.utils.io.readUTF8Line
 
 internal class ChannelHelixClient(
     appCredential: TwitchAppCredential,
@@ -67,18 +68,33 @@ internal class ChannelHelixClient(
         )
     }
 
-    override suspend fun subscribeEventSub(channelFollow: EventSubSubscriptionType, callback: String, userId: String, secret: String) {
+    override suspend fun subscribeEventSub(
+        channelFollow: EventSubSubscriptionType,
+        callback: String,
+        userId: String,
+        secret: String
+    ) {
         //TODO manage errors
-        "https://api.twitch.tv/helix/eventsub/subscriptions".post<HttpResponse>(
-            SubscribeNewFollow(
-                type = channelFollow,
-                condition = NewFollowCondition(userId),
-                transport = SubscribeTransport(
-                    callback = callback,
-                    secret = secret
+        @Suppress("IMPLICIT_CAST_TO_ANY") val payload = when (channelFollow) {
+            EventSubSubscriptionType.CHANNEL_FOLLOW -> {
+                SubscribeNewFollow(
+                    NewFollowCondition(userId),
+                    SubscribeTransport(
+                        callback,
+                        secret
+                    )
                 )
-            ),
-            appCredential
-        )
+            }
+            EventSubSubscriptionType.CHANNEL_UPDATE -> {
+                SubscribeChannelUpdate(
+                    ChannelUpdateCondition(userId),
+                    SubscribeTransport(
+                        callback,
+                        secret
+                    )
+                )
+            }
+        }
+        "https://api.twitch.tv/helix/eventsub/subscriptions".post<HttpResponse>(payload, appCredential)
     }
 }

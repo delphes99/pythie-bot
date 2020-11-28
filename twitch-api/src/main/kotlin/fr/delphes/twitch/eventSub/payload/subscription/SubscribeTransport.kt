@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SubscribeTransport(
-    val method: String = "webhook",
     val callback: String,
-    val secret: String
+    val secret: String,
+    val method: String = "webhook"
 )

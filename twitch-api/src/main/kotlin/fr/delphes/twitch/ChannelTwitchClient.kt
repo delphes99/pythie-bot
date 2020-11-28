@@ -1,5 +1,6 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.api.games.Game
@@ -61,6 +62,7 @@ class ChannelTwitchClient(
     ) {
         private var listenReward: ((RewardRedemption) -> Unit)? = null
         private var listenNewFollow: ((NewFollow) -> Unit)? = null
+        private var listenChannelUpdate: ((ChannelUpdate) -> Unit)? = null
 
         fun listenToReward(listener: (RewardRedemption) -> Unit): Builder {
             listenReward = listener
@@ -69,6 +71,11 @@ class ChannelTwitchClient(
 
         fun listenToNewFollow(listener: (NewFollow) -> Unit): Builder {
             listenNewFollow = listener
+            return this
+        }
+
+        fun listenToChannelUpdate(listener: (ChannelUpdate) -> Unit): Builder {
+            listenChannelUpdate = listener
             return this
         }
 
@@ -86,7 +93,7 @@ class ChannelTwitchClient(
                 pubSubApi.listen()
             }
 
-            val webhookApi = WebhookClient(publicUrl, userName, userId, webhookSecret, helixApi, listenNewFollow)
+            val webhookApi = WebhookClient(publicUrl, userName, userId, webhookSecret, helixApi, listenNewFollow, listenChannelUpdate)
 
             return ChannelTwitchClient(
                 helixApi,

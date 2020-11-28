@@ -84,6 +84,7 @@ class Channel(
         twitchApi = ChannelTwitchClient.builder(bot.appCredential, channelCredential, name, bot.publicUrl, bot.webhookSecret)
             .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
             .listenToNewFollow { println("new followwww!!!!!! ${it.follower}") }
+            .listenToChannelUpdate { println("update!!!!!! ${it.categoryName}") }
             .build()
         userId = twitchApi.userId
 
