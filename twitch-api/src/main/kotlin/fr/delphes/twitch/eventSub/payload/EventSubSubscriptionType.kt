@@ -1,0 +1,10 @@
+package fr.delphes.twitch.eventSub.payload
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+enum class EventSubSubscriptionType {
+    @SerialName("channel.follow")
+    CHANNEL_FOLLOW;
+}

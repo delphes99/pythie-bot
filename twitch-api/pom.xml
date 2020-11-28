@@ -22,6 +22,15 @@
             <groupId>fr.delphes</groupId>
             <artifactId>utils</artifactId>
         </dependency>
+        <!-- http server -->
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-serialization</artifactId>
+        </dependency>
         <!-- http client -->
         <dependency>
             <groupId>io.ktor</groupId>

@@ -1,6 +1,7 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.auth.TwitchAppCredential
+import fr.delphes.twitch.eventSub.payload.ListSubscriptionsPayload
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -17,6 +18,12 @@ class AppTwitchClient(
                     twitchAppHelixApi.unsubscribeWebhook(it)
                 }
             }.joinAll()
+        }
+    }
+
+    override suspend fun getAllSubscriptions(): ListSubscriptionsPayload {
+        return coroutineScope {
+            twitchAppHelixApi.getEventSubSubscriptions()
         }
     }
 

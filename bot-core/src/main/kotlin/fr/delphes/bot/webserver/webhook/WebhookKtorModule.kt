@@ -19,6 +19,8 @@ fun Application.WebhookModule(bot: ClientBot) {
     routing {
         bot.channels.forEach { channel ->
             startWebhooks(channel)
+
+            channel.twitchApi.startWebhooks(this)
         }
     }
 }

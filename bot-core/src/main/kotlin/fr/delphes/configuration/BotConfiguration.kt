@@ -4,4 +4,5 @@ interface BotConfiguration {
     val clientId: String
     val secretKey: String
     val botAccountOauth: String
+    val webhookSecret: String
 }

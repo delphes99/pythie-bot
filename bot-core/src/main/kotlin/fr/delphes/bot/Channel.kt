@@ -70,7 +70,7 @@ class Channel(
     private val client: com.github.twitch4j.TwitchClient
     private val chat: TwitchChat
 
-    private val twitchApi: ChannelTwitchApi
+    val twitchApi: ChannelTwitchApi
 
     private val newFollowHandler: TwitchIncomingEventHandler<NewFollowPayload> = NewFollowHandler()
     private val newSubHandler: TwitchIncomingEventHandler<NewSubPayload> = NewSubHandler()
@@ -81,8 +81,9 @@ class Channel(
     private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload>
 
     init {
-        twitchApi = ChannelTwitchClient.builder(bot.appCredential, channelCredential, name)
+        twitchApi = ChannelTwitchClient.builder(bot.appCredential, channelCredential, name, bot.publicUrl, bot.webhookSecret)
             .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
+            .listenToNewFollow { println("new followwww!!!!!! ${it.follower}") }
             .build()
         userId = twitchApi.userId
 

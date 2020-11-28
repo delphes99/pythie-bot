@@ -15,11 +15,12 @@ import java.time.Duration
 
 class ClientBot(
     configuration: BotConfiguration,
-    private val publicUrl: String,
+    val publicUrl: String,
     val configFilepath: String
 ) {
     val channels = mutableListOf<Channel>()
     private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
+    val webhookSecret = configuration.webhookSecret
 
     val appCredential = TwitchAppCredential.of(
         configuration.clientId,
@@ -27,8 +28,7 @@ class ClientBot(
         tokenRepository = { getToken -> AuthTokenRepository("${configFilepath}\\auth\\bot.json", getToken) }
     )
 
-    //TODO manage secret sign
-    private val twitchApi = AppTwitchClient.build(appCredential, "secret")
+    val twitchApi = AppTwitchClient.build(appCredential, webhookSecret)
 
     val client = TwitchClientBuilder.builder()
         .withClientId(appCredential.clientId)

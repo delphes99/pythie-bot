@@ -5,7 +5,7 @@ import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.model.Stream
 
-interface ChannelTwitchApi {
+interface ChannelTwitchApi : WebhookApi {
     val userId: String
 
     suspend fun getStream(): Stream?

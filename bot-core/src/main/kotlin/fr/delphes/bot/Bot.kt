@@ -2,6 +2,9 @@ package fr.delphes.bot
 
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 object Bot {
     fun build(
@@ -19,5 +22,13 @@ object Bot {
         WebServer(bot)
 
         bot.subscribeWebhooks()
+        runBlocking {
+            bot.channels.map {
+                launch { it.twitchApi.registerWebhooks() }
+            }.joinAll()
+
+            val allSubscriptions = bot.twitchApi.getAllSubscriptions()
+            allSubscriptions
+        }
     }
 }

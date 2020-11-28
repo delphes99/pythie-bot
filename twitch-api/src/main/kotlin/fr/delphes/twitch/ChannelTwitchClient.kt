@@ -7,6 +7,7 @@ import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.reward.RewardRedemption
 import fr.delphes.twitch.api.games.SimpleGameId
+import fr.delphes.twitch.api.newFollow.NewFollow
 import fr.delphes.twitch.model.Stream
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -15,8 +16,9 @@ import kotlinx.coroutines.runBlocking
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
     private val pubSubApi: PubSubApi,
+    private val webhookApi: WebhookApi,
     override val userId: String
-) : ChannelTwitchApi {
+) : ChannelTwitchApi, WebhookApi by webhookApi {
     override suspend fun getStream(): Stream? {
         val stream = helixApi.getStreamByUserId(userId) ?: return null
         val game = getGame(SimpleGameId(stream.game_id))
@@ -42,21 +44,31 @@ class ChannelTwitchClient(
         fun builder(
             appCredential: TwitchAppCredential,
             userCredential: TwitchUserCredential,
-            userName: String
+            userName: String,
+            publicUrl: String,
+            webhookSecret: String
         ): Builder {
-            return Builder(appCredential, userCredential, userName)
+            return Builder(appCredential, userCredential, userName, publicUrl, webhookSecret)
         }
     }
 
     class Builder(
         private val appCredential: TwitchAppCredential,
         private val userCredential: TwitchUserCredential,
-        private val userName: String
+        private val userName: String,
+        private val publicUrl: String,
+        private val webhookSecret: String
     ) {
         private var listenReward: ((RewardRedemption) -> Unit)? = null
+        private var listenNewFollow: ((NewFollow) -> Unit)? = null
 
         fun listenToReward(listener: (RewardRedemption) -> Unit): Builder {
             listenReward = listener
+            return this
+        }
+
+        fun listenToNewFollow(listener: (NewFollow) -> Unit): Builder {
+            listenNewFollow = listener
             return this
         }
 
@@ -74,9 +86,12 @@ class ChannelTwitchClient(
                 pubSubApi.listen()
             }
 
+            val webhookApi = WebhookClient(publicUrl, userName, userId, webhookSecret, helixApi, listenNewFollow)
+
             return ChannelTwitchClient(
                 helixApi,
                 pubSubApi,
+                webhookApi,
                 userId
             )
         }
