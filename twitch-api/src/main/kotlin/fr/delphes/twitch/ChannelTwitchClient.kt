@@ -9,6 +9,9 @@ import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.reward.RewardRedemption
 import fr.delphes.twitch.api.games.SimpleGameId
 import fr.delphes.twitch.api.newFollow.NewFollow
+import fr.delphes.twitch.eventSub.ChannelUpdateEventSubConfiguration
+import fr.delphes.twitch.eventSub.EventSubConfiguration
+import fr.delphes.twitch.eventSub.NewFollowEventSubConfiguration
 import fr.delphes.twitch.model.Stream
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -61,8 +64,7 @@ class ChannelTwitchClient(
         private val webhookSecret: String
     ) {
         private var listenReward: ((RewardRedemption) -> Unit)? = null
-        private var listenNewFollow: ((NewFollow) -> Unit)? = null
-        private var listenChannelUpdate: ((ChannelUpdate) -> Unit)? = null
+        private val eventSubConfigurations = mutableListOf<EventSubConfiguration<*, *, *>>()
 
         fun listenToReward(listener: (RewardRedemption) -> Unit): Builder {
             listenReward = listener
@@ -70,12 +72,22 @@ class ChannelTwitchClient(
         }
 
         fun listenToNewFollow(listener: (NewFollow) -> Unit): Builder {
-            listenNewFollow = listener
+            eventSubConfigurations.add(
+                NewFollowEventSubConfiguration(
+                    listener
+                )
+            )
+
             return this
         }
 
         fun listenToChannelUpdate(listener: (ChannelUpdate) -> Unit): Builder {
-            listenChannelUpdate = listener
+            eventSubConfigurations.add(
+                ChannelUpdateEventSubConfiguration(
+                    listener
+                )
+            )
+
             return this
         }
 
@@ -93,7 +105,14 @@ class ChannelTwitchClient(
                 pubSubApi.listen()
             }
 
-            val webhookApi = WebhookClient(publicUrl, userName, userId, webhookSecret, helixApi, listenNewFollow, listenChannelUpdate)
+            val webhookApi = WebhookClient(
+                publicUrl,
+                userName,
+                userId,
+                webhookSecret,
+                helixApi,
+                eventSubConfigurations
+            )
 
             return ChannelTwitchClient(
                 helixApi,
