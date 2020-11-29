@@ -12,28 +12,31 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.TwitchOutgoingEvent
-import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.state.Statistics
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
-import fr.delphes.bot.twitch.game.TwitchGameRepository
 import fr.delphes.bot.twitch.handler.ChannelBitsHandler
 import fr.delphes.bot.twitch.handler.ChannelMessageHandler
+import fr.delphes.bot.twitch.handler.ChannelUpdateHandler
 import fr.delphes.bot.twitch.handler.IRCMessageHandler
 import fr.delphes.bot.twitch.handler.NewFollowHandler
 import fr.delphes.bot.twitch.handler.NewSubHandler
 import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
-import fr.delphes.bot.twitch.handler.StreamInfosHandler
+import fr.delphes.bot.twitch.handler.StreamOfflineHandler
+import fr.delphes.bot.twitch.handler.StreamOnlineHandler
 import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
-import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.api.channelFollow.NewFollow
-import fr.delphes.twitch.auth.AuthToken
-import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.reward.RewardRedemption
+import fr.delphes.twitch.api.streamOffline.StreamOffline
+import fr.delphes.twitch.api.streamOnline.StreamOnline
+import fr.delphes.twitch.auth.AuthToken
+import fr.delphes.twitch.auth.AuthTokenRepository
+import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.model.Stream
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.channels.Channel
@@ -78,13 +81,17 @@ class Channel(
     private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedemption> = RewardRedeemedHandler()
     private val channelMessageHandler: TwitchIncomingEventHandler<ChannelMessageEvent> = ChannelMessageHandler()
     private val ircMessageHandler: TwitchIncomingEventHandler<IRCMessageEvent> = IRCMessageHandler()
-    private val streamInfosHandler: TwitchIncomingEventHandler<StreamInfosPayload>
+    private val channelUpdateHandler: TwitchIncomingEventHandler<ChannelUpdate> = ChannelUpdateHandler()
+    private val streamOnlineHandler: TwitchIncomingEventHandler<StreamOnline> = StreamOnlineHandler(this)
+    private val streamOfflineHandler: TwitchIncomingEventHandler<StreamOffline> = StreamOfflineHandler()
 
     init {
         twitchApi = ChannelTwitchClient.builder(bot.appCredential, channelCredential, name, bot.publicUrl, bot.webhookSecret)
             .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
             .listenToNewFollow { newFollowHandler.handleTwitchEvent(it) }
-            .listenToChannelUpdate { println("update!!!!!! ${it.categoryName}") }
+            .listenToStreamOnline { streamOnlineHandler.handleTwitchEvent(it) }
+            .listenToStreamOffline { streamOfflineHandler.handleTwitchEvent(it) }
+            .listenToChannelUpdate { channelUpdateHandler.handleTwitchEvent(it) }
             .build()
         userId = twitchApi.userId
 
@@ -103,8 +110,6 @@ class Channel(
         features.forEach { feature ->
             feature.registerHandlers(eventHandlers)
         }
-
-        streamInfosHandler = StreamInfosHandler(TwitchGameRepository(twitchApi::getGame))
 
         runBlocking {
             state.init(twitchApi.getStream())
@@ -128,10 +133,6 @@ class Channel(
 
     fun handleNewSub(request: NewSubPayload) {
         newSubHandler.handleTwitchEvent(request)
-    }
-
-    fun handleStreamInfos(request: StreamInfosPayload) {
-        streamInfosHandler.handleTwitchEvent(request)
     }
 
     private fun handleChannelMessageEvent(request: ChannelMessageEvent) {

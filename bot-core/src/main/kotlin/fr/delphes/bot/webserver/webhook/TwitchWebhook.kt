@@ -16,11 +16,6 @@ enum class TwitchWebhook(
         { userId -> "https://api.twitch.tv/helix/subscriptions/events?broadcaster_id=$userId&first=1" },
         "sub",
         { context -> handleNewSub(context.payload()) }
-    ),
-    STREAM(
-        { userId -> "https://api.twitch.tv/helix/streams?user_id=$userId" },
-        "streamstatus",
-        { context -> handleStreamInfos(context.payload()) }
     );
 
     fun topic(ownerId: OwnerId) = TwitchWebhookTopic.fromUrl(topicUrl(ownerId))
