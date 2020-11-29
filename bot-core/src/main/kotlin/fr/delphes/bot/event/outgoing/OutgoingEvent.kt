@@ -3,7 +3,7 @@ package fr.delphes.bot.event.outgoing
 import com.github.twitch4j.chat.TwitchChat
 import fr.delphes.bot.Channel
 import fr.delphes.twitch.ChannelTwitchApi
-import fr.delphes.twitch.api.reward.Reward
+import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.user.User
 
 sealed class OutgoingEvent

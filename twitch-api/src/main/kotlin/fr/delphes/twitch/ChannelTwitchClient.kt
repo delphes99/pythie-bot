@@ -1,5 +1,6 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
 import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
 import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
@@ -9,8 +10,8 @@ import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.reward.Reward
-import fr.delphes.twitch.api.reward.RewardRedemption
+import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.RewardRedemption
 import fr.delphes.twitch.api.games.SimpleGameId
 import fr.delphes.twitch.api.channelFollow.NewFollow
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
@@ -21,13 +22,10 @@ import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.model.Stream
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
-    private val pubSubApi: PubSubApi,
     private val webhookApi: WebhookApi,
     override val userId: String
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
@@ -71,11 +69,15 @@ class ChannelTwitchClient(
         private val publicUrl: String,
         private val webhookSecret: String
     ) {
-        private var listenReward: ((RewardRedemption) -> Unit)? = null
         private val eventSubConfigurations = mutableListOf<EventSubConfiguration<*, *, *>>()
 
         fun listenToReward(listener: (RewardRedemption) -> Unit): Builder {
-            listenReward = listener
+            eventSubConfigurations.add(
+                CustomRewardRedemptionEventSubConfiguration(
+                    listener
+                )
+            )
+
             return this
         }
 
@@ -146,13 +148,6 @@ class ChannelTwitchClient(
                 helixApi.getUser(userName)!!.id
             }
 
-            val pubSubApi = PubSubClient(userCredential, userId, listenReward)
-
-            //TODO move somewhere else
-            GlobalScope.launch {
-                pubSubApi.listen()
-            }
-
             val webhookApi = WebhookClient(
                 publicUrl,
                 userName,
@@ -164,7 +159,6 @@ class ChannelTwitchClient(
 
             return ChannelTwitchClient(
                 helixApi,
-                pubSubApi,
                 webhookApi,
                 userId
             )

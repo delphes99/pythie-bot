@@ -11,6 +11,8 @@ enum class EventSubSubscriptionType {
     CHANNEL_SUBSCRIBE,
     @SerialName("channel.cheer")
     CHANNEL_CHEER,
+    @SerialName("channel.channel_points_custom_reward_redemption.add")
+    CHANNEL_POINTS_CUSTOM_REWARD_REDEMPTION,
     @SerialName("channel.update")
     CHANNEL_UPDATE,
     @SerialName("stream.offline")

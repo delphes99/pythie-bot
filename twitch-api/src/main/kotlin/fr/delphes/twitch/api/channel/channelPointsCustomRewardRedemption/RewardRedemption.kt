@@ -1,4 +1,4 @@
-package fr.delphes.twitch.api.reward
+package fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption
 
 import fr.delphes.twitch.api.user.User
 
