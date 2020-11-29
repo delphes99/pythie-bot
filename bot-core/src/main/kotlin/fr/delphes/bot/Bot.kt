@@ -21,8 +21,8 @@ object Bot {
 
         WebServer(bot)
 
-        bot.subscribeWebhooks()
         runBlocking {
+            //TODO cron refresh sub
             bot.twitchApi.removeAllSubscriptions()
 
             bot.channels.map {

@@ -24,12 +24,12 @@ import fr.delphes.bot.twitch.handler.NewSubHandler
 import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
 import fr.delphes.bot.twitch.handler.StreamOfflineHandler
 import fr.delphes.bot.twitch.handler.StreamOnlineHandler
-import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.api.channelFollow.NewFollow
+import fr.delphes.twitch.api.channelSubscribe.NewSub
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.reward.RewardRedemption
 import fr.delphes.twitch.api.streamOffline.StreamOffline
@@ -76,7 +76,7 @@ class Channel(
     val twitchApi: ChannelTwitchApi
 
     private val newFollowHandler: TwitchIncomingEventHandler<NewFollow> = NewFollowHandler()
-    private val newSubHandler: TwitchIncomingEventHandler<NewSubPayload> = NewSubHandler()
+    private val newSubHandler: TwitchIncomingEventHandler<NewSub> = NewSubHandler()
     private val channelBitsHandler: TwitchIncomingEventHandler<ChannelBitsEvent> = ChannelBitsHandler()
     private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedemption> = RewardRedeemedHandler()
     private val channelMessageHandler: TwitchIncomingEventHandler<ChannelMessageEvent> = ChannelMessageHandler()
@@ -89,6 +89,7 @@ class Channel(
         twitchApi = ChannelTwitchClient.builder(bot.appCredential, channelCredential, name, bot.publicUrl, bot.webhookSecret)
             .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
             .listenToNewFollow { newFollowHandler.handleTwitchEvent(it) }
+            .listenToNewSub { newSubHandler.handleTwitchEvent(it) }
             .listenToStreamOnline { streamOnlineHandler.handleTwitchEvent(it) }
             .listenToStreamOffline { streamOfflineHandler.handleTwitchEvent(it) }
             .listenToChannelUpdate { channelUpdateHandler.handleTwitchEvent(it) }
@@ -129,10 +130,6 @@ class Channel(
 
     private fun handleBitsEvent(request: ChannelBitsEvent) {
         channelBitsHandler.handleTwitchEvent(request)
-    }
-
-    fun handleNewSub(request: NewSubPayload) {
-        newSubHandler.handleTwitchEvent(request)
     }
 
     private fun handleChannelMessageEvent(request: ChannelMessageEvent) {

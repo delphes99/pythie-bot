@@ -5,18 +5,16 @@ import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.NewSub
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
-import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
+import fr.delphes.twitch.api.channelSubscribe.NewSub as NewSubTwitch
 
-class NewSubHandler : TwitchIncomingEventHandler<NewSubPayload> {
+class NewSubHandler : TwitchIncomingEventHandler<NewSubTwitch> {
     override fun handle(
-        twitchEvent: NewSubPayload,
+        twitchEvent: NewSubTwitch,
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
-        val incomingEvents = twitchEvent.data.map { d -> NewSub(d) }
-        incomingEvents.forEach { newSub ->
-            changeState.newSub(newSub.sub)
-        }
-        return incomingEvents
+        changeState.newSub(twitchEvent.user)
+
+        return listOf(NewSub(twitchEvent.user))
     }
 }
