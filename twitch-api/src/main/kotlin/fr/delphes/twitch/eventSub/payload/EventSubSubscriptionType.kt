@@ -8,5 +8,7 @@ enum class EventSubSubscriptionType {
     @SerialName("channel.follow")
     CHANNEL_FOLLOW,
     @SerialName("channel.update")
-    CHANNEL_UPDATE;
+    CHANNEL_UPDATE,
+    @SerialName("stream.online")
+    STREAM_ONLINE;
 }

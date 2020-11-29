@@ -14,6 +14,8 @@ import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
 import fr.delphes.twitch.api.user.payload.GetUsersPayload
 import fr.delphes.twitch.api.newFollow.payload.NewFollowCondition
 import fr.delphes.twitch.api.newFollow.payload.SubscribeNewFollow
+import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineCondition
+import fr.delphes.twitch.api.streamOnline.payload.SubscribeStreamOnline
 import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.client.statement.HttpResponse
@@ -75,23 +77,27 @@ internal class ChannelHelixClient(
         secret: String
     ) {
         //TODO manage errors
+        val transport = SubscribeTransport(
+            callback,
+            secret
+        )
         @Suppress("IMPLICIT_CAST_TO_ANY") val payload = when (channelFollow) {
             EventSubSubscriptionType.CHANNEL_FOLLOW -> {
                 SubscribeNewFollow(
                     NewFollowCondition(userId),
-                    SubscribeTransport(
-                        callback,
-                        secret
-                    )
+                    transport
                 )
             }
             EventSubSubscriptionType.CHANNEL_UPDATE -> {
                 SubscribeChannelUpdate(
                     ChannelUpdateCondition(userId),
-                    SubscribeTransport(
-                        callback,
-                        secret
-                    )
+                    transport
+                )
+            }
+            EventSubSubscriptionType.STREAM_ONLINE -> {
+                SubscribeStreamOnline(
+                    StreamOnlineCondition(userId),
+                    transport
                 )
             }
         }

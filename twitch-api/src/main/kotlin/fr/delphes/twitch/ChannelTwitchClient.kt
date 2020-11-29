@@ -12,6 +12,8 @@ import fr.delphes.twitch.api.newFollow.NewFollow
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.api.newFollow.NewFollowEventSubConfiguration
+import fr.delphes.twitch.api.streamOnline.StreamOnline
+import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.model.Stream
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -84,6 +86,16 @@ class ChannelTwitchClient(
         fun listenToChannelUpdate(listener: (ChannelUpdate) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelUpdateEventSubConfiguration(
+                    listener
+                )
+            )
+
+            return this
+        }
+
+        fun listenToStreamOnline(listener: (StreamOnline) -> Unit): Builder {
+            eventSubConfigurations.add(
+                StreamOnlineEventSubConfiguration(
                     listener
                 )
             )
