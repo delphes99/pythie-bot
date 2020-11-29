@@ -30,7 +30,7 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.ChannelTwitchClient
-import fr.delphes.twitch.api.newFollow.NewFollow
+import fr.delphes.twitch.api.channelFollow.NewFollow
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.api.reward.RewardRedemption

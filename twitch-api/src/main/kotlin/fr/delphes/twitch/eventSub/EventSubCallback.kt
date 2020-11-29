@@ -2,7 +2,6 @@ package fr.delphes.twitch.eventSub
 
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
-import fr.delphes.twitch.eventSub.payload.notification.NotificationSubscriptionPayload
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.ContentType

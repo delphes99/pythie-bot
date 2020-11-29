@@ -1,4 +1,4 @@
-package fr.delphes.twitch.api.newFollow
+package fr.delphes.twitch.api.channelFollow
 
 import fr.delphes.twitch.api.user.User
 

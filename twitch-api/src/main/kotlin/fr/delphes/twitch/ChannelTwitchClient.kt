@@ -10,10 +10,10 @@ import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.reward.RewardRedemption
 import fr.delphes.twitch.api.games.SimpleGameId
-import fr.delphes.twitch.api.newFollow.NewFollow
+import fr.delphes.twitch.api.channelFollow.NewFollow
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.api.newFollow.NewFollowEventSubConfiguration
+import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
 import fr.delphes.twitch.api.streamOffline.StreamOffline
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
@@ -79,7 +79,7 @@ class ChannelTwitchClient(
 
         fun listenToNewFollow(listener: (NewFollow) -> Unit): Builder {
             eventSubConfigurations.add(
-                NewFollowEventSubConfiguration(
+                ChannelFollowEventSubConfiguration(
                     listener
                 )
             )

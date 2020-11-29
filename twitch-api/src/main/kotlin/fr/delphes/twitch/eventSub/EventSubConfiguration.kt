@@ -16,7 +16,7 @@ abstract class EventSubConfiguration<MODEL, PAYLOAD, CONDITION : GenericConditio
         listener(model)
     }
 
-    protected abstract fun transform(payload: PAYLOAD): MODEL
+    internal abstract fun transform(payload: PAYLOAD): MODEL
 
     abstract fun subscribePayload(userId: String, transport: SubscribeTransport): EventSubSubscribe<CONDITION>
 

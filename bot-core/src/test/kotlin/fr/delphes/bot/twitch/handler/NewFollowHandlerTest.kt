@@ -3,7 +3,7 @@ package fr.delphes.bot.twitch.handler
 import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
-import fr.delphes.twitch.api.newFollow.NewFollow
+import fr.delphes.twitch.api.channelFollow.NewFollow
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
