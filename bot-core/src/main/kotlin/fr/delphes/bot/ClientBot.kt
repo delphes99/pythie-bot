@@ -7,7 +7,6 @@ import fr.delphes.configuration.BotConfiguration
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.TwitchAppCredential
-import kotlinx.coroutines.runBlocking
 
 class ClientBot(
     configuration: BotConfiguration,
@@ -16,6 +15,7 @@ class ClientBot(
 ) {
     val channels = mutableListOf<Channel>()
     private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
+    //TODO random secret
     val webhookSecret = configuration.webhookSecret
 
     val appCredential = TwitchAppCredential.of(
@@ -24,7 +24,7 @@ class ClientBot(
         tokenRepository = { getToken -> AuthTokenRepository("${configFilepath}\\auth\\bot.json", getToken) }
     )
 
-    val twitchApi = AppTwitchClient.build(appCredential, webhookSecret)
+    val twitchApi = AppTwitchClient.build(appCredential)
 
     val client = TwitchClientBuilder.builder()
         .withEnableChat(true)
@@ -35,9 +35,6 @@ class ClientBot(
 
     init {
         chat.connect()
-        runBlocking {
-            twitchApi.removeAllWebhooks()
-        }
     }
 
     fun findChannelBy(name: String): Channel? {

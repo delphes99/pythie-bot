@@ -10,18 +10,6 @@ import mu.KotlinLogging
 class AppTwitchClient(
     private val twitchAppHelixApi: AppHelixApi
 ) : AppTwitchApi {
-    override suspend fun removeAllWebhooks() {
-        coroutineScope {
-            val webhook = twitchAppHelixApi.getWebhook()
-
-            webhook.map {
-                launch {
-                    twitchAppHelixApi.unsubscribeWebhook(it)
-                }
-            }.joinAll()
-        }
-    }
-
     override suspend fun getAllSubscriptions(): ListSubscriptionsPayload {
         return coroutineScope {
             twitchAppHelixApi.getEventSubSubscriptions()
@@ -41,8 +29,8 @@ class AppTwitchClient(
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}
-        fun build(appCredential: TwitchAppCredential, webhookSecret: String): AppTwitchClient {
-            return AppTwitchClient(AppHelixClient(appCredential, webhookSecret))
+        fun build(appCredential: TwitchAppCredential): AppTwitchClient {
+            return AppTwitchClient(AppHelixClient(appCredential))
         }
     }
 }
