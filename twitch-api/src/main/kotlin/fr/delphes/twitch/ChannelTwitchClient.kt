@@ -12,6 +12,8 @@ import fr.delphes.twitch.api.newFollow.NewFollow
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.api.newFollow.NewFollowEventSubConfiguration
+import fr.delphes.twitch.api.streamOffline.StreamOffline
+import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.model.Stream
@@ -96,6 +98,16 @@ class ChannelTwitchClient(
         fun listenToStreamOnline(listener: (StreamOnline) -> Unit): Builder {
             eventSubConfigurations.add(
                 StreamOnlineEventSubConfiguration(
+                    listener
+                )
+            )
+
+            return this
+        }
+
+        fun listenToStreamOffline(listener: (StreamOffline) -> Unit): Builder {
+            eventSubConfigurations.add(
+                StreamOfflineEventSubConfiguration(
                     listener
                 )
             )

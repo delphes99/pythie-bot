@@ -14,9 +14,6 @@ abstract class EventSubConfiguration<MODEL, PAYLOAD, CONDITION : GenericConditio
 ) {
     val callback = EventSubCallback(webhookPathSuffix, ::parse, ::notify)
 
-    // Abstract to keep type instead of generics
-    protected abstract suspend fun parse(call: ApplicationCall): NotificationPayload<PAYLOAD, CONDITION>
-
     private fun notify(event: PAYLOAD, subscription: NotificationSubscriptionPayload<CONDITION>) {
         val model = transform(event, subscription)
         listener(model)
@@ -25,4 +22,7 @@ abstract class EventSubConfiguration<MODEL, PAYLOAD, CONDITION : GenericConditio
     protected abstract fun transform(payload: PAYLOAD, subscription: NotificationSubscriptionPayload<CONDITION>): MODEL
 
     abstract fun subscribePayload(userId: String, transport: SubscribeTransport): EventSubSubscribe<CONDITION>
+
+    // Abstract to keep type instead of generics
+    protected abstract suspend fun parse(call: ApplicationCall): NotificationPayload<PAYLOAD, CONDITION>
 }

@@ -26,10 +26,6 @@ class NewFollowEventSubConfiguration(
         return NewFollow(User(payload.user_name), subscription.created_at)
     }
 
-    override suspend fun parse(call: ApplicationCall): NotificationPayload<NewFollowEventPayload, NewFollowCondition> {
-        return call.receive()
-    }
-
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
@@ -38,5 +34,9 @@ class NewFollowEventSubConfiguration(
             NewFollowCondition(userId),
             transport
         )
+    }
+
+    override suspend fun parse(call: ApplicationCall): NotificationPayload<NewFollowEventPayload, NewFollowCondition> {
+        return call.receive()
     }
 }

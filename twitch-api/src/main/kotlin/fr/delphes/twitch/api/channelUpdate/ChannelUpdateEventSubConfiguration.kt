@@ -25,10 +25,6 @@ class ChannelUpdateEventSubConfiguration(
         return ChannelUpdate(payload.title, payload.language, payload.category_id, payload.category_name)
     }
 
-    override suspend fun parse(call: ApplicationCall): NotificationPayload<ChannelUpdateEventPayload, ChannelUpdateCondition> {
-        return call.receive()
-    }
-
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
@@ -37,5 +33,9 @@ class ChannelUpdateEventSubConfiguration(
             ChannelUpdateCondition(userId),
             transport
         )
+    }
+
+    override suspend fun parse(call: ApplicationCall): NotificationPayload<ChannelUpdateEventPayload, ChannelUpdateCondition> {
+        return call.receive()
     }
 }

@@ -25,10 +25,6 @@ class StreamOnlineEventSubConfiguration(
         return StreamOnline(payload.type)
     }
 
-    override suspend fun parse(call: ApplicationCall): NotificationPayload<StreamOnlineEventPayload, StreamOnlineCondition> {
-        return call.receive()
-    }
-
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
@@ -37,5 +33,9 @@ class StreamOnlineEventSubConfiguration(
             StreamOnlineCondition(userId),
             transport
         )
+    }
+
+    override suspend fun parse(call: ApplicationCall): NotificationPayload<StreamOnlineEventPayload, StreamOnlineCondition> {
+        return call.receive()
     }
 }
