@@ -4,7 +4,7 @@ import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateCondition
 import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateEventPayload
 import fr.delphes.twitch.api.channelUpdate.payload.SubscribeChannelUpdate
 import fr.delphes.twitch.api.games.Game
-import fr.delphes.twitch.api.games.SimpleGameId
+import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
@@ -20,7 +20,7 @@ class ChannelUpdateEventSubConfiguration(
     override fun transform(
         payload: ChannelUpdateEventPayload
     ): ChannelUpdate {
-        return ChannelUpdate(payload.title, payload.language, Game(SimpleGameId(payload.category_id), payload.category_name))
+        return ChannelUpdate(payload.title, payload.language, Game(GameId(payload.category_id), payload.category_name))
     }
 
     override fun subscribePayload(

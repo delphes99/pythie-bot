@@ -4,10 +4,9 @@ import fr.delphes.bot.Channel
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.StreamOnline
 import fr.delphes.bot.state.ChannelChangeState
-import fr.delphes.bot.twitch.game.GameRepository
 import fr.delphes.bot.util.time.TestClock
 import fr.delphes.twitch.api.games.Game
-import fr.delphes.twitch.api.games.SimpleGameId
+import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.streamOnline.StreamType
 import fr.delphes.twitch.model.Stream
 import io.mockk.clearAllMocks
@@ -26,7 +25,7 @@ internal class StreamOnlineHandlerTest {
     private val changeState = mockk<ChannelChangeState>(relaxed = true)
     private val channel = mockk<Channel>()
 
-    private val GAME_ID = SimpleGameId("game")
+    private val GAME_ID = GameId("game")
     private val GAME = Game(GAME_ID, "label")
     private val STARTED_AT = LocalDateTime.of(2020, 1, 1, 12, 0)
 

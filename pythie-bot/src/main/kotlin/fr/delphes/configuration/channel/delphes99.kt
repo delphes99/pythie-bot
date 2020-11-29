@@ -148,9 +148,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             )
         },
         GameReward(
-            mapOf(
-                Games.SCIENCE_TECHNOLOGY to listOf(Reward("676834c5-fb74-4e9e-96bf-d10605d3f2b1", "Test dev"))
-            )
+            Reward("676834c5-fb74-4e9e-96bf-d10605d3f2b1", "Test dev") to Games.SCIENCE_TECHNOLOGY
         ),
         Command(
             "!test",

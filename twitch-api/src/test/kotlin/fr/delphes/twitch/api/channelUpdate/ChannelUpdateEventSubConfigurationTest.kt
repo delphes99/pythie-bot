@@ -1,7 +1,7 @@
 package fr.delphes.twitch.api.channelUpdate
 
 import fr.delphes.twitch.api.games.Game
-import fr.delphes.twitch.api.games.SimpleGameId
+import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.parseToModel
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -40,7 +40,7 @@ internal class ChannelUpdateEventSubConfigurationTest {
         val model = ChannelUpdateEventSubConfiguration { }.parseToModel(payload)
 
         Assertions.assertThat(model).isEqualTo(
-            ChannelUpdate("Best Stream Ever", "en", Game(SimpleGameId("21779"), "Fortnite"))
+            ChannelUpdate("Best Stream Ever", "en", Game(GameId("21779"), "Fortnite"))
         )
     }
 }

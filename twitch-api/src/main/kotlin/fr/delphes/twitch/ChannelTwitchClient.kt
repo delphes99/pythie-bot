@@ -1,26 +1,25 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
 import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
 import fr.delphes.twitch.api.channelCheer.NewCheer
+import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
+import fr.delphes.twitch.api.channelFollow.NewFollow
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.NewSub
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
-import fr.delphes.twitch.auth.TwitchAppCredential
-import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
-import fr.delphes.twitch.api.games.SimpleGameId
-import fr.delphes.twitch.api.channelFollow.NewFollow
-import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
-import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
 import fr.delphes.twitch.api.streamOffline.StreamOffline
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
+import fr.delphes.twitch.auth.TwitchAppCredential
+import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.model.Stream
 import kotlinx.coroutines.runBlocking
 
@@ -31,7 +30,7 @@ class ChannelTwitchClient(
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
     override suspend fun getStream(): Stream? {
         val stream = helixApi.getStreamByUserId(userId) ?: return null
-        val game = getGame(SimpleGameId(stream.game_id))
+        val game = getGame(GameId(stream.game_id))
 
         return Stream(stream.title, stream.started_at, game)
     }
@@ -39,7 +38,7 @@ class ChannelTwitchClient(
     override suspend fun getGame(id: GameId): Game {
         val game = helixApi.getGameById(id.id)
 
-        return Game(SimpleGameId(game!!.id), game.name)
+        return Game(GameId(game!!.id), game.name)
     }
 
     override suspend fun deactivateReward(reward: Reward) {

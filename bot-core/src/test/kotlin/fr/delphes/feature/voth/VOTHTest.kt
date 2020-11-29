@@ -1,6 +1,5 @@
 package fr.delphes.feature.voth
 
-import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.incoming.CommandAsked
@@ -17,7 +16,8 @@ import fr.delphes.feature.TestStateRepository
 import fr.delphes.feature.handle
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.games.Game
-import fr.delphes.twitch.api.games.SimpleGameId
+import fr.delphes.twitch.api.games.GameId
+import fr.delphes.twitch.api.user.User
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -124,7 +124,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val incomingEvent = StreamOnline("title", NOW, Game(SimpleGameId("gameId"), "game title"))
+        val incomingEvent = StreamOnline("title", NOW, Game(GameId("gameId"), "game title"))
         val messages = voth.handle(incomingEvent, channelInfo)
 
         verify(exactly = 1) { state.unpause(any()) }

@@ -1,8 +1,8 @@
 package fr.delphes.configuration.channel
 
-import fr.delphes.twitch.api.games.GameId
+import fr.delphes.twitch.api.games.WithGameId
 
-enum class Games(override val id: String) : GameId {
+enum class Games(override val id: String) : WithGameId {
     SCIENCE_TECHNOLOGY("509670"),
     JUST_CHATTING("509658"),
     SATISFACTORY("506456"),

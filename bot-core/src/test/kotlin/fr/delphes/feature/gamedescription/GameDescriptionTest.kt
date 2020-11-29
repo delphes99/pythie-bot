@@ -1,6 +1,5 @@
 package fr.delphes.feature.gamedescription
 
-import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.incoming.CommandAsked
@@ -9,7 +8,8 @@ import fr.delphes.feature.gameDescription.GameDescription
 import fr.delphes.feature.handle
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.games.SimpleGameId
+import fr.delphes.twitch.api.games.WithGameId
+import fr.delphes.twitch.api.user.User
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -18,11 +18,11 @@ import org.junit.jupiter.api.Test
 internal class GameDescriptionTest {
     private val channelInfo = mockk<ChannelInfo>()
 
-    private val GAME_ID = SimpleGameId("id")
+    private val GAME_ID = GameId("id")
     private val GAME = Game(GAME_ID, "label")
-    private val OTHER_GAME_ID = SimpleGameId("otherId")
+    private val OTHER_GAME_ID = GameId("otherId")
     private val OTHER_GAME = Game(OTHER_GAME_ID, "other label")
-    enum class GameEnum(override val id: String) : GameId {
+    enum class GameEnum(override val id: String) : WithGameId {
         GAME("id");
     }
 

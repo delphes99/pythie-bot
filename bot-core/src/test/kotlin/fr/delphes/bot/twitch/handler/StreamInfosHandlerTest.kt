@@ -6,7 +6,7 @@ import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.games.Game
-import fr.delphes.twitch.api.games.SimpleGameId
+import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.model.Stream
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -23,11 +23,11 @@ internal class StreamInfosHandlerTest {
     private val STARTED_AT = LocalDateTime.of(2020, 1, 1, 12, 0)
 
     private val CURRENT_TITLE = "current stream title"
-    private val CURRENT_GAME_ID = SimpleGameId("game")
+    private val CURRENT_GAME_ID = GameId("game")
     private val CURRENT_GAME = Game(CURRENT_GAME_ID, "game title")
 
     private val NEW_TITLE = "new title"
-    private val NEW_GAME_ID = SimpleGameId("new game")
+    private val NEW_GAME_ID = GameId("new game")
     private val NEW_GAME = Game(NEW_GAME_ID, "new game title")
 
     @BeforeEach
