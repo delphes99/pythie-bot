@@ -1,23 +1,23 @@
 package fr.delphes.bot.twitch.handler
 
-import com.github.twitch4j.pubsub.events.ChannelBitsEvent
-import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.BitCheered
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
+import fr.delphes.twitch.api.channelCheer.NewCheer
 
-class ChannelBitsHandler : TwitchIncomingEventHandler<ChannelBitsEvent> {
+class ChannelBitsHandler : TwitchIncomingEventHandler<NewCheer> {
     override fun handle(
-        twitchEvent: ChannelBitsEvent,
+        twitchEvent: NewCheer,
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
         return listOf(
             BitCheered(
-                User(twitchEvent.data.userName),
-                twitchEvent.data.bitsUsed.toLong()
+                twitchEvent.cheerer,
+                twitchEvent.bits,
+                twitchEvent.message
             )
         )
     }

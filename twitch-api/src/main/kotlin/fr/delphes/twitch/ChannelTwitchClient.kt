@@ -1,5 +1,7 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
+import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.NewSub
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
@@ -87,6 +89,26 @@ class ChannelTwitchClient(
             return this
         }
 
+        fun listenToNewSub(listener: (NewSub) -> Unit): Builder {
+            eventSubConfigurations.add(
+                ChannelSubscribeEventSubConfiguration(
+                    listener
+                )
+            )
+
+            return this
+        }
+
+        fun listenToNewCheer(listener: (NewCheer) -> Unit): Builder {
+            eventSubConfigurations.add(
+                ChannelCheerEventSubConfiguration(
+                    listener
+                )
+            )
+
+            return this
+        }
+
         fun listenToChannelUpdate(listener: (ChannelUpdate) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelUpdateEventSubConfiguration(
@@ -110,16 +132,6 @@ class ChannelTwitchClient(
         fun listenToStreamOffline(listener: (StreamOffline) -> Unit): Builder {
             eventSubConfigurations.add(
                 StreamOfflineEventSubConfiguration(
-                    listener
-                )
-            )
-
-            return this
-        }
-
-        fun listenToNewSub(listener: (NewSub) -> Unit): Builder {
-            eventSubConfigurations.add(
-                ChannelSubscribeEventSubConfiguration(
                     listener
                 )
             )

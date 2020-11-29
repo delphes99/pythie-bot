@@ -129,7 +129,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         },
         BitCheer { bitCheered ->
             listOf(
-                SendMessage("💎 ${bitCheered.cheerer.name} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎")
+                SendMessage("💎 ${bitCheered.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎")
             )
         },
         GameDescription(
