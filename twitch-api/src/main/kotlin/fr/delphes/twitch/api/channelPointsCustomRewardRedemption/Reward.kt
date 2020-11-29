@@ -1,4 +1,4 @@
-package fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption
+package fr.delphes.twitch.api.channelPointsCustomRewardRedemption
 
 data class Reward(
     val rewardId: String,

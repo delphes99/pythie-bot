@@ -23,7 +23,7 @@ import fr.delphes.feature.gameDescription.GameDescription
 import fr.delphes.feature.gameReward.GameReward
 import fr.delphes.feature.overlay.Overlay
 import fr.delphes.feature.rewardRedeem.RewardRedeem
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import java.time.Duration
 
 /**

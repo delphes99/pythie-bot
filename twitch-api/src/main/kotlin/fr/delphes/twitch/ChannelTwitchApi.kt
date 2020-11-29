@@ -2,7 +2,7 @@ package fr.delphes.twitch
 
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.model.Stream
 
 interface ChannelTwitchApi : WebhookApi {

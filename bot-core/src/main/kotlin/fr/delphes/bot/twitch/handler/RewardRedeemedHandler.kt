@@ -5,7 +5,7 @@ import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.RewardRedemption as RewardRedemptionTwitch
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption as RewardRedemptionTwitch
 
 class RewardRedeemedHandler : TwitchIncomingEventHandler<RewardRedemptionTwitch> {
     override fun handle(

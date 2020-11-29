@@ -1,4 +1,4 @@
-package fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.payload
+package fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload
 
 import kotlinx.serialization.Serializable
 

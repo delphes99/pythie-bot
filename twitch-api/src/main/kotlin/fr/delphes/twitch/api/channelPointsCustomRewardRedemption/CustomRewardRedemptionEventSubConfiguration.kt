@@ -1,8 +1,8 @@
-package fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption
+package fr.delphes.twitch.api.channelPointsCustomRewardRedemption
 
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionCondition
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionEventPayload
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.payload.SubscribechannelPointsCustomRewardRedemption
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionCondition
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionEventPayload
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.SubscribechannelPointsCustomRewardRedemption
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload

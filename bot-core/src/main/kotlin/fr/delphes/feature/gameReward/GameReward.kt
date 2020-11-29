@@ -11,7 +11,7 @@ import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
 import fr.delphes.twitch.api.games.Game
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.games.GameId
 
 class GameReward(

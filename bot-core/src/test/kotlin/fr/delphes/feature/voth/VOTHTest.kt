@@ -15,7 +15,7 @@ import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.util.time.TestClock
 import fr.delphes.feature.TestStateRepository
 import fr.delphes.feature.handle
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.SimpleGameId
 import io.mockk.every

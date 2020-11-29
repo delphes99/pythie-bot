@@ -1,6 +1,6 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
 import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
 import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
@@ -10,8 +10,8 @@ import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.Reward
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.RewardRedemption
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
 import fr.delphes.twitch.api.games.SimpleGameId
 import fr.delphes.twitch.api.channelFollow.NewFollow
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration

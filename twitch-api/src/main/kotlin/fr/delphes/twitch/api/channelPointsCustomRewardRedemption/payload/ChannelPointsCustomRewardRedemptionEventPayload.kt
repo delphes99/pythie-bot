@@ -1,8 +1,8 @@
 @file:UseSerializers(LocalDateTimeAsInstantSerializer::class)
 
-package fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.payload
+package fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload
 
-import fr.delphes.twitch.api.channel.channelPointsCustomRewardRedemption.RewardRedemptionStatus
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemptionStatus
 import fr.delphes.twitch.serialization.LocalDateTimeAsInstantSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
