@@ -12,11 +12,6 @@ enum class TwitchWebhook(
     val callSuffix: String,
     val notificationHandler: Channel.(PipelineContext<Unit, ApplicationCall>) -> Unit
 ) {
-    FOLLOW(
-        { userId -> "https://api.twitch.tv/helix/users/follows?first=1&to_id=$userId" },
-        "follow",
-        { context -> handleNewFollow(context.payload()) }
-    ),
     SUB(
         { userId -> "https://api.twitch.tv/helix/subscriptions/events?broadcaster_id=$userId&first=1" },
         "sub",

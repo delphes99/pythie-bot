@@ -3,14 +3,12 @@ package fr.delphes.bot.twitch.handler
 import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
-import fr.delphes.bot.webserver.payload.newFollow.NewFollowData
-import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
+import fr.delphes.twitch.api.newFollow.NewFollow
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 
 internal class NewFollowHandlerTest {
     private val changeState = mockk<ChannelChangeState>(relaxed = true)
@@ -29,8 +27,7 @@ internal class NewFollowHandlerTest {
         verify(exactly = 1) { changeState.newFollow(User("user")) }
     }
 
-    private fun String.follows(): NewFollowPayload {
-        val followed_at = LocalDateTime.of(2020, 1, 1, 12, 0)
-        return NewFollowPayload(NewFollowData("id", this, "streamId", "streamer", followed_at))
+    private fun String.follows(): NewFollow {
+        return NewFollow(User(this))
     }
 }

@@ -24,13 +24,13 @@ import fr.delphes.bot.twitch.handler.NewFollowHandler
 import fr.delphes.bot.twitch.handler.NewSubHandler
 import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
 import fr.delphes.bot.twitch.handler.StreamInfosHandler
-import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
 import fr.delphes.bot.webserver.payload.newSub.NewSubPayload
 import fr.delphes.bot.webserver.payload.streamInfos.StreamInfosPayload
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.ChannelTwitchClient
+import fr.delphes.twitch.api.newFollow.NewFollow
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.api.reward.RewardRedemption
@@ -72,7 +72,7 @@ class Channel(
 
     val twitchApi: ChannelTwitchApi
 
-    private val newFollowHandler: TwitchIncomingEventHandler<NewFollowPayload> = NewFollowHandler()
+    private val newFollowHandler: TwitchIncomingEventHandler<NewFollow> = NewFollowHandler()
     private val newSubHandler: TwitchIncomingEventHandler<NewSubPayload> = NewSubHandler()
     private val channelBitsHandler: TwitchIncomingEventHandler<ChannelBitsEvent> = ChannelBitsHandler()
     private val rewardRedeemedHandler: TwitchIncomingEventHandler<RewardRedemption> = RewardRedeemedHandler()
@@ -83,7 +83,7 @@ class Channel(
     init {
         twitchApi = ChannelTwitchClient.builder(bot.appCredential, channelCredential, name, bot.publicUrl, bot.webhookSecret)
             .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
-            .listenToNewFollow { println("new followwww!!!!!! ${it.follower}") }
+            .listenToNewFollow { newFollowHandler.handleTwitchEvent(it) }
             .listenToChannelUpdate { println("update!!!!!! ${it.categoryName}") }
             .build()
         userId = twitchApi.userId
@@ -124,10 +124,6 @@ class Channel(
 
     private fun handleBitsEvent(request: ChannelBitsEvent) {
         channelBitsHandler.handleTwitchEvent(request)
-    }
-
-    fun handleNewFollow(request: NewFollowPayload) {
-        newFollowHandler.handleTwitchEvent(request)
     }
 
     fun handleNewSub(request: NewSubPayload) {

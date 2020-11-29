@@ -5,18 +5,18 @@ import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.NewFollow
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
-import fr.delphes.bot.webserver.payload.newFollow.NewFollowPayload
+import fr.delphes.twitch.api.newFollow.NewFollow as NewFollowTwitch
 
-class NewFollowHandler : TwitchIncomingEventHandler<NewFollowPayload> {
+class NewFollowHandler : TwitchIncomingEventHandler<NewFollowTwitch> {
     override fun handle(
-        twitchEvent: NewFollowPayload,
+        twitchEvent: NewFollowTwitch,
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
-        val incomingEvents = twitchEvent.data.map { d -> NewFollow(d) }
-        incomingEvents.forEach { newFollow ->
-            changeState.newFollow(newFollow.follower)
-        }
-        return incomingEvents
+        val incomingEvent = NewFollow(twitchEvent.follower)
+
+        changeState.newFollow(incomingEvent.follower)
+
+        return listOf(incomingEvent)
     }
 }

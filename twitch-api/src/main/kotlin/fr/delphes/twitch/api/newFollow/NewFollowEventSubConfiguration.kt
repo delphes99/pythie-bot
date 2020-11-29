@@ -9,7 +9,6 @@ import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
-import java.time.LocalDateTime
 
 class NewFollowEventSubConfiguration(
     listener: (NewFollow) -> Unit
@@ -20,7 +19,7 @@ class NewFollowEventSubConfiguration(
     override fun transform(
         payload: NewFollowEventPayload
     ): NewFollow {
-        return NewFollow(User(payload.user_name), LocalDateTime.now())
+        return NewFollow(User(payload.user_name))
     }
 
     override fun subscribePayload(
