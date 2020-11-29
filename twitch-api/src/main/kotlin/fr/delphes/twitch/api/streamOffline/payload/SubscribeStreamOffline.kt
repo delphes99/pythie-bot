@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 class SubscribeStreamOffline(
     override val condition: StreamOfflineCondition,
     override val transport: SubscribeTransport,
-    override val type: EventSubSubscriptionType = EventSubSubscriptionType.STREAM_OFFLINE,
     override val version: String = "1"
-): EventSubSubscribe<StreamOfflineCondition>
+): EventSubSubscribe<StreamOfflineCondition> {
+    override val type: EventSubSubscriptionType = EventSubSubscriptionType.STREAM_OFFLINE
+}

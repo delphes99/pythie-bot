@@ -4,7 +4,6 @@ import fr.delphes.twitch.api.streamOffline.payload.StreamOfflineCondition
 import fr.delphes.twitch.api.streamOffline.payload.StreamOfflineEventPayload
 import fr.delphes.twitch.api.streamOffline.payload.SubscribeStreamOffline
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.notification.NotificationSubscriptionPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
@@ -14,8 +13,7 @@ import io.ktor.request.receive
 class StreamOfflineEventSubConfiguration(
     listener: (StreamOffline) -> Unit
 ) : EventSubConfiguration<StreamOffline, StreamOfflineEventPayload, StreamOfflineCondition>(
-    EventSubSubscriptionType.STREAM_ONLINE,
-    "StreamOnline",
+    "StreamOffline",
     listener
 ) {
     override fun transform(

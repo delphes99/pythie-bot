@@ -5,17 +5,16 @@ import fr.delphes.twitch.api.newFollow.payload.NewFollowEventPayload
 import fr.delphes.twitch.api.newFollow.payload.SubscribeNewFollow
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.notification.NotificationSubscriptionPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
+import java.time.LocalDateTime
 
 class NewFollowEventSubConfiguration(
     listener: (NewFollow) -> Unit
 ) : EventSubConfiguration<NewFollow, NewFollowEventPayload, NewFollowCondition>(
-    EventSubSubscriptionType.CHANNEL_FOLLOW,
     "newFollow",
     listener
 ) {
@@ -23,7 +22,7 @@ class NewFollowEventSubConfiguration(
         payload: NewFollowEventPayload,
         subscription: NotificationSubscriptionPayload<NewFollowCondition>
     ): NewFollow {
-        return NewFollow(User(payload.user_name), subscription.created_at)
+        return NewFollow(User(payload.user_name), LocalDateTime.now())
     }
 
     override fun subscribePayload(

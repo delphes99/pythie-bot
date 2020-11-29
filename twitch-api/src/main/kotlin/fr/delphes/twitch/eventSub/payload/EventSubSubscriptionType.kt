@@ -7,10 +7,12 @@ import kotlinx.serialization.Serializable
 enum class EventSubSubscriptionType {
     @SerialName("channel.follow")
     CHANNEL_FOLLOW,
+    @SerialName("channel.subscribe")
+    CHANNEL_SUBSCRIBE,
     @SerialName("channel.update")
     CHANNEL_UPDATE,
-    @SerialName("stream.online")
-    STREAM_ONLINE,
     @SerialName("stream.offline")
-    STREAM_OFFLINE;
+    STREAM_OFFLINE,
+    @SerialName("stream.online")
+    STREAM_ONLINE;
 }

@@ -4,7 +4,6 @@ import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineCondition
 import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineEventPayload
 import fr.delphes.twitch.api.streamOnline.payload.SubscribeStreamOnline
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.notification.NotificationSubscriptionPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
@@ -14,7 +13,6 @@ import io.ktor.request.receive
 class StreamOnlineEventSubConfiguration(
     listener: (StreamOnline) -> Unit
 ) : EventSubConfiguration<StreamOnline, StreamOnlineEventPayload, StreamOnlineCondition>(
-    EventSubSubscriptionType.STREAM_ONLINE,
     "StreamOnline",
     listener
 ) {

@@ -1,4 +1,4 @@
-package fr.delphes.twitch.api.newFollow.payload
+package fr.delphes.twitch.api.channelSubscribe.payload
 
 import fr.delphes.twitch.eventSub.EventSubSubscribe
 import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
@@ -6,10 +6,10 @@ import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SubscribeNewFollow(
-    override val condition: NewFollowCondition,
+class SubscribeChannelSubscribe(
+    override val condition: ChannelSubscribeCondition,
     override val transport: SubscribeTransport,
     override val version: String = "1"
-): EventSubSubscribe<NewFollowCondition> {
-    override val type: EventSubSubscriptionType = EventSubSubscriptionType.CHANNEL_FOLLOW
+): EventSubSubscribe<ChannelSubscribeCondition> {
+    override val type: EventSubSubscriptionType = EventSubSubscriptionType.CHANNEL_SUBSCRIBE
 }

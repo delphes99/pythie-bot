@@ -4,7 +4,6 @@ import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateCondition
 import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateEventPayload
 import fr.delphes.twitch.api.channelUpdate.payload.SubscribeChannelUpdate
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.notification.NotificationSubscriptionPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
@@ -14,7 +13,6 @@ import io.ktor.request.receive
 class ChannelUpdateEventSubConfiguration(
     listener: (ChannelUpdate) -> Unit
 ) : EventSubConfiguration<ChannelUpdate, ChannelUpdateEventPayload, ChannelUpdateCondition>(
-    EventSubSubscriptionType.CHANNEL_UPDATE,
     "channelUpdate",
     listener
 ) {

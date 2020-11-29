@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 class SubscribeChannelUpdate(
     override val condition: ChannelUpdateCondition,
     override val transport: SubscribeTransport,
-    override val type: EventSubSubscriptionType = EventSubSubscriptionType.CHANNEL_UPDATE,
     override val version: String = "1",
-): EventSubSubscribe<ChannelUpdateCondition>
+): EventSubSubscribe<ChannelUpdateCondition> {
+    override val type: EventSubSubscriptionType = EventSubSubscriptionType.CHANNEL_UPDATE
+}

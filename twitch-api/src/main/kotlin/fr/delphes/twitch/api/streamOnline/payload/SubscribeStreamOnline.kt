@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 class SubscribeStreamOnline(
     override val condition: StreamOnlineCondition,
     override val transport: SubscribeTransport,
-    override val type: EventSubSubscriptionType = EventSubSubscriptionType.STREAM_ONLINE,
     override val version: String = "1"
-): EventSubSubscribe<StreamOnlineCondition>
+): EventSubSubscribe<StreamOnlineCondition> {
+    override val type: EventSubSubscriptionType = EventSubSubscriptionType.STREAM_ONLINE
+}
