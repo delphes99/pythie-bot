@@ -5,7 +5,6 @@ import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineEventPayload
 import fr.delphes.twitch.api.streamOnline.payload.SubscribeStreamOnline
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
-import fr.delphes.twitch.eventSub.payload.notification.NotificationSubscriptionPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
@@ -17,8 +16,7 @@ class StreamOnlineEventSubConfiguration(
     listener
 ) {
     override fun transform(
-        payload: StreamOnlineEventPayload,
-        subscription: NotificationSubscriptionPayload<StreamOnlineCondition>
+        payload: StreamOnlineEventPayload
     ): StreamOnline {
         return StreamOnline(payload.type)
     }
