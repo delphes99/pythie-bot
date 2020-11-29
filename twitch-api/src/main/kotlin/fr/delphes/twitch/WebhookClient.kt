@@ -1,6 +1,7 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.eventSub.EventSubConfiguration
+import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.routing.Routing
 
 class WebhookClient(
@@ -23,12 +24,13 @@ class WebhookClient(
     override suspend fun registerWebhooks() {
         if (state.endStarted) {
             eventSubConfigurations.forEach { configuration ->
-                channelHelixApi.subscribeEventSub(
-                    configuration.type,
+                val transport = SubscribeTransport(
                     "$publicUrl/${configuration.callback.webhookPath(channel)}",
-                    userId,
                     secret
                 )
+                val subscribePayload = configuration.subscribePayload(userId, transport)
+
+                channelHelixApi.subscribeEventSub(subscribePayload)
             }
         }
     }

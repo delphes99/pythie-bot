@@ -1,23 +1,17 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateCondition
-import fr.delphes.twitch.api.channelUpdate.payload.SubscribeChannelUpdate
-import fr.delphes.twitch.auth.TwitchAppCredential
-import fr.delphes.twitch.auth.TwitchUserCredential
-import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
 import fr.delphes.twitch.api.games.payload.GetGamesPayload
+import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.reward.payload.UpdateCustomRewardPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
 import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
 import fr.delphes.twitch.api.user.payload.GetUsersPayload
-import fr.delphes.twitch.api.newFollow.payload.NewFollowCondition
-import fr.delphes.twitch.api.newFollow.payload.SubscribeNewFollow
-import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineCondition
-import fr.delphes.twitch.api.streamOnline.payload.SubscribeStreamOnline
-import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
-import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
+import fr.delphes.twitch.auth.TwitchAppCredential
+import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.eventSub.EventSubSubscribe
+import fr.delphes.twitch.eventSub.payload.GenericCondition
 import io.ktor.client.statement.HttpResponse
 
 internal class ChannelHelixClient(
@@ -70,37 +64,8 @@ internal class ChannelHelixClient(
         )
     }
 
-    override suspend fun subscribeEventSub(
-        channelFollow: EventSubSubscriptionType,
-        callback: String,
-        userId: String,
-        secret: String
-    ) {
+    override suspend fun subscribeEventSub(subscribe: EventSubSubscribe<out GenericCondition>) {
         //TODO manage errors
-        val transport = SubscribeTransport(
-            callback,
-            secret
-        )
-        @Suppress("IMPLICIT_CAST_TO_ANY") val payload = when (channelFollow) {
-            EventSubSubscriptionType.CHANNEL_FOLLOW -> {
-                SubscribeNewFollow(
-                    NewFollowCondition(userId),
-                    transport
-                )
-            }
-            EventSubSubscriptionType.CHANNEL_UPDATE -> {
-                SubscribeChannelUpdate(
-                    ChannelUpdateCondition(userId),
-                    transport
-                )
-            }
-            EventSubSubscriptionType.STREAM_ONLINE -> {
-                SubscribeStreamOnline(
-                    StreamOnlineCondition(userId),
-                    transport
-                )
-            }
-        }
-        "https://api.twitch.tv/helix/eventsub/subscriptions".post<HttpResponse>(payload, appCredential)
+        "https://api.twitch.tv/helix/eventsub/subscriptions".post<HttpResponse>(subscribe, appCredential)
     }
 }
