@@ -9,9 +9,9 @@ import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.reward.RewardRedemption
 import fr.delphes.twitch.api.games.SimpleGameId
 import fr.delphes.twitch.api.newFollow.NewFollow
-import fr.delphes.twitch.eventSub.ChannelUpdateEventSubConfiguration
+import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.eventSub.NewFollowEventSubConfiguration
+import fr.delphes.twitch.api.newFollow.NewFollowEventSubConfiguration
 import fr.delphes.twitch.model.Stream
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
