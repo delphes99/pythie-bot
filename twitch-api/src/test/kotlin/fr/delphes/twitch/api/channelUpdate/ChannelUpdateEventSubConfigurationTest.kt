@@ -1,24 +1,23 @@
-package fr.delphes.twitch.api.channelSubscribe
+package fr.delphes.twitch.api.channelUpdate
 
+import fr.delphes.twitch.api.games.Game
+import fr.delphes.twitch.api.games.SimpleGameId
 import fr.delphes.twitch.api.parseToModel
-import fr.delphes.twitch.api.streamOnline.StreamOnline
-import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
-import fr.delphes.twitch.api.streamOnline.StreamType
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-internal class StreamOnlineEventSubConfigurationTest {
+internal class ChannelUpdateEventSubConfigurationTest {
     @Test
-    fun `transform StreamOnline`() {
+    fun `transform ChannelUpdate`() {
         val payload = """
             {
                 "subscription": {
                     "id": "f1c2a387-161a-49f9-a165-0f21d7a4e1c4",
                     "status": "enabled",
-                    "type": "stream.online",
+                    "type": "channel.update",
                     "version": "1",
                     "condition": {
-                        "broadcaster_user_id": "1337"
+                       "broadcaster_user_id": "1337"
                     },
                      "transport": {
                         "method": "webhook",
@@ -27,18 +26,21 @@ internal class StreamOnlineEventSubConfigurationTest {
                     "created_at": "2019-11-16T10:11:12.123Z"
                 },
                 "event": {
-                    "id": "9001",
                     "broadcaster_user_id": "1337",
                     "broadcaster_user_name": "cool_user",
-                    "type": "live"
+                    "title": "Best Stream Ever",
+                    "language": "en",
+                    "category_id": "21779",
+                    "category_name": "Fortnite",
+                    "is_mature": false
                 }
             }
         """.trimIndent()
 
-        val model = StreamOnlineEventSubConfiguration { }.parseToModel(payload)
+        val model = ChannelUpdateEventSubConfiguration { }.parseToModel(payload)
 
-        assertThat(model).isEqualTo(
-            StreamOnline(StreamType.LIVE)
+        Assertions.assertThat(model).isEqualTo(
+            ChannelUpdate("Best Stream Ever", "en", Game(SimpleGameId("21779"), "Fortnite"))
         )
     }
 }

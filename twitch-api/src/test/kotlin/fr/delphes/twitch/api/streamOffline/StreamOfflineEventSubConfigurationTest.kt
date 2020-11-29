@@ -1,8 +1,6 @@
-package fr.delphes.twitch.api.channelSubscribe
+package fr.delphes.twitch.api.streamOffline
 
 import fr.delphes.twitch.api.parseToModel
-import fr.delphes.twitch.api.streamOffline.StreamOffline
-import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
