@@ -64,7 +64,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                         listOf(
                             SendMessage(
                                 listOfNotNull(
-                                    top1?.let { "\uD83E\uDD47 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
+                                    top1.let { "\uD83E\uDD47 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
                                     top2?.let { "\uD83E\uDD48 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
                                     top3?.let { "\uD83E\uDD49 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
                                 ).joinToString(" ")
@@ -142,7 +142,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         ),
         RewardRedeem(
             "Test dev"
-        ) { event ->
+        ) {
             listOf(
                 Alert("test")
             )

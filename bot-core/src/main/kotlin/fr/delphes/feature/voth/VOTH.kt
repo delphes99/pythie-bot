@@ -45,7 +45,7 @@ class VOTH(
 
     private val commandTop3Handler = CommandHandler(
         Command(configuration.top3Command)
-    ) { user, _ ->
+    ) { _, _ ->
         val tops = state.top3(clock.now())
         configuration.top3Response(tops.getOrNull(0), tops.getOrNull(1), tops.getOrNull(2))
     }

@@ -16,7 +16,7 @@ import io.ktor.websocket.webSocket
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
-import java.util.Collections
+import java.util.*
 import kotlin.collections.LinkedHashSet
 
 fun Application.AlertModule(bot: ClientBot) {
@@ -45,6 +45,7 @@ fun Application.AlertModule(bot: ClientBot) {
                                     close(CloseReason(CloseReason.Codes.NORMAL, "Client said BYE"))
                                 }
                             }
+                            else -> { /* nothin */}
                         }
                     }
                 } finally {

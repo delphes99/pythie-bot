@@ -18,10 +18,10 @@ fun StatisticsModule(
                 val statistics = channel.statistics
                 this.call.respondText(
                     "<table>" +
-                            "<tr><td>Number of chatters</td><td>${statistics?.numberOfChatters ?: ""}</td></tr>" +
-                            "<tr><td>Number of messages</td><td>${statistics?.numberMessages ?: ""}</td></tr>" +
-                            "<tr><td>Number of follow</td><td>${statistics?.numberOfFollow ?: ""}</td></tr>" +
-                            "<tr><td>Number of sub</td><td>${statistics?.numberOfSub ?: ""}</td></tr>" +
+                            "<tr><td>Number of chatters</td><td>${statistics.numberOfChatters}</td></tr>" +
+                            "<tr><td>Number of messages</td><td>${statistics.numberMessages}</td></tr>" +
+                            "<tr><td>Number of follow</td><td>${statistics.numberOfFollow}</td></tr>" +
+                            "<tr><td>Number of sub</td><td>${statistics.numberOfSub}</td></tr>" +
                             "</table>",
                     ContentType.parse("text/html")
                 )
