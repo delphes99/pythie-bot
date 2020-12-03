@@ -3,7 +3,7 @@
 package fr.delphes.twitch.eventSub.payload.subscription
 
 import fr.delphes.twitch.eventSub.payload.Transport
-import fr.delphes.twitch.serialization.LocalDateTimeAsInstantSerializer
+import fr.delphes.utils.serialization.LocalDateTimeAsInstantSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.time.LocalDateTime

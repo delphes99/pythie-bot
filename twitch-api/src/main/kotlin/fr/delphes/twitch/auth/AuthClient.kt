@@ -1,6 +1,6 @@
 package fr.delphes.twitch.auth
 
-import fr.delphes.twitch.serialization.Serializer
+import fr.delphes.utils.serialization.Serializer
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer

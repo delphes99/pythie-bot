@@ -4,7 +4,7 @@ package fr.delphes.twitch.eventSub.payload.notification
 
 import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionStatus
 import fr.delphes.twitch.eventSub.payload.EventSubSubscriptionType
-import fr.delphes.twitch.serialization.LocalDateTimeAsInstantSerializer
+import fr.delphes.utils.serialization.LocalDateTimeAsInstantSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.time.LocalDateTime

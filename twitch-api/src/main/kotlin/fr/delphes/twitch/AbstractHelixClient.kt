@@ -2,7 +2,7 @@ package fr.delphes.twitch
 
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.WithAuthToken
-import fr.delphes.twitch.serialization.Serializer
+import fr.delphes.utils.serialization.Serializer
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.json.JsonFeature

@@ -4,7 +4,6 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.Ngrok
 import fr.delphes.configuration.PropertiesBotConfiguration
 import fr.delphes.configuration.channel.delphes99Channel
-import fr.delphes.configuration.channel.delphestestChannel
 import fr.delphes.configuration.loadProperties
 
 fun main() {

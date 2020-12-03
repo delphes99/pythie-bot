@@ -2,7 +2,7 @@ package fr.delphes.bot.webserver.alert
 
 import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.outgoing.Alert
-import fr.delphes.bot.util.serialization.Serializer
+import fr.delphes.utils.serialization.Serializer
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.http.cio.websocket.CloseReason

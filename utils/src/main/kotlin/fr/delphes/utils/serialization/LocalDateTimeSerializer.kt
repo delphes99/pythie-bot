@@ -1,4 +1,4 @@
-package fr.delphes.twitch.serialization
+package fr.delphes.utils.serialization
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

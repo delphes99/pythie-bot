@@ -1,11 +1,11 @@
 package fr.delphes.bot
 
-import fr.delphes.bot.util.serialization.Serializer
 import fr.delphes.bot.webserver.admin.FeaturesModule
 import fr.delphes.bot.webserver.alert.AlertModule
 import fr.delphes.bot.webserver.auth.AuthInternalModule
 import fr.delphes.bot.webserver.auth.AuthModule
 import fr.delphes.bot.webserver.webhook.WebhookModule
+import fr.delphes.utils.serialization.Serializer
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CORS
