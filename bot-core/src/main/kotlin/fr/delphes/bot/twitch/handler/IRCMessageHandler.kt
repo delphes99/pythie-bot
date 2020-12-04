@@ -9,7 +9,7 @@ import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 
 class IRCMessageHandler : TwitchIncomingEventHandler<IRCMessageEvent> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: IRCMessageEvent,
         channel: ChannelInfo,
         changeState: ChannelChangeState

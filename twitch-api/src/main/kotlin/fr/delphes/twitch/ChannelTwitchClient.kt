@@ -20,7 +20,7 @@ import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.model.Stream
+import fr.delphes.twitch.api.streams.Stream
 import kotlinx.coroutines.runBlocking
 
 class ChannelTwitchClient(
@@ -32,7 +32,7 @@ class ChannelTwitchClient(
         val stream = helixApi.getStreamByUserId(userId) ?: return null
         val game = getGame(GameId(stream.game_id))
 
-        return Stream(stream.title, stream.started_at, game)
+        return Stream(stream.id, stream.title, stream.started_at, game)
     }
 
     override suspend fun getGame(id: GameId): Game {

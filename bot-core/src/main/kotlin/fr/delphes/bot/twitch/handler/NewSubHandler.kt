@@ -8,7 +8,7 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.api.channelSubscribe.NewSub as NewSubTwitch
 
 class NewSubHandler : TwitchIncomingEventHandler<NewSubTwitch> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: NewSubTwitch,
         channel: ChannelInfo,
         changeState: ChannelChangeState

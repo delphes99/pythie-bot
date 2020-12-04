@@ -8,12 +8,13 @@ import fr.delphes.bot.util.time.TestClock
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.streamOnline.StreamType
-import fr.delphes.twitch.model.Stream
+import fr.delphes.twitch.api.streams.Stream
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,17 +36,19 @@ internal class StreamOnlineHandlerTest {
         clearAllMocks()
 
         `given offline stream`()
-        coEvery { channel.twitchApi.getStream() } returns Stream("current stream title", STARTED_AT, GAME)
+        coEvery { channel.twitchApi.getStream() } returns Stream("streamId", "current stream title", STARTED_AT, GAME)
     }
 
     @Test
     internal fun `return event online`() {
         assertThat(
-            streamOnlineHandler.handle(
-                StreamOnlineTwitch(StreamType.LIVE),
-                channelInfo,
-                changeState
-            )
+            runBlocking {
+                streamOnlineHandler.handle(
+                    StreamOnlineTwitch(StreamType.LIVE),
+                    channelInfo,
+                    changeState
+                )
+            }
         )
             .contains(
                 StreamOnline(
@@ -58,15 +61,18 @@ internal class StreamOnlineHandlerTest {
 
     @Test
     internal fun `change state`() {
-        streamOnlineHandler.handle(
-            StreamOnlineTwitch(StreamType.LIVE),
-            channelInfo,
-            changeState
-        )
+        runBlocking {
+            streamOnlineHandler.handle(
+                StreamOnlineTwitch(StreamType.LIVE),
+                channelInfo,
+                changeState
+            )
+        }
 
         verify(exactly = 1) {
             changeState.changeCurrentStream(
                 Stream(
+                    "streamId",
                     "current stream title",
                     STARTED_AT,
                     GAME

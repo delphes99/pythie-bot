@@ -2,14 +2,15 @@ package fr.delphes.bot.twitch.handler
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import com.github.twitch4j.common.events.domain.EventUser
-import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.state.UserMessage
+import fr.delphes.twitch.api.user.User
 import io.mockk.clearAllMocks
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -29,13 +30,15 @@ internal class ChannelMessageHandlerTest {
     internal fun `add statistics message received`() {
         "user".sends("message")
 
-        ChannelMessageHandler().handle(
-            twitchEvent,
-            channel,
-            changeState
-        )
+        runBlocking {
+            ChannelMessageHandler().handle(
+                twitchEvent,
+                channel,
+                changeState
+            )
+        }
 
-        verify(exactly = 1) { changeState.addMessage(UserMessage(User("user"), "message")) }
+        coVerify(exactly = 1) { changeState.addMessage(UserMessage(User("user"), "message")) }
     }
 
     private fun String.sends(message: String) {

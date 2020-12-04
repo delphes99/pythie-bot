@@ -8,7 +8,7 @@ import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.util.time.Clock
 import fr.delphes.bot.util.time.SystemClock
-import fr.delphes.twitch.model.Stream
+import fr.delphes.twitch.api.streams.Stream
 import kotlinx.coroutines.runBlocking
 import fr.delphes.twitch.api.streamOnline.StreamOnline as StreamOnlineTwitch
 
@@ -16,7 +16,7 @@ class StreamOnlineHandler(
     private val channel: Channel,
     private val clock: Clock = SystemClock
 ) : TwitchIncomingEventHandler<StreamOnlineTwitch> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: StreamOnlineTwitch,
         channel: ChannelInfo,
         changeState: ChannelChangeState
@@ -27,7 +27,7 @@ class StreamOnlineHandler(
         }
         val incomingEvent = StreamOnline(stream!!.title, clock.now(), stream.game)
 
-        changeState.changeCurrentStream(Stream(incomingEvent.title, incomingEvent.start, incomingEvent.game))
+        changeState.changeCurrentStream(Stream(stream.id, incomingEvent.title, incomingEvent.start, incomingEvent.game))
 
         return listOf(incomingEvent)
     }

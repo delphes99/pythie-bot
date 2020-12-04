@@ -8,7 +8,7 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.api.channelCheer.NewCheer
 
 class ChannelBitsHandler : TwitchIncomingEventHandler<NewCheer> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: NewCheer,
         channel: ChannelInfo,
         changeState: ChannelChangeState

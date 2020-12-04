@@ -9,7 +9,7 @@ import com.kennycason.kumo.font.KumoFont
 import com.kennycason.kumo.font.scale.LinearFontScalar
 import com.kennycason.kumo.palette.ColorPalette
 import fr.delphes.bot.Channel
-import fr.delphes.bot.state.Statistics
+import fr.delphes.bot.state.StreamStatistics
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.twitch.api.user.User
 import io.ktor.application.Application
@@ -31,7 +31,7 @@ fun EndCreditsModule(
     return {
         routing {
             get("/$channelName/endcredits") {
-                val statistics = channel.statistics
+                val statistics = channel.streamStatistics!!
 
                 this.call.respondOutputStream(
                     contentType = ContentType.parse("image/png"),
@@ -60,7 +60,7 @@ fun EndCreditsModule(
     }
 }
 
-private fun Statistics.wordFrequencies(numberOfWords: Int): List<WordFrequency> {
+private fun StreamStatistics.wordFrequencies(numberOfWords: Int): List<WordFrequency> {
     if(messages.isEmpty()) {
         return emptyList()
     }

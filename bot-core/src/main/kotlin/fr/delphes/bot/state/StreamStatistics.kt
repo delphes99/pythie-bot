@@ -4,18 +4,18 @@ import fr.delphes.twitch.api.user.User
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Statistics(
+class StreamStatistics(
+    val streamId: String,
     private val userMessages: MutableList<UserMessage> = mutableListOf(),
     private val newFollows: MutableList<User> = mutableListOf(),
     private val newSubs: MutableList<User> = mutableListOf()
-) : UpdateStatistics {
+): UpdateStatistics {
+    val messages: List<UserMessage> get() = userMessages
+
     val numberOfFollow: Int get() = newFollows.size
     val numberOfSub: Int get() = newSubs.size
     val numberMessages: Int get() = userMessages.count()
     val numberOfChatters: Int get() = userMessages.map(UserMessage::user).distinct().count()
-
-    val lastFollows: List<User> get() = newFollows.reversed()
-    val lastSubs: List<User> get() = newSubs.reversed()
 
     override fun addMessage(userMessage: UserMessage) {
         userMessages.add(userMessage)

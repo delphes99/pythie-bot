@@ -6,8 +6,9 @@ import fr.delphes.twitch.api.channelSubscribe.NewSub
 import fr.delphes.twitch.api.channelSubscribe.SubscribeTier
 import fr.delphes.twitch.api.user.User
 import io.mockk.clearAllMocks
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -24,9 +25,11 @@ internal class NewSubHandlerTest {
     internal fun `add follow statistics`() {
         val event = "user".subscribe()
 
-        NewSubHandler().handle(event, channel, changeState)
+        runBlocking {
+            NewSubHandler().handle(event, channel, changeState)
+        }
 
-        verify(exactly = 1) { changeState.newSub(User("user")) }
+        coVerify(exactly = 1) { changeState.newSub(User("user")) }
     }
 
     private fun String.subscribe(): NewSub {

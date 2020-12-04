@@ -18,6 +18,8 @@ fun OverlayModule(
 ): Application.() -> Unit {
     val channelName = channel.name
 
+    //TODO no polling
+
     return {
         routing {
             static("/${channelName}/overlay") {
@@ -25,7 +27,11 @@ fun OverlayModule(
             }
             get("/${channelName}/overlay/infos") {
                 val statistics = channel.statistics
-                val overlayInfos = OverlayInfos(statistics.lastFollows.take(3).map(User::name), lastVOTH(channel))
+                val overlayInfos = OverlayInfos(
+                    last_follow = statistics.lastFollows.take(3).map(User::name),
+                    last_sub = statistics.lastSubs.take(3).map(User::name),
+                    last_voth = lastVOTH(channel)
+                )
                 this.call.respond(overlayInfos)
             }
         }

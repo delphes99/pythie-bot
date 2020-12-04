@@ -8,7 +8,7 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.api.streamOffline.StreamOffline as StreamOfflineTwitch
 
 class StreamOfflineHandler : TwitchIncomingEventHandler<StreamOfflineTwitch> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: StreamOfflineTwitch,
         channel: ChannelInfo,
         changeState: ChannelChangeState

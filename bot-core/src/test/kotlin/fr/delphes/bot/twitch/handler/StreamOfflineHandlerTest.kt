@@ -5,11 +5,12 @@ import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.model.Stream
+import fr.delphes.twitch.api.streams.Stream
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,12 +33,15 @@ class StreamOfflineHandlerTest {
     }
 
     @Test
-    internal fun `return offline event`() {assertThat(
-            StreamOfflineHandler().handle(
-                StreamOfflineTwitch,
-                channelInfo,
-                changeState
-            )
+    internal fun `return offline event`() {
+        assertThat(
+            runBlocking {
+                StreamOfflineHandler().handle(
+                    StreamOfflineTwitch,
+                    channelInfo,
+                    changeState
+                )
+            }
         ).contains(
             StreamOffline
         )
@@ -45,12 +49,14 @@ class StreamOfflineHandlerTest {
 
     @Test
     internal fun `change state`() {
-        StreamOfflineHandler().handle(StreamOfflineTwitch, channelInfo, changeState)
+        runBlocking {
+            StreamOfflineHandler().handle(StreamOfflineTwitch, channelInfo, changeState)
+        }
 
         verify(exactly = 1) { changeState.changeCurrentStream(null) }
     }
 
     private fun `given online stream`() {
-        every { channelInfo.currentStream } returns Stream("current stream title", STARTED_AT, GAME)
+        every { channelInfo.currentStream } returns Stream("streamId", "current stream title", STARTED_AT, GAME)
     }
 }

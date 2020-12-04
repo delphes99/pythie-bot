@@ -53,7 +53,7 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
                 ),
                 User("cooler_user"),
                 100,
-                "someId"
+                "1234"
             )
         )
     }

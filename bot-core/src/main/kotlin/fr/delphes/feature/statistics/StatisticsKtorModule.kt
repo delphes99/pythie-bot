@@ -11,18 +11,29 @@ import io.ktor.routing.routing
 fun StatisticsModule(
     channel: Channel,
     channelName: String
-) : Application.() -> Unit {
+): Application.() -> Unit {
     return {
         routing {
             get("/$channelName/stats") {
                 val statistics = channel.statistics
+                val streamStatistics = channel.streamStatistics
                 this.call.respondText(
-                    "<table>" +
-                            "<tr><td>Number of chatters</td><td>${statistics.numberOfChatters}</td></tr>" +
-                            "<tr><td>Number of messages</td><td>${statistics.numberMessages}</td></tr>" +
-                            "<tr><td>Number of follow</td><td>${statistics.numberOfFollow}</td></tr>" +
-                            "<tr><td>Number of sub</td><td>${statistics.numberOfSub}</td></tr>" +
-                            "</table>",
+                    """
+                        <h2>Current stream stats</h2>
+                        <table>
+                            <tr><td>Number of chatters</td><td>${streamStatistics?.numberOfChatters ?: ""}</td></tr>
+                            <tr><td>Number of messages</td><td>${streamStatistics?.numberMessages ?: ""}</td></tr>
+                            <tr><td>Number of follow</td><td>${streamStatistics?.numberOfFollow ?: ""}</td></tr>
+                            <tr><td>Number of sub</td><td>${streamStatistics?.numberOfSub ?: ""}</td></tr>
+                        </table>
+                        <h2>Global stats</h2>
+                        <table>
+                            <tr><td>Number of chatters</td><td>${statistics.numberOfChatters}</td></tr>
+                            <tr><td>Number of messages</td><td>${statistics.numberMessages}</td></tr>
+                            <tr><td>Number of follow</td><td>${statistics.numberOfFollow}</td></tr>
+                            <tr><td>Number of sub</td><td>${statistics.numberOfSub}</td></tr>
+                        </table>
+                    """.trimIndent(),
                     ContentType.parse("text/html")
                 )
             }

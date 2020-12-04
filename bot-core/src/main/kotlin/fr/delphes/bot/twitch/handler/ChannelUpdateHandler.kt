@@ -7,10 +7,10 @@ import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
-import fr.delphes.twitch.model.Stream
+import fr.delphes.twitch.api.streams.Stream
 
 class ChannelUpdateHandler : TwitchIncomingEventHandler<ChannelUpdate> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: ChannelUpdate,
         channel: ChannelInfo,
         changeState: ChannelChangeState

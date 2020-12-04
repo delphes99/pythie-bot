@@ -8,7 +8,7 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.api.channelFollow.NewFollow as NewFollowTwitch
 
 class NewFollowHandler : TwitchIncomingEventHandler<NewFollowTwitch> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: NewFollowTwitch,
         channel: ChannelInfo,
         changeState: ChannelChangeState

@@ -1,12 +1,13 @@
 package fr.delphes.bot.twitch.handler
 
-import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.twitch.api.channelFollow.NewFollow
+import fr.delphes.twitch.api.user.User
 import io.mockk.clearAllMocks
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -22,9 +23,11 @@ internal class NewFollowHandlerTest {
     @Test
     internal fun `add follow statistics`() {
         val event = "user".follows()
-        NewFollowHandler().handle(event, channel, changeState)
+        runBlocking {
+            NewFollowHandler().handle(event, channel, changeState)
+        }
 
-        verify(exactly = 1) { changeState.newFollow(User("user")) }
+        coVerify(exactly = 1) { changeState.newFollow(User("user")) }
     }
 
     private fun String.follows(): NewFollow {

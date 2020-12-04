@@ -11,7 +11,7 @@ import fr.delphes.bot.state.UserMessage
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 
 class ChannelMessageHandler : TwitchIncomingEventHandler<ChannelMessageEvent> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: ChannelMessageEvent,
         channel: ChannelInfo,
         changeState: ChannelChangeState

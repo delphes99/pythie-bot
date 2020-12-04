@@ -7,10 +7,11 @@ import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.model.Stream
+import fr.delphes.twitch.api.streams.Stream
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -42,11 +43,13 @@ internal class StreamInfosHandlerTest {
     @Test
     internal fun `return change title`() {
         assertThat(
-            channelUpdateHandler.handle(
-                ChannelUpdate(NEW_TITLE, "en", CURRENT_GAME),
-                channelInfo,
-                changeState
-            )
+            runBlocking {
+                channelUpdateHandler.handle(
+                    ChannelUpdate(NEW_TITLE, "en", CURRENT_GAME),
+                    channelInfo,
+                    changeState
+                )
+            }
         ).contains(
             StreamChanged(StreamChanges.Title(CURRENT_TITLE, "new title"))
         )
@@ -55,11 +58,13 @@ internal class StreamInfosHandlerTest {
     @Test
     internal fun `return change game`() {
         assertThat(
-            channelUpdateHandler.handle(
-                ChannelUpdate(CURRENT_TITLE, "en", NEW_GAME),
-                channelInfo,
-                changeState
-            )
+            runBlocking {
+                channelUpdateHandler.handle(
+                    ChannelUpdate(CURRENT_TITLE, "en", NEW_GAME),
+                    channelInfo,
+                    changeState
+                )
+            }
         ).contains(
             StreamChanged(StreamChanges.Game(CURRENT_GAME, NEW_GAME))
         )
@@ -69,10 +74,14 @@ internal class StreamInfosHandlerTest {
     internal fun `don't update when no change`() {
         val event = ChannelUpdate(CURRENT_TITLE, "en", CURRENT_GAME)
 
-        assertThat(channelUpdateHandler.handle(event, channelInfo, changeState)).isEmpty()
+        assertThat(
+            runBlocking {
+                channelUpdateHandler.handle(event, channelInfo, changeState)
+            }
+        ).isEmpty()
     }
 
     private fun `given online stream`() {
-        every { channelInfo.currentStream } returns Stream(CURRENT_TITLE, STARTED_AT, CURRENT_GAME)
+        every { channelInfo.currentStream } returns Stream("someId", CURRENT_TITLE, STARTED_AT, CURRENT_GAME)
     }
 }

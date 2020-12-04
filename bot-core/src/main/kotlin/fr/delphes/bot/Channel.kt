@@ -12,7 +12,9 @@ import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.TwitchOutgoingEvent
 import fr.delphes.bot.state.ChannelState
+import fr.delphes.bot.state.FileStatisticsRepository
 import fr.delphes.bot.state.Statistics
+import fr.delphes.bot.state.StreamStatistics
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.handler.ChannelBitsHandler
 import fr.delphes.bot.twitch.handler.ChannelMessageHandler
@@ -27,10 +29,10 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.ChannelTwitchClient
+import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.TwitchUserCredential
-import fr.delphes.twitch.model.Stream
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -41,11 +43,12 @@ import mu.KotlinLogging
 class Channel(
     configuration: ChannelConfiguration,
     val bot: ClientBot,
-    private val state: ChannelState = ChannelState()
+    private val state: ChannelState = ChannelState(FileStatisticsRepository())
 ) : ChannelInfo {
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     override val currentStream: Stream? get() = state.currentStream
     override val statistics: Statistics get() = state.statistics
+    override val streamStatistics: StreamStatistics? get() = state.streamStatistics
     val alerts = Channel<Alert>()
 
     val name = configuration.ownerChannel
@@ -123,9 +126,9 @@ class Channel(
     }
 
     private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {
-        this.handle(request, this@Channel, this@Channel.state).forEach { incomingEvent ->
-            //TODO make suspendable
-            runBlocking {
+        //TODO make suspendable
+        runBlocking {
+            this@handleTwitchEvent.handle(request, this@Channel, this@Channel.state).forEach { incomingEvent ->
                 eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
             }
         }

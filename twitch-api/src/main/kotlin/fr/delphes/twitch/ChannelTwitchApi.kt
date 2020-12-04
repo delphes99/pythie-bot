@@ -3,7 +3,7 @@ package fr.delphes.twitch
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.model.Stream
+import fr.delphes.twitch.api.streams.Stream
 
 interface ChannelTwitchApi : WebhookApi {
     val userId: String

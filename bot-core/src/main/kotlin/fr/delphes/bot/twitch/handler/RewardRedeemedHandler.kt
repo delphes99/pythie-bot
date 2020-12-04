@@ -8,7 +8,7 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption as RewardRedemptionTwitch
 
 class RewardRedeemedHandler : TwitchIncomingEventHandler<RewardRedemptionTwitch> {
-    override fun handle(
+    override suspend fun handle(
         twitchEvent: RewardRedemptionTwitch,
         channel: ChannelInfo,
         changeState: ChannelChangeState
