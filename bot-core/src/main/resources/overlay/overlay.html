@@ -8,7 +8,7 @@
 </head>
 <body>
 <div id="overlay">
-	<!-- <alert :data="alert"></alert> -->
+	<alert :data="alert"></alert>
 	<div id="footer">
 		<event-list
 				v-for="item in events"
@@ -44,7 +44,7 @@
 					emptyEventsFor(LAST_CHEER),
 					emptyEventsFor(LAST_VOTH)
 				],
-				alert: {"type": "test", "parameters": {}}
+				alert: null
 			}
 		},
 		methods: {
@@ -92,56 +92,85 @@
 		props: ['last_events', 'type'],
 		template: `
 			<div class="event-list">
-				<img :src="type.img"/>
-				<div class="first" v-if="last_events[0]">
-					<div>{{ last_events[0].user }}</div>
-					<div class="infos" v-if="last_events[0].infos">{{ last_events[0].infos }}</div>
-				</div>
-				<div class="second" v-if="last_events[1]">
-					<div>{{ last_events[1].user }}</div>
-					<div class="infos" v-if="last_events[1].infos">{{ last_events[1].infos }}</div>
-				</div>
-				<div class="third" v-if="last_events[2]">
-					<div>{{ last_events[2].user }}</div>
-					<div class="infos" v-if="last_events[2].infos">{{ last_events[2].infos }}</div>
-				</div>
+			<img :src="type.img"/>
+			<div class="first" v-if="last_events[0]">
+				<div>{{ last_events[0].user }}</div>
+				<div class="infos" v-if="last_events[0].infos">{{ last_events[0].infos }}</div>
+			</div>
+			<div class="second" v-if="last_events[1]">
+				<div>{{ last_events[1].user }}</div>
+				<div class="infos" v-if="last_events[1].infos">{{ last_events[1].infos }}</div>
+			</div>
+			<div class="third" v-if="last_events[2]">
+				<div>{{ last_events[2].user }}</div>
+				<div class="infos" v-if="last_events[2].infos">{{ last_events[2].infos }}</div>
+			</div>
 			</div>`
 	});
 	app.component('alert', {
 		props: ['data'],
 		computed: {
+			parsedData: function () {
+				return eventParser(this.data)
+			},
 			alertText: function () {
-				if (this.data) {
-					console.log(this.data)
-					if (this.data.type === "newVip") {
-						return "Nouveau VIP : " + this.data.parameters["newVIP"]
-					} else if (this.data.type === "test") {
-						return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam dictum ut ante id fringilla. Morbi hendrerit in sem quis rhoncus. Quisque in interdum ipsum, vel aliquet nulla. Nam sagittis massa mauris, a venenatis eros auctor vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis egestas, orci et auctor mattis, purus ipsum ultricies augue, vitae blandit ipsum lorem id felis. Vivamus nulla purus, aliquet vel fermentum sit amet, cursus in felis. Nulla nec varius mauris, eu facilisis libero. Donec dictum porta posuere. Pellentesque viverra enim vel vehicula rhoncus. Aenean elit enim, vehicula id mollis in, imperdiet id leo. Mauris tincidunt nisi rutrum sagittis ultricies. Ut sagittis lacus eu orci sodales rhoncus. Integer aliquet tellus tellus, eget volutpat justo ullamcorper eget. Quisque non accumsan nisi."
-					}
+				const event = this.parsedData
+				if (event) {
+					return event.text
 				}
 			},
 			img: function () {
-				if (this.data) {
-					return "img/voth.png"
+				const event = this.parsedData
+				if (event) {
+					return event.img
 				}
 			},
 			title: function () {
-				if (this.data) {
-					return "Nouveau VIP"
+				const event = this.parsedData
+				if (event) {
+					return event.title
 				}
 			}
 		},
 		template: `
-			<div class="alert">
-				<div class="alert-title">
-					<img :src="img"/>
-					{{ title }}
-				</div>
-				<div class="alert-content">
-					{{ alertText }}
-				</div>
+			<div class="alert" v-if="data">
+			<img :src="img"/>
+			<div class="alert-title">
+				{{ title }}
+			</div>
+			<div class="alert-content">
+				{{ alertText }}
+			</div>
 			</div>`
 	})
+
+	function eventParser(data) {
+		if (data.type === "newVip") {
+			return {
+				title: `Nouveau VIP`,
+				img: `img/voth.png`,
+				text: `${data.parameters["newVip"]}`
+			}
+		} else if (data.type === "newFollow") {
+			return {
+				title: `Nouveau follow`,
+				img: `img/follow.png`,
+				text: `${data.parameters["newFollow"]}`
+			}
+		} else if (data.type === "newSub") {
+			return {
+				title: `Nouvel abonné`,
+				img: `img/sub.png`,
+				text: `${data.parameters["newSub"]}`
+			}
+		} else if (data.type === "newCheer") {
+			return {
+				title: `Nouveau dons`,
+				img: `img/cheer.png`,
+				text: `${data.parameters["cheerer"]}`
+			}
+		}
+	}
 
 	let vm = app.mount('#overlay')
 	setInterval(() => {
@@ -153,7 +182,7 @@
 	socket.onopen = function () {
 		this.onmessage = function (event) {
 			vm.alert = JSON.parse(event.data)
-			setTimeout(() => vm.alert = null, 3000)
+			setTimeout(() => vm.alert = null, 5000)
 		};
 	};
 </script>

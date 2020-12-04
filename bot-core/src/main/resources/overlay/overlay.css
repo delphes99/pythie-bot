@@ -1,6 +1,6 @@
 body {
-    background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 47%, rgba(255,255,255,1) 100%);
+    background: rgb(2, 0, 36);
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(0, 0, 0, 1) 47%, rgba(255, 255, 255, 1) 100%);
 }
 
 :root {
@@ -111,21 +111,40 @@ body {
     top: 30px;
     width: 200px;
     height: 60px;
+    justify-self: center;
+    display: grid;
+    grid-template-columns: 25px auto;
+    grid-template-rows: 25px 35px;
+    grid-template-areas:
+        "alert-image    alert-title"
+        "alert-text     alert-text";
     padding: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border: black 2px solid;
-    background-color: rgb(var(--main-bg-color));
-    font-size: 20px;
+    border: black 1px solid;
     font-family: var(--main-font);
+    background-color: rgb(var(--main-bg-color));
 }
 
 .alert > .alert-title {
+    grid-area: alert-title;
+    text-align: center;
+    align-self: center;
     font-size: 12px;
-    background-color: cornflowerblue;
 }
 
 .alert > img {
+    grid-area: alert-image;
     display: inline-block;
+}
+
+.alert > .alert-content {
+    grid-area: alert-text;
+    height: 35px;
+    line-height: 35px;
+    background-color: cornflowerblue;
+    text-align: center;
+    font-size: 15px;
+    vertical-align: middle;
 }
