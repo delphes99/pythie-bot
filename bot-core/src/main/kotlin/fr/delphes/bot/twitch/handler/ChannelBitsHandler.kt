@@ -13,6 +13,8 @@ class ChannelBitsHandler : TwitchIncomingEventHandler<NewCheer> {
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
+        changeState.newCheer(twitchEvent)
+
         return listOf(
             BitCheered(
                 twitchEvent.cheerer,

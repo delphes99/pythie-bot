@@ -1,5 +1,6 @@
 package fr.delphes.bot.state
 
+import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.api.user.User
 import kotlinx.coroutines.coroutineScope
@@ -52,6 +53,13 @@ class ChannelState(
         streamStatistics?.newSub(newSub)
 
         //TODO periodic save instead ?
+        saveStats()
+    }
+
+    override suspend fun newCheer(newCheer: NewCheer) {
+        statistics.newCheer(newCheer)
+        streamStatistics?.newCheer(newCheer)
+
         saveStats()
     }
 

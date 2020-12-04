@@ -1,5 +1,6 @@
 package fr.delphes.bot.state
 
+import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.api.streams.Stream
 
@@ -8,4 +9,5 @@ interface ChannelChangeState {
     suspend fun addMessage(userMessage: UserMessage)
     suspend fun newFollow(newFollow: User)
     suspend fun newSub(newSub: User)
+    suspend fun newCheer(newCheer: NewCheer)
 }

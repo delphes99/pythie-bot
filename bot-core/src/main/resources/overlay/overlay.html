@@ -1,21 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
-	<link rel="stylesheet" href="overlay.css" />
+	<link rel="stylesheet" href="overlay.css"/>
 	<script src="https://unpkg.com/vue@next"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<title>Overlay</title>
 </head>
 <body>
 <div id="overlay">
-	<alert :data="alert"></alert>
+	<!-- <alert :data="alert"></alert> -->
 	<div id="footer">
 		<event-list
-			v-for="item in events"
-			:key="item.type"
-			:last_events="item.events"
-			:type="item.type"
-			:id="item.type.name">
+				v-for="item in events"
+				:key="item.type"
+				:last_events="item.events"
+				:type="item.type"
+				:id="item.type.name">
 		</event-list>
 	</div>
 </div>
@@ -23,10 +23,10 @@
 </html>
 
 <script type="application/javascript">
-	const LAST_FOLLOW = { name:"last_follow", img:"img/follow.png" };
-	const LAST_SUB = { name: "last_sub", img: "img/sub.png" };
-	const LAST_CHEER = { name:"last_cheer", img:"img/cheer.png" };
-	const LAST_VOTH = { name:"last_voth", img:"img/voth.png" };
+	const LAST_FOLLOW = {name: "last_follows", img: "img/follow.png"};
+	const LAST_SUB = {name: "last_subs", img: "img/sub.png"};
+	const LAST_CHEER = {name: "last_cheers", img: "img/cheer.png"};
+	const LAST_VOTH = {name: "last_voths", img: "img/voth.png"};
 
 	function emptyEventsFor(type) {
 		return {
@@ -44,7 +44,7 @@
 					emptyEventsFor(LAST_CHEER),
 					emptyEventsFor(LAST_VOTH)
 				],
-				alert: {"type":"test","parameters":{}}
+				alert: {"type": "test", "parameters": {}}
 			}
 		},
 		methods: {
@@ -55,19 +55,27 @@
 							this.events = [
 								{
 									type: LAST_FOLLOW,
-									events: data.last_follow
+									events: data.last_follows.map(follow => {
+										return {user: follow}
+									})
 								},
 								{
 									type: LAST_SUB,
-									events: data.last_sub
+									events: data.last_subs.map(sub => {
+										return {user: sub}
+									})
 								},
 								{
 									type: LAST_CHEER,
-									events: data.last_voth
+									events: data.last_cheers.map(({user, bits}) => {
+										return {user: user, infos: bits}
+									})
 								},
 								{
 									type: LAST_VOTH,
-									events: data.last_voth
+									events: data.last_voths.map(voth => {
+										return {user: voth}
+									})
 								}
 							]
 						})
@@ -82,18 +90,28 @@
 	let app = Vue.createApp(Overlay);
 	app.component('event-list', {
 		props: ['last_events', 'type'],
-		template: `<div class="event-list">
-					<img :src="type.img" />
-					<div class="first">{{ last_events[0] }}</div>
-					<div class="second">{{ last_events[1] }}</div>
-					<div class="third">{{ last_events[2] }}</div>
-					</div>`
+		template: `
+			<div class="event-list">
+				<img :src="type.img"/>
+				<div class="first" v-if="last_events[0]">
+					<div>{{ last_events[0].user }}</div>
+					<div class="infos" v-if="last_events[0].infos">{{ last_events[0].infos }}</div>
+				</div>
+				<div class="second" v-if="last_events[1]">
+					<div>{{ last_events[1].user }}</div>
+					<div class="infos" v-if="last_events[1].infos">{{ last_events[1].infos }}</div>
+				</div>
+				<div class="third" v-if="last_events[2]">
+					<div>{{ last_events[2].user }}</div>
+					<div class="infos" v-if="last_events[2].infos">{{ last_events[2].infos }}</div>
+				</div>
+			</div>`
 	});
 	app.component('alert', {
 		props: ['data'],
 		computed: {
 			alertText: function () {
-				if(this.data) {
+				if (this.data) {
 					console.log(this.data)
 					if (this.data.type === "newVip") {
 						return "Nouveau VIP : " + this.data.parameters["newVIP"]
@@ -103,25 +121,26 @@
 				}
 			},
 			img: function () {
-				if(this.data) {
+				if (this.data) {
 					return "img/voth.png"
 				}
 			},
 			title: function () {
-				if(this.data) {
+				if (this.data) {
 					return "Nouveau VIP"
 				}
 			}
 		},
-		template: `<div class="alert">
-						<div class="alert-title">
-							<img :src="img" />
-							{{title}}
-						</div>
-						<div class="alert-content">
-							{{ alertText }}
-						</div>
-					</div>`
+		template: `
+			<div class="alert">
+				<div class="alert-title">
+					<img :src="img"/>
+					{{ title }}
+				</div>
+				<div class="alert-content">
+					{{ alertText }}
+				</div>
+			</div>`
 	})
 
 	let vm = app.mount('#overlay')
@@ -131,10 +150,10 @@
 
 	let socket = new WebSocket("ws://localhost:8080/delphes99");
 
-	socket.onopen = function() {
-		this.onmessage = function(event) {
+	socket.onopen = function () {
+		this.onmessage = function (event) {
 			vm.alert = JSON.parse(event.data)
-			setTimeout(() => { vm.alert = null }, 3000)
+			setTimeout(() => vm.alert = null, 3000)
 		};
 	};
 </script>

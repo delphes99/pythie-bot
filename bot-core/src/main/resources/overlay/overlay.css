@@ -53,11 +53,22 @@ body {
     font-family: var(--main-font);
 }
 
+.event-list > div > div {
+    display: inline-block;
+}
+
+.event-list .infos {
+    margin-left: 6px;
+}
+
 .event-list > .first {
     grid-area: first;
     font-size: 20px;
 }
 
+.event-list > .first > .infos {
+    font-size: 14px;
+}
 
 .event-list > .second,
 .event-list > .third {
@@ -80,10 +91,18 @@ body {
     color: rgba(var(--main-font-color), 0.9);
 }
 
+.event-list > .second > .infos {
+    font-size: 10px;
+}
+
 .event-list > .third {
     grid-area: third;
     font-size: 10px;
     color: rgba(var(--main-font-color), 0.8);
+}
+
+.event-list > .third > .infos {
+    font-size: 7px;
 }
 
 .alert {

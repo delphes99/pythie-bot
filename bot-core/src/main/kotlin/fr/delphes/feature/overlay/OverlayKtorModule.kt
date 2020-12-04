@@ -28,9 +28,10 @@ fun OverlayModule(
             get("/${channelName}/overlay/infos") {
                 val statistics = channel.statistics
                 val overlayInfos = OverlayInfos(
-                    last_follow = statistics.lastFollows.take(3).map(User::name),
-                    last_sub = statistics.lastSubs.take(3).map(User::name),
-                    last_voth = lastVOTH(channel)
+                    last_follows = statistics.lastFollows.take(3).map(User::name),
+                    last_subs = statistics.lastSubs.take(3).map(User::name),
+                    last_cheers = statistics.lastCheers.take(3).map { cheer -> OverlayCheers(cheer.user?.name, cheer.bits) },
+                    last_voths = lastVOTH(channel)
                 )
                 this.call.respond(overlayInfos)
             }

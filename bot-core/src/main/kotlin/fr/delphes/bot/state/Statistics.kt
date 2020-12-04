@@ -1,5 +1,6 @@
 package fr.delphes.bot.state
 
+import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.user.User
 import kotlinx.serialization.Serializable
 
@@ -7,7 +8,8 @@ import kotlinx.serialization.Serializable
 class Statistics(
     private val userMessages: MutableList<UserMessage> = mutableListOf(),
     private val newFollows: MutableList<User> = mutableListOf(),
-    private val newSubs: MutableList<User> = mutableListOf()
+    private val newSubs: MutableList<User> = mutableListOf(),
+    private val cheers: MutableList<UserCheer> = mutableListOf()
 ) : UpdateStatistics {
     val numberOfFollow: Int get() = newFollows.size
     val numberOfSub: Int get() = newSubs.size
@@ -16,6 +18,7 @@ class Statistics(
 
     val lastFollows: List<User> get() = newFollows.reversed()
     val lastSubs: List<User> get() = newSubs.reversed()
+    val lastCheers: List<UserCheer> get() = cheers
 
     override fun addMessage(userMessage: UserMessage) {
         userMessages.add(userMessage)
@@ -31,5 +34,9 @@ class Statistics(
         if(!this.newSubs.contains(newSub)) {
             this.newSubs.add(newSub)
         }
+    }
+
+    override fun newCheer(newCheer: NewCheer) {
+        this.cheers.add(0, UserCheer(newCheer.cheerer, newCheer.bits))
     }
 }
