@@ -6,10 +6,11 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class FileStatisticsRepository : StatisticsRepository {
-    //TODO global save file folder
+class FileStatisticsRepository(
+    private val configFilepath: String
+) : StatisticsRepository {
     private val globalRepository = FileRepository(
-        "A:\\pythiebot\\stats\\globalStats.json",
+        "$configFilepath\\stats\\globalStats.json",
         initializer =  { Statistics() },
         serializer = { Json.encodeToString(it) },
         deserializer = { Json.decodeFromString(it) }
@@ -32,7 +33,7 @@ class FileStatisticsRepository : StatisticsRepository {
     }
 
     private fun buildStreamStatisticsRepository(streamId: String) = FileRepository(
-        "A:\\pythiebot\\stats\\stream_stats_$streamId.json",
+        "$configFilepath\\stats\\stream_stats_$streamId.json",
         initializer = { StreamStatistics(streamId) },
         serializer = { Json.encodeToString(it) },
         deserializer = { Json.decodeFromString(it) }

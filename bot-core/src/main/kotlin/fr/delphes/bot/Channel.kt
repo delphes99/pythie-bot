@@ -43,7 +43,7 @@ import mu.KotlinLogging
 class Channel(
     configuration: ChannelConfiguration,
     val bot: ClientBot,
-    private val state: ChannelState = ChannelState(FileStatisticsRepository())
+    private val state: ChannelState = ChannelState(FileStatisticsRepository(bot.configFilepath))
 ) : ChannelInfo {
     override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
     override val currentStream: Stream? get() = state.currentStream
