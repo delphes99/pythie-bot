@@ -1,9 +1,13 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
 import fr.delphes.twitch.api.games.payload.GetGamesPayload
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.twitch.api.reward.payload.CreateCustomReward
+import fr.delphes.twitch.api.reward.payload.RedemptionStatusForUpdate
 import fr.delphes.twitch.api.reward.payload.UpdateCustomRewardPayload
+import fr.delphes.twitch.api.reward.payload.UpdateRedemptionStatus
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
 import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
@@ -55,12 +59,31 @@ internal class ChannelHelixClient(
         return payload.data.firstOrNull()
     }
 
+    //TODO Dispatch reward / reward id / reward configuration
+    override suspend fun createCustomReward(reward: Reward, userId: String) {
+        "https://api.twitch.tv/helix/channel_points/custom_rewards".post<HttpResponse>(
+            CreateCustomReward(reward.rewardTitle, 300),
+            userCredential,
+            "broadcaster_id" to userId
+        )
+    }
+
     override suspend fun updateCustomReward(reward: Reward, activate: Boolean, userId: String) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards".patch<HttpResponse>(
-            UpdateCustomRewardPayload(activate),
+            UpdateCustomRewardPayload(is_enabled = activate),
             userCredential,
             "broadcaster_id" to userId,
             "id" to reward.rewardId
+        )
+    }
+
+    override suspend fun updateRewardRedemption(redemption: RewardRedemption, userId: String, status: RedemptionStatusForUpdate) {
+        "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions".patch<HttpResponse>(
+            UpdateRedemptionStatus(status),
+            userCredential,
+            "id" to redemption.id,
+            "broadcaster_id" to userId,
+            "reward_id" to redemption.reward.rewardId
         )
     }
 

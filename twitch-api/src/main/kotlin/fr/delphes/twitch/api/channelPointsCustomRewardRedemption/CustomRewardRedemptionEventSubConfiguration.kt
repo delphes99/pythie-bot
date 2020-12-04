@@ -22,12 +22,13 @@ class CustomRewardRedemptionEventSubConfiguration(
         payload: ChannelPointsCustomRewardRedemptionEventPayload
     ): RewardRedemption {
         return RewardRedemption(
-            Reward(
+            reward = Reward(
                 payload.reward.id,
                 payload.reward.title
             ),
-            User(payload.user_name),
-            payload.reward.cost
+            user = User(payload.user_name),
+            cost = payload.reward.cost,
+            id = payload.id
         )
     }
 

@@ -5,5 +5,6 @@ import fr.delphes.twitch.api.user.User
 data class RewardRedemption(
     val reward: Reward,
     val user: User,
-    val cost: RewardCost
+    val cost: RewardCost,
+    internal val id: String
 )
