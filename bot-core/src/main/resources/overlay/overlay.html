@@ -73,8 +73,8 @@
 								},
 								{
 									type: LAST_VOTH,
-									events: data.last_voths.map(voth => {
-										return {user: voth}
+									events: data.last_voths.map(({user, duration}) => {
+										return {user: user, infos: duration}
 									})
 								}
 							]

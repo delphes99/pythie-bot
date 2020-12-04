@@ -1,9 +1,9 @@
 package fr.delphes.feature.overlay
 
-import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.Channel
+import fr.delphes.bot.util.time.prettyPrint
 import fr.delphes.feature.voth.VOTH
-import fr.delphes.feature.voth.VOTHReign
+import fr.delphes.twitch.api.user.User
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.http.content.resources
@@ -39,16 +39,15 @@ fun OverlayModule(
     }
 }
 
-private fun lastVOTH(channel: Channel): List<String> {
+private fun lastVOTH(channel: Channel): List<OverlayVoth> {
     return channel.features
         .filterIsInstance<VOTH>()
         .firstOrNull()
-        .let { voth ->
-            voth
+        .let { vothFeature ->
+            vothFeature
                 ?.state
                 ?.lastReigns(LocalDateTime.now())
                 ?.take(3)
-                ?.map(VOTHReign::voth)
-                ?.map(User::name)
+                ?.map { voth -> OverlayVoth(voth.voth.name, voth.duration.prettyPrint()) }
         } ?: emptyList()
 }
