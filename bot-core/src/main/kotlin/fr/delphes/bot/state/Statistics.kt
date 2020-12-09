@@ -16,8 +16,8 @@ class Statistics(
     val numberMessages: Int get() = userMessages.count()
     val numberOfChatters: Int get() = userMessages.map(UserMessage::user).distinct().count()
 
-    val lastFollows: List<User> get() = newFollows.reversed()
-    val lastSubs: List<User> get() = newSubs.reversed()
+    val lastFollows: List<User> get() = newFollows
+    val lastSubs: List<User> get() = newSubs
     val lastCheers: List<UserCheer> get() = cheers
 
     override fun addMessage(userMessage: UserMessage) {
@@ -26,13 +26,13 @@ class Statistics(
 
     override fun newFollow(newFollow: User) {
         if(!this.newFollows.contains(newFollow)) {
-            this.newFollows.add(newFollow)
+            this.newFollows.add(0, newFollow)
         }
     }
 
     override fun newSub(newSub: User) {
         if(!this.newSubs.contains(newSub)) {
-            this.newSubs.add(newSub)
+            this.newSubs.add(0, newSub)
         }
     }
 

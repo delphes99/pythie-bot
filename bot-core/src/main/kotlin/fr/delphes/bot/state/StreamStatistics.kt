@@ -26,13 +26,13 @@ class StreamStatistics(
 
     override fun newFollow(newFollow: User) {
         if(!this.newFollows.contains(newFollow)) {
-            this.newFollows.add(newFollow)
+            this.newFollows.add(0, newFollow)
         }
     }
 
     override fun newSub(newSub: User) {
         if(!this.newSubs.contains(newSub)) {
-            this.newSubs.add(newSub)
+            this.newSubs.add(0, newSub)
         }
     }
 
