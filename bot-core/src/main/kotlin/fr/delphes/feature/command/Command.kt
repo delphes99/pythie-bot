@@ -3,10 +3,10 @@ package fr.delphes.feature.command
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.command.SimpleCommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
-import fr.delphes.bot.util.time.Clock
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
-import fr.delphes.bot.util.time.SystemClock
+import fr.delphes.utils.time.Clock
+import fr.delphes.utils.time.SystemClock
 import java.time.Duration
 import java.time.LocalDateTime
 

@@ -3,27 +3,27 @@ package fr.delphes.configuration.channel
 import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.DesactivateReward
-import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.bot.event.outgoing.SendMessage
+import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.feature.bitCheer.BitCheer
 import fr.delphes.feature.command.Command
+import fr.delphes.feature.commandList.CommandList
+import fr.delphes.feature.endCredits.EndCredits
+import fr.delphes.feature.gameDescription.GameDescription
+import fr.delphes.feature.gameReward.GameReward
 import fr.delphes.feature.newFollow.NewFollow
 import fr.delphes.feature.newSub.NewSub
+import fr.delphes.feature.overlay.Overlay
+import fr.delphes.feature.rewardRedeem.RewardRedeem
 import fr.delphes.feature.statistics.Statistics
 import fr.delphes.feature.streamOffline.StreamOffline
 import fr.delphes.feature.streamOnline.StreamOnline
+import fr.delphes.feature.streamUpdate.StreamUpdate
 import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
-import fr.delphes.bot.util.time.prettyPrint
-import fr.delphes.feature.bitCheer.BitCheer
-import fr.delphes.feature.commandList.CommandList
-import fr.delphes.feature.endCredits.EndCredits
-import fr.delphes.feature.streamUpdate.StreamUpdate
-import fr.delphes.feature.gameDescription.GameDescription
-import fr.delphes.feature.gameReward.GameReward
-import fr.delphes.feature.overlay.Overlay
-import fr.delphes.feature.rewardRedeem.RewardRedeem
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
+import fr.delphes.utils.time.prettyPrint
 import java.time.Duration
 
 /**

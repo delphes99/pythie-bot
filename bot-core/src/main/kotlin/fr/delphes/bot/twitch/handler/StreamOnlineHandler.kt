@@ -6,9 +6,9 @@ import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.StreamOnline
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
-import fr.delphes.bot.util.time.Clock
-import fr.delphes.bot.util.time.SystemClock
 import fr.delphes.twitch.api.streams.Stream
+import fr.delphes.utils.time.Clock
+import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
 import fr.delphes.twitch.api.streamOnline.StreamOnline as StreamOnlineTwitch
 

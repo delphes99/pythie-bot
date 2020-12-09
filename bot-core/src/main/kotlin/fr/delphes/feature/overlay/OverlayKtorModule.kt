@@ -1,9 +1,9 @@
 package fr.delphes.feature.overlay
 
 import fr.delphes.bot.Channel
-import fr.delphes.bot.util.time.prettyPrint
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.twitch.api.user.User
+import fr.delphes.utils.time.prettyPrint
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.http.content.resources

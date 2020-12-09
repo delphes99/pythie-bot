@@ -14,11 +14,11 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.PromoteVIP
 import fr.delphes.bot.event.outgoing.RemoveVIP
 import fr.delphes.bot.event.outgoing.RetrieveVip
-import fr.delphes.bot.util.time.Clock
-import fr.delphes.bot.util.time.SystemClock
 import fr.delphes.feature.AbstractFeature
 import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.StateRepository
+import fr.delphes.utils.time.Clock
+import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
 
 class VOTH(
