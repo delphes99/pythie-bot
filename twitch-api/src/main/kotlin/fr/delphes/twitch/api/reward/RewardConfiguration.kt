@@ -10,11 +10,11 @@ data class RewardConfiguration(
     val backgroundColor: String? = null,
     val isUserInputRequired: Boolean? = null,
     val isMaxPerStreamEnabled: Boolean? = null,
-    val maxPerStream: Int? = null,
+    val maxPerStream: Long? = null,
     val isMaxPerUserPerStreamEnabled: Boolean? = null,
-    val maxPerUserPerStream: Int? = null,
+    val maxPerUserPerStream: Long? = null,
     val isGlobalCooldownEnabled: Boolean? = null,
-    val globalCooldownSeconds: Int? = null,
+    val globalCooldownSeconds: Long? = null,
     val shouldRedemptionsSkipRequestQueue: Boolean? = null
 ): WithRewardConfiguration {
     override val rewardConfiguration = this

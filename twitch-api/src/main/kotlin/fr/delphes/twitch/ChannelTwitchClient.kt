@@ -13,7 +13,7 @@ import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
-import fr.delphes.twitch.api.reward.payload.UpdateCustomRewardPayload
+import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.streamOffline.StreamOffline
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
@@ -48,13 +48,13 @@ class ChannelTwitchClient(
 
     override suspend fun deactivateReward(reward: RewardConfiguration) {
         rewards.rewardOf(reward)?.also { twitchReward ->
-            helixApi.updateCustomReward(UpdateCustomRewardPayload(is_enabled = false), twitchReward.id, userId)
+            helixApi.updateCustomReward(UpdateCustomReward(is_enabled = false), twitchReward.id, userId)
         } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
     }
 
     override suspend fun activateReward(reward: RewardConfiguration) {
         rewards.rewardOf(reward)?.also { twitchReward ->
-            helixApi.updateCustomReward(UpdateCustomRewardPayload(is_enabled = true), twitchReward.id, userId)
+            helixApi.updateCustomReward(UpdateCustomReward(is_enabled = true), twitchReward.id, userId)
         } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
     }
 

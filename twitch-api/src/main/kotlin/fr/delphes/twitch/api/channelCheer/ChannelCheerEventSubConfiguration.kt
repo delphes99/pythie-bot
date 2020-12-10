@@ -18,7 +18,7 @@ class ChannelCheerEventSubConfiguration(
 ) {
     override fun transform(
         payload: ChannelCheerEventPayload
-    ): NewCheer? {
+    ): NewCheer {
         return NewCheer(
             payload.user_name?.let(::User),
             payload.bits,

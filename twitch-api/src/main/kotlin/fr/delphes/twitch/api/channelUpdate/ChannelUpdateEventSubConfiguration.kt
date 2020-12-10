@@ -19,7 +19,7 @@ class ChannelUpdateEventSubConfiguration(
 ) {
     override fun transform(
         payload: ChannelUpdateEventPayload
-    ): ChannelUpdate? {
+    ): ChannelUpdate {
         return ChannelUpdate(payload.title, payload.language, Game(GameId(payload.category_id), payload.category_name))
     }
 

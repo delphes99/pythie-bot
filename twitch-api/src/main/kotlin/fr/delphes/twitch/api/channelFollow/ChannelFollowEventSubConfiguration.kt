@@ -18,7 +18,7 @@ class ChannelFollowEventSubConfiguration(
 ) {
     override fun transform(
         payload: ChannelFollowEventPayload
-    ): NewFollow? {
+    ): NewFollow {
         return NewFollow(User(payload.user_name))
     }
 

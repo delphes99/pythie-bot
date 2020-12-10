@@ -5,7 +5,7 @@ import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
 import fr.delphes.twitch.api.games.payload.GetGamesPayload
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.RedemptionStatusForUpdate
-import fr.delphes.twitch.api.reward.payload.UpdateCustomRewardPayload
+import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.UpdateRedemptionStatus
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardPayload
@@ -78,7 +78,7 @@ internal class ChannelHelixClient(
         return payload.data.first()
     }
 
-    override suspend fun updateCustomReward(reward: UpdateCustomRewardPayload, rewardId: String, userId: String) {
+    override suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String, userId: String) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards".patch<HttpResponse>(
             reward,
             userCredential,

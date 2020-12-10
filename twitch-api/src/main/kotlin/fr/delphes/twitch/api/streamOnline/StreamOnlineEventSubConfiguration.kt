@@ -17,7 +17,7 @@ class StreamOnlineEventSubConfiguration(
 ) {
     override fun transform(
         payload: StreamOnlineEventPayload
-    ): StreamOnline? {
+    ): StreamOnline {
         return StreamOnline(payload.type)
     }
 

@@ -8,7 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class CustomRewardRedemptionEventSubConfigurationTest {
-    val configured_reward = RewardConfiguration("reward_title", 100)
+    private val configuredReward = RewardConfiguration("reward_title", 100)
 
     @Test
     fun `transform RewardRedemption`() {
@@ -47,13 +47,13 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = CustomRewardRedemptionEventSubConfiguration({ }, listOf(configured_reward)).parseToModel(payload)
+        val model = CustomRewardRedemptionEventSubConfiguration({ }, listOf(configuredReward)).parseToModel(payload)
 
         assertThat(model).isEqualTo(
             RewardRedemption(
                 Reward(
                     "9001",
-                    configured_reward
+                    configuredReward
                 ),
                 User("cooler_user"),
                 100,
@@ -65,7 +65,6 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
 
     @Test
     fun `don't transform RewardRedemption if not configured reward`() {
-        val reward = RewardConfiguration("reward_title", 100)
         val payload = """
             {
                 "subscription": {
@@ -101,7 +100,7 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = CustomRewardRedemptionEventSubConfiguration({ }, listOf(configured_reward)).parseToModel(payload)
+        val model = CustomRewardRedemptionEventSubConfiguration({ }, listOf(configuredReward)).parseToModel(payload)
 
         assertThat(model).isNull()
     }
