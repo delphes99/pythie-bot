@@ -5,7 +5,6 @@ import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
 import fr.delphes.twitch.api.channelFollow.NewFollow
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.NewSub
@@ -13,21 +12,25 @@ import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
+import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.streamOffline.StreamOffline
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
+import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import fr.delphes.twitch.api.streams.Stream
 import kotlinx.coroutines.runBlocking
 
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
     private val webhookApi: WebhookApi,
-    override val userId: String
+    override val userId: String,
+    rewardsConfigurations: List<RewardConfiguration>
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
+    private val rewards = RewardCache(rewardsConfigurations, helixApi, userId)
+
     override suspend fun getStream(): Stream? {
         val stream = helixApi.getStreamByUserId(userId) ?: return null
         val game = getGame(GameId(stream.game_id))
@@ -41,12 +44,12 @@ class ChannelTwitchClient(
         return Game(GameId(game!!.id), game.name)
     }
 
-    override suspend fun deactivateReward(reward: Reward) {
-        helixApi.updateCustomReward(reward, false, userId)
+    override suspend fun deactivateReward(rewardConfiguration: RewardConfiguration) {
+        //TODO helixApi.updateCustomReward(rewardConfiguration, false, userId)
     }
 
-    override suspend fun activateReward(reward: Reward) {
-        helixApi.updateCustomReward(reward, true, userId)
+    override suspend fun activateReward(rewardConfiguration: RewardConfiguration) {
+        //TODO helixApi.updateCustomReward(rewardConfiguration, true, userId)
     }
 
     companion object {
@@ -55,9 +58,10 @@ class ChannelTwitchClient(
             userCredential: TwitchUserCredential,
             userName: String,
             publicUrl: String,
-            webhookSecret: String
+            webhookSecret: String,
+            rewardsConfigurations: List<RewardConfiguration>
         ): Builder {
-            return Builder(appCredential, userCredential, userName, publicUrl, webhookSecret)
+            return Builder(appCredential, userCredential, userName, publicUrl, webhookSecret, rewardsConfigurations)
         }
     }
 
@@ -66,14 +70,16 @@ class ChannelTwitchClient(
         private val userCredential: TwitchUserCredential,
         private val userName: String,
         private val publicUrl: String,
-        private val webhookSecret: String
+        private val webhookSecret: String,
+        private val rewardsConfigurations: List<RewardConfiguration>
     ) {
         private val eventSubConfigurations = mutableListOf<EventSubConfiguration<*, *, *>>()
 
         fun listenToReward(listener: (RewardRedemption) -> Unit): Builder {
             eventSubConfigurations.add(
                 CustomRewardRedemptionEventSubConfiguration(
-                    listener
+                    listener,
+                    rewardsConfigurations
                 )
             )
 
@@ -159,7 +165,8 @@ class ChannelTwitchClient(
             return ChannelTwitchClient(
                 helixApi,
                 webhookApi,
-                userId
+                userId,
+                rewardsConfigurations
             )
         }
     }

@@ -1,8 +1,8 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
+import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.streams.Stream
 
 interface ChannelTwitchApi : WebhookApi {
@@ -12,7 +12,7 @@ interface ChannelTwitchApi : WebhookApi {
 
     suspend fun getGame(id: GameId): Game
 
-    suspend fun deactivateReward(reward: Reward)
+    suspend fun deactivateReward(rewardConfiguration: RewardConfiguration)
 
-    suspend fun activateReward(reward: Reward)
+    suspend fun activateReward(rewardConfiguration: RewardConfiguration)
 }

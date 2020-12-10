@@ -17,7 +17,7 @@ class StreamOfflineEventSubConfiguration(
 ) {
     override fun transform(
         payload: StreamOfflineEventPayload
-    ): StreamOffline {
+    ): StreamOffline? {
         return StreamOffline
     }
 

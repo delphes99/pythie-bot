@@ -52,7 +52,7 @@ class Channel(
     val alerts = Channel<Alert>()
 
     val name = configuration.ownerChannel
-    val userId : String
+    val userId: String
     val channelCredential = TwitchUserCredential.of(
         bot.appCredential,
         AuthTokenRepository(
@@ -82,15 +82,23 @@ class Channel(
     private val streamOfflineHandler = StreamOfflineHandler()
 
     init {
-        twitchApi = ChannelTwitchClient.builder(bot.appCredential, channelCredential, name, bot.publicUrl, bot.webhookSecret)
-            .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
-            .listenToNewFollow { newFollowHandler.handleTwitchEvent(it) }
-            .listenToNewSub { newSubHandler.handleTwitchEvent(it) }
-            .listenToNewCheer { channelBitsHandler.handleTwitchEvent(it) }
-            .listenToStreamOnline { streamOnlineHandler.handleTwitchEvent(it) }
-            .listenToStreamOffline { streamOfflineHandler.handleTwitchEvent(it) }
-            .listenToChannelUpdate { channelUpdateHandler.handleTwitchEvent(it) }
-            .build()
+        twitchApi =
+            ChannelTwitchClient.builder(
+                bot.appCredential,
+                channelCredential,
+                name,
+                bot.publicUrl,
+                bot.webhookSecret,
+                configuration.rewards
+            )
+                .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
+                .listenToNewFollow { newFollowHandler.handleTwitchEvent(it) }
+                .listenToNewSub { newSubHandler.handleTwitchEvent(it) }
+                .listenToNewCheer { channelBitsHandler.handleTwitchEvent(it) }
+                .listenToStreamOnline { streamOnlineHandler.handleTwitchEvent(it) }
+                .listenToStreamOffline { streamOfflineHandler.handleTwitchEvent(it) }
+                .listenToChannelUpdate { channelUpdateHandler.handleTwitchEvent(it) }
+                .build()
         userId = twitchApi.userId
 
         client = TwitchClientBuilder.builder()
@@ -107,6 +115,8 @@ class Channel(
 
         runBlocking {
             state.init(twitchApi.getStream())
+
+            //TODO Synchronize reward
         }
 
         chat.connect()

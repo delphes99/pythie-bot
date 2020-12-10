@@ -6,9 +6,10 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
+import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
 class RewardRedeem(
-    private val rewardName: String,
+    private val rewardConfiguration: WithRewardConfiguration,
     private val rewardRedeemResponse: (RewardRedemption) -> List<OutgoingEvent>
 ) : AbstractFeature() {
     override fun registerHandlers(eventHandlers: EventHandlers) {
@@ -17,7 +18,7 @@ class RewardRedeem(
 
     inner class RewardRedemptionHandler : EventHandler<RewardRedemption> {
         override suspend fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
-            return if(event.reward.isEquals(rewardName)) {
+            return if(event.reward.rewardConfiguration == rewardConfiguration.rewardConfiguration) {
                 rewardRedeemResponse(event)
             } else {
                 emptyList()

@@ -10,15 +10,15 @@ import fr.delphes.bot.event.outgoing.ActivateReward
 import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.AbstractFeature
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.WithGameId
+import fr.delphes.twitch.api.reward.RewardConfiguration
 
 class GameReward(
-    private val gameRewards: Map<GameId, List<Reward>>
+    private val gameRewards: Map<GameId, List<RewardConfiguration>>
 ) : AbstractFeature() {
-    constructor(vararg gameRewards: Pair<Reward, WithGameId>) : this(
+    constructor(vararg gameRewards: Pair<RewardConfiguration, WithGameId>) : this(
         gameRewards.groupBy(
             keySelector = { t -> t.second.gameId },
             valueTransform = { t -> t.first }

@@ -12,11 +12,10 @@ abstract class EventSubConfiguration<MODEL, PAYLOAD, CONDITION : GenericConditio
     val callback = EventSubCallback(webhookPathSuffix, ::parse, ::notify)
 
     private fun notify(event: PAYLOAD) {
-        val model = transform(event)
-        listener(model)
+        transform(event)?.also { listener(it) }
     }
 
-    internal abstract fun transform(payload: PAYLOAD): MODEL
+    internal abstract fun transform(payload: PAYLOAD): MODEL?
 
     abstract fun subscribePayload(userId: String, transport: SubscribeTransport): EventSubSubscribe<CONDITION>
 

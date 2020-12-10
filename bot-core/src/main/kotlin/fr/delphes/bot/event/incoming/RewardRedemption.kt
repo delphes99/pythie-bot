@@ -1,9 +1,9 @@
 package fr.delphes.bot.event.incoming
 
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardCost
-import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
+import fr.delphes.twitch.api.reward.Reward
+import fr.delphes.twitch.api.user.User
 
 data class RewardRedemption(
     val reward: Reward,

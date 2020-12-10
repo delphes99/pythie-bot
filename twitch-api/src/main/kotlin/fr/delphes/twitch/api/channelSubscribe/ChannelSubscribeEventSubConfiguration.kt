@@ -18,7 +18,7 @@ class ChannelSubscribeEventSubConfiguration(
 ) {
     override fun transform(
         payload: ChannelSubscribeEventPayload
-    ): NewSub {
+    ): NewSub? {
         return NewSub(
             User(payload.user_name),
             payload.tier,

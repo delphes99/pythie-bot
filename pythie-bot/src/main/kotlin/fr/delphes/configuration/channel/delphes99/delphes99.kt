@@ -1,16 +1,15 @@
-package fr.delphes.configuration.channel
+package fr.delphes.configuration.channel.delphes99
 
 import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.outgoing.Alert
-import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.configuration.channel.Games
 import fr.delphes.feature.bitCheer.BitCheer
 import fr.delphes.feature.command.Command
 import fr.delphes.feature.commandList.CommandList
 import fr.delphes.feature.endCredits.EndCredits
 import fr.delphes.feature.gameDescription.GameDescription
-import fr.delphes.feature.gameReward.GameReward
 import fr.delphes.feature.newFollow.NewFollow
 import fr.delphes.feature.newSub.NewSub
 import fr.delphes.feature.overlay.Overlay
@@ -22,7 +21,6 @@ import fr.delphes.feature.streamUpdate.StreamUpdate
 import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.utils.time.prettyPrint
 import java.time.Duration
 
@@ -33,9 +31,10 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
     ChannelConfiguration(
         properties.getProperty("channel.name"),
         properties.getProperty("account.oAuth"),
+        DelphesReward.toRewardList(),
         VOTH(
             VOTHConfiguration(
-                featureId = properties.getProperty("voth.featureID"),
+                reward = DelphesReward.VOTH,
                 newVipAnnouncer = { announce ->
                     listOf(
                         SendMessage(
@@ -141,19 +140,20 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             Games.GEOGUESSR to "Vous entrez dans un streetview dans un lieu aléatoire, vous devez vous retrouver sur une carte \uD83D\uDDFA️"
         ),
         RewardRedeem(
-            "Test dev"
+            DelphesReward.TEST_DEV
         ) {
             listOf(
+                SendMessage("-> test dev"),
                 Alert("test")
             )
         },
-        GameReward(
+       /* GameReward(
             Reward("676834c5-fb74-4e9e-96bf-d10605d3f2b1", "Test dev") to Games.SCIENCE_TECHNOLOGY
         ),
         Command(
             "!test",
             responses = listOf(DesactivateReward(Reward("676834c5-fb74-4e9e-96bf-d10605d3f2b1", "Test dev")))
-        ),
+        ),*/
         Command(
             "!ping",
             responses = listOf(SendMessage("pong"))

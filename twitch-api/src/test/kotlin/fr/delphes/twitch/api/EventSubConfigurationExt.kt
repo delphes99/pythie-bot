@@ -8,7 +8,7 @@ import kotlinx.serialization.decodeFromString
 
 internal inline fun <reified EVENT, reified CONDITION: GenericCondition, MODEL> EventSubConfiguration<MODEL, EVENT, CONDITION>.parseToModel(
     payloadStr: String
-): MODEL {
+): MODEL? {
     val payload =
         Serializer.decodeFromString<NotificationPayload<EVENT, CONDITION>>(
             payloadStr

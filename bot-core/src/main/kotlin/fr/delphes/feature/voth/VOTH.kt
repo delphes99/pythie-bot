@@ -58,7 +58,7 @@ class VOTH(
     internal inner class VOTHRewardRedemptionHandler : EventHandler<RewardRedemption> {
         override suspend fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
             val redeemUser = event.user
-            return if (event.reward.isEquals(configuration.featureId) && currentVip?.user != redeemUser) {
+            return if (event.reward.rewardConfiguration == configuration.reward.rewardConfiguration && currentVip?.user != redeemUser) {
                 val oldVOTH = currentVip
                 val newVOTH = state.newVOTH(event, clock.now())
 

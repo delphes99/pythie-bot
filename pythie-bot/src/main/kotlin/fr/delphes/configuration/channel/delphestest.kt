@@ -20,6 +20,7 @@ val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.p
     ChannelConfiguration(
         properties.getProperty("channel.name"),
         properties.getProperty("account.oAuth"),
+        emptyList(),
         Command(
             "!test",
             cooldown = Duration.ofSeconds(10),

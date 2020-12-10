@@ -1,6 +1,5 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
 import fr.delphes.twitch.api.games.payload.GetGamesPayload
@@ -8,6 +7,8 @@ import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.RedemptionStatusForUpdate
 import fr.delphes.twitch.api.reward.payload.UpdateCustomRewardPayload
 import fr.delphes.twitch.api.reward.payload.UpdateRedemptionStatus
+import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
+import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
 import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
@@ -59,21 +60,30 @@ internal class ChannelHelixClient(
         return payload.data.firstOrNull()
     }
 
-    //TODO Dispatch reward / reward id / reward configuration
-    override suspend fun createCustomReward(reward: Reward, userId: String) {
-        "https://api.twitch.tv/helix/channel_points/custom_rewards".post<HttpResponse>(
-            CreateCustomReward(reward.rewardTitle, 300),
+    override suspend fun getCustomRewards(userId: String): List<GetCustomRewardDataPayload> {
+        val payload = "https://api.twitch.tv/helix/channel_points/custom_rewards".get<GetCustomRewardPayload>(
             userCredential,
             "broadcaster_id" to userId
         )
+
+        return payload.data
     }
 
-    override suspend fun updateCustomReward(reward: Reward, activate: Boolean, userId: String) {
+    override suspend fun createCustomReward(reward: CreateCustomReward, userId: String): GetCustomRewardDataPayload {
+        val payload = "https://api.twitch.tv/helix/channel_points/custom_rewards".post<GetCustomRewardPayload>(
+            reward,
+            userCredential,
+            "broadcaster_id" to userId
+        )
+        return payload.data.first()
+    }
+
+    override suspend fun updateCustomReward(reward: UpdateCustomRewardPayload, rewardId: String, activate: Boolean, userId: String) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards".patch<HttpResponse>(
-            UpdateCustomRewardPayload(is_enabled = activate),
+            reward,
             userCredential,
             "broadcaster_id" to userId,
-            "id" to reward.rewardId
+            "id" to rewardId
         )
     }
 
@@ -83,7 +93,7 @@ internal class ChannelHelixClient(
             userCredential,
             "id" to redemption.id,
             "broadcaster_id" to userId,
-            "reward_id" to redemption.reward.rewardId
+            "reward_id" to redemption.reward.id
         )
     }
 

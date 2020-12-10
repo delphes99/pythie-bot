@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CreateCustomReward(
     val title: String,
-    val cost: Int,
+    val cost: Long,
     val prompt: String? = null,
     val is_enabled: Boolean? = null,
     val background_color: String? = null,

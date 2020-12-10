@@ -14,9 +14,10 @@ import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.bot.util.time.TestClock
 import fr.delphes.feature.TestStateRepository
 import fr.delphes.feature.handle
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.Reward
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
+import fr.delphes.twitch.api.reward.Reward
+import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.user.User
 import io.mockk.every
 import io.mockk.mockk
@@ -28,13 +29,13 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 internal class VOTHTest {
-    val FEATURE_ID = "featureID"
-    val FEATURE = Reward(FEATURE_ID, "feature")
-    val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
-    val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", NOW.minusMinutes(5), 50))
-    val CLOCK = TestClock(NOW)
-    val CONFIGURATION = VOTHConfiguration(
-        FEATURE_ID,
+    private val reward = RewardConfiguration("voth", 100)
+    private val rewardRedemption = RewardRedemption(Reward("id", reward), "user", 50)
+    private val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
+    private val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", NOW.minusMinutes(5), 50))
+    private val CLOCK = TestClock(NOW)
+    private val CONFIGURATION = VOTHConfiguration(
+        reward,
         { emptyList() },
         "!cmdstats",
         { emptyList() },
@@ -49,7 +50,7 @@ internal class VOTHTest {
         internal suspend fun `promote vip`() {
             val voth = voth(VOTHState())
 
-            voth.handle(RewardRedemption(FEATURE, "user", 50), channelInfo)
+            voth.handle(rewardRedemption, channelInfo)
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", NOW, 50))
             assertThat(voth.vothChanged).isTrue()
         }
@@ -59,7 +60,7 @@ internal class VOTHTest {
             val state = VOTHState(currentVip = VOTHWinner("user", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            voth.handle(RewardRedemption(FEATURE, "user", 50), channelInfo)
+            voth.handle(rewardRedemption, channelInfo)
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", NOW.minusMinutes(1), 50))
             assertThat(voth.vothChanged).isFalse()
         }
@@ -68,7 +69,7 @@ internal class VOTHTest {
         internal suspend fun `redeem launch vip list`() {
             val voth = voth()
 
-            val messages = voth.handle(RewardRedemption(FEATURE, "user", 50), channelInfo)
+            val messages = voth.handle(rewardRedemption, channelInfo)
             assertThat(messages).contains(RetrieveVip)
         }
     }
@@ -138,7 +139,7 @@ internal class VOTHTest {
 
         val voth = VOTH(
             VOTHConfiguration(
-                FEATURE_ID,
+                reward,
                 { emptyList() },
                 "!cmdstats",
                 { emptyList() },
