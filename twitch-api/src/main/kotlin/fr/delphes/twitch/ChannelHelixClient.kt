@@ -78,7 +78,7 @@ internal class ChannelHelixClient(
         return payload.data.first()
     }
 
-    override suspend fun updateCustomReward(reward: UpdateCustomRewardPayload, rewardId: String, activate: Boolean, userId: String) {
+    override suspend fun updateCustomReward(reward: UpdateCustomRewardPayload, rewardId: String, userId: String) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards".patch<HttpResponse>(
             reward,
             userCredential,

@@ -4,6 +4,7 @@ import com.github.twitch4j.chat.TwitchChat
 import fr.delphes.bot.Channel
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.WithRewardConfiguration
 import fr.delphes.twitch.api.user.User
 
 sealed class OutgoingEvent
@@ -47,17 +48,17 @@ data class SendMessage(
 }
 
 data class DesactivateReward(
-    val reward: RewardConfiguration
+    val reward: WithRewardConfiguration
 ) : TwitchOutgoingEvent() {
     override suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel) {
-        twitchApi.deactivateReward(reward)
+        twitchApi.deactivateReward(reward.rewardConfiguration)
     }
 }
 
 data class ActivateReward(
-    val reward: RewardConfiguration
+    val reward: WithRewardConfiguration
 ) : TwitchOutgoingEvent() {
     override suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel) {
-        twitchApi.activateReward(reward)
+        twitchApi.activateReward(reward.rewardConfiguration)
     }
 }

@@ -14,16 +14,19 @@ import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.WithGameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
 class GameReward(
     private val gameRewards: Map<GameId, List<RewardConfiguration>>
 ) : AbstractFeature() {
-    constructor(vararg gameRewards: Pair<RewardConfiguration, WithGameId>) : this(
+    constructor(vararg gameRewards: Pair<WithRewardConfiguration, WithGameId>) : this(
         gameRewards.groupBy(
             keySelector = { t -> t.second.gameId },
-            valueTransform = { t -> t.first }
+            valueTransform = { t -> t.first.rewardConfiguration }
         )
     )
+
+    //TODO change visibility on start of the bot when the stream is already started
 
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(StreamOnlineHandler())
@@ -50,6 +53,7 @@ class GameReward(
         }
     }
 
+    //TODO cache if the feature is already enabled / disabled
     private fun deactivateFeaturesNotAssociateWith(game: GameId): List<OutgoingEvent> {
         return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten().map(::DesactivateReward)
     }

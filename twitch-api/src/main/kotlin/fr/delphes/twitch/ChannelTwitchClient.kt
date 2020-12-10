@@ -13,6 +13,7 @@ import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.payload.UpdateCustomRewardPayload
 import fr.delphes.twitch.api.streamOffline.StreamOffline
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
@@ -22,6 +23,7 @@ import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import kotlinx.coroutines.runBlocking
+import mu.KotlinLogging
 
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
@@ -44,15 +46,21 @@ class ChannelTwitchClient(
         return Game(GameId(game!!.id), game.name)
     }
 
-    override suspend fun deactivateReward(rewardConfiguration: RewardConfiguration) {
-        //TODO helixApi.updateCustomReward(rewardConfiguration, false, userId)
+    override suspend fun deactivateReward(reward: RewardConfiguration) {
+        rewards.rewardOf(reward)?.also { twitchReward ->
+            helixApi.updateCustomReward(UpdateCustomRewardPayload(is_enabled = false), twitchReward.id, userId)
+        } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
     }
 
-    override suspend fun activateReward(rewardConfiguration: RewardConfiguration) {
-        //TODO helixApi.updateCustomReward(rewardConfiguration, true, userId)
+    override suspend fun activateReward(reward: RewardConfiguration) {
+        rewards.rewardOf(reward)?.also { twitchReward ->
+            helixApi.updateCustomReward(UpdateCustomRewardPayload(is_enabled = true), twitchReward.id, userId)
+        } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
     }
 
     companion object {
+        private val LOGGER = KotlinLogging.logger {}
+
         fun builder(
             appCredential: TwitchAppCredential,
             userCredential: TwitchUserCredential,

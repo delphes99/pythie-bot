@@ -22,11 +22,11 @@ class RewardCache(
                 val reward = rewards.find { reward -> reward.title == configuration.title }
 
                 if (reward != null) {
-                    map.put(configuration, reward.toReward(configuration))
+                    map[configuration] = reward.toReward(configuration)
 
                     //TODO synchronize reward with configuration
                 } else {
-                    api.createCustomReward(
+                    val createdReward = api.createCustomReward(
                         CreateCustomReward(
                             title = configuration.title,
                             cost = configuration.cost,
@@ -44,9 +44,15 @@ class RewardCache(
                         ),
                         userId
                     )
+
+                    map[configuration] = createdReward.toReward(configuration)
                 }
             }
         }
+    }
+
+    fun rewardOf(configuration: RewardConfiguration): Reward? {
+        return map[configuration]
     }
 
     private fun GetCustomRewardDataPayload.toReward(configuration: RewardConfiguration): Reward {

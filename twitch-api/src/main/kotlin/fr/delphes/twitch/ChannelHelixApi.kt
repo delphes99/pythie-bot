@@ -22,7 +22,7 @@ interface ChannelHelixApi {
 
     suspend fun getCustomRewards(userId: String): List<GetCustomRewardDataPayload>
 
-    suspend fun updateCustomReward(reward: UpdateCustomRewardPayload, rewardId: String, activate: Boolean, userId: String)
+    suspend fun updateCustomReward(reward: UpdateCustomRewardPayload, rewardId: String, userId: String)
 
     suspend fun subscribeEventSub(subscribe: EventSubSubscribe<out GenericCondition>)
 
