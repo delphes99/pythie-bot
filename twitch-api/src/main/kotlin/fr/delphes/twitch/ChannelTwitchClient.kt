@@ -34,7 +34,7 @@ class ChannelTwitchClient(
     private val rewards = RewardCache(rewardsConfigurations, helixApi, userId)
 
     override suspend fun getStream(): Stream? {
-        val stream = helixApi.getStreamByUserId(userId) ?: return null
+        val stream = helixApi.getStream() ?: return null
         val game = getGame(GameId(stream.game_id))
 
         return Stream(stream.id, stream.title, stream.started_at, game)
@@ -48,13 +48,13 @@ class ChannelTwitchClient(
 
     override suspend fun deactivateReward(reward: RewardConfiguration) {
         rewards.rewardOf(reward)?.also { twitchReward ->
-            helixApi.updateCustomReward(UpdateCustomReward(is_enabled = false), twitchReward.id, userId)
+            helixApi.updateCustomReward(UpdateCustomReward(is_enabled = false), twitchReward.id)
         } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
     }
 
     override suspend fun activateReward(reward: RewardConfiguration) {
         rewards.rewardOf(reward)?.also { twitchReward ->
-            helixApi.updateCustomReward(UpdateCustomReward(is_enabled = true), twitchReward.id, userId)
+            helixApi.updateCustomReward(UpdateCustomReward(is_enabled = true), twitchReward.id)
         } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
     }
 

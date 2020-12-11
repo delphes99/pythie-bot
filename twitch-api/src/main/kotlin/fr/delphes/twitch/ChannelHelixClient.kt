@@ -41,7 +41,7 @@ internal class ChannelHelixClient(
         return payload.data.firstOrNull()
     }
 
-    override suspend fun getStreamByUserId(userId: String): StreamInfos? {
+    override suspend fun getStream(): StreamInfos? {
         val payload = "https://api.twitch.tv/helix/streams".get<StreamPayload>(
             userCredential,
             "user_id" to userId
@@ -50,7 +50,7 @@ internal class ChannelHelixClient(
         return payload.data.firstOrNull()
     }
 
-    override suspend fun getCustomRewards(userId: String): List<GetCustomRewardDataPayload> {
+    override suspend fun getCustomRewards(): List<GetCustomRewardDataPayload> {
         val payload = "https://api.twitch.tv/helix/channel_points/custom_rewards".get<GetCustomRewardPayload>(
             userCredential,
             "broadcaster_id" to userId
@@ -59,7 +59,7 @@ internal class ChannelHelixClient(
         return payload.data
     }
 
-    override suspend fun createCustomReward(reward: CreateCustomReward, userId: String): GetCustomRewardDataPayload {
+    override suspend fun createCustomReward(reward: CreateCustomReward): GetCustomRewardDataPayload {
         val payload = "https://api.twitch.tv/helix/channel_points/custom_rewards".post<GetCustomRewardPayload>(
             reward,
             userCredential,
@@ -68,7 +68,7 @@ internal class ChannelHelixClient(
         return payload.data.first()
     }
 
-    override suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String, userId: String) {
+    override suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards".patch<HttpResponse>(
             reward,
             userCredential,
@@ -77,7 +77,7 @@ internal class ChannelHelixClient(
         )
     }
 
-    override suspend fun updateRewardRedemption(redemption: RewardRedemption, userId: String, status: RedemptionStatusForUpdate) {
+    override suspend fun updateRewardRedemption(redemption: RewardRedemption, status: RedemptionStatusForUpdate) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions".patch<HttpResponse>(
             UpdateRedemptionStatus(status),
             userCredential,

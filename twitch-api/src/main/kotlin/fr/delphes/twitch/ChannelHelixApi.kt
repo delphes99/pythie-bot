@@ -16,15 +16,15 @@ interface ChannelHelixApi {
 
     suspend fun getGameById(id: String): GetGamesDataPayload?
 
-    suspend fun getStreamByUserId(userId: String): StreamInfos?
+    suspend fun getStream(): StreamInfos?
 
-    suspend fun getCustomRewards(userId: String): List<GetCustomRewardDataPayload>
+    suspend fun getCustomRewards(): List<GetCustomRewardDataPayload>
 
-    suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String, userId: String)
+    suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String)
 
     suspend fun subscribeEventSub(subscribe: EventSubSubscribe<out GenericCondition>)
 
-    suspend fun createCustomReward(reward: CreateCustomReward, userId: String) : GetCustomRewardDataPayload
+    suspend fun createCustomReward(reward: CreateCustomReward) : GetCustomRewardDataPayload
 
-    suspend fun updateRewardRedemption(redemption: RewardRedemption, userId: String, status: RedemptionStatusForUpdate)
+    suspend fun updateRewardRedemption(redemption: RewardRedemption, status: RedemptionStatusForUpdate)
 }
