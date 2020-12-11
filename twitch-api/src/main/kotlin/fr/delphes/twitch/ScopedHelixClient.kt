@@ -18,8 +18,10 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 
-abstract class AbstractHelixClient(
-    protected val appCredential: TwitchAppCredential
+abstract class ScopedHelixClient(
+    protected val appCredential: TwitchAppCredential,
+    @PublishedApi
+    internal val scopedToken: WithAuthToken
 ) {
     @PublishedApi
     internal val httpClient = HttpClient {
@@ -29,24 +31,22 @@ abstract class AbstractHelixClient(
     }
 
     protected suspend inline fun <reified T> String.get(
-        twitchUserCredential: WithAuthToken,
         vararg parameters: Pair<String, String>
     ): T {
-        return authorizeCall(twitchUserCredential) {
+        return authorizeCall(scopedToken) {
             httpClient.get(this) {
-                headersAndParameters(twitchUserCredential, *parameters)
+                headersAndParameters(scopedToken, *parameters)
             }
         }
     }
 
     protected suspend inline fun <reified T> String.post(
         payload: Any,
-        twitchUserCredential: WithAuthToken,
         vararg parameters: Pair<String, String>
     ): T {
-        return authorizeCall(twitchUserCredential) {
+        return authorizeCall(scopedToken) {
             httpClient.post(this) {
-                headersAndParameters(twitchUserCredential, *parameters)
+                headersAndParameters(scopedToken, *parameters)
                 contentType(ContentType.Application.Json)
                 body = payload
             }
@@ -55,12 +55,11 @@ abstract class AbstractHelixClient(
 
     protected suspend inline fun <reified T> String.patch(
         payload: Any,
-        twitchUserCredential: WithAuthToken,
         vararg parameters: Pair<String, String>
     ): T {
-        return authorizeCall(twitchUserCredential) {
+        return authorizeCall(scopedToken) {
             httpClient.patch(this) {
-                headersAndParameters(twitchUserCredential, *parameters)
+                headersAndParameters(scopedToken, *parameters)
                 contentType(ContentType.Application.Json)
                 body = payload
             }
@@ -68,12 +67,11 @@ abstract class AbstractHelixClient(
     }
 
     protected suspend inline fun <reified T> String.delete(
-        twitchUserCredential: WithAuthToken,
         vararg parameters: Pair<String, String>
     ): T {
-        return authorizeCall(twitchUserCredential) {
+        return authorizeCall(scopedToken) {
             httpClient.delete(this) {
-                headersAndParameters(twitchUserCredential, *parameters)
+                headersAndParameters(scopedToken, *parameters)
             }
         }
     }

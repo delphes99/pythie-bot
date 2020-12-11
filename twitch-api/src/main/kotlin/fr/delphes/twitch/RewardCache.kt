@@ -9,15 +9,14 @@ import kotlinx.coroutines.runBlocking
 
 class RewardCache(
     private val configurations: List<RewardConfiguration>,
-    private val api: ChannelHelixApi,
-    private val userId: String
+    private val api: ChannelHelixApi
 ) {
     private val map = mutableMapOf<RewardConfiguration, Reward>()
 
     //TODO Move to synchronize method
     init {
         runBlocking {
-            val rewards = api.getCustomRewards(userId)
+            val rewards = api.getCustomRewards()
 
             configurations.forEach { configuration ->
                 val reward = rewards.find { reward -> reward.title == configuration.title }
@@ -41,8 +40,7 @@ class RewardCache(
                                 global_cooldown_seconds = configuration.globalCooldownSeconds,
                                 should_redemptions_skip_request_queue = configuration.shouldRedemptionsSkipRequestQueue
                             ),
-                            reward.id,
-                            userId
+                            reward.id
                         )
                     }
                 } else {
@@ -61,8 +59,7 @@ class RewardCache(
                             is_global_cooldown_enabled = configuration.isGlobalCooldownEnabled,
                             global_cooldown_seconds = configuration.globalCooldownSeconds,
                             should_redemptions_skip_request_queue = configuration.shouldRedemptionsSkipRequestQueue
-                        ),
-                        userId
+                        )
                     )
 
                     map[configuration] = createdReward.toReward(configuration)

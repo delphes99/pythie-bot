@@ -9,7 +9,7 @@ class WebhookClient(
     private val publicUrl: String,
     private val user: TwitchUser,
     private val secret: String,
-    private val channelHelixApi: ChannelHelixApi,
+    private val appHelixApi: AppHelixApi,
     private val eventSubConfigurations: List<EventSubConfiguration<*, *, *>>
 ) : WebhookApi {
     private val state = State()
@@ -30,7 +30,7 @@ class WebhookClient(
                 )
                 val subscribePayload = configuration.subscribePayload(user.id, transport)
 
-                channelHelixApi.subscribeEventSub(subscribePayload)
+                appHelixApi.subscribeEventSub(subscribePayload)
             }
         }
     }

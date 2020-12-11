@@ -7,9 +7,6 @@ import fr.delphes.twitch.api.reward.payload.RedemptionStatusForUpdate
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
-import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
-import fr.delphes.twitch.eventSub.EventSubSubscribe
-import fr.delphes.twitch.eventSub.payload.GenericCondition
 
 interface ChannelHelixApi {
     suspend fun getGameByName(name: String): GetGamesDataPayload?
@@ -21,8 +18,6 @@ interface ChannelHelixApi {
     suspend fun getCustomRewards(): List<GetCustomRewardDataPayload>
 
     suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String)
-
-    suspend fun subscribeEventSub(subscribe: EventSubSubscribe<out GenericCondition>)
 
     suspend fun createCustomReward(reward: CreateCustomReward) : GetCustomRewardDataPayload
 

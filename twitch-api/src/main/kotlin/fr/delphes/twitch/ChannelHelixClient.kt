@@ -13,18 +13,15 @@ import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
-import fr.delphes.twitch.eventSub.EventSubSubscribe
-import fr.delphes.twitch.eventSub.payload.GenericCondition
 import io.ktor.client.statement.HttpResponse
 
 internal class ChannelHelixClient(
     appCredential: TwitchAppCredential,
     private val userCredential: TwitchUserCredential,
     private val userId: String
-) : AbstractHelixClient(appCredential), ChannelHelixApi {
+) : ScopedHelixClient(appCredential, userCredential), ChannelHelixApi {
     override suspend fun getGameByName(name: String): GetGamesDataPayload? {
         val payload = "https://api.twitch.tv/helix/games".get<GetGamesPayload>(
-            userCredential,
             "name" to name
         )
         httpClient.attributes
@@ -34,7 +31,6 @@ internal class ChannelHelixClient(
 
     override suspend fun getGameById(id: String): GetGamesDataPayload? {
         val payload = "https://api.twitch.tv/helix/games".get<GetGamesPayload>(
-            userCredential,
             "id" to id
         )
 
@@ -43,7 +39,6 @@ internal class ChannelHelixClient(
 
     override suspend fun getStream(): StreamInfos? {
         val payload = "https://api.twitch.tv/helix/streams".get<StreamPayload>(
-            userCredential,
             "user_id" to userId
         )
 
@@ -52,7 +47,6 @@ internal class ChannelHelixClient(
 
     override suspend fun getCustomRewards(): List<GetCustomRewardDataPayload> {
         val payload = "https://api.twitch.tv/helix/channel_points/custom_rewards".get<GetCustomRewardPayload>(
-            userCredential,
             "broadcaster_id" to userId
         )
 
@@ -62,7 +56,6 @@ internal class ChannelHelixClient(
     override suspend fun createCustomReward(reward: CreateCustomReward): GetCustomRewardDataPayload {
         val payload = "https://api.twitch.tv/helix/channel_points/custom_rewards".post<GetCustomRewardPayload>(
             reward,
-            userCredential,
             "broadcaster_id" to userId
         )
         return payload.data.first()
@@ -71,7 +64,6 @@ internal class ChannelHelixClient(
     override suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards".patch<HttpResponse>(
             reward,
-            userCredential,
             "broadcaster_id" to userId,
             "id" to rewardId
         )
@@ -80,15 +72,9 @@ internal class ChannelHelixClient(
     override suspend fun updateRewardRedemption(redemption: RewardRedemption, status: RedemptionStatusForUpdate) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions".patch<HttpResponse>(
             UpdateRedemptionStatus(status),
-            userCredential,
             "id" to redemption.id,
             "broadcaster_id" to userId,
             "reward_id" to redemption.reward.id
         )
-    }
-
-    override suspend fun subscribeEventSub(subscribe: EventSubSubscribe<out GenericCondition>) {
-        //TODO manage errors
-        "https://api.twitch.tv/helix/eventsub/subscriptions".post<HttpResponse>(subscribe, appCredential)
     }
 }

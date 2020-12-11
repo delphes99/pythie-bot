@@ -28,7 +28,6 @@ import fr.delphes.bot.twitch.handler.StreamOnlineHandler
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.ChannelTwitchApi
-import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
@@ -70,37 +69,19 @@ class Channel(
 
     val twitchApi: ChannelTwitchApi
 
-    private val newFollowHandler = NewFollowHandler()
-    private val newSubHandler = NewSubHandler()
-    private val channelBitsHandler = ChannelBitsHandler()
-    private val rewardRedeemedHandler = RewardRedeemedHandler()
     private val channelMessageHandler = ChannelMessageHandler()
     private val ircMessageHandler = IRCMessageHandler()
-    private val channelUpdateHandler = ChannelUpdateHandler()
-    private val streamOnlineHandler = StreamOnlineHandler(this)
-    private val streamOfflineHandler = StreamOfflineHandler()
 
     init {
-        val user = runBlocking {
-            bot.twitchApi.getUserByName(name)!!
-        }
-
         twitchApi =
-            ChannelTwitchClient.builder(
-                bot.appCredential,
-                channelCredential,
-                user,
-                bot.publicUrl,
-                bot.webhookSecret,
-                configuration.rewards
-            )
-                .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
-                .listenToNewFollow { newFollowHandler.handleTwitchEvent(it) }
-                .listenToNewSub { newSubHandler.handleTwitchEvent(it) }
-                .listenToNewCheer { channelBitsHandler.handleTwitchEvent(it) }
-                .listenToStreamOnline { streamOnlineHandler.handleTwitchEvent(it) }
-                .listenToStreamOffline { streamOfflineHandler.handleTwitchEvent(it) }
-                .listenToChannelUpdate { channelUpdateHandler.handleTwitchEvent(it) }
+            bot.channelApiBuilder(configuration, channelCredential)
+                .listenToReward { RewardRedeemedHandler().handleTwitchEvent(it) }
+                .listenToNewFollow { NewFollowHandler().handleTwitchEvent(it) }
+                .listenToNewSub { NewSubHandler().handleTwitchEvent(it) }
+                .listenToNewCheer { ChannelBitsHandler().handleTwitchEvent(it) }
+                .listenToStreamOnline { StreamOnlineHandler(this).handleTwitchEvent(it) }
+                .listenToStreamOffline { StreamOfflineHandler().handleTwitchEvent(it) }
+                .listenToChannelUpdate { ChannelUpdateHandler().handleTwitchEvent(it) }
                 .build()
 
         client = TwitchClientBuilder.builder()

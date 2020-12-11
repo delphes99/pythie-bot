@@ -28,10 +28,9 @@ import mu.KotlinLogging
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
     private val webhookApi: WebhookApi,
-    override val userId: String,
     rewardsConfigurations: List<RewardConfiguration>
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
-    private val rewards = RewardCache(rewardsConfigurations, helixApi, userId)
+    private val rewards = RewardCache(rewardsConfigurations, helixApi)
 
     override suspend fun getStream(): Stream? {
         val stream = helixApi.getStream() ?: return null
@@ -161,14 +160,13 @@ class ChannelTwitchClient(
                 publicUrl,
                 user,
                 webhookSecret,
-                helixApi,
+                AppHelixClient(appCredential),
                 eventSubConfigurations
             )
 
             return ChannelTwitchClient(
                 helixApi,
                 webhookApi,
-                user.id,
                 rewardsConfigurations
             )
         }
