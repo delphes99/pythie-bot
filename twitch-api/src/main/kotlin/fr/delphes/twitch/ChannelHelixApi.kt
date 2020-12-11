@@ -16,8 +16,6 @@ interface ChannelHelixApi {
 
     suspend fun getGameById(id: String): GetGamesDataPayload?
 
-    suspend fun getUser(userName: String): GetUsersDataPayload?
-
     suspend fun getStreamByUserId(userId: String): StreamInfos?
 
     suspend fun getCustomRewards(userId: String): List<GetCustomRewardDataPayload>

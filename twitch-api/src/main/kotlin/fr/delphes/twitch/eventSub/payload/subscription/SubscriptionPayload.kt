@@ -14,7 +14,6 @@ data class SubscriptionPayload(
     val status: String,
     val type: String,
     val version: String,
-    //TODO val condition
     val created_at: LocalDateTime,
     val transport: Transport
 )

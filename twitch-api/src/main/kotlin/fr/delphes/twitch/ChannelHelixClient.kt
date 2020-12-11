@@ -11,8 +11,6 @@ import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataP
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
-import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
-import fr.delphes.twitch.api.user.payload.GetUsersPayload
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.eventSub.EventSubSubscribe
@@ -21,7 +19,8 @@ import io.ktor.client.statement.HttpResponse
 
 internal class ChannelHelixClient(
     appCredential: TwitchAppCredential,
-    private val userCredential: TwitchUserCredential
+    private val userCredential: TwitchUserCredential,
+    private val userId: String
 ) : AbstractHelixClient(appCredential), ChannelHelixApi {
     override suspend fun getGameByName(name: String): GetGamesDataPayload? {
         val payload = "https://api.twitch.tv/helix/games".get<GetGamesPayload>(
@@ -37,15 +36,6 @@ internal class ChannelHelixClient(
         val payload = "https://api.twitch.tv/helix/games".get<GetGamesPayload>(
             userCredential,
             "id" to id
-        )
-
-        return payload.data.firstOrNull()
-    }
-
-    override suspend fun getUser(userName: String): GetUsersDataPayload? {
-        val payload = "https://api.twitch.tv/helix/users".get<GetUsersPayload>(
-            userCredential,
-            "login" to userName
         )
 
         return payload.data.firstOrNull()

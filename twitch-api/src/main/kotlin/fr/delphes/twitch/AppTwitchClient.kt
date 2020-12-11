@@ -1,5 +1,6 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
 import kotlinx.coroutines.coroutineScope
@@ -24,6 +25,14 @@ class AppTwitchClient(
                     twitchAppHelixApi.removeEventSubSubscription(subscription)
                 }
             }.joinAll()
+        }
+    }
+
+    override suspend fun getUserByName(name: String): TwitchUser? {
+        return coroutineScope {
+            twitchAppHelixApi.getUser(name)?.let { user ->
+                TwitchUser(user.id, user.display_name)
+            }
         }
     }
 

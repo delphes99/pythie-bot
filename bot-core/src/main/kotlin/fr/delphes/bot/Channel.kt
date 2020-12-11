@@ -52,8 +52,7 @@ class Channel(
     val alerts = Channel<Alert>()
 
     val name = configuration.ownerChannel
-    val userId: String
-    val channelCredential = TwitchUserCredential.of(
+    private val channelCredential = TwitchUserCredential.of(
         bot.appCredential,
         AuthTokenRepository(
             "${bot.configFilepath}\\auth\\channel-$name.json"
@@ -82,11 +81,15 @@ class Channel(
     private val streamOfflineHandler = StreamOfflineHandler()
 
     init {
+        val user = runBlocking {
+            bot.twitchApi.getUserByName(name)!!
+        }
+
         twitchApi =
             ChannelTwitchClient.builder(
                 bot.appCredential,
                 channelCredential,
-                name,
+                user,
                 bot.publicUrl,
                 bot.webhookSecret,
                 configuration.rewards
@@ -99,7 +102,6 @@ class Channel(
                 .listenToStreamOffline { streamOfflineHandler.handleTwitchEvent(it) }
                 .listenToChannelUpdate { channelUpdateHandler.handleTwitchEvent(it) }
                 .build()
-        userId = twitchApi.userId
 
         client = TwitchClientBuilder.builder()
             .withEnableChat(true)
@@ -107,7 +109,6 @@ class Channel(
             .build()!!
 
         chat = client.chat
-        LOGGER.debug { "Retrieved owner user id : $userId" }
 
         features.forEach { feature ->
             feature.registerHandlers(eventHandlers)

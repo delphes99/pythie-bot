@@ -31,7 +31,6 @@ class RewardCache(
                                 title = configuration.title,
                                 cost = configuration.cost,
                                 prompt = configuration.prompt,
-                                is_enabled = true, //TODO
                                 background_color = configuration.backgroundColor,
                                 is_user_input_required = configuration.isUserInputRequired,
                                 is_max_per_stream_enabled = configuration.isMaxPerStreamEnabled,
@@ -52,7 +51,7 @@ class RewardCache(
                             title = configuration.title,
                             cost = configuration.cost,
                             prompt = configuration.prompt,
-                            is_enabled = true, //TODO
+                            is_enabled = true,
                             background_color = configuration.backgroundColor,
                             is_user_input_required = configuration.isUserInputRequired,
                             is_max_per_stream_enabled = configuration.isMaxPerStreamEnabled,

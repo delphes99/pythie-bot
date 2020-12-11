@@ -19,10 +19,10 @@ import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.api.streams.Stream
+import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.eventSub.EventSubConfiguration
-import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 
 class ChannelTwitchClient(
@@ -64,19 +64,19 @@ class ChannelTwitchClient(
         fun builder(
             appCredential: TwitchAppCredential,
             userCredential: TwitchUserCredential,
-            userName: String,
+            user: TwitchUser,
             publicUrl: String,
             webhookSecret: String,
             rewardsConfigurations: List<RewardConfiguration>
         ): Builder {
-            return Builder(appCredential, userCredential, userName, publicUrl, webhookSecret, rewardsConfigurations)
+            return Builder(appCredential, userCredential, user, publicUrl, webhookSecret, rewardsConfigurations)
         }
     }
 
     class Builder(
         private val appCredential: TwitchAppCredential,
         private val userCredential: TwitchUserCredential,
-        private val userName: String,
+        private val user: TwitchUser,
         private val publicUrl: String,
         private val webhookSecret: String,
         private val rewardsConfigurations: List<RewardConfiguration>
@@ -155,16 +155,11 @@ class ChannelTwitchClient(
         }
 
         fun build(): ChannelTwitchClient {
-            val helixApi = ChannelHelixClient(appCredential, userCredential)
-
-            val userId = runBlocking {
-                helixApi.getUser(userName)!!.id
-            }
+            val helixApi = ChannelHelixClient(appCredential, userCredential, user.id)
 
             val webhookApi = WebhookClient(
                 publicUrl,
-                userName,
-                userId,
+                user,
                 webhookSecret,
                 helixApi,
                 eventSubConfigurations
@@ -173,7 +168,7 @@ class ChannelTwitchClient(
             return ChannelTwitchClient(
                 helixApi,
                 webhookApi,
-                userId,
+                user.id,
                 rewardsConfigurations
             )
         }
