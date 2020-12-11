@@ -10,6 +10,9 @@ import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ClientBot(
@@ -28,9 +31,9 @@ class ClientBot(
         tokenRepository = { getToken -> AuthTokenRepository("${configFilepath}\\auth\\bot.json", getToken) }
     )
 
-    val twitchApi = AppTwitchClient.build(appCredential)
+    private val twitchApi = AppTwitchClient.build(appCredential)
 
-    val client = TwitchClientBuilder.builder()
+    private val client = TwitchClientBuilder.builder()
         .withEnableChat(true)
         .withChatAccount(botCredential)
         .build()!!
@@ -49,6 +52,17 @@ class ClientBot(
         channels.add(channel)
 
         chat.joinChannel(channel.name)
+    }
+
+    suspend fun resetWebhook() {
+        coroutineScope {
+            twitchApi.removeAllSubscriptions()
+
+            channels.map {
+                launch { it.twitchApi.registerWebhooks() }
+            }.joinAll()
+        }
+        //TODO cron refresh sub
     }
 
     fun channelApiBuilder(

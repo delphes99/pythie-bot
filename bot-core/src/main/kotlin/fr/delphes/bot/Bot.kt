@@ -22,12 +22,7 @@ object Bot {
         WebServer(bot)
 
         runBlocking {
-            //TODO cron refresh sub
-            bot.twitchApi.removeAllSubscriptions()
-
-            bot.channels.map {
-                launch { it.twitchApi.registerWebhooks() }
-            }.joinAll()
+            bot.resetWebhook()
         }
     }
 }
