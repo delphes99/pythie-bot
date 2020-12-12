@@ -6,4 +6,5 @@ val Serializer = Json {
     ignoreUnknownKeys = true
     isLenient = false
     encodeDefaults = true
+    coerceInputValues = true
 }

@@ -19,5 +19,5 @@ data class StreamInfos(
     val started_at: LocalDateTime,
     val language: String,
     val thumbnail_url: String,
-    val tag_ids: List<String>
+    val tag_ids: List<String> = emptyList()
 )
