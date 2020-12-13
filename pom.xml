@@ -12,6 +12,7 @@
         <module>pythie-bot</module>
         <module>twitch-api</module>
         <module>utils</module>
+        <module>bot-ui</module>
     </modules>
     <packaging>pom</packaging>
 
