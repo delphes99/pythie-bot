@@ -31,6 +31,10 @@
             <groupId>fr.delphes</groupId>
             <artifactId>utils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>fr.delphes</groupId>
+            <artifactId>bot-ui</artifactId>
+        </dependency>
         <!-- Twitch -->
         <dependency>
             <groupId>com.github.twitch4j</groupId>
@@ -120,6 +124,30 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dist</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/admin</outputDirectory>
+                            <overwrite>true</overwrite>
+                            <resources>
+                                <resource>
+                                    <directory>../bot-ui/dist/</directory>
+                                    <includes>
+                                        <include>**/*.*</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

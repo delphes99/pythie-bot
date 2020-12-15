@@ -69,6 +69,11 @@
                 <artifactId>utils</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>fr.delphes</groupId>
+                <artifactId>bot-ui</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- Twitch -->
             <dependency>
                 <groupId>fr.delphes</groupId>
@@ -251,6 +256,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
                 </plugin>
             </plugins>
         </pluginManagement>

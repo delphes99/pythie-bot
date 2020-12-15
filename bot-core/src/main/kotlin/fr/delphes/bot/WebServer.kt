@@ -1,6 +1,6 @@
 package fr.delphes.bot
 
-import fr.delphes.bot.webserver.admin.FeaturesModule
+import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.bot.webserver.alert.AlertModule
 import fr.delphes.bot.webserver.auth.AuthInternalModule
 import fr.delphes.bot.webserver.auth.AuthModule
@@ -27,7 +27,7 @@ class WebServer(
             install(CORS) {
                 anyHost()
             }
-            FeaturesModule(bot)
+            AdminModule(bot)
             AuthInternalModule(bot)
             AlertModule(bot)
         }
