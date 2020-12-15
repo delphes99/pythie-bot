@@ -17,7 +17,7 @@ import io.ktor.client.statement.HttpResponse
 
 internal class ChannelHelixClient(
     appCredential: TwitchAppCredential,
-    private val userCredential: TwitchUserCredential,
+    userCredential: TwitchUserCredential,
     private val userId: String
 ) : ScopedHelixClient(appCredential, userCredential), ChannelHelixApi {
     override suspend fun getGameByName(name: String): GetGamesDataPayload? {
