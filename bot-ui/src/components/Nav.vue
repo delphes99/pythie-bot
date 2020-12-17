@@ -1,5 +1,5 @@
 <template>
-  <nav class="h-screen bg-gray-500 p-6">
+  <nav class="h-screen nav-color p-6">
     <h1 class="h category">Connecteurs</h1>
     <router-link class="router-link" to="/">Twitch</router-link>
     <router-link class="router-link" to="/"> - Rewards</router-link>

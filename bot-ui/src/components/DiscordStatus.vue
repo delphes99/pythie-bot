@@ -1,0 +1,12 @@
+<template>
+  <div class="relative">
+    <img src="@/assets/discord.png">
+    <div class="absolute -bottom-1 -right-1 z-2 rounded-full border-8 shadow-lg" />
+  </div>
+</template>
+
+<script>
+export default {
+  name: `DiscordStatus`
+}
+</script>
