@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex flex-row items-center justify-around nav-color">
+  <div class="flex flex-row items-center justify-around nav-color">
     <div class="flex-grow">
       <h1 class="pl-2 text-2xl font-extrabold text-white">Pythie-bot</h1>
     </div>
@@ -9,10 +9,10 @@
         <discord-status></discord-status>
       </div>
     </div>
-  </nav>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
 import DiscordStatus from "@/components/DiscordStatus";
 import TwitchStatus from "@/components/TwitchStatus";
 
