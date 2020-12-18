@@ -15,7 +15,8 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
 class WebServer(
-    val bot: ClientBot
+    val bot: ClientBot,
+    vararg othersModules: ((Application) -> Unit)
 ) {
     init {
         launchServer(80) {
@@ -30,6 +31,9 @@ class WebServer(
             AdminModule(bot)
             AuthInternalModule(bot)
             AlertModule(bot)
+            othersModules.forEach {
+                it(this)
+            }
         }
     }
 

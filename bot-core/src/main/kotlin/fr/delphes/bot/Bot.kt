@@ -2,8 +2,7 @@ package fr.delphes.bot
 
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
+import fr.delphes.connector.discord.Discord
 import kotlinx.coroutines.runBlocking
 
 object Bot {
@@ -19,10 +18,15 @@ object Bot {
             bot.register(Channel(channelConfiguration, bot))
         }
 
-        WebServer(bot)
+        val discord = Discord()
+
+        WebServer(bot, discord::endpoint)
 
         runBlocking {
             bot.resetWebhook()
         }
+
+        // After initial state
+        discord.connect()
     }
 }
