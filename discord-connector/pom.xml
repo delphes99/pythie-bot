@@ -16,18 +16,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
-        <dependency>
             <groupId>fr.delphes</groupId>
             <artifactId>utils</artifactId>
         </dependency>
 
         <!-- Discord -->
         <dependency>
-            <groupId>dev.kord</groupId>
-            <artifactId>kord-core</artifactId>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
         </dependency>
 
         <!-- Http server -->

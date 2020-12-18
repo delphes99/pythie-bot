@@ -1,7 +1,8 @@
 package fr.delphes.connector.discord
 
-import dev.kord.core.Kord
 import kotlinx.coroutines.runBlocking
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.JDABuilder
 
 sealed class DiscordState {
     object Unconfigured: DiscordState() {
@@ -11,14 +12,16 @@ sealed class DiscordState {
     }
 
     class Configured(private val token: String): DiscordState() {
-        fun connect(): Connected {
-            print("connect")
-            val client = runBlocking {
-                Kord(token)
-            }
-            print("connected")
+        fun connect(): DiscordState {
+            return try {
+                val client = runBlocking {
+                    JDABuilder.createDefault(token).build()
+                }
 
-            return Connected(client)
+                Connected(client)
+            } catch (e: Exception) {
+                Error()
+            }
         }
     }
 
@@ -26,7 +29,12 @@ sealed class DiscordState {
 
     }
 
-    class Connected(private val client: Kord): DiscordState() {
-
+    class Connected(private val client: JDA): DiscordState() {
+        fun send(text: String, channel: Long) {
+            runBlocking {
+                val channel = client.getTextChannelById(channel)!!
+                channel.sendMessage(text).complete()
+            }
+        }
     }
 }

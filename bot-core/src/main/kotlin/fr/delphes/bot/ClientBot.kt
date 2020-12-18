@@ -5,6 +5,7 @@ import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.TwitchChat
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.connector.discord.Discord
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.auth.AuthTokenRepository
@@ -18,7 +19,8 @@ import kotlinx.coroutines.runBlocking
 class ClientBot(
     configuration: BotConfiguration,
     private val publicUrl: String,
-    val configFilepath: String
+    val configFilepath: String,
+    val discord: Discord
 ) {
     val channels = mutableListOf<Channel>()
     private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")

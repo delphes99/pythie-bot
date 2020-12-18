@@ -5,6 +5,7 @@
     <logger name="com.github.twitch4j" level="INFO"/>
     <logger name="com.netflix.hystrix" level="INFO"/>
     <logger name="com.github.philippheuer" level="INFO"/>
+    <logger name="net.dv8tion.jda" level="INFO"/>
 
     <!-- Ktor / Netty -->
     <logger name="io.netty" level="INFO"/>

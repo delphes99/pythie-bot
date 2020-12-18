@@ -56,11 +56,6 @@
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-stdlib</artifactId>
-                <version>${kotlin.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-serialization</artifactId>
                 <version>${kotlin.version}</version>
             </dependency>
@@ -97,9 +92,9 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>dev.kord</groupId>
-                <artifactId>kord-core</artifactId>
-                <version>0.7.0-RC</version>
+                <groupId>net.dv8tion</groupId>
+                <artifactId>JDA</artifactId>
+                <version>4.2.0_222</version>
             </dependency>
             <!-- Http server -->
             <dependency>
@@ -201,11 +196,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test</artifactId>

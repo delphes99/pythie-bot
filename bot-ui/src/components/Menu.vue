@@ -15,6 +15,7 @@
   .router-link {
     @apply my-1 border-black space-x-2 p-2 items-center flex flex-row font-bold
   }
+
   .router-link:hover {
     @apply bg-blue-900 text-white
   }
@@ -22,6 +23,7 @@
   .router-link:hover img {
     filter: invert(100%);
   }
+
   .router-link img {
     @apply mr-2
   }

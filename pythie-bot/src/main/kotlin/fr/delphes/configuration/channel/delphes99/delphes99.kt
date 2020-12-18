@@ -4,6 +4,7 @@ import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.outgoing.ActivateReward
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.DesactivateReward
+import fr.delphes.bot.event.outgoing.DiscordMessage
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
@@ -147,7 +148,8 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         ) {
             listOf(
                 SendMessage("-> test dev"),
-                Alert("test")
+                Alert("test"),
+                DiscordMessage("Coucou discord depuis une récompense !", 789537633487159396)
             )
         },
         GameReward(
@@ -165,6 +167,10 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         Command(
             "!ping",
             responses = listOf(SendMessage("pong"))
+        ),
+        Command(
+            "!helloDiscord",
+            responses = listOf(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
         )
     )
 }

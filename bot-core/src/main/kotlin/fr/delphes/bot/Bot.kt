@@ -3,6 +3,7 @@ package fr.delphes.bot
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.discord.Discord
+import fr.delphes.connector.discord.DiscordState
 import kotlinx.coroutines.runBlocking
 
 object Bot {
@@ -12,13 +13,12 @@ object Bot {
         configFilepath: String,
         vararg channelConfigurations: ChannelConfiguration
     ) {
-        val bot = ClientBot(configuration, publicUrl, configFilepath)
+        val discord = Discord(DiscordState.Configured(configuration.discordOAuth))
+        val bot = ClientBot(configuration, publicUrl, configFilepath, discord)
 
         channelConfigurations.forEach { channelConfiguration ->
             bot.register(Channel(channelConfiguration, bot))
         }
-
-        val discord = Discord()
 
         WebServer(bot, discord::endpoint)
 

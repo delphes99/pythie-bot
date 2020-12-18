@@ -2,8 +2,8 @@ package fr.delphes.bot.event.outgoing
 
 import com.github.twitch4j.chat.TwitchChat
 import fr.delphes.bot.Channel
+import fr.delphes.connector.discord.Discord
 import fr.delphes.twitch.ChannelTwitchApi
-import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 import fr.delphes.twitch.api.user.User
 
@@ -15,6 +15,21 @@ data class Alert(val type: String, val parameters: Map<String, String>): Outgoin
 
 sealed class TwitchOutgoingEvent: OutgoingEvent() {
     abstract suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel)
+}
+
+//TODO remove sealed class -> each connector must apply
+sealed class DiscordOutgoingEvent: OutgoingEvent() {
+    abstract suspend fun executeOnDiscord(client: Discord)
+}
+
+typealias ChannelId = Long
+
+data class DiscordMessage(val text: String, val channel: ChannelId): DiscordOutgoingEvent() {
+    override suspend fun executeOnDiscord(client: Discord) {
+        client.connected {
+            send(text, channel)
+        }
+    }
 }
 
 data class PromoteVIP(val user: User) : TwitchOutgoingEvent() {

@@ -15,10 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
-        <dependency>
             <groupId>fr.delphes</groupId>
             <artifactId>utils</artifactId>
         </dependency>

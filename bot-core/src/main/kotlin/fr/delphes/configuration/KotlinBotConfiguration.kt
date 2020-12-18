@@ -5,4 +5,5 @@ object KotlinBotConfiguration : BotConfiguration {
     override val secretKey = ""
     override val botAccountOauth = ""
     override val webhookSecret = ""
+    override val discordOAuth = ""
 }
