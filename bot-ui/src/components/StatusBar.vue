@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts">
-import DiscordStatus from "@/components/DiscordStatus";
-import TwitchStatus from "@/components/TwitchStatus";
+import DiscordStatus from "@/components/DiscordStatus.vue";
+import TwitchStatus from "@/components/TwitchStatus.vue";
 
 export default {
   name: `StatusBar`,

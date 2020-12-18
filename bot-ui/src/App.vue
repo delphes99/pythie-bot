@@ -6,9 +6,9 @@
   </div>
 </template>
 
-<script>
-import Menu from "@/components/Menu";
-import StatusBar from "@/components/StatusBar";
+<script lang="ts">
+import Menu from "@/components/Menu.vue";
+import StatusBar from "@/components/StatusBar.vue";
 
 export default {
   name: "bot-ui",
