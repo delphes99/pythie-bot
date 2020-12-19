@@ -20,7 +20,7 @@ object Bot {
             bot.register(Channel(channelConfiguration, bot))
         }
 
-        WebServer(bot, discord::endpoint)
+        WebServer(bot, discord::endpoints)
 
         runBlocking {
             bot.resetWebhook()

@@ -15,6 +15,14 @@
 
     <name>bot-connector</name>
 
+    <dependencies>
+        <!-- Http server -->
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-core</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
 

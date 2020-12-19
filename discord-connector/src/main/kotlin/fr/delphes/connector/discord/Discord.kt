@@ -18,7 +18,7 @@ class Discord(
         state = newState
     }
 
-    fun endpoint(application: Application) {
+    override fun endpoints(application: Application) {
         return application.DiscordModule(this@Discord)
     }
 
