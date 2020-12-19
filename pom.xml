@@ -14,6 +14,7 @@
         <module>utils</module>
         <module>bot-ui</module>
         <module>connector-discord</module>
+        <module>connector-twitch</module>
     </modules>
     <packaging>pom</packaging>
 

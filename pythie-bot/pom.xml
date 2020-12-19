@@ -27,6 +27,12 @@
             <groupId>fr.delphes</groupId>
             <artifactId>connector-discord</artifactId>
         </dependency>
+        <dependency>
+            <groupId>fr.delphes</groupId>
+            <artifactId>connector-twitch</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
