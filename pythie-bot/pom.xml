@@ -23,6 +23,10 @@
             <groupId>fr.delphes</groupId>
             <artifactId>bot-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>fr.delphes</groupId>
+            <artifactId>discord-connector</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

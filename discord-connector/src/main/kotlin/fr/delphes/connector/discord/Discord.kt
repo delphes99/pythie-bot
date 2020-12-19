@@ -1,7 +1,9 @@
 package fr.delphes.connector.discord
 
-import fr.delphes.connector.Connector
+import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.endpoint.DiscordModule
+import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent
 import io.ktor.application.Application
 
 class Discord(
@@ -16,6 +18,12 @@ class Discord(
         }
 
         state = newState
+    }
+
+    override suspend fun execute(event: OutgoingEvent) {
+        if(event is DiscordOutgoingEvent) {
+            event.executeOnDiscord(this)
+        }
     }
 
     override fun endpoints(application: Application) {

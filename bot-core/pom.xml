@@ -40,11 +40,6 @@
             <groupId>fr.delphes</groupId>
             <artifactId>twitch-api</artifactId>
         </dependency>
-        <!-- Discord -->
-        <dependency>
-            <groupId>fr.delphes</groupId>
-            <artifactId>discord-connector</artifactId>
-        </dependency>
         <!-- Http server -->
         <dependency>
             <groupId>io.ktor</groupId>

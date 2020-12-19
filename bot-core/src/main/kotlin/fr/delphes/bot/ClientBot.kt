@@ -3,9 +3,9 @@ package fr.delphes.bot
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
 import com.github.twitch4j.TwitchClientBuilder
 import com.github.twitch4j.chat.TwitchChat
+import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.connector.discord.Discord
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.auth.AuthTokenRepository
@@ -20,7 +20,7 @@ class ClientBot(
     configuration: BotConfiguration,
     private val publicUrl: String,
     val configFilepath: String,
-    val discord: Discord
+    val connectors: List<Connector>
 ) {
     val channels = mutableListOf<Channel>()
     private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")

@@ -1,6 +1,7 @@
 package fr.delphes.connector.discord
 
 import kotlinx.coroutines.runBlocking
+import mu.KotlinLogging
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 
@@ -20,6 +21,7 @@ sealed class DiscordState {
 
                 Connected(client)
             } catch (e: Exception) {
+                LOGGER.error(e) { "Discord connection failed" }
                 Error()
             }
         }
@@ -36,5 +38,8 @@ sealed class DiscordState {
                 channel.sendMessage(text).complete()
             }
         }
+    }
+    companion object {
+        private val LOGGER = KotlinLogging.logger {}
     }
 }

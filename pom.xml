@@ -13,7 +13,6 @@
         <module>twitch-api</module>
         <module>utils</module>
         <module>bot-ui</module>
-        <module>bot-connector</module>
         <module>discord-connector</module>
     </modules>
     <packaging>pom</packaging>
@@ -51,11 +50,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>fr.delphes</groupId>
-                <artifactId>bot-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-serialization</artifactId>
                 <version>${kotlin.version}</version>
@@ -77,7 +71,7 @@
             </dependency>
             <dependency>
                 <groupId>fr.delphes</groupId>
-                <artifactId>bot-connector</artifactId>
+                <artifactId>bot-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- Twitch -->

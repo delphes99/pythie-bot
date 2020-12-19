@@ -1,9 +1,8 @@
 package fr.delphes.bot
 
+import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.connector.discord.Discord
-import fr.delphes.connector.discord.DiscordState
 import kotlinx.coroutines.runBlocking
 
 object Bot {
@@ -11,22 +10,22 @@ object Bot {
         configuration: BotConfiguration,
         publicUrl: String,
         configFilepath: String,
+        connectors: List<Connector>,
         vararg channelConfigurations: ChannelConfiguration
     ) {
-        val discord = Discord(DiscordState.Configured(configuration.discordOAuth))
-        val bot = ClientBot(configuration, publicUrl, configFilepath, discord)
+        val bot = ClientBot(configuration, publicUrl, configFilepath, connectors)
 
         channelConfigurations.forEach { channelConfiguration ->
             bot.register(Channel(channelConfiguration, bot))
         }
 
-        WebServer(bot, discord::endpoints)
+        WebServer(bot, connectors.map { connector -> connector::endpoints })
 
         runBlocking {
             bot.resetWebhook()
         }
 
         // After initial state
-        discord.connect()
+        connectors.forEach(Connector::connect)
     }
 }

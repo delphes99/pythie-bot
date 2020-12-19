@@ -4,10 +4,10 @@ import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.outgoing.ActivateReward
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.DesactivateReward
-import fr.delphes.bot.event.outgoing.DiscordMessage
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
+import fr.delphes.connector.discord.outgoingEvent.DiscordMessage
 import fr.delphes.feature.bitCheer.BitCheer
 import fr.delphes.feature.command.Command
 import fr.delphes.feature.commandList.CommandList

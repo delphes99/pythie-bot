@@ -9,7 +9,6 @@ import com.github.twitch4j.chat.events.channel.IRCMessageEvent
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.Alert
-import fr.delphes.bot.event.outgoing.DiscordMessage
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.TwitchOutgoingEvent
 import fr.delphes.bot.state.ChannelState
@@ -144,8 +143,8 @@ class Channel(
                             alerts.send(e)
                         }
                     }
-                    is DiscordMessage -> {
-                        e.executeOnDiscord(bot.discord)
+                    else -> {
+                        bot.connectors.forEach { it.execute(e) }
                     }
                 }.exhaustive()
             }
