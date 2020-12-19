@@ -7,7 +7,7 @@ import io.ktor.application.Application
 class Discord(
     var state: DiscordState = DiscordState.Unconfigured
 ) : Connector {
-    fun connect() {
+    override fun connect() {
         val newState = when(val oldState = state) {
             DiscordState.Unconfigured -> oldState
             is DiscordState.Configured -> oldState.connect()
