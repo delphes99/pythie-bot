@@ -13,7 +13,7 @@
         <module>twitch-api</module>
         <module>utils</module>
         <module>bot-ui</module>
-        <module>discord-connector</module>
+        <module>connector-discord</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -88,7 +88,7 @@
             <!-- Discord -->
             <dependency>
                 <groupId>fr.delphes</groupId>
-                <artifactId>discord-connector</artifactId>
+                <artifactId>connector-discord</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

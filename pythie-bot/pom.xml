@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>fr.delphes</groupId>
-            <artifactId>discord-connector</artifactId>
+            <artifactId>connector-discord</artifactId>
         </dependency>
     </dependencies>
 
