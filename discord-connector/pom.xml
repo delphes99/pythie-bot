@@ -19,6 +19,10 @@
             <groupId>fr.delphes</groupId>
             <artifactId>utils</artifactId>
         </dependency>
+        <dependency>
+            <groupId>fr.delphes</groupId>
+            <artifactId>bot-connector</artifactId>
+        </dependency>
 
         <!-- Discord -->
         <dependency>
@@ -31,33 +35,10 @@
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-core</artifactId>
         </dependency>
-
-        <!-- Tests -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
 
         <plugins>
             <plugin>

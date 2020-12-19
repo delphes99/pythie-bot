@@ -1,13 +1,13 @@
 package fr.delphes.connector.discord
 
+import fr.delphes.connector.Connector
 import fr.delphes.connector.discord.endpoint.DiscordModule
 import io.ktor.application.Application
 
 class Discord(
     var state: DiscordState = DiscordState.Unconfigured
-) {
+) : Connector {
     fun connect() {
-        //TODO lock
         val newState = when(val oldState = state) {
             DiscordState.Unconfigured -> oldState
             is DiscordState.Configured -> oldState.connect()

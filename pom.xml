@@ -13,6 +13,7 @@
         <module>twitch-api</module>
         <module>utils</module>
         <module>bot-ui</module>
+        <module>bot-connector</module>
         <module>discord-connector</module>
     </modules>
     <packaging>pom</packaging>
@@ -72,6 +73,11 @@
             <dependency>
                 <groupId>fr.delphes</groupId>
                 <artifactId>bot-ui</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>fr.delphes</groupId>
+                <artifactId>bot-connector</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- Twitch -->

@@ -30,9 +30,9 @@ sealed class DiscordState {
     }
 
     class Connected(private val client: JDA): DiscordState() {
-        fun send(text: String, channel: Long) {
+        fun send(text: String, channelId: Long) {
             runBlocking {
-                val channel = client.getTextChannelById(channel)!!
+                val channel = client.getTextChannelById(channelId)!!
                 channel.sendMessage(text).complete()
             }
         }
