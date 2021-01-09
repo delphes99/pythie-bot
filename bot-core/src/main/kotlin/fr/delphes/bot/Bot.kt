@@ -21,11 +21,12 @@ object Bot {
 
         WebServer(bot, connectors.map { connector -> connector::endpoints })
 
+        // After initial state
+        connectors.forEach { it.connect(bot) }
+
+        //TODO move to connector
         runBlocking {
             bot.resetWebhook()
         }
-
-        // After initial state
-        connectors.forEach(Connector::connect)
     }
 }

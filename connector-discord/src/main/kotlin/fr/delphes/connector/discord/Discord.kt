@@ -1,5 +1,6 @@
 package fr.delphes.connector.discord
 
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.endpoint.DiscordModule
@@ -9,7 +10,7 @@ import io.ktor.application.Application
 class Discord(
     var state: DiscordState = DiscordState.Unconfigured
 ) : Connector {
-    override fun connect() {
+    override fun connect(bot: ClientBot) {
         val newState = when(val oldState = state) {
             DiscordState.Unconfigured -> oldState
             is DiscordState.Configured -> oldState.connect()

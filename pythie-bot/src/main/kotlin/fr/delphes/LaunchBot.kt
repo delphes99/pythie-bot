@@ -21,7 +21,7 @@ fun main() {
         tunnel.publicUrl,
         "A:\\pythiebot\\",
         listOf(
-            TwitchConnector(),
+            TwitchConnector(delphes99Channel),
             Discord(DiscordState.Configured(configuration.discordOAuth))
         ),
         delphes99Channel

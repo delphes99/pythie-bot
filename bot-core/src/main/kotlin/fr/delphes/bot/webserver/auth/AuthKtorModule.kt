@@ -16,6 +16,7 @@ import io.ktor.response.respondRedirect
 import io.ktor.routing.get
 import io.ktor.routing.routing
 
+//TODO move to twitch connector
 fun Application.AuthModule(bot: ClientBot) {
     routing {
         bot.channels.forEach { channel ->
