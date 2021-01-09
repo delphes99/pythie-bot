@@ -10,4 +10,6 @@ interface ChannelInfo {
     val currentStream: Stream?
     val statistics: Statistics?
     val streamStatistics: StreamStatistics?
+
+    fun isOnline(): Boolean = currentStream != null
 }

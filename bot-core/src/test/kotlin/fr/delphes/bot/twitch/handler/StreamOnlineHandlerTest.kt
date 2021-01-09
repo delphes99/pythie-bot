@@ -31,6 +31,7 @@ internal class StreamOnlineHandlerTest {
     private val STARTED_AT = LocalDateTime.of(2020, 1, 1, 12, 0)
 
     private val streamOnlineHandler = StreamOnlineHandler(channel, TestClock(STARTED_AT))
+
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
@@ -81,7 +82,31 @@ internal class StreamOnlineHandlerTest {
         }
     }
 
+    @Test
+    internal fun `don't notify if stream already online`() {
+        `given online stream`()
+
+        runBlocking {
+
+            assertThat(
+                streamOnlineHandler.handle(
+                    StreamOnlineTwitch(StreamType.LIVE),
+                    channelInfo,
+                    changeState
+                )
+            ).isEmpty()
+        }
+
+        verify(exactly = 0) {
+            changeState.changeCurrentStream(any())
+        }
+    }
+
     private fun `given offline stream`() {
-        every { channelInfo.currentStream } returns null
+        every { channelInfo.isOnline() } returns false
+    }
+
+    private fun `given online stream`() {
+        every { channelInfo.isOnline() } returns true
     }
 }

@@ -25,9 +25,21 @@ class StreamOnlineHandler(
         val stream = runBlocking {
             this@StreamOnlineHandler.channel.twitchApi.getStream()
         }
+
+        if (channel.isOnline()) {
+            return emptyList()
+        }
+
         val incomingEvent = StreamOnline(stream!!.title, clock.now(), stream.game)
 
-        changeState.changeCurrentStream(Stream(stream.id, incomingEvent.title, incomingEvent.start, incomingEvent.game))
+        changeState.changeCurrentStream(
+            Stream(
+                stream.id,
+                incomingEvent.title,
+                incomingEvent.start,
+                incomingEvent.game
+            )
+        )
 
         return listOf(incomingEvent)
     }
