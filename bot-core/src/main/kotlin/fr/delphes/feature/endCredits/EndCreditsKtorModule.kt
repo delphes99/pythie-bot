@@ -31,29 +31,29 @@ fun EndCreditsModule(
     return {
         routing {
             get("/$channelName/endcredits") {
-                val statistics = channel.streamStatistics!!
+                channel.streamStatistics?.let { statistics ->
+                    this.call.respondOutputStream(
+                        contentType = ContentType.parse("image/png"),
+                        status = HttpStatusCode.OK
+                    ) {
+                        val wordFrequencies = statistics.wordFrequencies(NUMBER_OF_WORDS)
 
-                this.call.respondOutputStream(
-                    contentType = ContentType.parse("image/png"),
-                    status = HttpStatusCode.OK
-                ) {
-                    val wordFrequencies = statistics.wordFrequencies(NUMBER_OF_WORDS)
-
-                    //TODO retrieve file dimension
-                    val dimension = Dimension(1920, 1080)
-                    val wordCloud = WordCloud(dimension, CollisionMode.PIXEL_PERFECT)
-                    wordCloud.setPadding(2)
-                    wordCloud.setBackground(PixelBoundryBackground(javaClass.classLoader.getResourceAsStream("endcredits/endcredits.png")))
-                    wordCloud.setColorPalette(
-                        ColorPalette(
-                            Color(0x4055F1),
-                            Color(0x408DF1)
+                        //TODO retrieve file dimension
+                        val dimension = Dimension(1920, 1080)
+                        val wordCloud = WordCloud(dimension, CollisionMode.PIXEL_PERFECT)
+                        wordCloud.setPadding(2)
+                        wordCloud.setBackground(PixelBoundryBackground(javaClass.classLoader.getResourceAsStream("endcredits/endcredits.png")))
+                        wordCloud.setColorPalette(
+                            ColorPalette(
+                                Color(0x4055F1),
+                                Color(0x408DF1)
+                            )
                         )
-                    )
-                    wordCloud.setKumoFont(KumoFont("LaserCutRegular", FontWeight.BOLD))
-                    wordCloud.setFontScalar(LinearFontScalar(20, 40))
-                    wordCloud.build(wordFrequencies)
-                    wordCloud.writeToStreamAsPNG(this)
+                        wordCloud.setKumoFont(KumoFont("LaserCutRegular", FontWeight.BOLD))
+                        wordCloud.setFontScalar(LinearFontScalar(20, 40))
+                        wordCloud.build(wordFrequencies)
+                        wordCloud.writeToStreamAsPNG(this)
+                    }
                 }
             }
         }
