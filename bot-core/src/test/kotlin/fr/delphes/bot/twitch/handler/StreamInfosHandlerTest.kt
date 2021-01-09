@@ -82,6 +82,12 @@ internal class StreamInfosHandlerTest {
     }
 
     private fun `given online stream`() {
-        every { channelInfo.currentStream } returns Stream("someId", CURRENT_TITLE, STARTED_AT, CURRENT_GAME)
+        every { channelInfo.currentStream } returns Stream(
+            "someId",
+            CURRENT_TITLE,
+            STARTED_AT,
+            CURRENT_GAME,
+            ""
+        )
     }
 }

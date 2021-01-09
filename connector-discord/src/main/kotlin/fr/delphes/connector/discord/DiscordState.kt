@@ -22,23 +22,15 @@ sealed class DiscordState {
                 Connected(client)
             } catch (e: Exception) {
                 LOGGER.error(e) { "Discord connection failed" }
-                Error()
+                Error
             }
         }
     }
 
-    class Error() : DiscordState() {
+    object Error : DiscordState()
 
-    }
+    class Connected(internal val client: JDA): DiscordState()
 
-    class Connected(private val client: JDA): DiscordState() {
-        fun send(text: String, channelId: Long) {
-            runBlocking {
-                val channel = client.getTextChannelById(channelId)!!
-                channel.sendMessage(text).complete()
-            }
-        }
-    }
     companion object {
         private val LOGGER = KotlinLogging.logger {}
     }

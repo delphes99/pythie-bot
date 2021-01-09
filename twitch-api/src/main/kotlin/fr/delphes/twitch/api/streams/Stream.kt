@@ -1,21 +1,23 @@
-package fr.delphes.bot.event.incoming
+package fr.delphes.twitch.api.streams
 
 import fr.delphes.twitch.api.games.Game
-import fr.delphes.twitch.api.streams.ThumbnailUrl
 import java.time.LocalDateTime
 
-data class StreamOnline(
+data class Stream(
+    val id: String,
     val title: String,
     val start: LocalDateTime,
     val game: Game,
     val thumbnailUrl: ThumbnailUrl
-) : IncomingEvent {
+) {
     constructor(
+        id: String,
         title: String,
         start: LocalDateTime,
         game: Game,
         thumbnailUrl: String
     ) : this(
+        id,
         title,
         start,
         game,

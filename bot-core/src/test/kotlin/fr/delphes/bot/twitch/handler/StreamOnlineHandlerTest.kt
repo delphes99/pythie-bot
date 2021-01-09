@@ -29,6 +29,7 @@ internal class StreamOnlineHandlerTest {
     private val GAME_ID = GameId("game")
     private val GAME = Game(GAME_ID, "label")
     private val STARTED_AT = LocalDateTime.of(2020, 1, 1, 12, 0)
+    private val THUMBNAIL_URL = "thumbnail_url"
 
     private val streamOnlineHandler = StreamOnlineHandler(channel, TestClock(STARTED_AT))
 
@@ -37,7 +38,13 @@ internal class StreamOnlineHandlerTest {
         clearAllMocks()
 
         `given offline stream`()
-        coEvery { channel.twitchApi.getStream() } returns Stream("streamId", "current stream title", STARTED_AT, GAME)
+        coEvery { channel.twitchApi.getStream() } returns Stream(
+            "streamId",
+            "current stream title",
+            STARTED_AT,
+            GAME,
+            THUMBNAIL_URL
+        )
     }
 
     @Test
@@ -55,7 +62,8 @@ internal class StreamOnlineHandlerTest {
                 StreamOnline(
                     "current stream title",
                     STARTED_AT,
-                    GAME
+                    GAME,
+                    THUMBNAIL_URL
                 )
             )
     }
@@ -76,7 +84,8 @@ internal class StreamOnlineHandlerTest {
                     "streamId",
                     "current stream title",
                     STARTED_AT,
-                    GAME
+                    GAME,
+                    THUMBNAIL_URL
                 )
             )
         }

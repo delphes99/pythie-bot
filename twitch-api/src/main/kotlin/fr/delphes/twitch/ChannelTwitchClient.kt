@@ -19,6 +19,7 @@ import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnline
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.api.streams.Stream
+import fr.delphes.twitch.api.streams.ThumbnailUrl
 import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
@@ -36,7 +37,7 @@ class ChannelTwitchClient(
         val stream = helixApi.getStream() ?: return null
         val game = getGame(GameId(stream.game_id))
 
-        return Stream(stream.id, stream.title, stream.started_at, game)
+        return Stream(stream.id, stream.title, stream.started_at, game, ThumbnailUrl(stream.thumbnail_url))
     }
 
     override suspend fun getGame(id: GameId): Game {

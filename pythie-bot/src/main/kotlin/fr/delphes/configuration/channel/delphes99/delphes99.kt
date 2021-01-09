@@ -7,6 +7,7 @@ import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
+import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
 import fr.delphes.connector.discord.outgoingEvent.DiscordMessage
 import fr.delphes.feature.bitCheer.BitCheer
 import fr.delphes.feature.command.Command
@@ -101,7 +102,21 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             listOf(SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F"))
         },
         StreamOffline { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")) },
-        StreamOnline { listOf(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !")) },
+        StreamOnline {
+            listOf(
+                SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !"),
+                DiscordEmbeddedMessage(
+                    it.title,
+                    "https://www.twitch.tv/delphes99",
+                    it.thumbnailUrl.withResolution(320, 160),
+                    708949759725010984,
+                    "Delphes99",
+                    "https://www.twitch.tv/delphes99",
+                    "https://static-cdn.jtvnw.net/jtv_user_pictures/9bda888d-167b-4e12-83d3-d8519fa45bcd-profile_image-300x300.png",
+                    "Catégorie" to it.game.label
+                )
+            )
+        },
         Statistics(),
         EndCredits(),
         Overlay(),

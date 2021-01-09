@@ -30,14 +30,15 @@ class StreamOnlineHandler(
             return emptyList()
         }
 
-        val incomingEvent = StreamOnline(stream!!.title, clock.now(), stream.game)
+        val incomingEvent = StreamOnline(stream!!.title, clock.now(), stream.game, stream.thumbnailUrl)
 
         changeState.changeCurrentStream(
             Stream(
                 stream.id,
                 incomingEvent.title,
                 incomingEvent.start,
-                incomingEvent.game
+                incomingEvent.game,
+                stream.thumbnailUrl
             )
         )
 

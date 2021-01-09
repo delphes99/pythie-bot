@@ -125,7 +125,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val incomingEvent = StreamOnline("title", NOW, Game(GameId("gameId"), "game title"))
+        val incomingEvent = StreamOnline("title", NOW, Game(GameId("gameId"), "game title"), "thumbnailUrl")
         val messages = voth.handle(incomingEvent, channelInfo)
 
         verify(exactly = 1) { state.unpause(any()) }

@@ -57,6 +57,12 @@ class StreamOfflineHandlerTest {
     }
 
     private fun `given online stream`() {
-        every { channelInfo.currentStream } returns Stream("streamId", "current stream title", STARTED_AT, GAME)
+        every { channelInfo.currentStream } returns Stream(
+            "streamId",
+            "current stream title",
+            STARTED_AT,
+            GAME,
+            "thumbnail_url"
+        )
     }
 }
