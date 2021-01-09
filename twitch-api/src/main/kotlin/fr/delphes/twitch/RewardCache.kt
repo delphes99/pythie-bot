@@ -6,6 +6,7 @@ import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import kotlinx.coroutines.runBlocking
+import mu.KotlinLogging
 
 class RewardCache(
     private val configurations: List<RewardConfiguration>,
@@ -16,7 +17,13 @@ class RewardCache(
     //TODO Move to synchronize method
     init {
         runBlocking {
-            val rewards = api.getCustomRewards()
+            //TODO manage channels without channel points
+            val rewards = try {
+                api.getCustomRewards()
+            } catch (e: Exception) {
+                LOGGER.error(e) { "error retrieving channel point rewards" }
+                emptyList()
+            }
 
             configurations.forEach { configuration ->
                 val reward = rewards.find { reward -> reward.title == configuration.title }
@@ -89,6 +96,10 @@ class RewardCache(
                 configuration.isGlobalCooldownEnabled != null && global_cooldown_setting.is_enabled != configuration.isGlobalCooldownEnabled ||
                 configuration.globalCooldownSeconds != null && global_cooldown_setting.global_cooldown_seconds != configuration.globalCooldownSeconds ||
                 configuration.shouldRedemptionsSkipRequestQueue != null && should_redemptions_skip_request_queue != configuration.shouldRedemptionsSkipRequestQueue
+    }
+
+    companion object {
+        private val LOGGER = KotlinLogging.logger {}
     }
 }
 
