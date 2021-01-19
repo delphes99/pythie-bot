@@ -7,7 +7,7 @@ import fr.delphes.connector.discord.endpoint.DiscordModule
 import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent
 import io.ktor.application.Application
 
-class Discord(
+class DiscordConnector(
     var state: DiscordState = DiscordState.Unconfigured
 ) : Connector {
     override fun connect(bot: ClientBot) {
@@ -28,7 +28,7 @@ class Discord(
     }
 
     override fun internalEndpoints(application: Application) {
-        return application.DiscordModule(this@Discord)
+        return application.DiscordModule(this)
     }
 
     override fun publicEndpoints(application: Application) {

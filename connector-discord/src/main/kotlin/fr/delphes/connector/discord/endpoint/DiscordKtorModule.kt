@@ -1,13 +1,13 @@
 package fr.delphes.connector.discord.endpoint
 
-import fr.delphes.connector.discord.Discord
+import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.discord.DiscordState
 import io.ktor.application.Application
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.response.respond
 
-fun Application.DiscordModule(discord: Discord) {
+fun Application.DiscordModule(discord: DiscordConnector) {
     routing {
         get("/status/discord") {
             this.context.respond(discord.state.toStatus())
