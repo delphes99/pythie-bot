@@ -12,7 +12,10 @@ class TwitchConnector(
 ) : Connector {
     constructor(vararg channels: ChannelConfiguration) : this(listOf(*channels))
 
-    override fun endpoints(application: Application) {
+    override fun internalEndpoints(application: Application) {
+    }
+
+    override fun publicEndpoints(application: Application) {
     }
 
     override fun connect(bot: ClientBot) {

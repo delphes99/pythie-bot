@@ -5,7 +5,9 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.ktor.application.Application
 
 interface Connector {
-    fun endpoints(application: Application)
+    fun internalEndpoints(application: Application)
+
+    fun publicEndpoints(application: Application)
 
     fun connect(bot: ClientBot)
 

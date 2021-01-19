@@ -27,8 +27,11 @@ class Discord(
         }
     }
 
-    override fun endpoints(application: Application) {
+    override fun internalEndpoints(application: Application) {
         return application.DiscordModule(this@Discord)
+    }
+
+    override fun publicEndpoints(application: Application) {
     }
 
     fun connected(doStuff: DiscordState.Connected.() -> Unit) {

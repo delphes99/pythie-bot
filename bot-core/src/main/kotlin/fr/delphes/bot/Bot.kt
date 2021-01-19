@@ -19,7 +19,11 @@ object Bot {
             bot.register(Channel(channelConfiguration, bot))
         }
 
-        WebServer(bot, connectors.map { connector -> connector::endpoints })
+        WebServer(
+            bot = bot,
+            internalModules = connectors.map { connector -> connector::internalEndpoints },
+            publicModules = connectors.map { connector -> connector::publicEndpoints }
+        )
 
         // After initial state
         connectors.forEach { it.connect(bot) }
