@@ -5,6 +5,7 @@ import fr.delphes.bot.ClientBot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.webservice.AuthModule
 import io.ktor.application.Application
 
 class TwitchConnector(
@@ -16,6 +17,7 @@ class TwitchConnector(
     }
 
     override fun publicEndpoints(application: Application) {
+        application.AuthModule(channels)
     }
 
     override fun connect(bot: ClientBot) {

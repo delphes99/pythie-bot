@@ -17,17 +17,6 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 
 //TODO move to twitch connector
-fun Application.AuthModule(bot: ClientBot) {
-    routing {
-        bot.channels.forEach { channel ->
-            get("/${channel.name}/registerToken") {
-                println(this.call.receiveText())
-                this.context.response.status(HttpStatusCode.OK)
-            }
-        }
-    }
-}
-
 fun Application.AuthInternalModule(bot: ClientBot) {
     routing {
         bot.channels.forEach { channel ->
