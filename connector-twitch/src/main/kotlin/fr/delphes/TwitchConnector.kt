@@ -13,6 +13,12 @@ class TwitchConnector(
 ) : Connector {
     constructor(vararg channels: ChannelConfiguration) : this(listOf(*channels))
 
+    override fun initChannel(bot: ClientBot) {
+        channels.forEach { channelConfiguration ->
+            bot.register(Channel(channelConfiguration, bot))
+        }
+    }
+
     override fun internalEndpoints(application: Application) {
     }
 
@@ -21,9 +27,7 @@ class TwitchConnector(
     }
 
     override fun connect(bot: ClientBot) {
-        channels.forEach { channelConfiguration ->
-            bot.register(Channel(channelConfiguration, bot))
-        }
+        bot.connect()
     }
 
     override suspend fun execute(event: OutgoingEvent) {

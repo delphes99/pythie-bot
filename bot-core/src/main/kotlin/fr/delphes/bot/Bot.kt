@@ -2,7 +2,6 @@ package fr.delphes.bot
 
 import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.BotConfiguration
-import fr.delphes.configuration.ChannelConfiguration
 import kotlinx.coroutines.runBlocking
 
 object Bot {
@@ -10,14 +9,11 @@ object Bot {
         configuration: BotConfiguration,
         publicUrl: String,
         configFilepath: String,
-        connectors: List<Connector>,
-        vararg channelConfigurations: ChannelConfiguration
+        connectors: List<Connector>
     ) {
         val bot = ClientBot(configuration, publicUrl, configFilepath, connectors)
 
-        channelConfigurations.forEach { channelConfiguration ->
-            bot.register(Channel(channelConfiguration, bot))
-        }
+        connectors.forEach { it.initChannel(bot) }
 
         WebServer(
             bot = bot,

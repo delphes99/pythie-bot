@@ -8,7 +8,8 @@ import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent
 import io.ktor.application.Application
 
 class DiscordConnector(
-    var state: DiscordState = DiscordState.Unconfigured
+    var state: DiscordState = DiscordState.Unconfigured,
+    private val configFilepath: String
 ) : Connector {
     override fun connect(bot: ClientBot) {
         val newState = when(val oldState = state) {
@@ -25,6 +26,9 @@ class DiscordConnector(
         if(event is DiscordOutgoingEvent) {
             event.executeOnDiscord(this)
         }
+    }
+
+    override fun initChannel(bot: ClientBot) {
     }
 
     override fun internalEndpoints(application: Application) {

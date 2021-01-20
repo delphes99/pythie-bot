@@ -16,15 +16,15 @@ fun main() {
 
     val configuration = PropertiesBotConfiguration()
 
+    val configFilepath = "A:\\pythiebot\\"
     Bot.build(
         configuration,
         tunnel.publicUrl,
-        "A:\\pythiebot\\",
+        configFilepath,
         listOf(
             TwitchConnector(delphes99Channel),
-            DiscordConnector(DiscordState.Configured(configuration.discordOAuth))
-        ),
-        delphes99Channel
+            DiscordConnector(DiscordState.Configured(configuration.discordOAuth), configFilepath)
+        )
         //,delphestestChannel
     )
 }

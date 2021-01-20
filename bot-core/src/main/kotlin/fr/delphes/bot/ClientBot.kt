@@ -52,8 +52,13 @@ class ClientBot(
 
     fun register(channel: Channel) {
         channels.add(channel)
+    }
 
-        chat.joinChannel(channel.name)
+    //TODO move to connector
+    fun connect() {
+        channels.forEach { channel ->
+            chat.joinChannel(channel.name)
+        }
     }
 
     suspend fun resetWebhook() {
