@@ -17,8 +17,8 @@ object Bot {
 
         WebServer(
             bot = bot,
-            internalModules = connectors.map { connector -> connector::internalEndpoints },
-            publicModules = connectors.map { connector -> connector::publicEndpoints }
+            internalModules = connectors.map { connector -> { application -> connector.internalEndpoints(application, bot) } },
+            publicModules = connectors.map { connector -> { application -> connector.publicEndpoints(application, bot) } }
         )
 
         // After initial state

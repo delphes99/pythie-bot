@@ -8,9 +8,9 @@ interface Connector {
     //T0DO remove when twitch move to connector
     fun initChannel(bot: ClientBot)
 
-    fun internalEndpoints(application: Application)
+    fun internalEndpoints(application: Application, bot: ClientBot)
 
-    fun publicEndpoints(application: Application)
+    fun publicEndpoints(application: Application, bot: ClientBot)
 
     fun connect(bot: ClientBot)
 

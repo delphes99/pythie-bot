@@ -19,10 +19,10 @@ class TwitchConnector(
         }
     }
 
-    override fun internalEndpoints(application: Application) {
+    override fun internalEndpoints(application: Application, bot: ClientBot) {
     }
 
-    override fun publicEndpoints(application: Application) {
+    override fun publicEndpoints(application: Application, bot: ClientBot) {
         application.AuthModule(channels)
     }
 

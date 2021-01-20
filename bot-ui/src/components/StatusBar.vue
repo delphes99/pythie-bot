@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row items-center justify-around nav-color">
+  <div class="flex flex-row items-center justify-around primary-color">
     <div class="flex-grow">
       <h1 class="pl-2 text-2xl font-extrabold text-white">Pythie-bot</h1>
     </div>

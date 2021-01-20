@@ -23,7 +23,7 @@ fun main() {
         configFilepath,
         listOf(
             TwitchConnector(delphes99Channel),
-            DiscordConnector(DiscordState.Configured(configuration.discordOAuth), configFilepath)
+            DiscordConnector(configFilepath)
         )
         //,delphestestChannel
     )

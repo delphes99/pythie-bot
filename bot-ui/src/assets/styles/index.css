@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 @layer utilities {
-    .nav-color {
-        @apply bg-gray-600
+    .primary-color {
+        @apply bg-gray-600 text-white
     }
 }

@@ -6,11 +6,20 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.endpoint.DiscordModule
 import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent
 import io.ktor.application.Application
+import kotlinx.coroutines.runBlocking
 
 class DiscordConnector(
-    var state: DiscordState = DiscordState.Unconfigured,
-    private val configFilepath: String
+    configFilepath: String
 ) : Connector {
+    private val repository = DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
+    var state: DiscordState = DiscordState.Unconfigured
+
+    init {
+        runBlocking {
+            configure(repository.load().oAuthToken)
+        }
+    }
+
     override fun connect(bot: ClientBot) {
         val newState = when(val oldState = state) {
             DiscordState.Unconfigured -> oldState
@@ -31,11 +40,11 @@ class DiscordConnector(
     override fun initChannel(bot: ClientBot) {
     }
 
-    override fun internalEndpoints(application: Application) {
-        return application.DiscordModule(this)
+    override fun internalEndpoints(application: Application, bot: ClientBot) {
+        return application.DiscordModule(this, bot)
     }
 
-    override fun publicEndpoints(application: Application) {
+    override fun publicEndpoints(application: Application, bot: ClientBot) {
     }
 
     fun connected(doStuff: DiscordState.Connected.() -> Unit) {
@@ -43,5 +52,12 @@ class DiscordConnector(
         if(currentState is DiscordState.Connected) {
             currentState.doStuff()
         }
+    }
+
+    suspend fun configure(oAuthToken: String) {
+        val newConfiguration = DiscordConfiguration(oAuthToken)
+        repository.save(newConfiguration)
+
+        state = DiscordState.Unconfigured.configure(oAuthToken)
     }
 }

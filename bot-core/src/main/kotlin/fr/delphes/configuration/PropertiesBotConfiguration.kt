@@ -6,7 +6,6 @@ class PropertiesBotConfiguration(
     override val secretKey: String
     override val botAccountOauth: String
     override val webhookSecret: String
-    override val discordOAuth: String
 
     init {
         val properties = loadProperties("configuration-pythiebot.properties")
@@ -14,6 +13,5 @@ class PropertiesBotConfiguration(
         secretKey = properties.getProperty("secret.key")
         botAccountOauth = properties.getProperty("bot.account.OAuth")
         webhookSecret = properties.getProperty("bot.webhook.secret")
-        discordOAuth = properties.getProperty("bot.discord.OAuth")
     }
 }
