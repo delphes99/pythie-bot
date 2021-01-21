@@ -35,6 +35,8 @@
         <kotlin.compiler.jvmTarget>14</kotlin.compiler.jvmTarget>
         <frontend-maven-plugin.version>1.10.4</frontend-maven-plugin.version>
         <frontend-maven-plugin.nodeVersion>v14.15.1</frontend-maven-plugin.nodeVersion>
+        <JDA.version>4.2.0_222</JDA.version>
+        <kittehIrc.version>7.3.0</kittehIrc.version>
     </properties>
 
     <repositories>
@@ -95,7 +97,13 @@
             <dependency>
                 <groupId>net.dv8tion</groupId>
                 <artifactId>JDA</artifactId>
-                <version>4.2.0_222</version>
+                <version>${JDA.version}</version>
+            </dependency>
+            <!-- Irc -->
+            <dependency>
+                <groupId>org.kitteh.irc</groupId>
+                <artifactId>client-lib</artifactId>
+                <version>${kittehIrc.version}</version>
             </dependency>
             <!-- Http server -->
             <dependency>

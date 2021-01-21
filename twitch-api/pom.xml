@@ -48,6 +48,11 @@
             <groupId>io.github.microutils</groupId>
             <artifactId>kotlin-logging</artifactId>
         </dependency>
+        <!-- Irc -->
+        <dependency>
+            <groupId>org.kitteh.irc</groupId>
+            <artifactId>client-lib</artifactId>
+        </dependency>
 
         <!-- Tests -->
         <dependency>
