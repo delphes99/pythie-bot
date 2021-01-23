@@ -1,32 +1,47 @@
 <template>
   <div class="m-3 w-full">
     <div class="border-b border-2">
-      <h1 class="text-xl font-medium text-black title-font primary-color">Twitch bot configuration</h1>
-      <h2>App credential</h2>
-      <div class="px-2 grid grid-cols-2 auto-cols-min">
+      <div class="primary-color">
+        <h1 class="inline text-2xl font-medium text-black title-font">Twitch bot configuration</h1>
+        <img class="inline-block align-middle" src="@/assets/refresh.svg" style="height: 20px" v-on:click="refreshCurrentConfiguration" />
+      </div>
+      <h2 class="text-xl font-medium text-black">App credential</h2>
+      <div class="px-2 grid grid-cols-2 space-y-1">
         <label for="clientId">Client Id</label>
         <input v-model="clientId" type="text" id="clientId" class="border-b-2">
         <label for="clientSecret">Client Secret</label>
         <input v-model="clientSecret" type="password" id="clientSecret" class="border-b-2">
-        <div>
-          <button v-on:click="saveAppCredential"
-                  class="col-span-2 bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline">
-            Save
-          </button>
-        </div>
       </div>
-      <h2>Bot identity</h2>
       <div>
-        <div v-if="botAccount">
-          Bot account : {{botAccount}}
-          <a :href="buildBotIdentityUrl()">Change bot account</a>
+        <button
+            v-on:click="saveAppCredential"
+            class="inline-block bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+        >
+          Save
+        </button>
+      </div>
+      <h2 class="text-xl font-medium text-black">Bot identity</h2>
+      <div v-if="botAccount">
+        <div>
+          Bot account : <span class="font-bold">{{botAccount}}</span>
         </div>
-        <div v-else>
-          <a :href="buildBotIdentityUrl()">Connect bot account</a>
-        </div>
+        <a
+            :href="buildBotIdentityUrl()"
+            class="inline-block bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+        >
+          Change bot account
+        </a>
+      </div>
+      <div v-else>
+        <a
+            :href="buildBotIdentityUrl()"
+            class="inline-block bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+        >
+          Connect bot account
+        </a>
+      </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -80,7 +95,8 @@ export default {
       clientSecret,
       botAccount,
       saveAppCredential,
-      buildBotIdentityUrl
+      buildBotIdentityUrl,
+      refreshCurrentConfiguration
     }
   }
 }
