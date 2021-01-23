@@ -5,15 +5,18 @@ import fr.delphes.bot.ClientBot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.webservice.AuthModule
 import fr.delphes.webservice.ConfigurationModule
 import io.ktor.application.Application
+import kotlinx.coroutines.runBlocking
 
 class TwitchConnector(
     configFilepath: String,
     private val channels: List<ChannelConfiguration>
 ) : Connector {
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
+    internal var configuration: TwitchConfiguration = runBlocking { repository.load() }
 
     constructor(
         configFilepath: String,
@@ -43,6 +46,19 @@ class TwitchConnector(
     }
 
     suspend fun configureAppCredential(clientId: String, clientSecret: String) {
-        repository.save(TwitchConfiguration(clientId, clientSecret))
+        val newConfiguration = configuration.copy(
+            clientId = clientId,
+            clientSecret = clientSecret
+        )
+        repository.save(newConfiguration)
+        configuration = newConfiguration
+    }
+
+    suspend fun newBotAccountConfiguration(newBotAuth: AuthToken) {
+        val newConfiguration = configuration.copy(
+            botAccountCredential = newBotAuth
+        )
+        repository.save(newConfiguration)
+        configuration = newConfiguration
     }
 }

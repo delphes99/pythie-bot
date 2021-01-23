@@ -2,6 +2,7 @@
   <div class="m-3 w-full">
     <div class="border-b border-2">
       <h1 class="text-xl font-medium text-black title-font primary-color">Twitch bot configuration</h1>
+      <h2>App credential</h2>
       <div class="px-2 grid grid-cols-2 auto-cols-min">
         <label for="clientId">Client Id</label>
         <input v-model="clientId" type="text" id="clientId" class="border-b-2">
@@ -13,6 +14,10 @@
             Save
           </button>
         </div>
+      </div>
+      <h2>Bot identity</h2>
+      <div>
+        <a :href="buildBotIdentityUrl()" >Connect bot account</a>
       </div>
     </div>
   </div>
@@ -47,10 +52,23 @@ export default {
           });
     }
 
+    const buildBotIdentityUrl = () => {
+      const twitchAuthUrl = "https://id.twitch.tv/oauth2/authorize"
+      const params = new URLSearchParams()
+      params.append("response_type", "code",)
+      params.append("client_id", clientId.value)
+      params.append("redirect_uri", "http://localhost:8080/twitch/configuration/userCredential",)
+      params.append("scope", "bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions channel:manage:redemptions",)
+      params.append("state", "botConfiguration")
+
+      return twitchAuthUrl + "?" + params.toString()
+    }
+
     return {
       clientId,
       clientSecret,
-      saveAppCredential
+      saveAppCredential,
+      buildBotIdentityUrl
     }
   }
 }

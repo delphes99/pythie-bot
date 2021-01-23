@@ -9,8 +9,6 @@ data class AuthToken(
     val scope: List<String> = emptyList()
 ) {
     companion object {
-        fun empty(): AuthToken {
-            return AuthToken("", "", emptyList())
-        }
+        val empty = AuthToken("", "", emptyList())
     }
 }
