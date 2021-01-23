@@ -17,14 +17,14 @@
       </div>
       <h2>Bot identity</h2>
       <div>
-        <a :href="buildBotIdentityUrl()" >Connect bot account</a>
+        <a :href="buildBotIdentityUrl()">Connect bot account</a>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import {ref} from 'vue'
 import axios from "axios";
 
 export default {
@@ -33,23 +33,26 @@ export default {
     const clientId = ref("")
     const clientSecret = ref("")
 
-    const saveAppCredential = () => {
+    const refreshCurrentConfiguration = async () => {
+      const response = await axios.get('http://localhost:8080/twitch/configuration')
+
+      clientId.value = response.data.clientId
+    }
+
+    refreshCurrentConfiguration()
+
+    const saveAppCredential = async () => {
       const payload = {
         clientId: clientId.value,
         clientSecret: clientSecret.value
       }
       //TODO inject back url
-      axios.post('http://localhost:8080/twitch/configuration/appCredential', payload, {
+      const response = await axios.post('http://localhost:8080/twitch/configuration/appCredential', payload, {
         headers: {'Content-Type': 'application/json'}
       })
-          .then(function (response) {
-            //TODO better modal
-            alert("OK")
-          })
-          .catch(function (error) {
-            //TODO better modal
-            alert("KO")
-          });
+
+      //TODO better modal
+      alert("OK")
     }
 
     const buildBotIdentityUrl = () => {

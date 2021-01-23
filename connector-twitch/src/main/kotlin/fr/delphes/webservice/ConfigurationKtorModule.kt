@@ -21,6 +21,9 @@ import mu.KotlinLogging
 
 internal fun Application.ConfigurationModule(connector: TwitchConnector, clientBot: ClientBot) {
     routing {
+        get("/twitch/configuration") {
+            this.call.respond(ConfigurationOverview(connector.configuration.clientId))
+        }
         post("/twitch/configuration/appCredential") {
             val configuration = this.call.receive<AppCredentialRequest>()
 
@@ -50,6 +53,11 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector, clientB
         }
     }
 }
+
+@Serializable
+private data class ConfigurationOverview(
+    val clientId: String
+)
 
 @Serializable
 private data class AppCredentialRequest(
