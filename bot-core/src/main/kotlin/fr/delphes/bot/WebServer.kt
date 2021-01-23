@@ -27,6 +27,7 @@ class WebServer(
         launchServer(8080) {
             install(CORS) {
                 anyHost()
+                allowNonSimpleContentTypes = true
             }
             AdminModule(bot)
             AuthInternalModule(bot)

@@ -1,6 +1,8 @@
 <template>
   <div class="relative">
-    <img src="@/assets/twitch.png">
+    <router-link to="/twitch">
+      <img src="@/assets/twitch.png">
+    </router-link>
     <div class="absolute -bottom-1 -right-1 z-2 rounded-full border-8 shadow-lg"  />
   </div>
 </template>

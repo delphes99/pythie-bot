@@ -22,7 +22,7 @@ fun main() {
         tunnel.publicUrl,
         configFilepath,
         listOf(
-            TwitchConnector(delphes99Channel),
+            TwitchConnector(configFilepath, delphes99Channel),
             DiscordConnector(configFilepath)
         )
         //,delphestestChannel
