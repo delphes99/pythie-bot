@@ -50,9 +50,7 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
                 }.receive<AuthToken>())
                 connector.newBotAccountConfiguration(newBotAuth)
 
-                call.respondRedirect(permanent = false) {
-                    takeFrom("${WebServer.FRONT_BASE_URL}/admin/#/twitch")
-                }
+                call.respondRedirect("${WebServer.FRONT_BASE_URL}/admin/#/twitch", false)
             } else {
                 LOGGER.error { "Unkown state value" }
 
