@@ -5,6 +5,7 @@ import fr.delphes.bot.ClientBot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.webservice.AuthModule
 import fr.delphes.webservice.ConfigurationModule
@@ -17,6 +18,7 @@ class TwitchConnector(
 ) : Connector {
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
     internal var configuration: TwitchConfiguration = runBlocking { repository.load() }
+    private val twitchHelixApi = TwitchHelixClient()
 
     constructor(
         configFilepath: String,
@@ -30,7 +32,7 @@ class TwitchConnector(
     }
 
     override fun internalEndpoints(application: Application, bot: ClientBot) {
-        application.ConfigurationModule(this, bot)
+        application.ConfigurationModule(this)
     }
 
     override fun publicEndpoints(application: Application, bot: ClientBot) {
@@ -42,7 +44,6 @@ class TwitchConnector(
     }
 
     override suspend fun execute(event: OutgoingEvent) {
-
     }
 
     suspend fun configureAppCredential(clientId: String, clientSecret: String) {
@@ -55,9 +56,12 @@ class TwitchConnector(
     }
 
     suspend fun newBotAccountConfiguration(newBotAuth: AuthToken) {
+        val userInfos = twitchHelixApi.getUserInfosOf(newBotAuth)
+
         val newConfiguration = configuration.copy(
-            botAccountCredential = newBotAuth
+            botAccountCredential = ConfigurationTwitchAccount(newBotAuth, userInfos.preferred_username)
         )
+
         repository.save(newConfiguration)
         configuration = newConfiguration
     }

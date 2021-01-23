@@ -46,4 +46,11 @@ class WebServer(
             modules()
         }.start(wait = false)
     }
+
+    companion object {
+        val FRONT_BASE_URL = "http://localhost:8080"
+        //TODO dev profile
+        // Local dev
+        //val FRONT_BASE_URL = "http://localhost:8082"
+    }
 }

@@ -17,7 +17,13 @@
       </div>
       <h2>Bot identity</h2>
       <div>
-        <a :href="buildBotIdentityUrl()">Connect bot account</a>
+        <div v-if="botAccount">
+          Bot account : {{botAccount}}
+          <a :href="buildBotIdentityUrl()">Change bot account</a>
+        </div>
+        <div v-else>
+          <a :href="buildBotIdentityUrl()">Connect bot account</a>
+        </div>
       </div>
     </div>
   </div>
@@ -32,11 +38,13 @@ export default {
   setup() {
     const clientId = ref("")
     const clientSecret = ref("")
+    const botAccount = ref("")
 
     const refreshCurrentConfiguration = async () => {
       const response = await axios.get('http://localhost:8080/twitch/configuration')
 
       clientId.value = response.data.clientId
+      botAccount.value = response.data.botUsername
     }
 
     refreshCurrentConfiguration()
@@ -61,7 +69,7 @@ export default {
       params.append("response_type", "code",)
       params.append("client_id", clientId.value)
       params.append("redirect_uri", "http://localhost:8080/twitch/configuration/userCredential",)
-      params.append("scope", "bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions channel:manage:redemptions",)
+      params.append("scope", "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions channel:manage:redemptions",)
       params.append("state", "botConfiguration")
 
       return twitchAuthUrl + "?" + params.toString()
@@ -70,6 +78,7 @@ export default {
     return {
       clientId,
       clientSecret,
+      botAccount,
       saveAppCredential,
       buildBotIdentityUrl
     }

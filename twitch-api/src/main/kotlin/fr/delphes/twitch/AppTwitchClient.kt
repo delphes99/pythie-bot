@@ -38,7 +38,7 @@ class AppTwitchClient(
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}
-        fun build(appCredential: TwitchAppCredential): AppTwitchClient {
+        fun build(appCredential: TwitchAppCredential): AppTwitchApi {
             return AppTwitchClient(AppHelixClient(appCredential))
         }
     }
