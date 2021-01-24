@@ -28,6 +28,8 @@ import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
 import fr.delphes.utils.time.prettyPrint
 import java.time.Duration
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
@@ -108,7 +110,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                 DiscordEmbeddedMessage(
                     it.title,
                     "https://www.twitch.tv/delphes99",
-                    it.thumbnailUrl.withResolution(320, 160),
+                    "${it.thumbnailUrl.withResolution(320, 160)}?r=${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}",
                     708949759725010984,
                     "Delphes99",
                     "https://www.twitch.tv/delphes99",
