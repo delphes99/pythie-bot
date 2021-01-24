@@ -5,6 +5,8 @@ import fr.delphes.bot.Channel
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.irc.IrcChannel
+import fr.delphes.twitch.irc.IrcClient
 
 interface OutgoingEvent
 
@@ -13,13 +15,23 @@ data class Alert(val type: String, val parameters: Map<String, String>): Outgoin
 }
 
 sealed class TwitchOutgoingEvent: OutgoingEvent {
-    abstract suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel)
+    abstract suspend fun executeOnTwitch(
+        chat: IrcClient,
+        ownerChat: TwitchChat,
+        twitchApi: ChannelTwitchApi,
+        channel: Channel
+    )
 }
 
 data class PromoteVIP(val user: User) : TwitchOutgoingEvent() {
     constructor(user: String) : this(User(user))
 
-    override suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel) {
+    override suspend fun executeOnTwitch(
+        chat: IrcClient,
+        ownerChat: TwitchChat,
+        twitchApi: ChannelTwitchApi,
+        channel: Channel
+    ) {
         ownerChat.sendMessage(channel.name, "/vip $user")
     }
 }
@@ -27,13 +39,23 @@ data class PromoteVIP(val user: User) : TwitchOutgoingEvent() {
 data class RemoveVIP(val user: User): TwitchOutgoingEvent() {
     constructor(user: String) : this(User(user))
 
-    override suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel) {
+    override suspend fun executeOnTwitch(
+        chat: IrcClient,
+        ownerChat: TwitchChat,
+        twitchApi: ChannelTwitchApi,
+        channel: Channel
+    ) {
         ownerChat.sendMessage(channel.name, "/unvip $user")
     }
 }
 
 object RetrieveVip : TwitchOutgoingEvent() {
-    override suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel) {
+    override suspend fun executeOnTwitch(
+        chat: IrcClient,
+        ownerChat: TwitchChat,
+        twitchApi: ChannelTwitchApi,
+        channel: Channel
+    ) {
         ownerChat.sendMessage(channel.name, "/vips")
     }
 }
@@ -41,15 +63,25 @@ object RetrieveVip : TwitchOutgoingEvent() {
 data class SendMessage(
     val text: String
 ) : TwitchOutgoingEvent() {
-    override suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel) {
-        chat.sendMessage(channel.name, text)
+    override suspend fun executeOnTwitch(
+        chat: IrcClient,
+        ownerChat: TwitchChat,
+        twitchApi: ChannelTwitchApi,
+        channel: Channel
+    ) {
+        chat.sendMessage(IrcChannel(channel.name), text)
     }
 }
 
 data class DesactivateReward(
     val reward: WithRewardConfiguration
 ) : TwitchOutgoingEvent() {
-    override suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel) {
+    override suspend fun executeOnTwitch(
+        chat: IrcClient,
+        ownerChat: TwitchChat,
+        twitchApi: ChannelTwitchApi,
+        channel: Channel
+    ) {
         twitchApi.deactivateReward(reward.rewardConfiguration)
     }
 }
@@ -57,7 +89,12 @@ data class DesactivateReward(
 data class ActivateReward(
     val reward: WithRewardConfiguration
 ) : TwitchOutgoingEvent() {
-    override suspend fun executeOnTwitch(chat: TwitchChat, ownerChat: TwitchChat, twitchApi: ChannelTwitchApi, channel: Channel) {
+    override suspend fun executeOnTwitch(
+        chat: IrcClient,
+        ownerChat: TwitchChat,
+        twitchApi: ChannelTwitchApi,
+        channel: Channel
+    ) {
         twitchApi.activateReward(reward.rewardConfiguration)
     }
 }

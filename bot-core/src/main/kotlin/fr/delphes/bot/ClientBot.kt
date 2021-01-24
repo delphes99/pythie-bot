@@ -1,8 +1,5 @@
 package fr.delphes.bot
 
-import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
-import com.github.twitch4j.TwitchClientBuilder
-import com.github.twitch4j.chat.TwitchChat
 import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
@@ -11,6 +8,8 @@ import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.irc.IrcChannel
+import fr.delphes.twitch.irc.IrcClient
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -23,7 +22,6 @@ class ClientBot(
     val connectors: List<Connector>
 ) {
     val channels = mutableListOf<Channel>()
-    private val botCredential = OAuth2Credential("twitch", "oauth:${configuration.botAccountOauth}")
     //TODO random secret
     private val webhookSecret = configuration.webhookSecret
 
@@ -35,16 +33,7 @@ class ClientBot(
 
     private val twitchApi = AppTwitchClient.build(appCredential)
 
-    private val client = TwitchClientBuilder.builder()
-        .withEnableChat(true)
-        .withChatAccount(botCredential)
-        .build()!!
-
-    val chat: TwitchChat = client.chat
-
-    init {
-        chat.connect()
-    }
+    val ircClient = IrcClient.builder(configuration.botAccountOauth).build()
 
     fun findChannelBy(name: String): Channel? {
         return channels.find { channel -> channel.name == name }
@@ -56,8 +45,10 @@ class ClientBot(
 
     //TODO move to connector
     fun connect() {
+        ircClient.connect()
+
         channels.forEach { channel ->
-            chat.joinChannel(channel.name)
+            ircClient.join(IrcChannel(channel.name))
         }
     }
 
