@@ -65,4 +65,17 @@ class TwitchConnector(
         repository.save(newConfiguration)
         configuration = newConfiguration
     }
+
+    suspend fun addChannelConfiguration(channelAuth: AuthToken) {
+        val userInfos = twitchHelixApi.getUserInfosOf(channelAuth)
+
+        val newConfiguration = configuration.copy(
+            listChannelCredential = configuration.listChannelCredential
+                .filter { channel -> channel.userName != userInfos.preferred_username }
+                .plus(ConfigurationTwitchAccount(channelAuth, userInfos.preferred_username))
+        )
+
+        repository.save(newConfiguration)
+        configuration = newConfiguration
+    }
 }
