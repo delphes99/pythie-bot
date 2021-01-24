@@ -47,42 +47,29 @@ class TwitchConnector(
     }
 
     suspend fun configureAppCredential(clientId: String, clientSecret: String) {
-        val newConfiguration = configuration.copy(
-            clientId = clientId,
-            clientSecret = clientSecret
-        )
-        updateConfiguration(newConfiguration)
+        updateConfiguration(configuration.setAppCredential(clientId, clientSecret))
     }
 
     suspend fun newBotAccountConfiguration(newBotAuth: AuthToken) {
-        val userInfos = twitchHelixApi.getUserInfosOf(newBotAuth)
+        val account = newBotAuth.toConfigurationTwitchAccount()
 
-        val newConfiguration = configuration.copy(
-            botAccountCredential = ConfigurationTwitchAccount(newBotAuth, userInfos.preferred_username)
-        )
-
-        updateConfiguration(newConfiguration)
+        updateConfiguration(configuration.setBotAccount(account))
     }
 
     suspend fun addChannelConfiguration(channelAuth: AuthToken) {
-        val userInfos = twitchHelixApi.getUserInfosOf(channelAuth)
+        val account = channelAuth.toConfigurationTwitchAccount()
 
-        val newConfiguration = configuration.copy(
-            listChannelCredential = configuration.listChannelCredential
-                .filter { channel -> channel.userName != userInfos.preferred_username }
-                .plus(ConfigurationTwitchAccount(channelAuth, userInfos.preferred_username))
-        )
-
-        updateConfiguration(newConfiguration)
+        updateConfiguration(configuration.addChannel(account))
     }
 
     suspend fun removeChannel(channelName: String) {
-        val newConfiguration = configuration.copy(
-            listChannelCredential = configuration.listChannelCredential
-                .filter { channel -> channel.userName != channelName }
-        )
+        updateConfiguration(configuration.removeChannel(channelName))
+    }
 
-        updateConfiguration(newConfiguration)
+    private suspend fun AuthToken.toConfigurationTwitchAccount(): ConfigurationTwitchAccount {
+        val userInfos = twitchHelixApi.getUserInfosOf(this)
+
+        return ConfigurationTwitchAccount(this, userInfos.preferred_username)
     }
 
     private suspend fun updateConfiguration(newConfiguration: TwitchConfiguration) {

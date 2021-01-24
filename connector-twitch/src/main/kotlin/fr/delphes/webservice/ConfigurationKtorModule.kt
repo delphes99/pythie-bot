@@ -30,8 +30,8 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
             this.call.respond(
                 ConfigurationOverview(
                     configuration.clientId,
-                    configuration.botAccountCredential?.userName,
-                    configuration.listChannelCredential.map(ConfigurationTwitchAccount::userName)
+                    configuration.botAccountName,
+                    configuration.channelsName.toList()
                 )
             )
         }
