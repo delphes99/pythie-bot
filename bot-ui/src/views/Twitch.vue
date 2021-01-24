@@ -69,8 +69,16 @@
             </thead>
             <tbody>
             <tr v-for="channel in channels" :key="channel" class="hover:bg-grey-lighter">
-              <td class="py-4 px-6 border-b border-grey-light">{{ channel }}</td>
               <td class="py-4 px-6 border-b border-grey-light">
+                {{ channel }}
+              </td>
+              <td class="py-4 px-6 border-b border-grey-light">
+                <button
+                    v-on:click="deleteChannel(channel)"
+                    class="inline-block bg-red-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-red-800 focus:outline-none focus:shadow-outline"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
             </tbody>
@@ -88,13 +96,16 @@ import axios from "axios";
 export default {
   name: `TwitchConfiguration`,
   setup() {
+    //TODO inject back url
+    const backUrl = 'http://localhost:8080'
+
     const clientId = ref("")
     const clientSecret = ref("")
     const botAccount = ref("")
     const channels = ref([])
 
     const refreshCurrentConfiguration = async () => {
-      const response = await axios.get('http://localhost:8080/twitch/configuration')
+      const response = await axios.get(backUrl + '/twitch/configuration')
 
       clientId.value = response.data.clientId
       botAccount.value = response.data.botUsername
@@ -108,8 +119,7 @@ export default {
         clientId: clientId.value,
         clientSecret: clientSecret.value
       }
-      //TODO inject back url
-      const response = await axios.post('http://localhost:8080/twitch/configuration/appCredential', payload, {
+      const response = await axios.post(backUrl + '/twitch/configuration/appCredential', payload, {
         headers: {'Content-Type': 'application/json'}
       })
 
@@ -117,20 +127,25 @@ export default {
       alert("OK")
     }
 
+    const deleteChannel = async (channel: string) => {
+      await axios.delete(backUrl + '/twitch/configuration/channel/' + channel)
+      await refreshCurrentConfiguration()
+    }
+
     const buildGetAuthUrl = (state: string) => () => {
       const twitchAuthUrl = "https://id.twitch.tv/oauth2/authorize"
       const params = new URLSearchParams()
-      params.append("response_type", "code",)
-      params.append("client_id", clientId.value)
-      params.append("redirect_uri", "http://localhost:8080/twitch/configuration/userCredential",)
-      params.append("scope", "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions channel:manage:redemptions",)
-      params.append("state", state)
+      params.append('response_type', 'code',)
+      params.append('client_id', clientId.value)
+      params.append('redirect_uri', backUrl + '/twitch/configuration/userCredential',)
+      params.append('scope', 'user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions channel:manage:redemptions',)
+      params.append('state', state)
 
-      return twitchAuthUrl + "?" + params.toString()
+      return twitchAuthUrl + '?' + params.toString()
     }
 
-    const buildBotIdentityUrl = buildGetAuthUrl("botConfiguration")
-    const buildAddChannelUrl = buildGetAuthUrl("addChannel")
+    const buildBotIdentityUrl = buildGetAuthUrl('botConfiguration')
+    const buildAddChannelUrl = buildGetAuthUrl('addChannel')
 
     return {
       clientId,
@@ -138,6 +153,7 @@ export default {
       botAccount,
       channels,
       saveAppCredential,
+      deleteChannel,
       buildBotIdentityUrl,
       buildAddChannelUrl,
       refreshCurrentConfiguration

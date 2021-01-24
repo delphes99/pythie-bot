@@ -51,8 +51,7 @@ class TwitchConnector(
             clientId = clientId,
             clientSecret = clientSecret
         )
-        repository.save(newConfiguration)
-        configuration = newConfiguration
+        updateConfiguration(newConfiguration)
     }
 
     suspend fun newBotAccountConfiguration(newBotAuth: AuthToken) {
@@ -62,8 +61,7 @@ class TwitchConnector(
             botAccountCredential = ConfigurationTwitchAccount(newBotAuth, userInfos.preferred_username)
         )
 
-        repository.save(newConfiguration)
-        configuration = newConfiguration
+        updateConfiguration(newConfiguration)
     }
 
     suspend fun addChannelConfiguration(channelAuth: AuthToken) {
@@ -75,6 +73,19 @@ class TwitchConnector(
                 .plus(ConfigurationTwitchAccount(channelAuth, userInfos.preferred_username))
         )
 
+        updateConfiguration(newConfiguration)
+    }
+
+    suspend fun removeChannel(channelName: String) {
+        val newConfiguration = configuration.copy(
+            listChannelCredential = configuration.listChannelCredential
+                .filter { channel -> channel.userName != channelName }
+        )
+
+        updateConfiguration(newConfiguration)
+    }
+
+    private suspend fun updateConfiguration(newConfiguration: TwitchConfiguration) {
         repository.save(newConfiguration)
         configuration = newConfiguration
     }

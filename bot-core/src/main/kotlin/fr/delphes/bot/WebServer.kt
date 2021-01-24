@@ -9,6 +9,7 @@ import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
+import io.ktor.http.HttpMethod
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -28,6 +29,7 @@ class WebServer(
             install(CORS) {
                 anyHost()
                 allowNonSimpleContentTypes = true
+                method(HttpMethod.Delete)
             }
             AdminModule(bot)
             AuthInternalModule(bot)

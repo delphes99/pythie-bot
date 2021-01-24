@@ -16,6 +16,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.response.respondRedirect
+import io.ktor.routing.delete
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
@@ -63,6 +64,17 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
             }
 
             call.respondRedirect("${WebServer.FRONT_BASE_URL}/admin/#/twitch", false)
+        }
+        delete("/twitch/configuration/channel/{channel}") {
+            val channelName = this.context.parameters["channel"]
+            val responseCode = if(channelName != null) {
+                connector.removeChannel(channelName)
+                HttpStatusCode.OK
+            } else {
+                HttpStatusCode.BadRequest
+            }
+
+            call.respond(responseCode)
         }
     }
 }
