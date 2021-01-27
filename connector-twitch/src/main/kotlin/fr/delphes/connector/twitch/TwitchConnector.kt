@@ -1,14 +1,14 @@
-package fr.delphes
+package fr.delphes.connector.twitch
 
 import fr.delphes.bot.Channel
 import fr.delphes.bot.ClientBot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.connector.twitch.webservice.AuthModule
+import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.auth.AuthToken
-import fr.delphes.webservice.AuthModule
-import fr.delphes.webservice.ConfigurationModule
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 

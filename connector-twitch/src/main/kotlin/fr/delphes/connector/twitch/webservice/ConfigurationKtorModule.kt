@@ -1,10 +1,9 @@
-package fr.delphes.webservice
+package fr.delphes.connector.twitch.webservice
 
-import fr.delphes.ConfigurationTwitchAccount
-import fr.delphes.TwitchConfiguration
-import fr.delphes.TwitchConnector
 import fr.delphes.bot.WebServer
 import fr.delphes.bot.util.http.httpClient
+import fr.delphes.connector.twitch.TwitchConfiguration
+import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.twitch.auth.AuthToken
 import io.ktor.application.Application
 import io.ktor.application.call

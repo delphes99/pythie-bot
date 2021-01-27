@@ -1,4 +1,4 @@
-package fr.delphes.webservice
+package fr.delphes.connector.twitch.webservice
 
 import fr.delphes.configuration.ChannelConfiguration
 import io.ktor.application.Application

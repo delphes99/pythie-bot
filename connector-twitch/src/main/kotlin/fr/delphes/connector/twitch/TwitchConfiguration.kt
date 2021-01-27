@@ -1,4 +1,4 @@
-package fr.delphes
+package fr.delphes.connector.twitch
 
 import kotlinx.serialization.Serializable
 

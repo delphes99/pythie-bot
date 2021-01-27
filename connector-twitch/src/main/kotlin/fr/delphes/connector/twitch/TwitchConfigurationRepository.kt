@@ -1,4 +1,4 @@
-package fr.delphes
+package fr.delphes.connector.twitch
 
 import fr.delphes.utils.FileRepository
 import kotlinx.serialization.decodeFromString
