@@ -33,10 +33,6 @@
         </dependency>
         <!-- Twitch -->
         <dependency>
-            <groupId>com.github.twitch4j</groupId>
-            <artifactId>twitch4j</artifactId>
-        </dependency>
-        <dependency>
             <groupId>fr.delphes</groupId>
             <artifactId>twitch-api</artifactId>
         </dependency>

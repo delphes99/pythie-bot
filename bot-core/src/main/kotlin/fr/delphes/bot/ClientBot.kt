@@ -49,6 +49,7 @@ class ClientBot(
 
         channels.forEach { channel ->
             ircClient.join(IrcChannel(channel.name))
+            channel.join()
         }
     }
 

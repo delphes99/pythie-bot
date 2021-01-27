@@ -1,11 +1,12 @@
 package fr.delphes.bot.twitch.handler
 
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
-import com.github.twitch4j.common.events.domain.EventUser
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.irc.IrcChannel
+import fr.delphes.twitch.irc.IrcChannelMessage
+import fr.delphes.twitch.irc.IrcUser
 import io.mockk.clearAllMocks
 import io.mockk.coVerify
 import io.mockk.every
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.Test
 
 internal class ChannelMessageHandlerTest {
     private val changeState = mockk<ChannelChangeState>(relaxed = true)
-    private val twitchEvent = mockk<ChannelMessageEvent>()
     private val channel = mockk<ChannelInfo>()
 
     @BeforeEach
@@ -28,21 +28,14 @@ internal class ChannelMessageHandlerTest {
 
     @Test
     internal fun `add statistics message received`() {
-        "user".sends("message")
-
         runBlocking {
             ChannelMessageHandler().handle(
-                twitchEvent,
+                IrcChannelMessage(IrcChannel("myChannel"), IrcUser("user"), "message"),
                 channel,
                 changeState
             )
         }
 
         coVerify(exactly = 1) { changeState.addMessage(UserMessage(User("user"), "message")) }
-    }
-
-    private fun String.sends(message: String) {
-        every { twitchEvent.user } returns EventUser("id", this)
-        every { twitchEvent.message } returns message
     }
 }

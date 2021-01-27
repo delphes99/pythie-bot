@@ -1,11 +1,5 @@
 package fr.delphes.bot
 
-import com.github.philippheuer.credentialmanager.domain.OAuth2Credential
-import com.github.philippheuer.events4j.simple.SimpleEventHandler
-import com.github.twitch4j.TwitchClientBuilder
-import com.github.twitch4j.chat.TwitchChat
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
-import com.github.twitch4j.chat.events.channel.IRCMessageEvent
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.Alert
@@ -19,8 +13,8 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.handler.ChannelBitsHandler
 import fr.delphes.bot.twitch.handler.ChannelMessageHandler
 import fr.delphes.bot.twitch.handler.ChannelUpdateHandler
-import fr.delphes.bot.twitch.handler.IRCMessageHandler
 import fr.delphes.bot.twitch.handler.NewFollowHandler
+import fr.delphes.bot.twitch.handler.IRCMessageHandler
 import fr.delphes.bot.twitch.handler.NewSubHandler
 import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
 import fr.delphes.bot.twitch.handler.StreamOfflineHandler
@@ -32,6 +26,8 @@ import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.irc.IrcChannel
+import fr.delphes.twitch.irc.IrcClient
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -61,17 +57,20 @@ class Channel(
     private val oAuth = configuration.ownerAccountOauth
 
     val features = configuration.features
-    private val ownerCredential = OAuth2Credential("twitch", oAuth)
     private val eventHandlers = EventHandlers()
 
-    private val client: com.github.twitch4j.TwitchClient
-    private val chat: TwitchChat
+    private val newIrcMessageHandler = IRCMessageHandler()
+    private val channelMessageHandler = ChannelMessageHandler()
+
+    //TODO move irc client to twitch API
+    private val ircClient = IrcClient.builder(oAuth)
+        .withOnMessage { message -> newIrcMessageHandler.handleTwitchEvent(message) }
+        .withOnChannelMessage { message -> channelMessageHandler.handleTwitchEvent(message) }
+        .build()
 
     val twitchApi: ChannelTwitchApi
 
-    private val channelMessageHandler = ChannelMessageHandler()
-    private val ircMessageHandler = IRCMessageHandler()
-
+    //TODO subscribe only when feature requires
     init {
         twitchApi =
             bot.channelApiBuilder(configuration, channelCredential)
@@ -84,13 +83,6 @@ class Channel(
                 .listenToChannelUpdate { ChannelUpdateHandler().handleTwitchEvent(it) }
                 .build()
 
-        client = TwitchClientBuilder.builder()
-            .withEnableChat(true)
-            .withChatAccount(ownerCredential)
-            .build()!!
-
-        chat = client.chat
-
         features.forEach { feature ->
             feature.registerHandlers(eventHandlers)
         }
@@ -100,21 +92,6 @@ class Channel(
 
             //TODO Synchronize reward
         }
-
-        chat.connect()
-
-        //TODO subscribe only when feature requires
-        val eventHandler = client.eventManager.getEventHandler(SimpleEventHandler::class.java)
-        eventHandler.onEvent(ChannelMessageEvent::class.java, ::handleChannelMessageEvent)
-        eventHandler.onEvent(IRCMessageEvent::class.java, ::handleIRCMessage)
-    }
-
-    private fun handleChannelMessageEvent(request: ChannelMessageEvent) {
-        channelMessageHandler.handleTwitchEvent(request)
-    }
-
-    private fun handleIRCMessage(request: IRCMessageEvent) {
-        ircMessageHandler.handleTwitchEvent(request)
     }
 
     private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {
@@ -133,7 +110,7 @@ class Channel(
                 when (e) {
                     is TwitchOutgoingEvent -> {
                         try {
-                            e.executeOnTwitch(bot.ircClient, chat, twitchApi, this@Channel)
+                            e.executeOnTwitch(bot.ircClient, ircClient, twitchApi, this@Channel)
                         } catch (e: Exception) {
                             LOGGER.error(e) { "Error while handling event ${e.message}" }
                         }
@@ -154,6 +131,11 @@ class Channel(
     suspend fun newAuth(auth: AuthToken) {
         LOGGER.info { "Save new credentials for channel : $name" }
         this.channelCredential.newAuth(auth)
+    }
+
+    fun join() {
+        ircClient.connect()
+        ircClient.join(IrcChannel(name))
     }
 
     companion object {

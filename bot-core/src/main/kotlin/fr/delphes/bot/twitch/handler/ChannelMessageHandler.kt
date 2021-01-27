@@ -1,6 +1,5 @@
 package fr.delphes.bot.twitch.handler
 
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.CommandAsked
@@ -9,10 +8,11 @@ import fr.delphes.bot.event.incoming.MessageReceived
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
+import fr.delphes.twitch.irc.IrcChannelMessage
 
-class ChannelMessageHandler : TwitchIncomingEventHandler<ChannelMessageEvent> {
+class ChannelMessageHandler : TwitchIncomingEventHandler<IrcChannelMessage> {
     override suspend fun handle(
-        twitchEvent: ChannelMessageEvent,
+        twitchEvent: IrcChannelMessage,
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {

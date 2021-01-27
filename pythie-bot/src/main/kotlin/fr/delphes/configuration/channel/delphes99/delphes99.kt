@@ -165,12 +165,19 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         ) {
             listOf(
                 SendMessage("-> test dev"),
-                Alert("test"),
+                Alert("test")
+            )
+        },
+        RewardRedeem(
+            DelphesReward.DEV_TEST2
+        ) {
+            listOf(
                 DiscordMessage("Coucou discord depuis une récompense !", 789537633487159396)
             )
         },
         GameReward(
             DelphesReward.DEV_TEST to Games.SCIENCE_TECHNOLOGY,
+            DelphesReward.DEV_TEST2 to Games.SCIENCE_TECHNOLOGY,
             DelphesReward.SATISFACTORY_COLOR to Games.SATISFACTORY
         ),
         Command(

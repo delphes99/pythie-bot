@@ -1,6 +1,5 @@
 package fr.delphes.bot.event.outgoing
 
-import com.github.twitch4j.chat.TwitchChat
 import fr.delphes.bot.Channel
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
@@ -17,7 +16,7 @@ data class Alert(val type: String, val parameters: Map<String, String>): Outgoin
 sealed class TwitchOutgoingEvent: OutgoingEvent {
     abstract suspend fun executeOnTwitch(
         chat: IrcClient,
-        ownerChat: TwitchChat,
+        ownerChat: IrcClient,
         twitchApi: ChannelTwitchApi,
         channel: Channel
     )
@@ -28,11 +27,11 @@ data class PromoteVIP(val user: User) : TwitchOutgoingEvent() {
 
     override suspend fun executeOnTwitch(
         chat: IrcClient,
-        ownerChat: TwitchChat,
+        ownerChat: IrcClient,
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
-        ownerChat.sendMessage(channel.name, "/vip $user")
+        ownerChat.sendMessage(IrcChannel(channel.name), "/vip $user")
     }
 }
 
@@ -41,22 +40,22 @@ data class RemoveVIP(val user: User): TwitchOutgoingEvent() {
 
     override suspend fun executeOnTwitch(
         chat: IrcClient,
-        ownerChat: TwitchChat,
+        ownerChat: IrcClient,
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
-        ownerChat.sendMessage(channel.name, "/unvip $user")
+        ownerChat.sendMessage(IrcChannel(channel.name), "/unvip $user")
     }
 }
 
 object RetrieveVip : TwitchOutgoingEvent() {
     override suspend fun executeOnTwitch(
         chat: IrcClient,
-        ownerChat: TwitchChat,
+        ownerChat: IrcClient,
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
-        ownerChat.sendMessage(channel.name, "/vips")
+        ownerChat.sendMessage(IrcChannel(channel.name), "/vips")
     }
 }
 
@@ -65,7 +64,7 @@ data class SendMessage(
 ) : TwitchOutgoingEvent() {
     override suspend fun executeOnTwitch(
         chat: IrcClient,
-        ownerChat: TwitchChat,
+        ownerChat: IrcClient,
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
@@ -78,7 +77,7 @@ data class DesactivateReward(
 ) : TwitchOutgoingEvent() {
     override suspend fun executeOnTwitch(
         chat: IrcClient,
-        ownerChat: TwitchChat,
+        ownerChat: IrcClient,
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
@@ -91,7 +90,7 @@ data class ActivateReward(
 ) : TwitchOutgoingEvent() {
     override suspend fun executeOnTwitch(
         chat: IrcClient,
-        ownerChat: TwitchChat,
+        ownerChat: IrcClient,
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {

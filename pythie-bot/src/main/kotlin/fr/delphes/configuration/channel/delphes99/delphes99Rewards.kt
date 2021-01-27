@@ -6,6 +6,7 @@ import fr.delphes.twitch.api.reward.WithRewardConfiguration
 enum class DelphesReward(override val rewardConfiguration: RewardConfiguration): WithRewardConfiguration {
     VOTH(vothReward),
     DEV_TEST(testDev),
+    DEV_TEST2(testDev2),
     SATISFACTORY_COLOR(satisfactoryBaseColor);
 
     companion object {
@@ -20,6 +21,11 @@ private val vothReward = RewardConfiguration(
 )
 private val testDev = RewardConfiguration(
     "Test dev",
+    1,
+    "Test lors des live coding"
+)
+private val testDev2 = RewardConfiguration(
+    "Test dev 2",
     1,
     "Test lors des live coding"
 )

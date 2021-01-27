@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration scan="true">
-    <!-- Twitch4j -->
-    <logger name="com.github.twitch4j" level="INFO"/>
-    <logger name="com.netflix.hystrix" level="INFO"/>
-    <logger name="com.github.philippheuer" level="INFO"/>
+    <!-- Discord -->
     <logger name="net.dv8tion.jda" level="INFO"/>
 
     <!-- Ktor / Netty -->

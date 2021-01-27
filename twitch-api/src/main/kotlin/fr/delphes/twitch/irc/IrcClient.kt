@@ -2,7 +2,7 @@ package fr.delphes.twitch.irc
 
 import fr.delphes.twitch.irc.handler.GlobalMessageHandler
 import fr.delphes.twitch.irc.handler.JoinHandler
-import fr.delphes.twitch.irc.handler.MessageHandler
+import fr.delphes.twitch.irc.handler.ChannelMessageHandler
 import org.kitteh.irc.client.library.Client
 import org.kitteh.irc.client.library.feature.twitch.TwitchSupport
 
@@ -28,15 +28,14 @@ class IrcClient(
     class Builder(
         private val token: String
     ) {
-        var onChannelMessage: ((IrcChannel, Message) -> Unit)? = null
+        var onChannelMessage: ((IrcChannelMessage) -> Unit)? = null
         var onJoin: ((IrcChannel, IrcUser) -> Unit)? = null
-        var onMessage: ((String) -> Unit)? = null
+        var onMessage: ((IrcMessage) -> Unit)? = null
 
-        fun withOnChannelMessage(listener: ((IrcChannel, Message) -> Unit)?): Builder {
+        fun withOnChannelMessage(listener: ((IrcChannelMessage) -> Unit)?): Builder {
             onChannelMessage = listener
             return this
         }
-
 
         fun withOnJoin(listener: ((IrcChannel, IrcUser) -> Unit)?): Builder {
             onJoin = listener
@@ -44,7 +43,7 @@ class IrcClient(
         }
 
 
-        fun withOnMessage(listener: ((String) -> Unit)?): Builder {
+        fun withOnMessage(listener: ((IrcMessage) -> Unit)?): Builder {
             onMessage = listener
             return this
         }
@@ -62,7 +61,7 @@ class IrcClient(
             TwitchSupport.addSupport(client)
 
             onJoin?.also { client.eventManager.registerEventListener(JoinHandler(it)) }
-            onChannelMessage?.also { client.eventManager.registerEventListener(MessageHandler(it)) }
+            onChannelMessage?.also { client.eventManager.registerEventListener(ChannelMessageHandler(it)) }
             onMessage?.also { client.eventManager.registerEventListener(GlobalMessageHandler(it)) }
 
             return IrcClient(client)

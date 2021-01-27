@@ -1,13 +1,13 @@
 package fr.delphes.bot.event.incoming
 
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent
 import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.irc.IrcChannelMessage
 
 data class MessageReceived(
     val user: User,
     val text: String
 ) : IncomingEvent {
-    constructor(event: ChannelMessageEvent) : this(event.user.name, event.message)
+    constructor(event: IrcChannelMessage) : this(event.user.name, event.message)
 
     constructor(
         user: String,
