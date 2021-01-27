@@ -5,6 +5,8 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.ktor.application.Application
 
 interface Connector {
+    val configFilepath: String
+
     //T0DO remove when twitch move to connector
     fun initChannel(bot: ClientBot)
 

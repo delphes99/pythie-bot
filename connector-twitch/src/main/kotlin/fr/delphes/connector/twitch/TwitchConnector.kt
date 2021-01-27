@@ -13,12 +13,13 @@ import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 
 class TwitchConnector(
-    configFilepath: String,
+    override val configFilepath: String,
     private val channels: List<ChannelConfiguration>
 ) : Connector {
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
     internal var configuration: TwitchConfiguration = runBlocking { repository.load() }
     private val twitchHelixApi = TwitchHelixClient()
+    private var state: TwitchState = TwitchState.Unconfigured
 
     constructor(
         configFilepath: String,

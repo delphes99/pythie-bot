@@ -10,6 +10,8 @@ data class TwitchConfiguration(
     val channelsName: Set<String> = emptySet(),
     private val channelsCredentials: List<ConfigurationTwitchAccount> = emptyList()
 ) {
+    val botIdentity get() = channelsCredentials.firstOrNull { account -> account.userName == botAccountName }
+
     companion object {
         val empty = TwitchConfiguration("", "", null)
     }

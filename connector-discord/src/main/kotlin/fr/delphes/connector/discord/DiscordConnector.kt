@@ -9,7 +9,7 @@ import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 
 class DiscordConnector(
-    configFilepath: String
+    override val configFilepath: String
 ) : Connector {
     private val repository = DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     var state: DiscordState = DiscordState.Unconfigured
