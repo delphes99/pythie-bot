@@ -1,17 +1,17 @@
 package fr.delphes.configuration.channel
 
 import fr.delphes.bot.event.incoming.StreamChanges
-import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.bot.event.outgoing.SendMessage
+import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
-import fr.delphes.feature.command.Command
-import fr.delphes.feature.commandList.CommandList
-import fr.delphes.feature.newFollow.NewFollow
 import fr.delphes.feature.statistics.Statistics
-import fr.delphes.feature.streamOffline.StreamOffline
-import fr.delphes.feature.streamOnline.StreamOnline
-import fr.delphes.feature.streamUpdate.StreamUpdate
-import fr.delphes.feature.gameDescription.GameDescription
+import fr.delphes.features.twitch.command.Command
+import fr.delphes.features.twitch.commandList.CommandList
+import fr.delphes.features.twitch.gameDescription.GameDescription
+import fr.delphes.features.twitch.newFollow.NewFollow
+import fr.delphes.features.twitch.streamOffline.StreamOffline
+import fr.delphes.features.twitch.streamOnline.StreamOnline
+import fr.delphes.features.twitch.streamUpdate.StreamUpdate
 import java.time.Duration
 
 /**

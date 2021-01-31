@@ -1,4 +1,4 @@
-package fr.delphes.bot.util.time
+package fr.delphes.features
 
 import fr.delphes.utils.time.Clock
 import java.time.LocalDateTime
