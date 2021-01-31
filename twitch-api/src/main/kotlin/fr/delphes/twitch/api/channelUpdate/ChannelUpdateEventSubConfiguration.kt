@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelUpdate
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateCondition
 import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateEventPayload
 import fr.delphes.twitch.api.channelUpdate.payload.SubscribeChannelUpdate
@@ -12,15 +13,25 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelUpdateEventSubConfiguration(
+    channel: TwitchChannel,
     listener: (ChannelUpdate) -> Unit
 ) : EventSubConfiguration<ChannelUpdate, ChannelUpdateEventPayload, ChannelUpdateCondition>(
+    channel,
     "channelUpdate",
     listener
 ) {
     override fun transform(
         payload: ChannelUpdateEventPayload
     ): ChannelUpdate {
-        return ChannelUpdate(payload.title, payload.language, Game(GameId(payload.category_id), payload.category_name))
+        return ChannelUpdate(
+            channel,
+            payload.title,
+            payload.language,
+            Game(
+                GameId(payload.category_id),
+                payload.category_name
+            )
+        )
     }
 
     override fun subscribePayload(

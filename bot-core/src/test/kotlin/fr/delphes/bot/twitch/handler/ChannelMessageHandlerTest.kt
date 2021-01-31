@@ -3,6 +3,7 @@ package fr.delphes.bot.twitch.handler
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.state.UserMessage
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcChannelMessage
@@ -17,7 +18,9 @@ import org.junit.jupiter.api.Test
 
 internal class ChannelMessageHandlerTest {
     private val changeState = mockk<ChannelChangeState>(relaxed = true)
+    //TODO double channel variables
     private val channel = mockk<ChannelInfo>()
+    private val CHANNEL = TwitchChannel("channel")
 
     @BeforeEach
     internal fun setUp() {
@@ -29,7 +32,7 @@ internal class ChannelMessageHandlerTest {
     @Test
     internal fun `add statistics message received`() {
         runBlocking {
-            ChannelMessageHandler().handle(
+            ChannelMessageHandler(CHANNEL).handle(
                 IrcChannelMessage(IrcChannel("myChannel"), IrcUser("user"), "message"),
                 channel,
                 changeState

@@ -4,8 +4,10 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.feature.Feature
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
@@ -20,7 +22,8 @@ class ClientBot(
     configuration: BotConfiguration,
     private val publicUrl: String,
     val configFilepath: String,
-    val connectors: List<Connector>
+    val connectors: List<Connector>,
+    private val features: List<Feature>
 ) {
     val channels = mutableListOf<Channel>()
     //TODO random secret
@@ -35,10 +38,6 @@ class ClientBot(
     private val twitchApi = AppTwitchClient.build(appCredential)
 
     val ircClient = IrcClient.builder(configuration.botAccountOauth).build()
-
-    fun findChannelBy(name: String): Channel? {
-        return channels.find { channel -> channel.name == name }
-    }
 
     fun register(channel: Channel) {
         channels.add(channel)

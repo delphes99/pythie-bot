@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelFollow
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.parseToModel
 import fr.delphes.twitch.api.user.User
 import org.assertj.core.api.Assertions.assertThat
@@ -33,10 +34,10 @@ internal class ChannelFollowEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = ChannelFollowEventSubConfiguration { }.parseToModel(payload)
+        val model = ChannelFollowEventSubConfiguration(TwitchChannel("channel")) { }.parseToModel(payload)
 
         assertThat(model).isEqualTo(
-            NewFollow(User("cool_user"))
+            NewFollow(TwitchChannel("channel"), User("cool_user"))
         )
     }
 }

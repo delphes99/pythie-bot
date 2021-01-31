@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelCheer
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.parseToModel
 import fr.delphes.twitch.api.user.User
 import org.assertj.core.api.Assertions.assertThat
@@ -36,10 +37,10 @@ internal class ChannelCheerEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = ChannelCheerEventSubConfiguration { }.parseToModel(payload)
+        val model = ChannelCheerEventSubConfiguration(TwitchChannel("channel")) { }.parseToModel(payload)
 
         assertThat(model).isEqualTo(
-            NewCheer(User("cool_user"), 1000, "pogchamp")
+            NewCheer(TwitchChannel("channel"), User("cool_user"), 1000, "pogchamp")
         )
     }
 }

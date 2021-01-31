@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelPointsCustomRewardRedemption
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.parseToModel
 import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.reward.RewardConfiguration
@@ -47,10 +48,15 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = CustomRewardRedemptionEventSubConfiguration({ }, listOf(configuredReward)).parseToModel(payload)
+        val model = CustomRewardRedemptionEventSubConfiguration(
+            channel = TwitchChannel("channel"),
+            listener = { },
+            rewardsConfigurations = listOf(configuredReward)
+        ).parseToModel(payload)
 
         assertThat(model).isEqualTo(
             RewardRedemption(
+                TwitchChannel("channel"),
                 Reward(
                     "9001",
                     configuredReward
@@ -100,7 +106,11 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = CustomRewardRedemptionEventSubConfiguration({ }, listOf(configuredReward)).parseToModel(payload)
+        val model = CustomRewardRedemptionEventSubConfiguration(
+            channel = TwitchChannel("channel"),
+            listener = { },
+            rewardsConfigurations = listOf(configuredReward)
+        ).parseToModel(payload)
 
         assertThat(model).isNull()
     }

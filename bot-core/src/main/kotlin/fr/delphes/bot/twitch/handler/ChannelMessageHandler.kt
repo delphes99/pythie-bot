@@ -8,9 +8,12 @@ import fr.delphes.bot.event.incoming.MessageReceived
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.irc.IrcChannelMessage
 
-class ChannelMessageHandler : TwitchIncomingEventHandler<IrcChannelMessage> {
+class ChannelMessageHandler(
+    private val channel: TwitchChannel
+) : TwitchIncomingEventHandler<IrcChannelMessage> {
     override suspend fun handle(
         twitchEvent: IrcChannelMessage,
         channel: ChannelInfo,
@@ -23,10 +26,10 @@ class ChannelMessageHandler : TwitchIncomingEventHandler<IrcChannelMessage> {
 
         return listOf(
             if (command != null) {
-                CommandAsked(command, user)
+                CommandAsked(this@ChannelMessageHandler.channel, command, user)
             } else {
                 changeState.addMessage(UserMessage(user, message))
-                MessageReceived(twitchEvent)
+                MessageReceived(this@ChannelMessageHandler.channel, twitchEvent)
             }
         )
     }

@@ -30,7 +30,7 @@ class StreamOnlineHandler(
             return emptyList()
         }
 
-        val incomingEvent = StreamOnline(stream!!.title, clock.now(), stream.game, stream.thumbnailUrl)
+        val incomingEvent = StreamOnline(twitchEvent.channel, stream!!.title, clock.now(), stream.game, stream.thumbnailUrl)
 
         changeState.changeCurrentStream(
             Stream(

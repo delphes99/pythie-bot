@@ -15,6 +15,6 @@ class StreamOfflineHandler : TwitchIncomingEventHandler<StreamOfflineTwitch> {
     ): List<IncomingEvent> {
         changeState.changeCurrentStream(null)
 
-        return listOf(StreamOffline)
+        return listOf(StreamOffline(twitchEvent.channel))
     }
 }

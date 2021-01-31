@@ -14,6 +14,7 @@ import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.features.TestClock
 import fr.delphes.features.TestStateRepository
 import fr.delphes.features.handle
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.Reward
@@ -29,9 +30,10 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 internal class VOTHTest {
+    private val CHANNEL_NAME = "channel"
+    private val CHANNEL = TwitchChannel(CHANNEL_NAME)
     private val reward = RewardConfiguration("voth", 100)
-    private val rewardRedemption = RewardRedemption(Reward("id", reward), "user", 50)
-    private val CHANNEL = "channel"
+    private val rewardRedemption = RewardRedemption(CHANNEL, Reward("id", reward), "user", 50)
     private val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
     private val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", NOW.minusMinutes(5), 50))
     private val CLOCK = TestClock(NOW)
@@ -82,7 +84,7 @@ internal class VOTHTest {
         internal suspend fun `remove all old vip`() {
             val voth = voth()
 
-            val messages = voth.handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
+            val messages = voth.handle(VIPListReceived(CHANNEL, "oldVip", "oldVip2"), channelInfo)
             assertThat(messages).contains(
                 RemoveVIP("oldVip"),
                 RemoveVIP("oldVip2")
@@ -94,7 +96,7 @@ internal class VOTHTest {
             val state = VOTHState(true, VOTHWinner("newVip", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
+            val messages = voth.handle(VIPListReceived(CHANNEL, "oldVip", "oldVip2"), channelInfo)
             assertThat(messages).contains(
                 PromoteVIP("newVip")
             )
@@ -105,7 +107,7 @@ internal class VOTHTest {
             val state = VOTHState(false, VOTHWinner("user", NOW.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.handle(VIPListReceived("oldVip", "oldVip2"), channelInfo)
+            val messages = voth.handle(VIPListReceived(CHANNEL, "oldVip", "oldVip2"), channelInfo)
             assertThat(messages).isEmpty()
         }
     }
@@ -115,7 +117,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.handle(StreamOffline, channelInfo)
+        val messages = voth.handle(StreamOffline(CHANNEL), channelInfo)
 
         verify(exactly = 1) { state.pause(any()) }
         assertThat(messages).isEmpty()
@@ -126,7 +128,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val incomingEvent = StreamOnline("title", NOW, Game(GameId("gameId"), "game title"), "thumbnailUrl")
+        val incomingEvent = StreamOnline(CHANNEL, "title", NOW, Game(GameId("gameId"), "game title"), "thumbnailUrl")
         val messages = voth.handle(incomingEvent, channelInfo)
 
         verify(exactly = 1) { state.unpause(any()) }
@@ -139,7 +141,7 @@ internal class VOTHTest {
         every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
 
         val voth = VOTH(
-            CHANNEL,
+            CHANNEL_NAME,
             VOTHConfiguration(
                 reward,
                 { emptyList() },
@@ -152,14 +154,14 @@ internal class VOTHTest {
             clock = CLOCK
         )
 
-        val events = voth.handle(CommandAsked(Command("!top3"), User("user")), mockk())
+        val events = voth.handle(CommandAsked(CHANNEL, Command("!top3"), User("user")), mockk())
 
         assertThat(events).contains(SendMessage("user1, user2, user3"))
     }
 
     private fun voth(state: VOTHState = DEFAULT_STATE): VOTH {
         return VOTH(
-            CHANNEL,
+            CHANNEL_NAME,
             CONFIGURATION,
             stateRepository = TestStateRepository { state },
             state = state,

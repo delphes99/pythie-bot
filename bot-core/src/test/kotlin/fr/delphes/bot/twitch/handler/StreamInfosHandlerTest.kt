@@ -4,6 +4,7 @@ import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.StreamChanged
 import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -31,6 +32,8 @@ internal class StreamInfosHandlerTest {
     private val NEW_GAME_ID = GameId("new game")
     private val NEW_GAME = Game(NEW_GAME_ID, "new game title")
 
+    private val CHANNEL = TwitchChannel("channel")
+
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
@@ -45,13 +48,13 @@ internal class StreamInfosHandlerTest {
         assertThat(
             runBlocking {
                 channelUpdateHandler.handle(
-                    ChannelUpdate(NEW_TITLE, "en", CURRENT_GAME),
+                    ChannelUpdate(CHANNEL, NEW_TITLE, "en", CURRENT_GAME),
                     channelInfo,
                     changeState
                 )
             }
         ).contains(
-            StreamChanged(StreamChanges.Title(CURRENT_TITLE, "new title"))
+            StreamChanged(CHANNEL, StreamChanges.Title(CURRENT_TITLE, "new title"))
         )
     }
 
@@ -60,19 +63,19 @@ internal class StreamInfosHandlerTest {
         assertThat(
             runBlocking {
                 channelUpdateHandler.handle(
-                    ChannelUpdate(CURRENT_TITLE, "en", NEW_GAME),
+                    ChannelUpdate(CHANNEL, CURRENT_TITLE, "en", NEW_GAME),
                     channelInfo,
                     changeState
                 )
             }
         ).contains(
-            StreamChanged(StreamChanges.Game(CURRENT_GAME, NEW_GAME))
+            StreamChanged(CHANNEL, StreamChanges.Game(CURRENT_GAME, NEW_GAME))
         )
     }
 
     @Test
     internal fun `don't update when no change`() {
-        val event = ChannelUpdate(CURRENT_TITLE, "en", CURRENT_GAME)
+        val event = ChannelUpdate(CHANNEL, CURRENT_TITLE, "en", CURRENT_GAME)
 
         assertThat(
             runBlocking {

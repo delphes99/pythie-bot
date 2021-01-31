@@ -2,6 +2,7 @@ package fr.delphes.bot
 
 import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.BotConfiguration
+import fr.delphes.feature.Feature
 import kotlinx.coroutines.runBlocking
 
 object Bot {
@@ -9,9 +10,16 @@ object Bot {
         configuration: BotConfiguration,
         publicUrl: String,
         configFilepath: String,
-        connectors: List<Connector>
+        connectors: List<Connector>,
+        features: List<Feature>
     ) {
-        val bot = ClientBot(configuration, publicUrl, configFilepath, connectors)
+        val bot = ClientBot(
+            configuration,
+            publicUrl,
+            configFilepath,
+            connectors,
+            features
+        )
 
         connectors.forEach { it.initChannel(bot) }
 

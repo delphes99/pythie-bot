@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.streamOnline
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.parseToModel
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
@@ -32,10 +33,13 @@ internal class StreamOnlineEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = StreamOnlineEventSubConfiguration { }.parseToModel(payload)
+        val model = StreamOnlineEventSubConfiguration(TwitchChannel("channel")) { }.parseToModel(payload)
 
         Assertions.assertThat(model).isEqualTo(
-            StreamOnline(StreamType.LIVE)
+            StreamOnline(
+                TwitchChannel("channel"),
+                StreamType.LIVE
+            )
         )
     }
 }

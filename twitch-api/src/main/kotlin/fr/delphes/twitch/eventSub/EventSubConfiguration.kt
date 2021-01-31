@@ -1,11 +1,13 @@
 package fr.delphes.twitch.eventSub
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.application.ApplicationCall
 
 abstract class EventSubConfiguration<MODEL, PAYLOAD, CONDITION : GenericCondition>(
+    protected val channel: TwitchChannel,
     webhookPathSuffix: String,
     private val listener: (MODEL) -> Unit
 ) {

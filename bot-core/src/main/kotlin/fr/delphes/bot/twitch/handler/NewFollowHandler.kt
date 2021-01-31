@@ -13,7 +13,7 @@ class NewFollowHandler : TwitchIncomingEventHandler<NewFollowTwitch> {
         channel: ChannelInfo,
         changeState: ChannelChangeState
     ): List<IncomingEvent> {
-        val incomingEvent = NewFollow(twitchEvent.follower)
+        val incomingEvent = NewFollow(twitchEvent.channel, twitchEvent.follower)
 
         changeState.newFollow(incomingEvent.follower)
 

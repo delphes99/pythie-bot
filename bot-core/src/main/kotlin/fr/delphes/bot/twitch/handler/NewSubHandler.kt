@@ -15,6 +15,6 @@ class NewSubHandler : TwitchIncomingEventHandler<NewSubTwitch> {
     ): List<IncomingEvent> {
         changeState.newSub(twitchEvent.user)
 
-        return listOf(NewSub(twitchEvent.user))
+        return listOf(NewSub(twitchEvent.channel, twitchEvent.user))
     }
 }

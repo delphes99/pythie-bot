@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelCheer
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelCheer.payload.ChannelCheerCondition
 import fr.delphes.twitch.api.channelCheer.payload.ChannelCheerEventPayload
 import fr.delphes.twitch.api.channelCheer.payload.SubscribeChannelCheer
@@ -11,8 +12,10 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelCheerEventSubConfiguration(
+    channel: TwitchChannel,
     listener: (NewCheer) -> Unit
 ) : EventSubConfiguration<NewCheer, ChannelCheerEventPayload, ChannelCheerCondition>(
+    channel,
     "newCheer",
     listener
 ) {
@@ -20,6 +23,7 @@ class ChannelCheerEventSubConfiguration(
         payload: ChannelCheerEventPayload
     ): NewCheer {
         return NewCheer(
+            channel,
             payload.user_name?.let(::User),
             payload.bits,
             payload.message

@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelFollow
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelFollow.payload.ChannelFollowCondition
 import fr.delphes.twitch.api.channelFollow.payload.ChannelFollowEventPayload
 import fr.delphes.twitch.api.channelFollow.payload.SubscribeChannelFollow
@@ -11,15 +12,20 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelFollowEventSubConfiguration(
+    channel: TwitchChannel,
     listener: (NewFollow) -> Unit
 ) : EventSubConfiguration<NewFollow, ChannelFollowEventPayload, ChannelFollowCondition>(
+    channel,
     "newFollow",
     listener
 ) {
     override fun transform(
         payload: ChannelFollowEventPayload
     ): NewFollow {
-        return NewFollow(User(payload.user_name))
+        return NewFollow(
+            channel,
+            User(payload.user_name)
+        )
     }
 
     override fun subscribePayload(

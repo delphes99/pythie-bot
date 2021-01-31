@@ -33,7 +33,7 @@ class ChannelUpdateHandler : TwitchIncomingEventHandler<ChannelUpdate> {
         }
         return if (!changes.isNullOrEmpty()) {
             changeState.changeCurrentStream(currentStream.applyChanges(changes))
-            listOf(StreamChanged(changes))
+            listOf(StreamChanged(twitchEvent.channel, changes))
         } else {
             emptyList()
         }

@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelSubscribe
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscribeCondition
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscribeEventPayload
 import fr.delphes.twitch.api.channelSubscribe.payload.SubscribeChannelSubscribe
@@ -11,8 +12,10 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelSubscribeEventSubConfiguration(
+    channel: TwitchChannel,
     listener: (NewSub) -> Unit
 ) : EventSubConfiguration<NewSub, ChannelSubscribeEventPayload, ChannelSubscribeCondition>(
+    channel,
     "newSub",
     listener
 ) {
@@ -20,6 +23,7 @@ class ChannelSubscribeEventSubConfiguration(
         payload: ChannelSubscribeEventPayload
     ): NewSub {
         return NewSub(
+            channel,
             User(payload.user_name),
             payload.tier,
             payload.is_gift

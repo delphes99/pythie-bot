@@ -3,6 +3,7 @@ package fr.delphes.bot.command
 import fr.delphes.bot.Channel
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.SendMessage
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.Clock
 import io.mockk.clearAllMocks
@@ -18,6 +19,7 @@ internal class SimpleCommandHandlerTest {
     private val clock = mockk<Clock>()
     private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
     private val channel = mockk<Channel>()
+    private val CHANNEL = TwitchChannel("channel")
 
     @BeforeEach
     internal fun setUp() {
@@ -38,7 +40,7 @@ internal class SimpleCommandHandlerTest {
             clock = clock,
             responses = listOf(SendMessage("response"))
         )
-        val event = CommandAsked(command, User("user"))
+        val event = CommandAsked(CHANNEL, command, User("user"))
 
         assertThat(simpleCommand.handle(event, channel)).containsExactlyInAnyOrder(
             SendMessage("response")
@@ -54,7 +56,7 @@ internal class SimpleCommandHandlerTest {
             cooldown = Duration.ofMinutes(10),
             responses = listOf(SendMessage("response"))
         )
-        val event = CommandAsked(command, User("user"))
+        val event = CommandAsked(CHANNEL, command, User("user"))
 
         `given now`(now)
         assertThat(simpleCommand.handle(event, channel)).isNotEmpty
@@ -72,7 +74,7 @@ internal class SimpleCommandHandlerTest {
             cooldown = Duration.ofMinutes(10),
             responses = listOf(SendMessage("response"))
         )
-        val event = CommandAsked(command, User("user"))
+        val event = CommandAsked(CHANNEL, command, User("user"))
 
         `given now`(now)
         assertThat(simpleCommand.handle(event, channel)).isNotEmpty

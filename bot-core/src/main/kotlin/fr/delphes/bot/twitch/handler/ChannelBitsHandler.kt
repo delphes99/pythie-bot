@@ -17,6 +17,7 @@ class ChannelBitsHandler : TwitchIncomingEventHandler<NewCheer> {
 
         return listOf(
             BitCheered(
+                twitchEvent.channel,
                 twitchEvent.cheerer,
                 twitchEvent.bits,
                 twitchEvent.message

@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.streamOffline
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.streamOffline.payload.StreamOfflineCondition
 import fr.delphes.twitch.api.streamOffline.payload.StreamOfflineEventPayload
 import fr.delphes.twitch.api.streamOffline.payload.SubscribeStreamOffline
@@ -10,15 +11,17 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class StreamOfflineEventSubConfiguration(
+    channel: TwitchChannel,
     listener: (StreamOffline) -> Unit
 ) : EventSubConfiguration<StreamOffline, StreamOfflineEventPayload, StreamOfflineCondition>(
+    channel,
     "StreamOffline",
     listener
 ) {
     override fun transform(
         payload: StreamOfflineEventPayload
     ): StreamOffline {
-        return StreamOffline
+        return StreamOffline(channel)
     }
 
     override fun subscribePayload(

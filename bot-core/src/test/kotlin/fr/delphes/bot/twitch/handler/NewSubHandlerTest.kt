@@ -2,6 +2,7 @@ package fr.delphes.bot.twitch.handler
 
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelSubscribe.NewSub
 import fr.delphes.twitch.api.channelSubscribe.SubscribeTier
 import fr.delphes.twitch.api.user.User
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test
 internal class NewSubHandlerTest {
     private val changeState = mockk<ChannelChangeState>(relaxed = true)
     private val channel = mockk<ChannelInfo>()
+    private val CHANNEL = TwitchChannel("channel")
 
     @BeforeEach
     internal fun setUp() {
@@ -33,6 +35,6 @@ internal class NewSubHandlerTest {
     }
 
     private fun String.subscribe(): NewSub {
-        return NewSub(User(this), SubscribeTier.TIER_1, false)
+        return NewSub(CHANNEL, User(this), SubscribeTier.TIER_1, false)
     }
 }

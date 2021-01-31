@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelPointsCustomRewardRedemption
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionCondition
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionEventPayload
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.SubscribechannelPointsCustomRewardRedemption
@@ -13,11 +14,13 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class CustomRewardRedemptionEventSubConfiguration(
+    channel: TwitchChannel,
     listener: (RewardRedemption) -> Unit,
     private val rewardsConfigurations: List<RewardConfiguration>
 ) : EventSubConfiguration<RewardRedemption,
         ChannelPointsCustomRewardRedemptionEventPayload,
         ChannelPointsCustomRewardRedemptionCondition>(
+    channel,
     "customRewardRedemption",
     listener
 ) {
@@ -29,6 +32,7 @@ class CustomRewardRedemptionEventSubConfiguration(
             ?: return null
 
         return RewardRedemption(
+            channel = channel,
             reward = Reward(
                 payload.reward.id,
                 configuration

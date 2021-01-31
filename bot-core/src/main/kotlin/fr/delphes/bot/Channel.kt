@@ -23,6 +23,7 @@ import fr.delphes.bot.twitch.handler.StreamOnlineHandler
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.TwitchFeature
 import fr.delphes.twitch.ChannelTwitchApi
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
@@ -62,13 +63,10 @@ class Channel(
     val features = configuration.features
     private val eventHandlers = EventHandlers()
 
-    private val newIrcMessageHandler = IRCMessageHandler()
-    private val channelMessageHandler = ChannelMessageHandler()
-
     //TODO move irc client to twitch API
     private val ircClient = IrcClient.builder(oAuth)
-        .withOnMessage { message -> newIrcMessageHandler.handleTwitchEvent(message) }
-        .withOnChannelMessage { message -> channelMessageHandler.handleTwitchEvent(message) }
+        .withOnMessage { message -> IRCMessageHandler(TwitchChannel(name)).handleTwitchEvent(message) }
+        .withOnChannelMessage { message -> ChannelMessageHandler(TwitchChannel(name)).handleTwitchEvent(message) }
         .build()
 
     val twitchApi: ChannelTwitchApi

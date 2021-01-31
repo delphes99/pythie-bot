@@ -1,9 +1,15 @@
 package fr.delphes.bot.event.incoming
 
+import fr.delphes.twitch.TwitchChannel
+
 data class StreamChanged(
+    override val channel: TwitchChannel,
     val changes: List<StreamChanges>
-) : IncomingEvent {
-    constructor(vararg changes: StreamChanges) : this(listOf(*changes))
+) : TwitchIncomingEvent {
+    constructor(
+        channel: TwitchChannel,
+        vararg changes: StreamChanges
+    ) : this(channel, listOf(*changes))
 }
 
 sealed class StreamChanges {

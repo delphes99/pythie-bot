@@ -2,6 +2,7 @@ package fr.delphes.bot.twitch.handler
 
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelFollow.NewFollow
 import fr.delphes.twitch.api.user.User
 import io.mockk.clearAllMocks
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test
 internal class NewFollowHandlerTest {
     private val changeState = mockk<ChannelChangeState>(relaxed = true)
     private val channel = mockk<ChannelInfo>()
+    private val CHANNEL = TwitchChannel("channel")
 
     @BeforeEach
     internal fun setUp() {
@@ -31,6 +33,6 @@ internal class NewFollowHandlerTest {
     }
 
     private fun String.follows(): NewFollow {
-        return NewFollow(User(this))
+        return NewFollow(CHANNEL, User(this))
     }
 }

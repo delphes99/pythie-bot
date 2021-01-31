@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.streamOffline
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.parseToModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -30,10 +31,10 @@ internal class StreamOfflineEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = StreamOfflineEventSubConfiguration { }.parseToModel(payload)
+        val model = StreamOfflineEventSubConfiguration(TwitchChannel("channel")) { }.parseToModel(payload)
 
         assertThat(model).isEqualTo(
-            StreamOffline
+            StreamOffline(TwitchChannel("channel"))
         )
     }
 }

@@ -3,6 +3,7 @@ package fr.delphes.bot.twitch.handler
 import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.streams.Stream
@@ -24,6 +25,7 @@ class StreamOfflineHandlerTest {
     private val GAME_ID = GameId("game")
     private val GAME = Game(GAME_ID, "label")
     private val STARTED_AT = LocalDateTime.of(2020, 1, 1, 12, 0)
+    private val CHANNEL = TwitchChannel("channel")
 
     @BeforeEach
     internal fun setUp() {
@@ -37,20 +39,20 @@ class StreamOfflineHandlerTest {
         assertThat(
             runBlocking {
                 StreamOfflineHandler().handle(
-                    StreamOfflineTwitch,
+                    StreamOfflineTwitch(CHANNEL),
                     channelInfo,
                     changeState
                 )
             }
         ).contains(
-            StreamOffline
+            StreamOffline(CHANNEL)
         )
     }
 
     @Test
     internal fun `change state`() {
         runBlocking {
-            StreamOfflineHandler().handle(StreamOfflineTwitch, channelInfo, changeState)
+            StreamOfflineHandler().handle(StreamOfflineTwitch(CHANNEL), channelInfo, changeState)
         }
 
         verify(exactly = 1) { changeState.changeCurrentStream(null) }

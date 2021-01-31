@@ -5,6 +5,7 @@ import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.event.incoming.StreamOnline
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.util.time.TestClock
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.streamOnline.StreamType
@@ -30,6 +31,7 @@ internal class StreamOnlineHandlerTest {
     private val GAME = Game(GAME_ID, "label")
     private val STARTED_AT = LocalDateTime.of(2020, 1, 1, 12, 0)
     private val THUMBNAIL_URL = "thumbnail_url"
+    private val CHANNEL = TwitchChannel("channel")
 
     private val streamOnlineHandler = StreamOnlineHandler(channel, TestClock(STARTED_AT))
 
@@ -52,7 +54,7 @@ internal class StreamOnlineHandlerTest {
         assertThat(
             runBlocking {
                 streamOnlineHandler.handle(
-                    StreamOnlineTwitch(StreamType.LIVE),
+                    StreamOnlineTwitch(CHANNEL, StreamType.LIVE),
                     channelInfo,
                     changeState
                 )
@@ -60,6 +62,7 @@ internal class StreamOnlineHandlerTest {
         )
             .contains(
                 StreamOnline(
+                    CHANNEL,
                     "current stream title",
                     STARTED_AT,
                     GAME,
@@ -72,7 +75,7 @@ internal class StreamOnlineHandlerTest {
     internal fun `change state`() {
         runBlocking {
             streamOnlineHandler.handle(
-                StreamOnlineTwitch(StreamType.LIVE),
+                StreamOnlineTwitch(CHANNEL, StreamType.LIVE),
                 channelInfo,
                 changeState
             )
@@ -99,7 +102,7 @@ internal class StreamOnlineHandlerTest {
 
             assertThat(
                 streamOnlineHandler.handle(
-                    StreamOnlineTwitch(StreamType.LIVE),
+                    StreamOnlineTwitch(CHANNEL, StreamType.LIVE),
                     channelInfo,
                     changeState
                 )

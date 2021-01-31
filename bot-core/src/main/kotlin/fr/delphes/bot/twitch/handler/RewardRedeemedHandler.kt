@@ -15,6 +15,7 @@ class RewardRedeemedHandler : TwitchIncomingEventHandler<RewardRedemptionTwitch>
     ): List<IncomingEvent> {
         return listOf(
             RewardRedemption(
+                twitchEvent.channel,
                 twitchEvent
             )
         )
