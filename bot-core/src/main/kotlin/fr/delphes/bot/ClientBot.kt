@@ -1,6 +1,7 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.twitch.AppTwitchClient
@@ -80,5 +81,12 @@ class ClientBot(
             webhookSecret,
             configuration.rewards
         )
+    }
+
+    suspend fun handleEvent(incomingEvent: IncomingEvent) {
+        //TODO move channel into event / target the good channel
+        channels.forEach { channel ->
+            channel.handleIncomingEvent(incomingEvent)
+        }
     }
 }

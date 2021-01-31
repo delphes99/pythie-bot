@@ -26,6 +26,7 @@ import fr.delphes.feature.streamUpdate.StreamUpdate
 import fr.delphes.feature.voth.FileVOTHStateRepository
 import fr.delphes.feature.voth.VOTH
 import fr.delphes.feature.voth.VOTHConfiguration
+import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.utils.time.prettyPrint
 import java.time.Duration
 import java.time.LocalDateTime
@@ -195,6 +196,11 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         Command(
             "!helloDiscord",
             responses = listOf(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
-        )
+        ),
+        NewGuildMember { newGuildMember ->
+            listOf(
+                SendMessage("${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même !")
+            )
+        }
     )
 }

@@ -2,6 +2,7 @@ package fr.delphes.bot
 
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.TwitchOutgoingEvent
@@ -98,9 +99,13 @@ class Channel(
         //TODO make suspendable
         runBlocking {
             this@handleTwitchEvent.handle(request, this@Channel, this@Channel.state).forEach { incomingEvent ->
-                eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
+                handleIncomingEvent(incomingEvent)
             }
         }
+    }
+
+    suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
+        eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
     }
 
     private suspend fun List<OutgoingEvent>.execute() {

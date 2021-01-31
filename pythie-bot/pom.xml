@@ -21,17 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>fr.delphes</groupId>
-            <artifactId>bot-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>fr.delphes</groupId>
-            <artifactId>connector-discord</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>fr.delphes</groupId>
-            <artifactId>connector-twitch</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <artifactId>bot-features</artifactId>
         </dependency>
     </dependencies>
 

@@ -13,6 +13,8 @@ class DiscordConnector(
 ) : Connector {
     private val repository = DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     var state: DiscordState = DiscordState.Unconfigured
+    //TODO non null
+    var clientBot: ClientBot? = null
 
     init {
         runBlocking {
@@ -38,6 +40,7 @@ class DiscordConnector(
     }
 
     override fun initChannel(bot: ClientBot) {
+        clientBot = bot
     }
 
     override fun internalEndpoints(application: Application, bot: ClientBot) {
@@ -58,6 +61,6 @@ class DiscordConnector(
         val newConfiguration = DiscordConfiguration(oAuthToken)
         repository.save(newConfiguration)
 
-        state = DiscordState.Unconfigured.configure(oAuthToken)
+        state = DiscordState.Unconfigured.configure(oAuthToken, this)
     }
 }
