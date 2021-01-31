@@ -9,7 +9,7 @@ import fr.delphes.bot.event.incoming.StreamOnline
 import fr.delphes.bot.event.outgoing.ActivateReward
 import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.feature.AbstractFeature
+import fr.delphes.feature.TwitchFeature
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.WithGameId
@@ -17,9 +17,14 @@ import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
 class GameReward(
+    channel: String,
     private val gameRewards: Map<GameId, List<RewardConfiguration>>
-) : AbstractFeature() {
-    constructor(vararg gameRewards: Pair<WithRewardConfiguration, WithGameId>) : this(
+) : TwitchFeature(channel) {
+    constructor(
+        channel: String,
+        vararg gameRewards: Pair<WithRewardConfiguration, WithGameId>
+    ) : this(
+        channel,
         gameRewards.groupBy(
             keySelector = { t -> t.second.gameId },
             valueTransform = { t -> t.first.rewardConfiguration }

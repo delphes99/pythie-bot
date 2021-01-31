@@ -17,23 +17,25 @@ import java.time.Duration
 /**
  * Example for delphestest channel : https://www.twitch.tv/delphestest
  */
+val channel = "delphestest"
 val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.properties") { properties ->
     ChannelConfiguration(
         properties.getProperty("channel.name"),
         properties.getProperty("account.oAuth"),
         emptyList(),
         Command(
+            channel,
             "!test",
             cooldown = Duration.ofSeconds(10),
             responses = listOf(
                 SendMessage("Compte de test opérationnel !")
             )
         ),
-        NewFollow { newFollow ->
+        NewFollow(channel) { newFollow ->
             listOf(SendMessage("Merci du follow ${newFollow.follower.name}"))
         },
-        StreamOffline { listOf(SendMessage("Le stream est fini, au revoir !")) },
-        StreamOnline {
+        StreamOffline(channel) { listOf(SendMessage("Le stream est fini, au revoir !")) },
+        StreamOnline(channel) {
             listOf(
                 SendMessage("Le stream démarre, ravi de vous revoir !"),
                 DiscordEmbeddedMessage(
@@ -50,6 +52,7 @@ val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.p
         },
         Statistics(),
         CommandList(
+            channel,
             "!help"
         ) { commands ->
             listOf(
@@ -58,7 +61,7 @@ val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.p
                 )
             )
         },
-        StreamUpdate { changes ->
+        StreamUpdate(channel) { changes ->
             listOf(
                 SendMessage(
                     changes.joinToString(" | ") { change ->
@@ -75,11 +78,13 @@ val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.p
             )
         },
         GameDescription(
+            channel,
             "!tufekoi",
             Games.SCIENCE_TECHNOLOGY to "development",
             Games.JUST_CHATTING to "just chatting"
         ),
         Command(
+            channel,
             "!ping",
             responses = listOf(SendMessage("pong"))
         )

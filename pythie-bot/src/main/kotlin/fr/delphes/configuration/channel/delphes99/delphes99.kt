@@ -35,12 +35,14 @@ import java.time.format.DateTimeFormatter
 /**
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
+val channel = "delphes99"
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(
         properties.getProperty("channel.name"),
         properties.getProperty("account.oAuth"),
         DelphesReward.toRewardList(),
         VOTH(
+            channel,
             VOTHConfiguration(
                 reward = DelphesReward.VOTH,
                 newVipAnnouncer = { announce ->
@@ -85,6 +87,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             )
         ),
         Command(
+            channel,
             "!bot",
             cooldown = Duration.ofMinutes(2),
             responses = listOf(
@@ -92,20 +95,21 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             )
         ),
         Command(
+            channel,
             "!discord",
             cooldown = Duration.ofSeconds(10),
             responses = listOf(
                 SendMessage("https://discord.com/invite/SAdBhbu")
             )
         ),
-        NewFollow { newFollow ->
+        NewFollow(channel) { newFollow ->
             listOf(SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F"))
         },
-        NewSub { newSub ->
+        NewSub(channel) { newSub ->
             listOf(SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F"))
         },
-        StreamOffline { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")) },
-        StreamOnline {
+        StreamOffline(channel) { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")) },
+        StreamOnline(channel) {
             listOf(
                 SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !"),
                 DiscordEmbeddedMessage(
@@ -124,6 +128,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         EndCredits(),
         Overlay(),
         CommandList(
+            channel,
             "!help"
         ) { commands ->
             listOf(
@@ -132,7 +137,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                 )
             )
         },
-        StreamUpdate { changes ->
+        StreamUpdate(channel) { changes ->
             listOf(
                 SendMessage(
                     changes.joinToString(" | ") { change ->
@@ -148,12 +153,13 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
                 )
             )
         },
-        BitCheer { bitCheered ->
+        BitCheer(channel) { bitCheered ->
             listOf(
                 SendMessage("💎 ${bitCheered.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎")
             )
         },
         GameDescription(
+            channel,
             "!tufekoi",
             Games.SCIENCE_TECHNOLOGY to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
             Games.JUST_CHATTING to "\uD83D\uDDE3️ bla bla bla",
@@ -162,6 +168,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             Games.GEOGUESSR to "Vous entrez dans un streetview dans un lieu aléatoire, vous devez vous retrouver sur une carte \uD83D\uDDFA️"
         ),
         RewardRedeem(
+            channel,
             DelphesReward.DEV_TEST
         ) {
             listOf(
@@ -170,6 +177,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             )
         },
         RewardRedeem(
+            channel,
             DelphesReward.DEV_TEST2
         ) {
             listOf(
@@ -177,23 +185,28 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
             )
         },
         GameReward(
+            channel,
             DelphesReward.DEV_TEST to Games.SCIENCE_TECHNOLOGY,
             DelphesReward.DEV_TEST2 to Games.SCIENCE_TECHNOLOGY,
             DelphesReward.SATISFACTORY_COLOR to Games.SATISFACTORY
         ),
         Command(
+            channel,
             "!deactivateTest",
             responses = listOf(DesactivateReward(DelphesReward.DEV_TEST))
         ),
         Command(
+            channel,
             "!activateTest",
             responses = listOf(ActivateReward(DelphesReward.DEV_TEST))
         ),
         Command(
+            channel,
             "!ping",
             responses = listOf(SendMessage("pong"))
         ),
         Command(
+            channel,
             "!helloDiscord",
             responses = listOf(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
         ),

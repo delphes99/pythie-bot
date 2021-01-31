@@ -6,11 +6,12 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.StreamChanged
 import fr.delphes.bot.event.incoming.StreamChanges
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.feature.AbstractFeature
+import fr.delphes.feature.TwitchFeature
 
 class StreamUpdate(
+    channel: String,
     private val handleChanges: (List<StreamChanges>) -> List<OutgoingEvent>
-) : AbstractFeature() {
+) : TwitchFeature(channel) {
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(Handler())
     }

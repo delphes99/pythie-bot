@@ -6,7 +6,7 @@ import fr.delphes.bot.command.CommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.SendMessage
-import fr.delphes.feature.AbstractFeature
+import fr.delphes.feature.TwitchFeature
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.WithGameId
 import fr.delphes.twitch.api.user.User
@@ -14,13 +14,15 @@ import fr.delphes.twitch.api.user.User
 
 //TODO dynamics description (file / commands / ... ?)
 class GameDescription(
+    channel: String,
     commandTrigger: String,
     private val descriptions: Map<GameId, String>
-) : AbstractFeature() {
+) : TwitchFeature(channel) {
     constructor(
+        channel: String,
         commandTrigger: String,
         vararg descriptions: Pair<WithGameId, String>
-    ): this(commandTrigger, mapOf(*descriptions).mapKeys { entry -> entry.key.gameId })
+    ): this(channel, commandTrigger, mapOf(*descriptions).mapKeys { entry -> entry.key.gameId })
 
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(commandHandler)

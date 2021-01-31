@@ -21,7 +21,6 @@ class Overlay : Feature, HaveHttp {
         eventHandlers.addHandler(BitCheeredHandler())
     }
 
-    override val commands: Iterable<Command> = emptyList()
     override val module: (Channel) -> Application.() -> Unit = { channel ->
         OverlayModule(channel)
     }

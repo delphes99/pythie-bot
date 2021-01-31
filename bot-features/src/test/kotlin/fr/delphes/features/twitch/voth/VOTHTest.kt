@@ -31,6 +31,7 @@ import java.time.LocalDateTime
 internal class VOTHTest {
     private val reward = RewardConfiguration("voth", 100)
     private val rewardRedemption = RewardRedemption(Reward("id", reward), "user", 50)
+    private val CHANNEL = "channel"
     private val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
     private val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", NOW.minusMinutes(5), 50))
     private val CLOCK = TestClock(NOW)
@@ -138,6 +139,7 @@ internal class VOTHTest {
         every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
 
         val voth = VOTH(
+            CHANNEL,
             VOTHConfiguration(
                 reward,
                 { emptyList() },
@@ -145,7 +147,7 @@ internal class VOTHTest {
                 { emptyList() },
                 "!top3",
                 { top1, top2, top3 -> listOf(SendMessage("${top1?.user?.name}, ${top2?.user?.name}, ${top3?.user?.name}")) }),
-            stateRepository = TestStateRepository({ state }),
+            stateRepository = TestStateRepository { state },
             state = state,
             clock = CLOCK
         )
@@ -156,6 +158,12 @@ internal class VOTHTest {
     }
 
     private fun voth(state: VOTHState = DEFAULT_STATE): VOTH {
-        return VOTH(CONFIGURATION, stateRepository = TestStateRepository({ state }), state = state, clock = CLOCK)
+        return VOTH(
+            CHANNEL,
+            CONFIGURATION,
+            stateRepository = TestStateRepository { state },
+            state = state,
+            clock = CLOCK
+        )
     }
 }

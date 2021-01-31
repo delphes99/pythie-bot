@@ -10,7 +10,6 @@ import io.ktor.application.Application
 class EndCredits : Feature, HaveHttp {
     override fun registerHandlers(eventHandlers: EventHandlers) {}
 
-    override val commands: Iterable<Command> = emptyList()
     override val module: (Channel) -> Application.() -> Unit = { channel ->
         EndCreditsModule(channel, channel.name)
     }

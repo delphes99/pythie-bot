@@ -14,14 +14,14 @@ import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.bot.twitch.handler.ChannelBitsHandler
 import fr.delphes.bot.twitch.handler.ChannelMessageHandler
 import fr.delphes.bot.twitch.handler.ChannelUpdateHandler
-import fr.delphes.bot.twitch.handler.NewFollowHandler
 import fr.delphes.bot.twitch.handler.IRCMessageHandler
+import fr.delphes.bot.twitch.handler.NewFollowHandler
 import fr.delphes.bot.twitch.handler.NewSubHandler
 import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
 import fr.delphes.bot.twitch.handler.StreamOfflineHandler
 import fr.delphes.bot.twitch.handler.StreamOnlineHandler
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.feature.Feature
+import fr.delphes.feature.TwitchFeature
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.auth.AuthToken
@@ -41,7 +41,9 @@ class Channel(
     val bot: ClientBot,
     private val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${configuration.ownerChannel}"))
 ) : ChannelInfo {
-    override val commands: List<Command> = configuration.features.flatMap(Feature::commands)
+    override val commands: List<Command> = configuration.features
+        .filterIsInstance<TwitchFeature>()
+        .flatMap(TwitchFeature::commands)
     override val currentStream: Stream? get() = state.currentStream
     override val statistics: Statistics get() = state.statistics
     override val streamStatistics: StreamStatistics? get() = state.streamStatistics

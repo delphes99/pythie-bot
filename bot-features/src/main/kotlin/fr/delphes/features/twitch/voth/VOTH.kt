@@ -14,7 +14,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.PromoteVIP
 import fr.delphes.bot.event.outgoing.RemoveVIP
 import fr.delphes.bot.event.outgoing.RetrieveVip
-import fr.delphes.feature.AbstractFeature
+import fr.delphes.feature.TwitchFeature
 import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.StateRepository
 import fr.delphes.utils.time.Clock
@@ -22,11 +22,12 @@ import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
 
 class VOTH(
+    channel: String,
     private val configuration: VOTHConfiguration,
     override val stateRepository: StateRepository<VOTHState>,
     override val state: VOTHState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock
-) : AbstractFeature(), HavePersistantState<VOTHState> {
+) : TwitchFeature(channel), HavePersistantState<VOTHState> {
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(VOTHRewardRedemptionHandler())
         eventHandlers.addHandler(VOTHVIPListReceivedHandler())

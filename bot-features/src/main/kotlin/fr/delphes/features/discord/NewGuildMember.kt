@@ -5,11 +5,11 @@ import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.incomingEvent.NewGuildMember
-import fr.delphes.feature.AbstractFeature
+import fr.delphes.feature.Feature
 
 class NewGuildMember(
     val newGuildMember: (NewGuildMember) -> List<OutgoingEvent>
-) : AbstractFeature() {
+) : Feature {
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(NewGuildMemberHandler())
     }
