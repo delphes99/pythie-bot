@@ -2,7 +2,6 @@ package fr.delphes.bot
 
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.bot.webserver.alert.AlertModule
-import fr.delphes.bot.webserver.auth.AuthInternalModule
 import fr.delphes.bot.webserver.webhook.WebhookModule
 import fr.delphes.utils.serialization.Serializer
 import io.ktor.application.Application
@@ -32,7 +31,6 @@ class WebServer(
                 method(HttpMethod.Delete)
             }
             AdminModule(bot)
-            AuthInternalModule(bot)
             AlertModule(bot)
             internalModules.forEach { module -> module(this) }
         }

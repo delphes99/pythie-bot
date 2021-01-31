@@ -5,7 +5,6 @@ import fr.delphes.bot.ClientBot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.connector.twitch.webservice.AuthModule
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.auth.AuthToken
@@ -37,7 +36,6 @@ class TwitchConnector(
     }
 
     override fun publicEndpoints(application: Application, bot: ClientBot) {
-        application.AuthModule(channels)
     }
 
     override fun connect(bot: ClientBot) {
