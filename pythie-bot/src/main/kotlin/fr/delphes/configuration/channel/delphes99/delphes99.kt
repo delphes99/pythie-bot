@@ -27,6 +27,7 @@ import fr.delphes.features.twitch.streamUpdate.StreamUpdate
 import fr.delphes.features.twitch.voth.FileVOTHStateRepository
 import fr.delphes.features.twitch.voth.VOTH
 import fr.delphes.features.twitch.voth.VOTHConfiguration
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.prettyPrint
 import java.time.Duration
 import java.time.LocalDateTime
@@ -35,7 +36,7 @@ import java.time.format.DateTimeFormatter
 /**
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
-val channel = "delphes99"
+val channel = TwitchChannel("delphes99")
 val delphes99Features = listOf(
     VOTH(
         channel,

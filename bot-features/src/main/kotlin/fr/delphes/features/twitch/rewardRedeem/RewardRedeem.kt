@@ -6,10 +6,11 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.TwitchFeature
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
 class RewardRedeem(
-    channel: String,
+    channel: TwitchChannel,
     private val rewardConfiguration: WithRewardConfiguration,
     private val rewardRedeemResponse: (RewardRedemption) -> List<OutgoingEvent>
 ) : TwitchFeature(channel) {

@@ -10,6 +10,7 @@ import fr.delphes.bot.event.outgoing.ActivateReward
 import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.TwitchFeature
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.WithGameId
@@ -17,11 +18,11 @@ import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
 class GameReward(
-    channel: String,
+    channel: TwitchChannel,
     private val gameRewards: Map<GameId, List<RewardConfiguration>>
 ) : TwitchFeature(channel) {
     constructor(
-        channel: String,
+        channel: TwitchChannel,
         vararg gameRewards: Pair<WithRewardConfiguration, WithGameId>
     ) : this(
         channel,

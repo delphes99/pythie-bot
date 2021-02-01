@@ -2,6 +2,7 @@ package fr.delphes.bot.twitch.handler
 
 import fr.delphes.twitch.api.user.User
 import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.MessageReceived
@@ -12,7 +13,8 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.irc.IrcChannelMessage
 
 class ChannelMessageHandler(
-    private val channel: TwitchChannel
+    private val channel: TwitchChannel,
+    private val bot: ClientBot
 ) : TwitchIncomingEventHandler<IrcChannelMessage> {
     override suspend fun handle(
         twitchEvent: IrcChannelMessage,
@@ -22,7 +24,7 @@ class ChannelMessageHandler(
         val user = User(twitchEvent.user.name)
         val message = twitchEvent.message
 
-        val command = channel.commands.find { it.triggerMessage == message }
+        val command = bot.commandsFor(this@ChannelMessageHandler.channel).find { it.triggerMessage == message }
 
         return listOf(
             if (command != null) {

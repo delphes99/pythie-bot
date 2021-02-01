@@ -12,12 +12,13 @@ import fr.delphes.features.twitch.newFollow.NewFollow
 import fr.delphes.features.twitch.streamOffline.StreamOffline
 import fr.delphes.features.twitch.streamOnline.StreamOnline
 import fr.delphes.features.twitch.streamUpdate.StreamUpdate
+import fr.delphes.twitch.TwitchChannel
 import java.time.Duration
 
 /**
  * Example for delphestest channel : https://www.twitch.tv/delphestest
  */
-val channel = "delphestest"
+val channel = TwitchChannel("delphestest")
 val delphestestFeatures = listOf(
     Command(
         channel,

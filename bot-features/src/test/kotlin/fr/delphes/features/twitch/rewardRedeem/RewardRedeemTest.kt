@@ -11,8 +11,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class RewardRedeemTest {
-    private val CHANNEL_NAME = "channel"
-    private val CHANNEL = TwitchChannel(CHANNEL_NAME)
+    private val CHANNEL = TwitchChannel("channel")
     private val reward = RewardConfiguration("reward", 100)
     private val otherReward = RewardConfiguration("other_reward", 100)
 
@@ -20,7 +19,7 @@ internal class RewardRedeemTest {
     internal suspend fun `respond if matching reward`() {
         val response = mockk<OutgoingEvent>()
 
-        val outgoingEvents = RewardRedeem(CHANNEL_NAME, reward) { listOf(response) }
+        val outgoingEvents = RewardRedeem(CHANNEL, reward) { listOf(response) }
             .handle(
                 RewardRedemption(
                     CHANNEL,
@@ -38,7 +37,7 @@ internal class RewardRedeemTest {
     internal suspend fun `don't respond not matching reward`() {
         val response = mockk<OutgoingEvent>()
 
-        val outgoingEvents = RewardRedeem(CHANNEL_NAME, otherReward) { listOf(response) }
+        val outgoingEvents = RewardRedeem(CHANNEL, otherReward) { listOf(response) }
             .handle(
                 RewardRedemption(
                     CHANNEL,

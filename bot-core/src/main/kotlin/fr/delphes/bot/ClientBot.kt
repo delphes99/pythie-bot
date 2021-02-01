@@ -1,10 +1,12 @@
 package fr.delphes.bot
 
+import fr.delphes.bot.command.Command
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.feature.Feature
+import fr.delphes.feature.TwitchFeature
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.TwitchChannel
@@ -41,6 +43,19 @@ class ClientBot(
 
     fun register(channel: Channel) {
         channels.add(channel)
+    }
+
+    //TODO move to connector
+    fun featuresFor(channel: TwitchChannel): List<TwitchFeature> {
+        return features
+            .filterIsInstance<TwitchFeature>()
+            .filter { feature -> feature.channel == channel }
+    }
+
+    //TODO move to connector
+    fun commandsFor(channel: TwitchChannel): List<Command> {
+        return featuresFor(channel)
+            .flatMap(TwitchFeature::commands)
     }
 
     //TODO move to connector

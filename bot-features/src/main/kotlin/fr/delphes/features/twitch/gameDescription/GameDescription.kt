@@ -7,19 +7,19 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.feature.TwitchFeature
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.WithGameId
 import fr.delphes.twitch.api.user.User
 
-
 //TODO dynamics description (file / commands / ... ?)
 class GameDescription(
-    channel: String,
+    channel: TwitchChannel,
     commandTrigger: String,
     private val descriptions: Map<GameId, String>
 ) : TwitchFeature(channel) {
     constructor(
-        channel: String,
+        channel: TwitchChannel,
         commandTrigger: String,
         vararg descriptions: Pair<WithGameId, String>
     ): this(channel, commandTrigger, mapOf(*descriptions).mapKeys { entry -> entry.key.gameId })

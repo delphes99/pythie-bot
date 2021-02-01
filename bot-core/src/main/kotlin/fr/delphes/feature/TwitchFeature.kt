@@ -1,10 +1,10 @@
 package fr.delphes.feature
 
 import fr.delphes.bot.command.Command
+import fr.delphes.twitch.TwitchChannel
 
 abstract class TwitchFeature(
-    //TODO type
-    val channel: String
+    val channel: TwitchChannel
 ) : Feature {
     open val commands: Iterable<Command> = emptyList()
 }

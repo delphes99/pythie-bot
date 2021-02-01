@@ -1,6 +1,7 @@
 package fr.delphes.bot.twitch.handler
 
 import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.state.ChannelChangeState
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.twitch.TwitchChannel
@@ -21,6 +22,7 @@ internal class ChannelMessageHandlerTest {
     //TODO double channel variables
     private val channel = mockk<ChannelInfo>()
     private val CHANNEL = TwitchChannel("channel")
+    private val clientBot = mockk<ClientBot>()
 
     @BeforeEach
     internal fun setUp() {
@@ -29,10 +31,11 @@ internal class ChannelMessageHandlerTest {
         every { channel.commands } returns emptyList()
     }
 
+
     @Test
     internal fun `add statistics message received`() {
         runBlocking {
-            ChannelMessageHandler(CHANNEL).handle(
+            ChannelMessageHandler(CHANNEL, clientBot).handle(
                 IrcChannelMessage(IrcChannel("myChannel"), IrcUser("user"), "message"),
                 channel,
                 changeState

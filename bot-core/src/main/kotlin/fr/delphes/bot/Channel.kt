@@ -66,7 +66,7 @@ class Channel(
     //TODO move irc client to twitch API
     private val ircClient = IrcClient.builder(oAuth)
         .withOnMessage { message -> IRCMessageHandler(TwitchChannel(name)).handleTwitchEvent(message) }
-        .withOnChannelMessage { message -> ChannelMessageHandler(TwitchChannel(name)).handleTwitchEvent(message) }
+        .withOnChannelMessage { message -> ChannelMessageHandler(TwitchChannel(name), bot).handleTwitchEvent(message) }
         .build()
 
     val twitchApi: ChannelTwitchApi

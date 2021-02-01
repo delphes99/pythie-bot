@@ -6,9 +6,10 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.StreamOffline
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.TwitchFeature
+import fr.delphes.twitch.TwitchChannel
 
 class StreamOffline(
-    channel: String,
+    channel: TwitchChannel,
     val streamOfflineResponse: (StreamOffline) -> List<OutgoingEvent>
 ) : TwitchFeature(channel) {
     override fun registerHandlers(eventHandlers: EventHandlers) {

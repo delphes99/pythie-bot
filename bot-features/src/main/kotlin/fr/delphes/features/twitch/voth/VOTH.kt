@@ -17,12 +17,13 @@ import fr.delphes.bot.event.outgoing.RetrieveVip
 import fr.delphes.feature.TwitchFeature
 import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.StateRepository
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
 
 class VOTH(
-    channel: String,
+    channel: TwitchChannel,
     private val configuration: VOTHConfiguration,
     override val stateRepository: StateRepository<VOTHState>,
     override val state: VOTHState = runBlocking { stateRepository.load() },

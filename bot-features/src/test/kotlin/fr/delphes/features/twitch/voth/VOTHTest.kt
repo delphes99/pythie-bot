@@ -30,8 +30,7 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 internal class VOTHTest {
-    private val CHANNEL_NAME = "channel"
-    private val CHANNEL = TwitchChannel(CHANNEL_NAME)
+    private val CHANNEL = TwitchChannel("channel")
     private val reward = RewardConfiguration("voth", 100)
     private val rewardRedemption = RewardRedemption(CHANNEL, Reward("id", reward), "user", 50)
     private val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
@@ -141,7 +140,7 @@ internal class VOTHTest {
         every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
 
         val voth = VOTH(
-            CHANNEL_NAME,
+            CHANNEL,
             VOTHConfiguration(
                 reward,
                 { emptyList() },
@@ -161,7 +160,7 @@ internal class VOTHTest {
 
     private fun voth(state: VOTHState = DEFAULT_STATE): VOTH {
         return VOTH(
-            CHANNEL_NAME,
+            CHANNEL,
             CONFIGURATION,
             stateRepository = TestStateRepository { state },
             state = state,

@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
 internal class GameDescriptionTest {
     private val channelInfo = mockk<ChannelInfo>()
 
-    private val CHANNEL_NAME = "channel"
     private val CHANNEL = TwitchChannel("channel")
     private val GAME_ID = GameId("id")
     private val GAME = Game(GAME_ID, "label")
@@ -30,7 +29,7 @@ internal class GameDescriptionTest {
 
     @Test
     internal suspend fun `describe the current`() {
-        val feature = GameDescription(CHANNEL_NAME, "!tufekoi", GAME_ID to "description")
+        val feature = GameDescription(CHANNEL, "!tufekoi", GAME_ID to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(CHANNEL, Command("!tufekoi"), User("user"))
 
@@ -41,7 +40,7 @@ internal class GameDescriptionTest {
 
     @Test
     internal suspend fun `describe the current (with other gameId implementation)`() {
-        val feature = GameDescription(CHANNEL_NAME,"!tufekoi", GameEnum.GAME to "description")
+        val feature = GameDescription(CHANNEL,"!tufekoi", GameEnum.GAME to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(CHANNEL, Command("!tufekoi"), User("user"))
 
@@ -52,7 +51,7 @@ internal class GameDescriptionTest {
 
     @Test
     internal suspend fun `do nothing when no description`() {
-        val feature = GameDescription(CHANNEL_NAME, "!tufekoi", GAME_ID to "description")
+        val feature = GameDescription(CHANNEL, "!tufekoi", GAME_ID to "description")
         `current game is`(OTHER_GAME)
         val commandAsked = CommandAsked(CHANNEL, Command("!tufekoi"), User("user"))
 
