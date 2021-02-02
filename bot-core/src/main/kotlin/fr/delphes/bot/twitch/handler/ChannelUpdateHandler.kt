@@ -1,21 +1,20 @@
 package fr.delphes.bot.twitch.handler
 
-import fr.delphes.bot.ChannelInfo
-import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.StreamChanged
 import fr.delphes.bot.event.incoming.StreamChanges
-import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.bot.event.incoming.TwitchIncomingEvent
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.streams.Stream
 
-class ChannelUpdateHandler : TwitchIncomingEventHandler<ChannelUpdate> {
+class ChannelUpdateHandler(
+    private val bot: ClientBot
+) : TwitchIncomingEventHandler<ChannelUpdate> {
     override suspend fun handle(
-        twitchEvent: ChannelUpdate,
-        channel: ChannelInfo,
-        changeState: ChannelChangeState
-    ): List<IncomingEvent> {
-        val currentStream = channel.currentStream
+        twitchEvent: ChannelUpdate
+    ): List<TwitchIncomingEvent> {
+        val currentStream = bot.channelOf(twitchEvent.channel)?.currentStream
 
         val changes = currentStream?.let {
             listOfNotNull(
@@ -32,7 +31,7 @@ class ChannelUpdateHandler : TwitchIncomingEventHandler<ChannelUpdate> {
             )
         }
         return if (!changes.isNullOrEmpty()) {
-            changeState.changeCurrentStream(currentStream.applyChanges(changes))
+            bot.channelOf(twitchEvent.channel)?.state?.changeCurrentStream(currentStream.applyChanges(changes))
             listOf(StreamChanged(twitchEvent.channel, changes))
         } else {
             emptyList()

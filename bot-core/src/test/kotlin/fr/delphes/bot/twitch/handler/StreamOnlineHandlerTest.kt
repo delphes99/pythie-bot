@@ -1,9 +1,9 @@
 package fr.delphes.bot.twitch.handler
 
 import fr.delphes.bot.Channel
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.StreamOnline
-import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.util.time.TestClock
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
@@ -23,8 +23,8 @@ import java.time.LocalDateTime
 import fr.delphes.twitch.api.streamOnline.StreamOnline as StreamOnlineTwitch
 
 internal class StreamOnlineHandlerTest {
-    private val channelInfo = mockk<ChannelInfo>()
-    private val changeState = mockk<ChannelChangeState>(relaxed = true)
+    private val state = mockk<ChannelState>(relaxed = true)
+    private val bot = mockk<ClientBot>()
     private val channel = mockk<Channel>()
 
     private val GAME_ID = GameId("game")
@@ -33,13 +33,17 @@ internal class StreamOnlineHandlerTest {
     private val THUMBNAIL_URL = "thumbnail_url"
     private val CHANNEL = TwitchChannel("channel")
 
-    private val streamOnlineHandler = StreamOnlineHandler(channel, TestClock(STARTED_AT))
+    private val streamOnlineHandler = StreamOnlineHandler(channel, bot, TestClock(STARTED_AT))
 
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
 
         `given offline stream`()
+
+        every { bot.channelOf(CHANNEL) } returns channel
+        every { channel.state } returns state
+
         coEvery { channel.twitchApi.getStream() } returns Stream(
             "streamId",
             "current stream title",
@@ -54,9 +58,7 @@ internal class StreamOnlineHandlerTest {
         assertThat(
             runBlocking {
                 streamOnlineHandler.handle(
-                    StreamOnlineTwitch(CHANNEL, StreamType.LIVE),
-                    channelInfo,
-                    changeState
+                    StreamOnlineTwitch(CHANNEL, StreamType.LIVE)
                 )
             }
         )
@@ -75,14 +77,12 @@ internal class StreamOnlineHandlerTest {
     internal fun `change state`() {
         runBlocking {
             streamOnlineHandler.handle(
-                StreamOnlineTwitch(CHANNEL, StreamType.LIVE),
-                channelInfo,
-                changeState
+                StreamOnlineTwitch(CHANNEL, StreamType.LIVE)
             )
         }
 
         verify(exactly = 1) {
-            changeState.changeCurrentStream(
+            state.changeCurrentStream(
                 Stream(
                     "streamId",
                     "current stream title",
@@ -102,23 +102,21 @@ internal class StreamOnlineHandlerTest {
 
             assertThat(
                 streamOnlineHandler.handle(
-                    StreamOnlineTwitch(CHANNEL, StreamType.LIVE),
-                    channelInfo,
-                    changeState
+                    StreamOnlineTwitch(CHANNEL, StreamType.LIVE)
                 )
             ).isEmpty()
         }
 
         verify(exactly = 0) {
-            changeState.changeCurrentStream(any())
+            state.changeCurrentStream(any())
         }
     }
 
     private fun `given offline stream`() {
-        every { channelInfo.isOnline() } returns false
+        every { channel.isOnline() } returns false
     }
 
     private fun `given online stream`() {
-        every { channelInfo.isOnline() } returns true
+        every { channel.isOnline() } returns true
     }
 }

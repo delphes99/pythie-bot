@@ -1,12 +1,11 @@
 package fr.delphes.bot.twitch.handler
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.StreamOffline
-import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.bot.state.ChannelState
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.streams.Stream
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -19,8 +18,8 @@ import java.time.LocalDateTime
 import fr.delphes.twitch.api.streamOffline.StreamOffline as StreamOfflineTwitch
 
 class StreamOfflineHandlerTest {
-    private val channelInfo = mockk<ChannelInfo>()
-    private val changeState = mockk<ChannelChangeState>(relaxed = true)
+    private val changeState = mockk<ChannelState>(relaxed = true)
+    private val bot = mockk<ClientBot>()
 
     private val GAME_ID = GameId("game")
     private val GAME = Game(GAME_ID, "label")
@@ -31,17 +30,15 @@ class StreamOfflineHandlerTest {
     internal fun setUp() {
         clearAllMocks()
 
-        `given online stream`()
+        every { bot.channelOf(CHANNEL)?.state } returns changeState
     }
 
     @Test
     internal fun `return offline event`() {
         assertThat(
             runBlocking {
-                StreamOfflineHandler().handle(
-                    StreamOfflineTwitch(CHANNEL),
-                    channelInfo,
-                    changeState
+                StreamOfflineHandler(bot).handle(
+                    StreamOfflineTwitch(CHANNEL)
                 )
             }
         ).contains(
@@ -52,19 +49,10 @@ class StreamOfflineHandlerTest {
     @Test
     internal fun `change state`() {
         runBlocking {
-            StreamOfflineHandler().handle(StreamOfflineTwitch(CHANNEL), channelInfo, changeState)
+            StreamOfflineHandler(bot).handle(StreamOfflineTwitch(CHANNEL))
         }
 
         verify(exactly = 1) { changeState.changeCurrentStream(null) }
     }
 
-    private fun `given online stream`() {
-        every { channelInfo.currentStream } returns Stream(
-            "streamId",
-            "current stream title",
-            STARTED_AT,
-            GAME,
-            "thumbnail_url"
-        )
-    }
 }

@@ -1,15 +1,13 @@
 package fr.delphes.bot.twitch.handler
 
-import fr.delphes.twitch.api.user.User
-import fr.delphes.bot.ChannelInfo
 import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.CommandAsked
-import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.MessageReceived
-import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.bot.event.incoming.TwitchIncomingEvent
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.TwitchChannel
+import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.irc.IrcChannelMessage
 
 class ChannelMessageHandler(
@@ -17,21 +15,19 @@ class ChannelMessageHandler(
     private val bot: ClientBot
 ) : TwitchIncomingEventHandler<IrcChannelMessage> {
     override suspend fun handle(
-        twitchEvent: IrcChannelMessage,
-        channel: ChannelInfo,
-        changeState: ChannelChangeState
-    ): List<IncomingEvent> {
+        twitchEvent: IrcChannelMessage
+    ): List<TwitchIncomingEvent> {
         val user = User(twitchEvent.user.name)
         val message = twitchEvent.message
 
-        val command = bot.commandsFor(this@ChannelMessageHandler.channel).find { it.triggerMessage == message }
+        val command = bot.commandsFor(channel).find { it.triggerMessage == message }
 
         return listOf(
             if (command != null) {
-                CommandAsked(this@ChannelMessageHandler.channel, command, user)
+                CommandAsked(channel, command, user)
             } else {
-                changeState.addMessage(UserMessage(user, message))
-                MessageReceived(this@ChannelMessageHandler.channel, twitchEvent)
+                bot.channelOf(twitchEvent.channel.toTwitchChannel())?.state?.addMessage(UserMessage(user, message))
+                MessageReceived(channel, twitchEvent)
             }
         )
     }

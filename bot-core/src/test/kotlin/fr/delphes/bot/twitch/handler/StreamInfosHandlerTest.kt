@@ -1,9 +1,9 @@
 package fr.delphes.bot.twitch.handler
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.StreamChanged
 import fr.delphes.bot.event.incoming.StreamChanges
-import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.bot.state.ChannelState
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.games.Game
@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 internal class StreamInfosHandlerTest {
-    private val channelInfo = mockk<ChannelInfo>()
-    private val changeState = mockk<ChannelChangeState>(relaxed = true)
+    private val channelState = mockk<ChannelState>(relaxed = true)
+    private val bot = mockk<ClientBot>()
 
     private val STARTED_AT = LocalDateTime.of(2020, 1, 1, 12, 0)
 
@@ -39,18 +39,21 @@ internal class StreamInfosHandlerTest {
         clearAllMocks()
 
         `given online stream`()
+
+        every {
+            bot.channelOf(CHANNEL)?.state
+        } returns channelState
+
     }
 
-    private val channelUpdateHandler = ChannelUpdateHandler()
+    private val channelUpdateHandler = ChannelUpdateHandler(bot)
 
     @Test
     internal fun `return change title`() {
         assertThat(
             runBlocking {
                 channelUpdateHandler.handle(
-                    ChannelUpdate(CHANNEL, NEW_TITLE, "en", CURRENT_GAME),
-                    channelInfo,
-                    changeState
+                    ChannelUpdate(CHANNEL, NEW_TITLE, "en", CURRENT_GAME)
                 )
             }
         ).contains(
@@ -63,9 +66,7 @@ internal class StreamInfosHandlerTest {
         assertThat(
             runBlocking {
                 channelUpdateHandler.handle(
-                    ChannelUpdate(CHANNEL, CURRENT_TITLE, "en", NEW_GAME),
-                    channelInfo,
-                    changeState
+                    ChannelUpdate(CHANNEL, CURRENT_TITLE, "en", NEW_GAME)
                 )
             }
         ).contains(
@@ -79,13 +80,13 @@ internal class StreamInfosHandlerTest {
 
         assertThat(
             runBlocking {
-                channelUpdateHandler.handle(event, channelInfo, changeState)
+                channelUpdateHandler.handle(event)
             }
         ).isEmpty()
     }
 
     private fun `given online stream`() {
-        every { channelInfo.currentStream } returns Stream(
+        every { bot.channelOf(CHANNEL)?.currentStream } returns Stream(
             "someId",
             CURRENT_TITLE,
             STARTED_AT,

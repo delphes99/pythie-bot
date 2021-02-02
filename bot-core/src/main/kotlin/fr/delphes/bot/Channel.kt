@@ -1,6 +1,5 @@
 package fr.delphes.bot
 
-import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
@@ -21,7 +20,6 @@ import fr.delphes.bot.twitch.handler.RewardRedeemedHandler
 import fr.delphes.bot.twitch.handler.StreamOfflineHandler
 import fr.delphes.bot.twitch.handler.StreamOnlineHandler
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.feature.TwitchFeature
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.streams.Stream
@@ -40,15 +38,14 @@ import mu.KotlinLogging
 class Channel(
     configuration: ChannelConfiguration,
     val bot: ClientBot,
-    private val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${configuration.ownerChannel}"))
-) : ChannelInfo {
-    override val commands: List<Command> = configuration.features
-        .filterIsInstance<TwitchFeature>()
-        .flatMap(TwitchFeature::commands)
-    override val currentStream: Stream? get() = state.currentStream
-    override val statistics: Statistics get() = state.statistics
-    override val streamStatistics: StreamStatistics? get() = state.streamStatistics
+    val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${configuration.ownerChannel}"))
+) {
+    val currentStream: Stream? get() = state.currentStream
+    val statistics: Statistics get() = state.statistics
+    val streamStatistics: StreamStatistics? get() = state.streamStatistics
     val alerts = Channel<Alert>()
+
+    fun isOnline(): Boolean = currentStream != null
 
     val name = configuration.ownerChannel
     private val channelCredential = TwitchUserCredential.of(
@@ -75,13 +72,13 @@ class Channel(
     init {
         twitchApi =
             bot.channelApiBuilder(configuration, channelCredential)
-                .listenToReward { RewardRedeemedHandler().handleTwitchEvent(it) }
-                .listenToNewFollow { NewFollowHandler().handleTwitchEvent(it) }
-                .listenToNewSub { NewSubHandler().handleTwitchEvent(it) }
-                .listenToNewCheer { ChannelBitsHandler().handleTwitchEvent(it) }
-                .listenToStreamOnline { StreamOnlineHandler(this).handleTwitchEvent(it) }
-                .listenToStreamOffline { StreamOfflineHandler().handleTwitchEvent(it) }
-                .listenToChannelUpdate { ChannelUpdateHandler().handleTwitchEvent(it) }
+                .listenToReward { RewardRedeemedHandler(bot).handleTwitchEvent(it) }
+                .listenToNewFollow { NewFollowHandler(bot).handleTwitchEvent(it) }
+                .listenToNewSub { NewSubHandler(bot).handleTwitchEvent(it) }
+                .listenToNewCheer { ChannelBitsHandler(bot).handleTwitchEvent(it) }
+                .listenToStreamOnline { StreamOnlineHandler(this, bot).handleTwitchEvent(it) }
+                .listenToStreamOffline { StreamOfflineHandler(bot).handleTwitchEvent(it) }
+                .listenToChannelUpdate { ChannelUpdateHandler(bot).handleTwitchEvent(it) }
                 .build()
 
         features.forEach { feature ->
@@ -98,7 +95,7 @@ class Channel(
     private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {
         //TODO make suspendable
         runBlocking {
-            this@handleTwitchEvent.handle(request, this@Channel, this@Channel.state).forEach { incomingEvent ->
+            this@handleTwitchEvent.handle(request).forEach { incomingEvent ->
                 handleIncomingEvent(incomingEvent)
             }
         }

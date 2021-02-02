@@ -1,19 +1,18 @@
 package fr.delphes.bot.twitch.handler
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.BitCheered
-import fr.delphes.bot.event.incoming.IncomingEvent
-import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.bot.event.incoming.TwitchIncomingEvent
 import fr.delphes.bot.twitch.TwitchIncomingEventHandler
 import fr.delphes.twitch.api.channelCheer.NewCheer
 
-class ChannelBitsHandler : TwitchIncomingEventHandler<NewCheer> {
+class ChannelBitsHandler(
+    private val bot: ClientBot
+) : TwitchIncomingEventHandler<NewCheer> {
     override suspend fun handle(
-        twitchEvent: NewCheer,
-        channel: ChannelInfo,
-        changeState: ChannelChangeState
-    ): List<IncomingEvent> {
-        changeState.newCheer(twitchEvent)
+        twitchEvent: NewCheer
+    ): List<TwitchIncomingEvent> {
+        bot.channelOf(twitchEvent.channel)?.state?.newCheer(twitchEvent)
 
         return listOf(
             BitCheered(

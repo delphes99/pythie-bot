@@ -1,9 +1,7 @@
 package fr.delphes.bot.twitch
 
-import fr.delphes.bot.ChannelInfo
-import fr.delphes.bot.event.incoming.IncomingEvent
-import fr.delphes.bot.state.ChannelChangeState
+import fr.delphes.bot.event.incoming.TwitchIncomingEvent
 
 interface TwitchIncomingEventHandler<T> {
-    suspend fun handle(twitchEvent: T, channel: ChannelInfo, changeState: ChannelChangeState): List<IncomingEvent>
+    suspend fun handle(twitchEvent: T): List<TwitchIncomingEvent>
 }
