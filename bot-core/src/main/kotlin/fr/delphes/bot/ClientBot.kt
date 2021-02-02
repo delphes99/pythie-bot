@@ -28,6 +28,7 @@ class ClientBot(
     private val features: List<Feature>
 ) {
     val channels = mutableListOf<Channel>()
+
     //TODO random secret
     private val webhookSecret = configuration.webhookSecret
 
@@ -45,16 +46,15 @@ class ClientBot(
         channels.add(channel)
     }
 
-    //TODO move to connector
-    fun featuresFor(channel: TwitchChannel): List<TwitchFeature> {
-        return features
-            .filterIsInstance<TwitchFeature>()
-            .filter { feature -> feature.channel == channel }
+    fun channelOf(channel: TwitchChannel): Channel? {
+        return channels.firstOrNull { it.name == channel.name }
     }
 
     //TODO move to connector
     fun commandsFor(channel: TwitchChannel): List<Command> {
-        return featuresFor(channel)
+        return features
+            .filterIsInstance<TwitchFeature>()
+            .filter { feature -> feature.channel == channel }
             .flatMap(TwitchFeature::commands)
     }
 

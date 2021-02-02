@@ -1,6 +1,6 @@
 package fr.delphes.bot.command
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -16,7 +16,7 @@ class SimpleCommandHandler(
     private val cooldown: Duration? = null,
     private val responses: List<OutgoingEvent>
 ) : EventHandler<CommandAsked> {
-    override suspend fun handle(event: CommandAsked, channel: ChannelInfo): List<OutgoingEvent> {
+    override suspend fun handle(event: CommandAsked, bot: ClientBot): List<OutgoingEvent> {
         return if(event.command == command &&
             cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false
         ) {

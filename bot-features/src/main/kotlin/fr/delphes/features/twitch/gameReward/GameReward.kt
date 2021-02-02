@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.gameReward
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.StreamChanged
@@ -40,13 +40,13 @@ class GameReward(
     }
 
     inner class StreamOnlineHandler : EventHandler<StreamOnline> {
-        override suspend fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: StreamOnline, bot: ClientBot): List<OutgoingEvent> {
             return deactivateFeaturesNotAssociateWith(event.game.id) + activateFeaturesAssociateWith(event.game.id)
         }
     }
 
     inner class StreamChangedHandler : EventHandler<StreamChanged> {
-        override suspend fun handle(event: StreamChanged, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: StreamChanged, bot: ClientBot): List<OutgoingEvent> {
             return event.changes
                 .filterIsInstance<StreamChanges.Game>()
                 .firstOrNull()

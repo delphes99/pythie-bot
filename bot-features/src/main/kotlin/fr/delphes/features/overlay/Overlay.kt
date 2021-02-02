@@ -1,8 +1,7 @@
 package fr.delphes.features.overlay
 
 import fr.delphes.bot.Channel
-import fr.delphes.bot.ChannelInfo
-import fr.delphes.bot.command.Command
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.BitCheered
@@ -26,7 +25,7 @@ class Overlay : Feature, HaveHttp {
     }
 
     inner class NewFollowHandler : EventHandler<NewFollow> {
-        override suspend fun handle(event: NewFollow, channel: ChannelInfo): List<OutgoingEvent> =
+        override suspend fun handle(event: NewFollow, bot: ClientBot): List<OutgoingEvent> =
             listOf(
                 Alert(
                     "newFollow",
@@ -36,7 +35,7 @@ class Overlay : Feature, HaveHttp {
     }
 
     inner class NewSubHandler : EventHandler<NewSub> {
-        override suspend fun handle(event: NewSub, channel: ChannelInfo): List<OutgoingEvent> =
+        override suspend fun handle(event: NewSub, bot: ClientBot): List<OutgoingEvent> =
             listOf(
                 Alert(
                     "newSub",
@@ -46,7 +45,7 @@ class Overlay : Feature, HaveHttp {
     }
 
     inner class BitCheeredHandler : EventHandler<BitCheered> {
-        override suspend fun handle(event: BitCheered, channel: ChannelInfo): List<OutgoingEvent> =
+        override suspend fun handle(event: BitCheered, bot: ClientBot): List<OutgoingEvent> =
             listOf(
                 Alert(
                     "newCheer",

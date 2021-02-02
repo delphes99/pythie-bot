@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.voth
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.command.CommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandler
@@ -58,7 +58,7 @@ class VOTH(
     internal val vothChanged get() = state.vothChanged
 
     internal inner class VOTHRewardRedemptionHandler : EventHandler<RewardRedemption> {
-        override suspend fun handle(event: RewardRedemption, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: RewardRedemption, bot: ClientBot): List<OutgoingEvent> {
             val redeemUser = event.user
             return if (event.reward.rewardConfiguration == configuration.reward.rewardConfiguration && currentVip?.user != redeemUser) {
                 val oldVOTH = currentVip
@@ -78,7 +78,7 @@ class VOTH(
     }
 
     internal inner class VOTHVIPListReceivedHandler : EventHandler<VIPListReceived> {
-        override suspend fun handle(event: VIPListReceived, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: VIPListReceived, bot: ClientBot): List<OutgoingEvent> {
             return if (vothChanged) {
                 state.vothChanged = false
 
@@ -95,14 +95,14 @@ class VOTH(
     }
 
     internal inner class StreamOnlineHandler : EventHandler<StreamOnline> {
-        override suspend fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: StreamOnline, bot: ClientBot): List<OutgoingEvent> {
             state.unpause(clock.now())
             return emptyList()
         }
     }
 
     internal inner class StreamOfflineHandler : EventHandler<StreamOffline> {
-        override suspend fun handle(event: StreamOffline, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: StreamOffline, bot: ClientBot): List<OutgoingEvent> {
             state.pause(clock.now())
             save()
             return emptyList()

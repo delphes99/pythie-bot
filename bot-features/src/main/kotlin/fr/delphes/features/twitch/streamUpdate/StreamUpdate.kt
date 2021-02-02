@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.streamUpdate
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.StreamChanged
@@ -18,7 +18,7 @@ class StreamUpdate(
     }
 
     inner class Handler : EventHandler<StreamChanged> {
-        override suspend fun handle(event: StreamChanged, channel: ChannelInfo): List<OutgoingEvent> {
+        override suspend fun handle(event: StreamChanged, bot: ClientBot): List<OutgoingEvent> {
             return handleChanges(event.changes)
         }
     }

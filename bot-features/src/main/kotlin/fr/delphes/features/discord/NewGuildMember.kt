@@ -1,6 +1,6 @@
 package fr.delphes.features.discord
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -15,7 +15,7 @@ class NewGuildMember(
     }
 
     inner class NewGuildMemberHandler : EventHandler<NewGuildMember> {
-        override suspend fun handle(event: NewGuildMember, channel: ChannelInfo): List<OutgoingEvent> =
+        override suspend fun handle(event: NewGuildMember, bot: ClientBot): List<OutgoingEvent> =
             newGuildMember(event)
     }
 }

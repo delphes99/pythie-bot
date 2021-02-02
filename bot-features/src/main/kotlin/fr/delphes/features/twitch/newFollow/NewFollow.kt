@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.newFollow
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.NewFollow
@@ -17,6 +17,6 @@ class NewFollow(
     }
 
     inner class NewFollowHandler : EventHandler<NewFollow> {
-        override suspend fun handle(event: NewFollow, channel: ChannelInfo): List<OutgoingEvent> = newFollowResponse(event)
+        override suspend fun handle(event: NewFollow, bot: ClientBot): List<OutgoingEvent> = newFollowResponse(event)
     }
 }

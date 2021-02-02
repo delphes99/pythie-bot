@@ -1,6 +1,6 @@
 package fr.delphes.bot.event.eventHandler
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import kotlinx.coroutines.async
@@ -18,11 +18,11 @@ class EventHandlers {
     }
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun handleEvent(event: IncomingEvent, channel: ChannelInfo) : List<OutgoingEvent> {
+    suspend fun handleEvent(event: IncomingEvent, bot: ClientBot) : List<OutgoingEvent> {
         return coroutineScope {
             map[event::class]
                 ?.map { it as EventHandler<IncomingEvent> }
-                ?.let { it.map { handler -> async { handler.handle(event, channel) } } }
+                ?.let { it.map { handler -> async { handler.handle(event, bot) } } }
                 ?.awaitAll()
                 ?.flatten()
                 ?: emptyList()

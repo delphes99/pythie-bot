@@ -18,8 +18,8 @@ class CommandList(
 
     private val commandHandler = CommandHandler(
         Command(triggerMessage)
-    ) { _, channel ->
-        val commands = channel.commands.map(Command::triggerMessage)
+    ) { _, bot ->
+        val commands = bot.commandsFor(channel).map(Command::triggerMessage)
 
         displayCommands(commands)
     }

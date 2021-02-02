@@ -1,6 +1,6 @@
 package fr.delphes.bot.command
 
-import fr.delphes.bot.Channel
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.twitch.TwitchChannel
@@ -18,7 +18,7 @@ import java.time.LocalDateTime
 internal class SimpleCommandHandlerTest {
     private val clock = mockk<Clock>()
     private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
-    private val channel = mockk<Channel>()
+    private val clientBot = mockk<ClientBot>()
     private val CHANNEL = TwitchChannel("channel")
 
     @BeforeEach
@@ -42,7 +42,7 @@ internal class SimpleCommandHandlerTest {
         )
         val event = CommandAsked(CHANNEL, command, User("user"))
 
-        assertThat(simpleCommand.handle(event, channel)).containsExactlyInAnyOrder(
+        assertThat(simpleCommand.handle(event, clientBot)).containsExactlyInAnyOrder(
             SendMessage("response")
         )
     }
@@ -59,10 +59,10 @@ internal class SimpleCommandHandlerTest {
         val event = CommandAsked(CHANNEL, command, User("user"))
 
         `given now`(now)
-        assertThat(simpleCommand.handle(event, channel)).isNotEmpty
+        assertThat(simpleCommand.handle(event, clientBot)).isNotEmpty
 
         `given now`(now.plusMinutes(5))
-        assertThat(simpleCommand.handle(event, channel)).isEmpty()
+        assertThat(simpleCommand.handle(event, clientBot)).isEmpty()
     }
 
     @Test
@@ -77,9 +77,9 @@ internal class SimpleCommandHandlerTest {
         val event = CommandAsked(CHANNEL, command, User("user"))
 
         `given now`(now)
-        assertThat(simpleCommand.handle(event, channel)).isNotEmpty
+        assertThat(simpleCommand.handle(event, clientBot)).isNotEmpty
 
         `given now`(now.plusMinutes(15))
-        assertThat(simpleCommand.handle(event, channel)).isNotEmpty
+        assertThat(simpleCommand.handle(event, clientBot)).isNotEmpty
     }
 }

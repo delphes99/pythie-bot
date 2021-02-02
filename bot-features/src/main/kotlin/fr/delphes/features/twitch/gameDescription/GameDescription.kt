@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.gameDescription
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.command.CommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
@@ -33,9 +33,9 @@ class GameDescription(
 
     private fun displayInfoFor(
         @Suppress("UNUSED_PARAMETER") user: User,
-        channelInfo: ChannelInfo
+        bot: ClientBot
     ): List<OutgoingEvent> {
-        val description = channelInfo.currentStream?.game?.id?.let { game -> descriptions[game] }
+        val description = bot.channelOf(channel)?.currentStream?.game?.id?.let { game -> descriptions[game] }
         return description?.let { listOf(SendMessage(it)) } ?: emptyList()
     }
 }

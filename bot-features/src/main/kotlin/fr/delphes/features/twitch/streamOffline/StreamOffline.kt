@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.streamOffline
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.StreamOffline
@@ -17,6 +17,6 @@ class StreamOffline(
     }
 
     inner class StreamOfflineHandler : EventHandler<StreamOffline> {
-        override suspend fun handle(event: StreamOffline, channel: ChannelInfo): List<OutgoingEvent> = streamOfflineResponse(event)
+        override suspend fun handle(event: StreamOffline, bot: ClientBot): List<OutgoingEvent> = streamOfflineResponse(event)
     }
 }

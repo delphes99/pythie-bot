@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.bitCheer
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.BitCheered
@@ -17,6 +17,6 @@ class BitCheer(
     }
 
     inner class BitCheeredHandler : EventHandler<BitCheered> {
-        override suspend fun handle(event: BitCheered, channel: ChannelInfo): List<OutgoingEvent> = bitCheeredResponse(event)
+        override suspend fun handle(event: BitCheered, bot: ClientBot): List<OutgoingEvent> = bitCheeredResponse(event)
     }
 }

@@ -105,7 +105,7 @@ class Channel(
     }
 
     suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
-        eventHandlers.handleEvent(incomingEvent, this@Channel).execute()
+        eventHandlers.handleEvent(incomingEvent, bot).execute()
     }
 
     private suspend fun List<OutgoingEvent>.execute() {

@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.gameDescription
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.command.Command
 import fr.delphes.bot.event.incoming.CommandAsked
 import fr.delphes.bot.event.outgoing.SendMessage
@@ -16,7 +16,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class GameDescriptionTest {
-    private val channelInfo = mockk<ChannelInfo>()
+    private val clientBot = mockk<ClientBot>()
 
     private val CHANNEL = TwitchChannel("channel")
     private val GAME_ID = GameId("id")
@@ -33,7 +33,7 @@ internal class GameDescriptionTest {
         `current game is`(GAME)
         val commandAsked = CommandAsked(CHANNEL, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handle(commandAsked, channelInfo)
+        val outgoingEvents = feature.handle(commandAsked, clientBot)
 
         assertThat(outgoingEvents).contains(SendMessage("description"))
     }
@@ -44,7 +44,7 @@ internal class GameDescriptionTest {
         `current game is`(GAME)
         val commandAsked = CommandAsked(CHANNEL, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handle(commandAsked, channelInfo)
+        val outgoingEvents = feature.handle(commandAsked, clientBot)
 
         assertThat(outgoingEvents).contains(SendMessage("description"))
     }
@@ -55,12 +55,12 @@ internal class GameDescriptionTest {
         `current game is`(OTHER_GAME)
         val commandAsked = CommandAsked(CHANNEL, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handle(commandAsked, channelInfo)
+        val outgoingEvents = feature.handle(commandAsked, clientBot)
 
         assertThat(outgoingEvents).isEmpty()
     }
 
     private fun `current game is`(game: Game) {
-        every { channelInfo.currentStream?.game } returns game
+        every { clientBot.channelOf(CHANNEL)?.currentStream?.game } returns game
     }
 }

@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.newSub
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.NewSub
@@ -17,6 +17,6 @@ class NewSub(
     }
 
     inner class NewSubHandler() : EventHandler<NewSub> {
-        override suspend fun handle(event: NewSub, channel: ChannelInfo): List<OutgoingEvent> = newSubResponse(event)
+        override suspend fun handle(event: NewSub, bot: ClientBot): List<OutgoingEvent> = newSubResponse(event)
     }
 }

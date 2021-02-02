@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.streamOnline
 
-import fr.delphes.bot.ChannelInfo
+import fr.delphes.bot.ClientBot
 import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.StreamOnline
@@ -17,6 +17,6 @@ class StreamOnline(
     }
 
     inner class StreamOnlineHandler : EventHandler<StreamOnline> {
-        override suspend fun handle(event: StreamOnline, channel: ChannelInfo): List<OutgoingEvent> = streamOnlineResponse(event)
+        override suspend fun handle(event: StreamOnline, bot: ClientBot): List<OutgoingEvent> = streamOnlineResponse(event)
     }
 }
