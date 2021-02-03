@@ -63,7 +63,7 @@ class ClientBot(
         ircClient.connect()
 
         channels.forEach { channel ->
-            ircClient.join(IrcChannel(channel.name))
+            ircClient.join(IrcChannel.withName(channel.name))
             channel.join()
         }
     }

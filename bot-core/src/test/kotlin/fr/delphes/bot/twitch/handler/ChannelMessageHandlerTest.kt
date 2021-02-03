@@ -34,7 +34,7 @@ internal class ChannelMessageHandlerTest {
     internal fun `add statistics message received`() {
         runBlocking {
             ChannelMessageHandler(channel, clientBot).handle(
-                IrcChannelMessage(IrcChannel("channel"), IrcUser("user"), "message")
+                IrcChannelMessage(IrcChannel.withName("channel"), IrcUser("user"), "message")
             )
         }
 

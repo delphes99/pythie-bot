@@ -10,6 +10,6 @@ class JoinHandler(
 ) {
     @Handler
     fun onJoin(event: ChannelJoinEvent) {
-        listener(IrcChannel(event.channel.name), IrcUser(event.user.nick))
+        listener(IrcChannel.withName(event.channel.name), IrcUser(event.user.nick))
     }
 }

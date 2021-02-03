@@ -31,7 +31,7 @@ data class PromoteVIP(val user: User) : TwitchOutgoingEvent() {
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
-        ownerChat.sendMessage(IrcChannel(channel.name), "/vip $user")
+        ownerChat.sendMessage(IrcChannel.withName(channel.name), "/vip $user")
     }
 }
 
@@ -44,7 +44,7 @@ data class RemoveVIP(val user: User): TwitchOutgoingEvent() {
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
-        ownerChat.sendMessage(IrcChannel(channel.name), "/unvip $user")
+        ownerChat.sendMessage(IrcChannel.withName(channel.name), "/unvip $user")
     }
 }
 
@@ -55,7 +55,7 @@ object RetrieveVip : TwitchOutgoingEvent() {
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
-        ownerChat.sendMessage(IrcChannel(channel.name), "/vips")
+        ownerChat.sendMessage(IrcChannel.withName(channel.name), "/vips")
     }
 }
 
@@ -68,7 +68,7 @@ data class SendMessage(
         twitchApi: ChannelTwitchApi,
         channel: Channel
     ) {
-        chat.sendMessage(IrcChannel(channel.name), text)
+        chat.sendMessage(IrcChannel.withName(channel.name), text)
     }
 }
 

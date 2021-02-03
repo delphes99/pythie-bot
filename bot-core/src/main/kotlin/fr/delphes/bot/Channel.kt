@@ -137,7 +137,7 @@ class Channel(
 
     fun join() {
         ircClient.connect()
-        ircClient.join(IrcChannel(name))
+        ircClient.join(IrcChannel.withName(name))
     }
 
     companion object {

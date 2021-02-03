@@ -13,7 +13,7 @@ class ChannelMessageHandler(
     fun onMessage(event: ChannelMessageEvent) {
         listener(
             IrcChannelMessage(
-                IrcChannel(event.channel.name),
+                IrcChannel.withName(event.channel.name),
                 IrcUser(event.actor.nick),
                 event.message
             )
