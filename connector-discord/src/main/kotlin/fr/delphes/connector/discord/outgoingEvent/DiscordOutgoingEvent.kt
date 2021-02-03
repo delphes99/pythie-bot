@@ -56,7 +56,7 @@ data class DiscordEmbeddedMessage(
             val builder = EmbedBuilder()
             builder.setTitle(title)
             builder.setImage(imageUrl)
-            builder.setDescription(authorUrl)
+            builder.setDescription(url)
             builder.setAuthor(
                 authorName,
                 authorUrl,

@@ -1,6 +1,8 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
+import fr.delphes.twitch.api.clips.payload.GetClips
+import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
 import fr.delphes.twitch.api.games.payload.GetGamesPayload
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
@@ -14,6 +16,7 @@ import fr.delphes.twitch.api.streams.payload.StreamPayload
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import io.ktor.client.statement.HttpResponse
+import java.time.LocalDateTime
 
 internal class ChannelHelixClient(
     appCredential: TwitchAppCredential,
@@ -76,5 +79,15 @@ internal class ChannelHelixClient(
             "broadcaster_id" to userId,
             "reward_id" to redemption.reward.id
         )
+    }
+
+    override suspend fun getClips(startAfter: LocalDateTime): List<GetClipsPayload> {
+        val payload = "https://api.twitch.tv/helix/clips".get<GetClips>(
+            "broadcaster_id" to userId,
+            "first" to 100,
+            "started_at" to startAfter
+        )
+
+        return payload.data
     }
 }

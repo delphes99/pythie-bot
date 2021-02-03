@@ -17,6 +17,8 @@ import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 abstract class ScopedHelixClient(
     protected val appCredential: TwitchAppCredential,
@@ -31,7 +33,7 @@ abstract class ScopedHelixClient(
     }
 
     protected suspend inline fun <reified T> String.get(
-        vararg parameters: Pair<String, String>
+        vararg parameters: Pair<String, Any>
     ): T {
         return authorizeCall(scopedToken) {
             httpClient.get(this) {
@@ -79,12 +81,19 @@ abstract class ScopedHelixClient(
     @PublishedApi
     internal fun HttpRequestBuilder.headersAndParameters(
         credentials: WithAuthToken,
-        vararg parameters: Pair<String, String>
+        vararg parameters: Pair<String, Any>
     ) {
         header("Authorization", "Bearer ${credentials.authToken!!.access_token}")
         header("Client-Id", appCredential.clientId)
         parameters.forEach { parameter ->
-            parameter(parameter.first, parameter.second)
+            val serializedValue = when (parameter.second) {
+                is LocalDateTime -> {
+                    "${(parameter.second as LocalDateTime)
+                        .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)}Z" //TODO format twitch / Z?
+                }
+                else -> parameter.second
+            }
+            parameter(parameter.first, serializedValue)
         }
     }
 
@@ -92,7 +101,7 @@ abstract class ScopedHelixClient(
     internal suspend inline fun <reified T> authorizeCall(
         credentials: WithAuthToken,
         doCall: () -> T
-    ): T{
+    ): T {
         try {
             return doCall()
         } catch (e: ClientRequestException) {

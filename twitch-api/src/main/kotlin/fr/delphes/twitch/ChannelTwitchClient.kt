@@ -10,6 +10,7 @@ import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfigurat
 import fr.delphes.twitch.api.channelSubscribe.NewSub
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
+import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
@@ -25,6 +26,7 @@ import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import mu.KotlinLogging
+import java.time.LocalDateTime
 
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
@@ -56,6 +58,19 @@ class ChannelTwitchClient(
         rewards.rewardOf(reward)?.also { twitchReward ->
             helixApi.updateCustomReward(UpdateCustomReward(is_enabled = true), twitchReward.id)
         } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
+    }
+
+    override suspend fun getClips(startedAfter: LocalDateTime): List<Clip> {
+        return helixApi.getClips(startedAfter).map { payload ->
+            Clip(
+                payload.url,
+                TwitchUser(payload.creator_id, payload.creator_name),
+                payload.game_id, //TODO game repository to retrieve game name
+                payload.title,
+                payload.created_at,
+                ThumbnailUrl(payload.thumbnail_url)
+            )
+        }
     }
 
     companion object {

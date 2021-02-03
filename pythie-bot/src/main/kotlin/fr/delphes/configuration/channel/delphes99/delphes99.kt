@@ -14,6 +14,7 @@ import fr.delphes.feature.statistics.Statistics
 import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.overlay.Overlay
 import fr.delphes.features.twitch.bitCheer.BitCheer
+import fr.delphes.features.twitch.clipCreated.ClipCreated
 import fr.delphes.features.twitch.command.Command
 import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.gameDescription.GameDescription
@@ -210,6 +211,22 @@ val delphes99Features = listOf(
     NewGuildMember { newGuildMember ->
         listOf(
             SendMessage("${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même !")
+        )
+    },
+    ClipCreated(channel) { clipCreated ->
+        val clip = clipCreated.clip
+        listOf(
+            SendMessage("\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}"),
+            DiscordEmbeddedMessage(
+                clip.title,
+                clip.url,
+                "${clip.thumbnailUrl.withResolution(320, 160)}?r=${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}",
+                789537633487159396,
+                clip.creator.name,
+                "https://www.twitch.tv/${clip.creator.name}",
+                null,
+                "Catégorie" to clip.gameId
+            )
         )
     }
 )

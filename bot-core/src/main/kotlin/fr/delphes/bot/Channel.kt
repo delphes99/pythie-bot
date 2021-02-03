@@ -1,6 +1,7 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.incoming.ClipCreated
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -29,11 +30,14 @@ import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
 import fr.delphes.utils.exhaustive
+import fr.delphes.utils.scheduler.Scheduler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import java.time.Duration
+import java.time.LocalDateTime
 
 class Channel(
     configuration: ChannelConfiguration,
@@ -66,6 +70,16 @@ class Channel(
         .withOnChannelMessage { message -> ChannelMessageHandler(TwitchChannel(name), bot).handleTwitchEvent(message) }
         .build()
 
+
+    private val schedulerForClips = Scheduler(Duration.ofSeconds(20)) {
+        val startedAfter = LocalDateTime.of(2021, 2, 1, 0, 0, 0)
+
+        twitchApi.getClips(startedAfter)
+            .takeLast(1).map { clip -> ClipCreated(TwitchChannel(name), clip) }.forEach { event ->
+                handleIncomingEvent(event)
+            }
+    }
+
     val twitchApi: ChannelTwitchApi
 
     //TODO subscribe only when feature requires
@@ -90,6 +104,8 @@ class Channel(
 
             //TODO Synchronize reward
         }
+
+        //TODO finish clip created handler schedulerForClips.start()
     }
 
     private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {

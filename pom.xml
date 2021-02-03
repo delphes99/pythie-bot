@@ -24,6 +24,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.4.20</kotlin.version>
+        <kotlinx-coroutines-core.version>1.4.2</kotlinx-coroutines-core.version>
         <ktor.version>1.4.1</ktor.version>
         <serialization.version>1.0.0-RC</serialization.version>
         <kotlin.code.style>official</kotlin.code.style>
@@ -61,6 +62,11 @@
                 <groupId>org.jetbrains.kotlinx</groupId>
                 <artifactId>kotlinx-serialization-core</artifactId>
                 <version>${serialization.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kotlinx-coroutines-core</artifactId>
+                <version>${kotlinx-coroutines-core.version}</version>
             </dependency>
             <dependency>
                 <groupId>fr.delphes</groupId>
