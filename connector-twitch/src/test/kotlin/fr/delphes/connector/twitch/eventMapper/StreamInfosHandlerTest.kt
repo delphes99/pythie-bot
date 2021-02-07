@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.connector.twitch.ClientBot
@@ -46,7 +46,7 @@ internal class StreamInfosHandlerTest {
 
     }
 
-    private val channelUpdateHandler = ChannelUpdateHandler(bot)
+    private val channelUpdateHandler = ChannelUpdateMapper(bot)
 
     @Test
     internal fun `return change title`() {

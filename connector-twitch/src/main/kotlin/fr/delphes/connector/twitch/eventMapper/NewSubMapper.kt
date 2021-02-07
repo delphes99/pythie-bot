@@ -1,13 +1,13 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.connector.twitch.ClientBot
 import fr.delphes.connector.twitch.incomingEvent.NewSub
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.api.channelSubscribe.NewSub as NewSubTwitch
 
-class NewSubHandler(
+class NewSubMapper(
     private val bot: ClientBot
-) : TwitchIncomingEventHandler<NewSubTwitch> {
+) : TwitchIncomingEventMapper<NewSubTwitch> {
     override suspend fun handle(
         twitchEvent: fr.delphes.twitch.api.channelSubscribe.NewSub
     ): List<TwitchIncomingEvent> {

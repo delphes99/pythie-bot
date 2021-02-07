@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.utils.time.Clock
 import java.time.LocalDateTime

@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.connector.twitch.ClientBot
@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class NewSubHandlerTest {
+internal class NewSubMapperTest {
     private val changeState = mockk<ChannelState>(relaxed = true)
     private val bot = mockk<ClientBot>()
     private val CHANNEL = TwitchChannel("channel")
@@ -31,7 +31,7 @@ internal class NewSubHandlerTest {
         val event = "user".subscribe()
 
         runBlocking {
-            NewSubHandler(bot).handle(event)
+            NewSubMapper(bot).handle(event)
         }
 
         coVerify(exactly = 1) { changeState.newSub(User("user")) }

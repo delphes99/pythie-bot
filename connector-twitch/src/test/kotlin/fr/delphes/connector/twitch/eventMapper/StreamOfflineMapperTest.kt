@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.connector.twitch.ClientBot
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import fr.delphes.twitch.api.streamOffline.StreamOffline as StreamOfflineTwitch
 
-class StreamOfflineHandlerTest {
+class StreamOfflineMapperTest {
     private val changeState = mockk<ChannelState>(relaxed = true)
     private val bot = mockk<ClientBot>()
 
@@ -37,7 +37,7 @@ class StreamOfflineHandlerTest {
     internal fun `return offline event`() {
         assertThat(
             runBlocking {
-                StreamOfflineHandler(bot).handle(
+                StreamOfflineMapper(bot).handle(
                     StreamOfflineTwitch(CHANNEL)
                 )
             }
@@ -49,7 +49,7 @@ class StreamOfflineHandlerTest {
     @Test
     internal fun `change state`() {
         runBlocking {
-            StreamOfflineHandler(bot).handle(StreamOfflineTwitch(CHANNEL))
+            StreamOfflineMapper(bot).handle(StreamOfflineTwitch(CHANNEL))
         }
 
         verify(exactly = 1) { changeState.changeCurrentStream(null) }

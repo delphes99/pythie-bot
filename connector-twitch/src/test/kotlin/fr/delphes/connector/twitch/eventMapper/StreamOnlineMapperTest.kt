@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.connector.twitch.Channel
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import fr.delphes.twitch.api.streamOnline.StreamOnline as StreamOnlineTwitch
 
-internal class StreamOnlineHandlerTest {
+internal class StreamOnlineMapperTest {
     private val state = mockk<ChannelState>(relaxed = true)
     private val bot = mockk<ClientBot>()
     private val channel = mockk<Channel>()
@@ -32,7 +32,7 @@ internal class StreamOnlineHandlerTest {
     private val THUMBNAIL_URL = "thumbnail_url"
     private val CHANNEL = TwitchChannel("channel")
 
-    private val streamOnlineHandler = StreamOnlineHandler(channel, bot, TestClock(STARTED_AT))
+    private val streamOnlineHandler = StreamOnlineMapper(channel, bot, TestClock(STARTED_AT))
 
     @BeforeEach
     internal fun setUp() {

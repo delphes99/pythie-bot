@@ -5,16 +5,16 @@ import fr.delphes.bot.state.FileStatisticsRepository
 import fr.delphes.bot.state.Statistics
 import fr.delphes.bot.state.StreamStatistics
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.connector.twitch.eventHandler.ChannelBitsHandler
-import fr.delphes.connector.twitch.eventHandler.ChannelMessageHandler
-import fr.delphes.connector.twitch.eventHandler.ChannelUpdateHandler
-import fr.delphes.connector.twitch.eventHandler.IRCMessageHandler
-import fr.delphes.connector.twitch.eventHandler.NewFollowHandler
-import fr.delphes.connector.twitch.eventHandler.NewSubHandler
-import fr.delphes.connector.twitch.eventHandler.RewardRedeemedHandler
-import fr.delphes.connector.twitch.eventHandler.StreamOfflineHandler
-import fr.delphes.connector.twitch.eventHandler.StreamOnlineHandler
-import fr.delphes.connector.twitch.eventHandler.TwitchIncomingEventHandler
+import fr.delphes.connector.twitch.eventMapper.ChannelBitsMapper
+import fr.delphes.connector.twitch.eventMapper.ChannelMessageMapper
+import fr.delphes.connector.twitch.eventMapper.ChannelUpdateMapper
+import fr.delphes.connector.twitch.eventMapper.IRCMessageMapper
+import fr.delphes.connector.twitch.eventMapper.NewFollowMapper
+import fr.delphes.connector.twitch.eventMapper.NewSubMapper
+import fr.delphes.connector.twitch.eventMapper.RewardRedeemedMapper
+import fr.delphes.connector.twitch.eventMapper.StreamOfflineMapper
+import fr.delphes.connector.twitch.eventMapper.StreamOnlineMapper
+import fr.delphes.connector.twitch.eventMapper.TwitchIncomingEventMapper
 import fr.delphes.connector.twitch.incomingEvent.ClipCreated
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
@@ -53,12 +53,12 @@ class Channel(
     val ircClient = IrcClient.builder(oAuth)
         .withOnMessage { message ->
             runBlocking {
-                IRCMessageHandler(TwitchChannel(name)).handleTwitchEvent(message)
+                IRCMessageMapper(TwitchChannel(name)).handleTwitchEvent(message)
             }
         }
         .withOnChannelMessage { message ->
             runBlocking {
-                ChannelMessageHandler(TwitchChannel(name), bot).handleTwitchEvent(message)
+                ChannelMessageMapper(TwitchChannel(name), bot).handleTwitchEvent(message)
             }
         }
         .build()
@@ -77,23 +77,23 @@ class Channel(
 
     //TODO subscribe only when feature requires
     init {
-        val rewardRedeemedHandler = RewardRedeemedHandler()
-        val newFollowHandler = NewFollowHandler(bot)
-        val newSubHandler = NewSubHandler(bot)
-        val channelBitsHandler = ChannelBitsHandler(bot)
-        val streamOnlineHandler = StreamOnlineHandler(this, bot)
-        val streamOfflineHandler = StreamOfflineHandler(bot)
-        val channelUpdateHandler = ChannelUpdateHandler(bot)
+        val rewardRedeemedMapper = RewardRedeemedMapper()
+        val newFollowMapper = NewFollowMapper(bot)
+        val newSubMapper = NewSubMapper(bot)
+        val channelBitsMapper = ChannelBitsMapper(bot)
+        val streamOnlineMapper = StreamOnlineMapper(this, bot)
+        val streamOfflineMapper = StreamOfflineMapper(bot)
+        val channelUpdateMapper = ChannelUpdateMapper(bot)
 
         twitchApi =
             bot.channelApiBuilder(configuration, channelCredential)
-                .listenToReward { rewardRedeemedHandler.handleTwitchEvent(it) }
-                .listenToNewFollow { newFollowHandler.handleTwitchEvent(it) }
-                .listenToNewSub { newSubHandler.handleTwitchEvent(it) }
-                .listenToNewCheer { channelBitsHandler.handleTwitchEvent(it) }
-                .listenToStreamOnline { streamOnlineHandler.handleTwitchEvent(it) }
-                .listenToStreamOffline { streamOfflineHandler.handleTwitchEvent(it) }
-                .listenToChannelUpdate { channelUpdateHandler.handleTwitchEvent(it) }
+                .listenToReward { rewardRedeemedMapper.handleTwitchEvent(it) }
+                .listenToNewFollow { newFollowMapper.handleTwitchEvent(it) }
+                .listenToNewSub { newSubMapper.handleTwitchEvent(it) }
+                .listenToNewCheer { channelBitsMapper.handleTwitchEvent(it) }
+                .listenToStreamOnline { streamOnlineMapper.handleTwitchEvent(it) }
+                .listenToStreamOffline { streamOfflineMapper.handleTwitchEvent(it) }
+                .listenToChannelUpdate { channelUpdateMapper.handleTwitchEvent(it) }
                 .build()
 
 
@@ -106,7 +106,7 @@ class Channel(
         //TODO finish clip created handler schedulerForClips.start()
     }
 
-    private fun <T> TwitchIncomingEventHandler<T>.handleTwitchEvent(request: T) {
+    private fun <T> TwitchIncomingEventMapper<T>.handleTwitchEvent(request: T) {
         //TODO make suspendable
         runBlocking {
             this@handleTwitchEvent.handle(request).forEach { incomingEvent ->

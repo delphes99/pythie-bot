@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.connector.twitch.Channel
 import fr.delphes.connector.twitch.ClientBot
@@ -10,17 +10,17 @@ import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
 import fr.delphes.twitch.api.streamOnline.StreamOnline as StreamOnlineTwitch
 
-class StreamOnlineHandler(
+class StreamOnlineMapper(
     private val channel: Channel,
     private val bot: ClientBot,
     private val clock: Clock = SystemClock
-) : TwitchIncomingEventHandler<StreamOnlineTwitch> {
+) : TwitchIncomingEventMapper<StreamOnlineTwitch> {
     override suspend fun handle(
         twitchEvent: fr.delphes.twitch.api.streamOnline.StreamOnline
     ): List<TwitchIncomingEvent> {
         //TODO better retrieve
         val stream = runBlocking {
-            this@StreamOnlineHandler.channel.twitchApi.getStream()
+            this@StreamOnlineMapper.channel.twitchApi.getStream()
         }
 
         if (bot.channelOf(twitchEvent.channel)?.isOnline() == true) {

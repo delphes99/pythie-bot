@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.connector.twitch.ClientBot
 import fr.delphes.connector.twitch.incomingEvent.StreamChanged
@@ -7,9 +7,9 @@ import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.streams.Stream
 
-class ChannelUpdateHandler(
+class ChannelUpdateMapper(
     private val bot: ClientBot
-) : TwitchIncomingEventHandler<ChannelUpdate> {
+) : TwitchIncomingEventMapper<ChannelUpdate> {
     override suspend fun handle(
         twitchEvent: ChannelUpdate
     ): List<TwitchIncomingEvent> {

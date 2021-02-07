@@ -1,13 +1,13 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.connector.twitch.ClientBot
 import fr.delphes.connector.twitch.incomingEvent.BitCheered
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.api.channelCheer.NewCheer
 
-class ChannelBitsHandler(
+class ChannelBitsMapper(
     private val bot: ClientBot
-) : TwitchIncomingEventHandler<NewCheer> {
+) : TwitchIncomingEventMapper<NewCheer> {
     override suspend fun handle(
         twitchEvent: NewCheer
     ): List<TwitchIncomingEvent> {

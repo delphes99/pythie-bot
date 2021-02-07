@@ -1,13 +1,13 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.connector.twitch.ClientBot
 import fr.delphes.connector.twitch.incomingEvent.NewFollow
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.api.channelFollow.NewFollow as NewFollowTwitch
 
-class NewFollowHandler(
+class NewFollowMapper(
     private val bot: ClientBot
-) : TwitchIncomingEventHandler<NewFollowTwitch> {
+) : TwitchIncomingEventMapper<NewFollowTwitch> {
     override suspend fun handle(
         twitchEvent: fr.delphes.twitch.api.channelFollow.NewFollow
     ): List<TwitchIncomingEvent> {

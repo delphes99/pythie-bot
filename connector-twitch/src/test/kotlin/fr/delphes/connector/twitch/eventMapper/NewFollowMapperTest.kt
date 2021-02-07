@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.connector.twitch.ClientBot
@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class NewFollowHandlerTest {
+internal class NewFollowMapperTest {
     private val changeState = mockk<ChannelState>(relaxed = true)
     private val bot = mockk<ClientBot>()
     private val channel = TwitchChannel("channel")
@@ -31,7 +31,7 @@ internal class NewFollowHandlerTest {
 
 
         runBlocking {
-            NewFollowHandler(bot).handle(event)
+            NewFollowMapper(bot).handle(event)
         }
 
         coVerify(exactly = 1) { changeState.newFollow(User("user")) }

@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.connector.twitch.ClientBot
@@ -9,10 +9,10 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.irc.IrcChannelMessage
 
-class ChannelMessageHandler(
+class ChannelMessageMapper(
     private val channel: TwitchChannel,
     private val bot: ClientBot
-) : TwitchIncomingEventHandler<IrcChannelMessage> {
+) : TwitchIncomingEventMapper<IrcChannelMessage> {
     override suspend fun handle(
         twitchEvent: IrcChannelMessage
     ): List<TwitchIncomingEvent> {

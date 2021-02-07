@@ -1,4 +1,4 @@
-package fr.delphes.connector.twitch.eventHandler
+package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.bot.state.UserMessage
@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class ChannelMessageHandlerTest {
+internal class ChannelMessageMapperTest {
     private val changeState = mockk<ChannelState>(relaxed = true)
     private val channel = TwitchChannel("channel")
     private val clientBot = mockk<ClientBot>()
@@ -33,7 +33,7 @@ internal class ChannelMessageHandlerTest {
     @Test
     internal fun `add statistics message received`() {
         runBlocking {
-            ChannelMessageHandler(channel, clientBot).handle(
+            ChannelMessageMapper(channel, clientBot).handle(
                 IrcChannelMessage(IrcChannel.withName("channel"), IrcUser("user"), "message")
             )
         }
