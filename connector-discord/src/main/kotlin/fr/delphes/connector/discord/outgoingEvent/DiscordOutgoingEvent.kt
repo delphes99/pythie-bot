@@ -11,8 +11,8 @@ sealed class DiscordOutgoingEvent : OutgoingEvent {
 typealias ChannelId = Long
 
 data class DiscordMessage(val text: String, val channel: ChannelId) : DiscordOutgoingEvent() {
-    override suspend fun executeOnDiscord(discord: DiscordConnector) {
-        discord.connected {
+    override suspend fun executeOnDiscord(client: DiscordConnector) {
+        client.connected {
             val channel = this@connected.client.getTextChannelById(channel)!!
             channel.sendMessage(text).complete()
         }
@@ -49,8 +49,8 @@ data class DiscordEmbeddedMessage(
         listOf(*fields)
     )
 
-    override suspend fun executeOnDiscord(discord: DiscordConnector) {
-        discord.connected {
+    override suspend fun executeOnDiscord(client: DiscordConnector) {
+        client.connected {
             val channel = this@connected.client.getTextChannelById(channel)!!
 
             val builder = EmbedBuilder()

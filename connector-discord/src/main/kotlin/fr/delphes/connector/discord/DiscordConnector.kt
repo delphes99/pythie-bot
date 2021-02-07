@@ -1,6 +1,6 @@
 package fr.delphes.connector.discord
 
-import fr.delphes.bot.ClientBot
+import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.endpoint.DiscordModule
@@ -14,7 +14,7 @@ class DiscordConnector(
     private val repository = DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     var state: DiscordState = DiscordState.Unconfigured
     //TODO non null
-    var clientBot: ClientBot? = null
+    lateinit var bot: Bot
 
     init {
         runBlocking {
@@ -22,7 +22,11 @@ class DiscordConnector(
         }
     }
 
-    override fun connect(bot: ClientBot) {
+    override fun init(bot: Bot) {
+        this.bot = bot
+    }
+
+    override fun connect() {
         val newState = when(val oldState = state) {
             DiscordState.Unconfigured -> oldState
             is DiscordState.Configured -> oldState.connect()
@@ -39,15 +43,14 @@ class DiscordConnector(
         }
     }
 
-    override fun initChannel(bot: ClientBot) {
-        clientBot = bot
+    override suspend fun resetWebhook() {
     }
 
-    override fun internalEndpoints(application: Application, bot: ClientBot) {
-        return application.DiscordModule(this, bot)
+    override fun internalEndpoints(application: Application) {
+        return application.DiscordModule(this)
     }
 
-    override fun publicEndpoints(application: Application, bot: ClientBot) {
+    override fun publicEndpoints(application: Application) {
     }
 
     fun connected(doStuff: DiscordState.Connected.() -> Unit) {

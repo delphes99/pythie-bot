@@ -1,11 +1,14 @@
 package fr.delphes.features.overlay
 
-import fr.delphes.bot.Channel
+import fr.delphes.bot.Bot
+import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.features.twitch.voth.VOTH
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.prettyPrint
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
 import io.ktor.response.respond
@@ -15,34 +18,46 @@ import java.time.LocalDateTime
 
 //TODO move to core
 fun OverlayModule(
-    channel: Channel
+    bot: Bot
 ): Application.() -> Unit {
-    val channelName = channel.name
-
     //TODO no polling
 
     return {
         routing {
-            static("/${channelName}/overlay") {
-                resources("overlay")
-            }
-            get("/${channelName}/overlay/infos") {
-                val statistics = channel.statistics
-                val overlayInfos = OverlayInfos(
-                    last_follows = statistics.lastFollows.take(3).map(User::name),
-                    last_subs = statistics.lastSubs.take(3).map(User::name),
-                    last_cheers = statistics.lastCheers.take(3).map { cheer -> OverlayCheers(cheer.user?.name, cheer.bits) },
-                    last_voths = lastVOTH(channel)
-                )
-                this.call.respond(overlayInfos)
+            val twitchConnector = bot.connectors.filterIsInstance<TwitchConnector>().first()
+            twitchConnector.channels.forEach { channelConfiguration ->
+                static("/${channelConfiguration.ownerChannel}/overlay") {
+                    resources("overlay")
+                }
+                get("/${channelConfiguration.ownerChannel}/overlay/infos") {
+                    twitchConnector.whenRunning(
+                        whenRunning = {
+                            val channel = this.clientBot.channelOf(TwitchChannel(channelConfiguration.ownerChannel))!!
+                            val statistics = channel.statistics
+                            val overlayInfos = OverlayInfos(
+                                last_follows = statistics.lastFollows.take(3).map(User::name),
+                                last_subs = statistics.lastSubs.take(3).map(User::name),
+                                last_cheers = statistics.lastCheers.take(3)
+                                    .map { cheer -> OverlayCheers(cheer.user?.name, cheer.bits) },
+                                last_voths = lastVOTH(bot)
+                            )
+
+                            this@get.call.respond(overlayInfos)
+                        },
+                        whenNotRunning = {
+                            this@get.call.respond(HttpStatusCode.NoContent)
+                        }
+                    )
+                }
             }
         }
     }
 }
 
 //TODO voth inject informations
-private fun lastVOTH(channel: Channel): List<OverlayVoth> {
-    return channel.features
+private fun lastVOTH(bot: Bot): List<OverlayVoth> {
+    return bot
+        .features
         .filterIsInstance<VOTH>()
         .firstOrNull()
         .let { vothFeature ->

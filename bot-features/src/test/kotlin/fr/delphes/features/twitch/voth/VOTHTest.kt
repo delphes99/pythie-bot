@@ -1,16 +1,16 @@
 package fr.delphes.features.twitch.voth
 
-import fr.delphes.bot.ClientBot
-import fr.delphes.bot.command.Command
-import fr.delphes.bot.event.incoming.CommandAsked
-import fr.delphes.bot.event.incoming.RewardRedemption
-import fr.delphes.bot.event.incoming.StreamOffline
-import fr.delphes.bot.event.incoming.StreamOnline
-import fr.delphes.bot.event.incoming.VIPListReceived
-import fr.delphes.bot.event.outgoing.PromoteVIP
-import fr.delphes.bot.event.outgoing.RemoveVIP
-import fr.delphes.bot.event.outgoing.RetrieveVip
-import fr.delphes.bot.event.outgoing.SendMessage
+import fr.delphes.bot.Bot
+import fr.delphes.connector.twitch.command.Command
+import fr.delphes.connector.twitch.incomingEvent.CommandAsked
+import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
+import fr.delphes.connector.twitch.incomingEvent.StreamOffline
+import fr.delphes.connector.twitch.incomingEvent.StreamOnline
+import fr.delphes.connector.twitch.incomingEvent.VIPListReceived
+import fr.delphes.connector.twitch.outgoingEvent.PromoteVIP
+import fr.delphes.connector.twitch.outgoingEvent.RemoveVIP
+import fr.delphes.connector.twitch.outgoingEvent.RetrieveVip
+import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.TestClock
 import fr.delphes.features.TestStateRepository
 import fr.delphes.features.handle
@@ -43,7 +43,7 @@ internal class VOTHTest {
         { emptyList() },
         "!top3",
         { _, _, _ -> emptyList() })
-    val clientBot = mockk<ClientBot>()
+    val clientBot = mockk<Bot>()
 
     @Nested
     @DisplayName("RewardRedemption")
@@ -72,7 +72,7 @@ internal class VOTHTest {
             val voth = voth()
 
             val messages = voth.handle(rewardRedemption, clientBot)
-            assertThat(messages).contains(RetrieveVip)
+            assertThat(messages).contains(RetrieveVip(CHANNEL))
         }
     }
 
@@ -85,8 +85,8 @@ internal class VOTHTest {
 
             val messages = voth.handle(VIPListReceived(CHANNEL, "oldVip", "oldVip2"), clientBot)
             assertThat(messages).contains(
-                RemoveVIP("oldVip"),
-                RemoveVIP("oldVip2")
+                RemoveVIP("oldVip", CHANNEL),
+                RemoveVIP("oldVip2", CHANNEL)
             )
         }
 
@@ -97,7 +97,7 @@ internal class VOTHTest {
 
             val messages = voth.handle(VIPListReceived(CHANNEL, "oldVip", "oldVip2"), clientBot)
             assertThat(messages).contains(
-                PromoteVIP("newVip")
+                PromoteVIP("newVip", CHANNEL)
             )
         }
 
@@ -147,7 +147,7 @@ internal class VOTHTest {
                 "!cmdstats",
                 { emptyList() },
                 "!top3",
-                { top1, top2, top3 -> listOf(SendMessage("${top1?.user?.name}, ${top2?.user?.name}, ${top3?.user?.name}")) }),
+                { top1, top2, top3 -> listOf(SendMessage("${top1?.user?.name}, ${top2?.user?.name}, ${top3?.user?.name}", CHANNEL)) }),
             stateRepository = TestStateRepository { state },
             state = state,
             clock = CLOCK
@@ -155,7 +155,7 @@ internal class VOTHTest {
 
         val events = voth.handle(CommandAsked(CHANNEL, Command("!top3"), User("user")), mockk())
 
-        assertThat(events).contains(SendMessage("user1, user2, user3"))
+        assertThat(events).contains(SendMessage("user1, user2, user3", CHANNEL))
     }
 
     private fun voth(state: VOTHState = DEFAULT_STATE): VOTH {

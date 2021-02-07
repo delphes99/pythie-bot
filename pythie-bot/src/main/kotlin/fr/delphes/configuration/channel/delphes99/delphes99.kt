@@ -1,27 +1,27 @@
 package fr.delphes.configuration.channel.delphes99
 
-import fr.delphes.bot.event.incoming.StreamChanges
-import fr.delphes.bot.event.outgoing.ActivateReward
 import fr.delphes.bot.event.outgoing.Alert
-import fr.delphes.bot.event.outgoing.DesactivateReward
-import fr.delphes.bot.event.outgoing.SendMessage
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
 import fr.delphes.connector.discord.outgoingEvent.DiscordMessage
-import fr.delphes.feature.endCredits.EndCredits
-import fr.delphes.feature.statistics.Statistics
+import fr.delphes.connector.twitch.incomingEvent.StreamChanges
+import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
+import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
+import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.overlay.Overlay
 import fr.delphes.features.twitch.bitCheer.BitCheer
 import fr.delphes.features.twitch.clipCreated.ClipCreated
 import fr.delphes.features.twitch.command.Command
 import fr.delphes.features.twitch.commandList.CommandList
+import fr.delphes.features.twitch.endCredits.EndCredits
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.gameReward.GameReward
 import fr.delphes.features.twitch.newFollow.NewFollow
 import fr.delphes.features.twitch.newSub.NewSub
 import fr.delphes.features.twitch.rewardRedeem.RewardRedeem
+import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.StreamOffline
 import fr.delphes.features.twitch.streamOnline.StreamOnline
 import fr.delphes.features.twitch.streamUpdate.StreamUpdate
@@ -49,7 +49,8 @@ val delphes99Features = listOf(
                         listOfNotNull(
                             "\uD83D\uDC51 ${announce.rewardRedemption.user.name} est le nouveau VIP. \uD83D\uDC51",
                             announce.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP ${oldVOTH.user} [règne : ${announce.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
-                        ).joinToString(" ")
+                        ).joinToString(" "),
+                        channel
                     )
                 )
             },
@@ -59,7 +60,8 @@ val delphes99Features = listOf(
                     SendMessage(
                         "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +
                                 "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
-                                "\uD83D\uDCB8 Dépensés : ${stats.totalCost}"
+                                "\uD83D\uDCB8 Dépensés : ${stats.totalCost}",
+                        channel
                     )
                 )
             },
@@ -74,7 +76,8 @@ val delphes99Features = listOf(
                                 top1.let { "\uD83E\uDD47 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
                                 top2?.let { "\uD83E\uDD48 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
                                 top3?.let { "\uD83E\uDD49 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
-                            ).joinToString(" ")
+                            ).joinToString(" "),
+                            channel
                         )
                     )
                 }
@@ -89,7 +92,7 @@ val delphes99Features = listOf(
         "!bot",
         cooldown = Duration.ofMinutes(2),
         responses = listOf(
-            SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot")
+            SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot", channel)
         )
     ),
     Command(
@@ -97,19 +100,19 @@ val delphes99Features = listOf(
         "!discord",
         cooldown = Duration.ofSeconds(10),
         responses = listOf(
-            SendMessage("https://discord.com/invite/SAdBhbu")
+            SendMessage("https://discord.com/invite/SAdBhbu", channel)
         )
     ),
     NewFollow(channel) { newFollow ->
-        listOf(SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F"))
+        listOf(SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F", channel))
     },
     NewSub(channel) { newSub ->
-        listOf(SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F"))
+        listOf(SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F", channel))
     },
-    StreamOffline(channel) { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")) },
+    StreamOffline(channel) { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18", channel)) },
     StreamOnline(channel) {
         listOf(
-            SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !"),
+            SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !", channel),
             DiscordEmbeddedMessage(
                 it.title,
                 "https://www.twitch.tv/delphes99",
@@ -122,16 +125,17 @@ val delphes99Features = listOf(
             )
         )
     },
-    Statistics(),
+    Statistics(channel),
     EndCredits(),
-    Overlay(),
+    Overlay(channel),
     CommandList(
         channel,
         "!help"
     ) { commands ->
         listOf(
             SendMessage(
-                "ℹ️ Commandes : ${commands.joinToString(", ")}"
+                "ℹ️ Commandes : ${commands.joinToString(", ")}",
+                channel
             )
         )
     },
@@ -147,13 +151,17 @@ val delphes99Features = listOf(
                             "\uD83D\uDD04 ${change.oldGame.label} ➡ ${change.newGame.label}"
                         }
                     }
-                }
+                },
+                channel
             )
         )
     },
     BitCheer(channel) { bitCheered ->
         listOf(
-            SendMessage("💎 ${bitCheered.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎")
+            SendMessage(
+                "💎 ${bitCheered.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎",
+                channel
+            )
         )
     },
     GameDescription(
@@ -170,7 +178,7 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST
     ) {
         listOf(
-            SendMessage("-> test dev"),
+            SendMessage("-> test dev", channel),
             Alert("test")
         )
     },
@@ -191,17 +199,17 @@ val delphes99Features = listOf(
     Command(
         channel,
         "!deactivateTest",
-        responses = listOf(DesactivateReward(DelphesReward.DEV_TEST))
+        responses = listOf(DesactivateReward(DelphesReward.DEV_TEST, channel))
     ),
     Command(
         channel,
         "!activateTest",
-        responses = listOf(ActivateReward(DelphesReward.DEV_TEST))
+        responses = listOf(ActivateReward(DelphesReward.DEV_TEST, channel))
     ),
     Command(
         channel,
         "!ping",
-        responses = listOf(SendMessage("pong"))
+        responses = listOf(SendMessage("pong", channel))
     ),
     Command(
         channel,
@@ -210,13 +218,13 @@ val delphes99Features = listOf(
     ),
     NewGuildMember { newGuildMember ->
         listOf(
-            SendMessage("${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même !")
+            SendMessage("${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même !", channel)
         )
     },
     ClipCreated(channel) { clipCreated ->
         val clip = clipCreated.clip
         listOf(
-            SendMessage("\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}"),
+            SendMessage("\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}", channel),
             DiscordEmbeddedMessage(
                 clip.title,
                 clip.url,
@@ -234,7 +242,6 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
     ChannelConfiguration(
         properties.getProperty("channel.name"),
         properties.getProperty("account.oAuth"),
-        DelphesReward.toRewardList(),
-        delphes99Features
+        DelphesReward.toRewardList()
     )
 }

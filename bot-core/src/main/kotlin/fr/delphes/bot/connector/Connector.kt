@@ -1,20 +1,21 @@
 package fr.delphes.bot.connector
 
-import fr.delphes.bot.ClientBot
+import fr.delphes.bot.Bot
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.ktor.application.Application
 
 interface Connector {
     val configFilepath: String
 
-    //T0DO remove when twitch move to connector
-    fun initChannel(bot: ClientBot)
+    fun internalEndpoints(application: Application)
 
-    fun internalEndpoints(application: Application, bot: ClientBot)
+    fun publicEndpoints(application: Application)
 
-    fun publicEndpoints(application: Application, bot: ClientBot)
+    fun init(bot: Bot)
 
-    fun connect(bot: ClientBot)
+    fun connect()
 
     suspend fun execute(event: OutgoingEvent)
+
+    suspend fun resetWebhook()
 }

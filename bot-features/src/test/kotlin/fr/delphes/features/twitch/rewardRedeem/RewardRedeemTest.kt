@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.rewardRedeem
 
-import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.features.handle
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.reward.Reward

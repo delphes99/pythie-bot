@@ -1,40 +1,52 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.configuration.BotConfiguration
 import fr.delphes.feature.Feature
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 
-object Bot {
-    fun build(
-        configuration: BotConfiguration,
-        publicUrl: String,
-        configFilepath: String,
-        connectors: List<Connector>,
-        features: List<Feature>
-    ) {
-        val bot = ClientBot(
-            configuration,
-            publicUrl,
-            configFilepath,
-            connectors,
-            features
-        )
+class Bot(
+    val configuration: BotConfiguration,
+    val publicUrl: String,
+    val configFilepath: String,
+    val connectors: List<Connector>,
+    val features: List<Feature>
+) {
+    val alerts = Channel<Alert>()
+    private val eventHandlers = EventHandlers()
 
-        connectors.forEach { it.initChannel(bot) }
+    suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
+        eventHandlers.handleEvent(incomingEvent, this).forEach { event ->
+            connectors.forEach { connector ->
+                connector.execute(event)
+            }
+        }
+    }
+
+    fun init() {
+        features.forEach { feature ->
+            feature.registerHandlers(eventHandlers)
+        }
+
+        //TODO breack interdependency
+        connectors.forEach { it.init(this) }
 
         WebServer(
-            bot = bot,
-            internalModules = connectors.map { connector -> { application -> connector.internalEndpoints(application, bot) } },
-            publicModules = connectors.map { connector -> { application -> connector.publicEndpoints(application, bot) } }
+            bot = this,
+            internalModules = connectors.map { connector -> { application -> connector.internalEndpoints(application) } },
+            publicModules = connectors.map { connector -> { application -> connector.publicEndpoints(application) } }
         )
 
         // After initial state
-        connectors.forEach { it.connect(bot) }
+        connectors.forEach { it.connect() }
 
         //TODO move to connector
         runBlocking {
-            bot.resetWebhook()
+            connectors.forEach { it.resetWebhook() }
         }
     }
 }

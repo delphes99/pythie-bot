@@ -1,8 +1,8 @@
 package fr.delphes.features.twitch.voth
 
-import fr.delphes.twitch.api.user.User
-import fr.delphes.bot.event.incoming.RewardRedemption
+import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.feature.State
+import fr.delphes.twitch.api.user.User
 import kotlinx.serialization.Serializable
 import java.time.Duration
 import java.time.LocalDateTime

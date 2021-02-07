@@ -2,7 +2,6 @@ package fr.delphes.bot
 
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.bot.webserver.alert.AlertModule
-import fr.delphes.bot.webserver.webhook.WebhookModule
 import fr.delphes.utils.serialization.Serializer
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -14,13 +13,12 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
 class WebServer(
-    val bot: ClientBot,
+    val bot: Bot,
     internalModules: List<(Application) -> Unit>,
     publicModules: List<(Application) -> Unit>
 ) {
     init {
         launchServer(80) {
-            WebhookModule(bot)
             publicModules.forEach { module -> module(this) }
         }
 
@@ -32,6 +30,7 @@ class WebServer(
             }
             AdminModule(bot)
             AlertModule(bot)
+
             internalModules.forEach { module -> module(this) }
         }
     }

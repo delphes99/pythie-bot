@@ -100,7 +100,7 @@ class ChannelTwitchClient(
 
         private val eventSubConfigurations = mutableListOf<EventSubConfiguration<*, *, *>>()
 
-        fun listenToReward(listener: (RewardRedemption) -> Unit): Builder {
+        fun listenToReward(listener: suspend (RewardRedemption) -> Unit): Builder {
             eventSubConfigurations.add(
                 CustomRewardRedemptionEventSubConfiguration(
                     channel,
@@ -112,7 +112,7 @@ class ChannelTwitchClient(
             return this
         }
 
-        fun listenToNewFollow(listener: (NewFollow) -> Unit): Builder {
+        fun listenToNewFollow(listener: suspend (NewFollow) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelFollowEventSubConfiguration(
                     channel,
@@ -123,7 +123,7 @@ class ChannelTwitchClient(
             return this
         }
 
-        fun listenToNewSub(listener: (NewSub) -> Unit): Builder {
+        fun listenToNewSub(listener: suspend (NewSub) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelSubscribeEventSubConfiguration(
                     channel,
@@ -134,7 +134,7 @@ class ChannelTwitchClient(
             return this
         }
 
-        fun listenToNewCheer(listener: (NewCheer) -> Unit): Builder {
+        fun listenToNewCheer(listener: suspend (NewCheer) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelCheerEventSubConfiguration(
                     channel,
@@ -145,7 +145,7 @@ class ChannelTwitchClient(
             return this
         }
 
-        fun listenToChannelUpdate(listener: (ChannelUpdate) -> Unit): Builder {
+        fun listenToChannelUpdate(listener: suspend (ChannelUpdate) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelUpdateEventSubConfiguration(
                     channel,
@@ -156,7 +156,7 @@ class ChannelTwitchClient(
             return this
         }
 
-        fun listenToStreamOnline(listener: (StreamOnline) -> Unit): Builder {
+        fun listenToStreamOnline(listener: suspend (StreamOnline) -> Unit): Builder {
             eventSubConfigurations.add(
                 StreamOnlineEventSubConfiguration(
                     channel,
@@ -167,7 +167,7 @@ class ChannelTwitchClient(
             return this
         }
 
-        fun listenToStreamOffline(listener: (StreamOffline) -> Unit): Builder {
+        fun listenToStreamOffline(listener: suspend (StreamOffline) -> Unit): Builder {
             eventSubConfigurations.add(
                 StreamOfflineEventSubConfiguration(
                     channel,

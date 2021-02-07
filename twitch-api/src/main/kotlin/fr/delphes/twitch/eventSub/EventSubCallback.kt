@@ -15,7 +15,7 @@ import mu.KotlinLogging
 class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
     private val webhookPathSuffix: String,
     private val parse: suspend (ApplicationCall) -> NotificationPayload<PAYLOAD, CONDITION>,
-    private val notify: (PAYLOAD) -> Unit
+    private val notify: suspend (PAYLOAD) -> Unit
 ) {
     fun webhookPath(channelName: String) = "$channelName/${webhookPathSuffix}"
 

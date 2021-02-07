@@ -1,11 +1,11 @@
 package fr.delphes.features.twitch.rewardRedeem
 
-import fr.delphes.bot.ClientBot
-import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.Bot
 import fr.delphes.bot.event.eventHandler.EventHandlers
-import fr.delphes.bot.event.incoming.RewardRedemption
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.feature.TwitchFeature
+import fr.delphes.connector.twitch.TwitchEventHandler
+import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
@@ -18,8 +18,8 @@ class RewardRedeem(
         eventHandlers.addHandler(RewardRedemptionHandler())
     }
 
-    inner class RewardRedemptionHandler : EventHandler<RewardRedemption> {
-        override suspend fun handle(event: RewardRedemption, bot: ClientBot): List<OutgoingEvent> {
+    inner class RewardRedemptionHandler : TwitchEventHandler<RewardRedemption>(channel) {
+        override suspend fun handleIfGoodChannel(event: RewardRedemption, bot: Bot): List<OutgoingEvent> {
             return if(event.reward.rewardConfiguration == rewardConfiguration.rewardConfiguration) {
                 rewardRedeemResponse(event)
             } else {

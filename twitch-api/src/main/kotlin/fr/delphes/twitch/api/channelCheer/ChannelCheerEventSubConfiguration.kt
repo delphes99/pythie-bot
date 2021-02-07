@@ -13,7 +13,7 @@ import io.ktor.request.receive
 
 class ChannelCheerEventSubConfiguration(
     channel: TwitchChannel,
-    listener: (NewCheer) -> Unit
+    listener: suspend (NewCheer) -> Unit
 ) : EventSubConfiguration<NewCheer, ChannelCheerEventPayload, ChannelCheerCondition>(
     channel,
     "newCheer",

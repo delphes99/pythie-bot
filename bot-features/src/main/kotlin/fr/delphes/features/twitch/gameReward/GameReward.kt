@@ -1,15 +1,15 @@
 package fr.delphes.features.twitch.gameReward
 
-import fr.delphes.bot.ClientBot
-import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.Bot
 import fr.delphes.bot.event.eventHandler.EventHandlers
-import fr.delphes.bot.event.incoming.StreamChanged
-import fr.delphes.bot.event.incoming.StreamChanges
-import fr.delphes.bot.event.incoming.StreamOnline
-import fr.delphes.bot.event.outgoing.ActivateReward
-import fr.delphes.bot.event.outgoing.DesactivateReward
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.feature.TwitchFeature
+import fr.delphes.connector.twitch.TwitchEventHandler
+import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.incomingEvent.StreamChanged
+import fr.delphes.connector.twitch.incomingEvent.StreamChanges
+import fr.delphes.connector.twitch.incomingEvent.StreamOnline
+import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
+import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -39,14 +39,14 @@ class GameReward(
         eventHandlers.addHandler(StreamChangedHandler())
     }
 
-    inner class StreamOnlineHandler : EventHandler<StreamOnline> {
-        override suspend fun handle(event: StreamOnline, bot: ClientBot): List<OutgoingEvent> {
+    inner class StreamOnlineHandler : TwitchEventHandler<StreamOnline>(channel) {
+        override suspend fun handleIfGoodChannel(event: StreamOnline, bot: Bot): List<OutgoingEvent> {
             return deactivateFeaturesNotAssociateWith(event.game.id) + activateFeaturesAssociateWith(event.game.id)
         }
     }
 
-    inner class StreamChangedHandler : EventHandler<StreamChanged> {
-        override suspend fun handle(event: StreamChanged, bot: ClientBot): List<OutgoingEvent> {
+    inner class StreamChangedHandler : TwitchEventHandler<StreamChanged>(channel) {
+        override suspend fun handleIfGoodChannel(event: StreamChanged, bot: Bot): List<OutgoingEvent> {
             return event.changes
                 .filterIsInstance<StreamChanges.Game>()
                 .firstOrNull()
@@ -61,10 +61,10 @@ class GameReward(
 
     //TODO cache if the feature is already enabled / disabled
     private fun deactivateFeaturesNotAssociateWith(game: GameId): List<OutgoingEvent> {
-        return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten().map(::DesactivateReward)
+        return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten().map { DesactivateReward(it, channel) }
     }
 
     private fun activateFeaturesAssociateWith(game: GameId): List<OutgoingEvent> {
-        return gameRewards[game]?.map(::ActivateReward) ?: emptyList()
+        return gameRewards[game]?.map { ActivateReward(it, channel) } ?: emptyList()
     }
 }

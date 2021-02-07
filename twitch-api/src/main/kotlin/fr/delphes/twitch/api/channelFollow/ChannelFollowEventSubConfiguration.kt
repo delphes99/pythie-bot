@@ -13,7 +13,7 @@ import io.ktor.request.receive
 
 class ChannelFollowEventSubConfiguration(
     channel: TwitchChannel,
-    listener: (NewFollow) -> Unit
+    listener: suspend (NewFollow) -> Unit
 ) : EventSubConfiguration<NewFollow, ChannelFollowEventPayload, ChannelFollowCondition>(
     channel,
     "newFollow",

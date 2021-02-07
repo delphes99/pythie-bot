@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.voth
 
-import fr.delphes.bot.event.incoming.RewardRedemption
+import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import java.time.Duration
 
 data class NewVOTHAnnounced(

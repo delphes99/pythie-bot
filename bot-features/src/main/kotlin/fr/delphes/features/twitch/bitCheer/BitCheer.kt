@@ -1,11 +1,11 @@
 package fr.delphes.features.twitch.bitCheer
 
-import fr.delphes.bot.ClientBot
-import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.Bot
 import fr.delphes.bot.event.eventHandler.EventHandlers
-import fr.delphes.bot.event.incoming.BitCheered
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.feature.TwitchFeature
+import fr.delphes.connector.twitch.TwitchEventHandler
+import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.incomingEvent.BitCheered
 import fr.delphes.twitch.TwitchChannel
 
 class BitCheer(
@@ -16,7 +16,9 @@ class BitCheer(
         eventHandlers.addHandler(BitCheeredHandler())
     }
 
-    inner class BitCheeredHandler : EventHandler<BitCheered> {
-        override suspend fun handle(event: BitCheered, bot: ClientBot): List<OutgoingEvent> = bitCheeredResponse(event)
+    inner class BitCheeredHandler : TwitchEventHandler<BitCheered>(channel) {
+        override suspend fun handleIfGoodChannel(event: BitCheered, bot: Bot): List<OutgoingEvent> {
+            return bitCheeredResponse(event)
+        }
     }
 }

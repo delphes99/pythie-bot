@@ -9,11 +9,11 @@ import io.ktor.application.ApplicationCall
 abstract class EventSubConfiguration<MODEL, PAYLOAD, CONDITION : GenericCondition>(
     protected val channel: TwitchChannel,
     webhookPathSuffix: String,
-    private val listener: (MODEL) -> Unit
+    private val listener: suspend (MODEL) -> Unit
 ) {
     val callback = EventSubCallback(webhookPathSuffix, ::parse, ::notify)
 
-    private fun notify(event: PAYLOAD) {
+    private suspend fun notify(event: PAYLOAD) {
         transform(event)?.also { listener(it) }
     }
 

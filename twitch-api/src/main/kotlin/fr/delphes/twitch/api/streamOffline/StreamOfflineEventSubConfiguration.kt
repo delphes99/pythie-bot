@@ -12,7 +12,7 @@ import io.ktor.request.receive
 
 class StreamOfflineEventSubConfiguration(
     channel: TwitchChannel,
-    listener: (StreamOffline) -> Unit
+    listener: suspend (StreamOffline) -> Unit
 ) : EventSubConfiguration<StreamOffline, StreamOfflineEventPayload, StreamOfflineCondition>(
     channel,
     "StreamOffline",

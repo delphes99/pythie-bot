@@ -1,6 +1,5 @@
 package fr.delphes.connector.discord.endpoint
 
-import fr.delphes.bot.ClientBot
 import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.discord.DiscordState
 import io.ktor.application.Application
@@ -13,7 +12,7 @@ import io.ktor.routing.post
 import io.ktor.routing.routing
 import kotlinx.serialization.Serializable
 
-fun Application.DiscordModule(discord: DiscordConnector, clientBot: ClientBot) {
+fun Application.DiscordModule(discord: DiscordConnector) {
     routing {
         get("/status/discord") {
             this.context.respond(discord.state.toStatus())
@@ -21,7 +20,7 @@ fun Application.DiscordModule(discord: DiscordConnector, clientBot: ClientBot) {
         post("/discord/configuration") {
             val configuration = this.call.receive<DiscordConfigurationRequest>()
             discord.configure(configuration.oAuthToken)
-            discord.connect(clientBot)
+            discord.connect()
 
             this.context.respond(HttpStatusCode.OK)
         }

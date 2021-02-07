@@ -1,8 +1,8 @@
 package fr.delphes.twitch.irc
 
+import fr.delphes.twitch.irc.handler.ChannelMessageHandler
 import fr.delphes.twitch.irc.handler.GlobalMessageHandler
 import fr.delphes.twitch.irc.handler.JoinHandler
-import fr.delphes.twitch.irc.handler.ChannelMessageHandler
 import org.kitteh.irc.client.library.Client
 import org.kitteh.irc.client.library.feature.twitch.TwitchSupport
 
@@ -55,8 +55,7 @@ class IrcClient(
                 .server()
                 .host("irc.twitch.tv")
                 .password("oauth:$token")
-                .then()
-                .build()
+                .then().build()
 
             TwitchSupport.addSupport(client)
 

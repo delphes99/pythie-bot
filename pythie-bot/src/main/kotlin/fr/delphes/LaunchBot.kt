@@ -5,6 +5,7 @@ import fr.delphes.bot.Ngrok
 import fr.delphes.configuration.PropertiesBotConfiguration
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99Features
+import fr.delphes.configuration.channel.delphestestChannel
 import fr.delphes.configuration.channel.delphestestFeatures
 import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
@@ -19,17 +20,17 @@ fun main() {
     val configuration = PropertiesBotConfiguration()
 
     val configFilepath = "A:\\pythiebot\\"
-    Bot.build(
+    Bot(
         configuration,
         tunnel.publicUrl,
         configFilepath,
         listOf(
-            TwitchConnector(configFilepath, delphes99Channel),
+            TwitchConnector(configFilepath, delphes99Channel, delphestestChannel),
             DiscordConnector(configFilepath)
         ),
         listOf(
             delphes99Features,
             delphestestFeatures
         ).flatten()
-    )
+    ).init()
 }

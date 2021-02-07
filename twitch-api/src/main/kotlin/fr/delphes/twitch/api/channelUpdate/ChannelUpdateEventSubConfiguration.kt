@@ -14,7 +14,7 @@ import io.ktor.request.receive
 
 class ChannelUpdateEventSubConfiguration(
     channel: TwitchChannel,
-    listener: (ChannelUpdate) -> Unit
+    listener: suspend (ChannelUpdate) -> Unit
 ) : EventSubConfiguration<ChannelUpdate, ChannelUpdateEventPayload, ChannelUpdateCondition>(
     channel,
     "channelUpdate",

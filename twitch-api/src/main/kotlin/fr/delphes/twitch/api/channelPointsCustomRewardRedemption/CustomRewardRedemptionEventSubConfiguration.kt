@@ -15,7 +15,7 @@ import io.ktor.request.receive
 
 class CustomRewardRedemptionEventSubConfiguration(
     channel: TwitchChannel,
-    listener: (RewardRedemption) -> Unit,
+    listener: suspend (RewardRedemption) -> Unit,
     private val rewardsConfigurations: List<RewardConfiguration>
 ) : EventSubConfiguration<RewardRedemption,
         ChannelPointsCustomRewardRedemptionEventPayload,

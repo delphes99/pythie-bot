@@ -1,10 +1,10 @@
 package fr.delphes.features.twitch.command
 
-import fr.delphes.bot.command.Command
-import fr.delphes.bot.command.SimpleCommandHandler
+import fr.delphes.connector.twitch.command.SimpleCommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.feature.TwitchFeature
+import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.command.Command
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
@@ -24,6 +24,7 @@ class Command(
     }
 
     private val commandHandler = SimpleCommandHandler(
+        channel,
         Command(trigger),
         lastActivation,
         clock,

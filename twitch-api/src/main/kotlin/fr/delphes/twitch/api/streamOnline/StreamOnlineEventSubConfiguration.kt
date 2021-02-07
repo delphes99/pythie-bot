@@ -12,7 +12,7 @@ import io.ktor.request.receive
 
 class StreamOnlineEventSubConfiguration(
     channel: TwitchChannel,
-    listener: (StreamOnline) -> Unit
+    listener: suspend (StreamOnline) -> Unit
 ) : EventSubConfiguration<StreamOnline, StreamOnlineEventPayload, StreamOnlineCondition>(
     channel,
     "StreamOnline",

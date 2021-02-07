@@ -12,7 +12,7 @@ class JoinListener(
     override fun onGuildMemberJoin(event: GuildMemberJoinEvent) {
         //TODO non blocking
         runBlocking {
-            connector.clientBot!!.handleEvent(NewGuildMember(event.user.name))
+            connector.bot.handleIncomingEvent(NewGuildMember(event.user.name))
         }
     }
 }
