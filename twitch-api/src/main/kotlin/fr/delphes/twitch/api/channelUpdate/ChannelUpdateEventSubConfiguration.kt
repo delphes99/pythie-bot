@@ -7,6 +7,7 @@ import fr.delphes.twitch.api.channelUpdate.payload.SubscribeChannelUpdate
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
+import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.application.ApplicationCall
@@ -17,7 +18,7 @@ class ChannelUpdateEventSubConfiguration(
     listener: suspend (ChannelUpdate) -> Unit
 ) : EventSubConfiguration<ChannelUpdate, ChannelUpdateEventPayload, ChannelUpdateCondition>(
     channel,
-    "channelUpdate",
+    EventSubTopic.CHANNEL_UPDATE,
     listener
 ) {
     override fun transform(

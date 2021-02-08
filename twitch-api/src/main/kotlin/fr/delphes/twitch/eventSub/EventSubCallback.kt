@@ -13,11 +13,11 @@ import io.ktor.util.pipeline.PipelineContext
 import mu.KotlinLogging
 
 class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
-    private val webhookPathSuffix: String,
+    private val topic: EventSubTopic,
     private val parse: suspend (ApplicationCall) -> NotificationPayload<PAYLOAD, CONDITION>,
     private val notify: suspend (PAYLOAD) -> Unit
 ) {
-    fun webhookPath(channelName: String) = "$channelName/${webhookPathSuffix}"
+    fun webhookPath(channelName: String) = "$channelName/${topic.webhookPathSuffix}"
 
     fun callbackDefinition(routing: Routing, channelName: String) {
         routing.post("/${webhookPath(channelName)}") {
@@ -26,7 +26,7 @@ class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
             //TODO manage duplicate event
             when {
                 payload.challenge != null -> {
-                    LOGGER.info { "Twitch webhook $webhookPathSuffix for $channelName : Subscription ok" }
+                    LOGGER.info { "Twitch webhook ${topic.webhookPathSuffix} for $channelName : Subscription ok" }
                     this.challengeWebHook(payload.challenge)
                 }
                 payload.event != null -> {
@@ -35,7 +35,7 @@ class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
                     this.context.response.status(HttpStatusCode.OK)
                 }
                 else -> {
-                    LOGGER.error { "Twitch webhook $webhookPathSuffix for $channelName : Unable to handle message" }
+                    LOGGER.error { "Twitch webhook ${topic.webhookPathSuffix} for $channelName : Unable to handle message" }
                 }
             }
         }
