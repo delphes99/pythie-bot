@@ -8,6 +8,7 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.eventMapper.ChannelBitsMapper
 import fr.delphes.connector.twitch.eventMapper.ChannelMessageMapper
 import fr.delphes.connector.twitch.eventMapper.ChannelUpdateMapper
+import fr.delphes.connector.twitch.eventMapper.ClipCreatedMapper
 import fr.delphes.connector.twitch.eventMapper.IRCMessageMapper
 import fr.delphes.connector.twitch.eventMapper.NewFollowMapper
 import fr.delphes.connector.twitch.eventMapper.NewSubMapper
@@ -15,7 +16,6 @@ import fr.delphes.connector.twitch.eventMapper.RewardRedeemedMapper
 import fr.delphes.connector.twitch.eventMapper.StreamOfflineMapper
 import fr.delphes.connector.twitch.eventMapper.StreamOnlineMapper
 import fr.delphes.connector.twitch.eventMapper.TwitchIncomingEventMapper
-import fr.delphes.connector.twitch.incomingEvent.ClipCreated
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.streams.Stream
@@ -23,10 +23,7 @@ import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.TwitchUserCredential
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
-import fr.delphes.utils.scheduler.Scheduler
 import kotlinx.coroutines.runBlocking
-import java.time.Duration
-import java.time.LocalDateTime
 
 class Channel(
     configuration: ChannelConfiguration,
@@ -63,16 +60,6 @@ class Channel(
         }
         .build()
 
-
-    private val schedulerForClips = Scheduler(Duration.ofSeconds(20)) {
-        val startedAfter = LocalDateTime.of(2021, 2, 1, 0, 0, 0)
-
-        twitchApi.getClips(startedAfter)
-            .takeLast(1).map { clip -> ClipCreated(TwitchChannel(name), clip) }.forEach { event ->
-                bot.bot.handleIncomingEvent(event)
-            }
-    }
-
     val twitchApi: ChannelTwitchApi
 
     //TODO subscribe only when feature requires
@@ -84,9 +71,10 @@ class Channel(
         val streamOnlineMapper = StreamOnlineMapper(this, bot)
         val streamOfflineMapper = StreamOfflineMapper(bot)
         val channelUpdateMapper = ChannelUpdateMapper(bot)
+        val clipCreatedMapper = ClipCreatedMapper()
 
         twitchApi =
-            bot.channelApiBuilder(configuration, channelCredential)
+            bot.channelApiBuilder(configuration, channelCredential, bot.configFilepath)
                 .listenToReward { rewardRedeemedMapper.handleTwitchEvent(it) }
                 .listenToNewFollow { newFollowMapper.handleTwitchEvent(it) }
                 .listenToNewSub { newSubMapper.handleTwitchEvent(it) }
@@ -94,6 +82,7 @@ class Channel(
                 .listenToStreamOnline { streamOnlineMapper.handleTwitchEvent(it) }
                 .listenToStreamOffline { streamOfflineMapper.handleTwitchEvent(it) }
                 .listenToChannelUpdate { channelUpdateMapper.handleTwitchEvent(it) }
+                .listenToClipCreated { clipCreatedMapper.handleTwitchEvent(it) }
                 .build()
 
 
@@ -102,8 +91,6 @@ class Channel(
 
             //TODO Synchronize reward
         }
-
-        //TODO finish clip created handler schedulerForClips.start()
     }
 
     private fun <T> TwitchIncomingEventMapper<T>.handleTwitchEvent(request: T) {

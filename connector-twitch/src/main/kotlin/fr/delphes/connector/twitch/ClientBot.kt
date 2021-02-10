@@ -66,7 +66,8 @@ class ClientBot(
 
     fun channelApiBuilder(
         configuration: ChannelConfiguration,
-        channelCredential: TwitchUserCredential
+        channelCredential: TwitchUserCredential,
+        configFilepath: String
     ): ChannelTwitchClient.Builder {
         val user = runBlocking {
             twitchApi.getUserByName(configuration.ownerChannel)!!
@@ -77,6 +78,7 @@ class ClientBot(
             channelCredential,
             user,
             publicUrl,
+            configFilepath,
             webhookSecret,
             configuration.rewards
         )

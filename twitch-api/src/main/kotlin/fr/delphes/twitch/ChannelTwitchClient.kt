@@ -11,6 +11,7 @@ import fr.delphes.twitch.api.channelSubscribe.NewSub
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.api.clips.Clip
+import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
@@ -24,13 +25,17 @@ import fr.delphes.twitch.api.streams.ThumbnailUrl
 import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.auth.TwitchAppCredential
 import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.clip.ClipCreated
+import fr.delphes.twitch.clip.LastClipClient
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import mu.KotlinLogging
+import java.time.Duration
 import java.time.LocalDateTime
 
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
     private val webhookApi: WebhookApi,
+    private val lastClipApi: LastClipApi,
     rewardsConfigurations: List<RewardConfiguration>
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
     private val rewards = RewardCache(rewardsConfigurations, helixApi)
@@ -61,16 +66,7 @@ class ChannelTwitchClient(
     }
 
     override suspend fun getClips(startedAfter: LocalDateTime): List<Clip> {
-        return helixApi.getClips(startedAfter).map { payload ->
-            Clip(
-                payload.url,
-                TwitchUser(payload.creator_id, payload.creator_name),
-                payload.game_id, //TODO game repository to retrieve game name
-                payload.title,
-                payload.created_at,
-                ThumbnailUrl(payload.thumbnail_url)
-            )
-        }
+        return helixApi.getClips(startedAfter).map(GetClipsPayload::toClip)
     }
 
     companion object {
@@ -81,10 +77,11 @@ class ChannelTwitchClient(
             userCredential: TwitchUserCredential,
             user: TwitchUser,
             publicUrl: String,
+            configFilepath: String,
             webhookSecret: String,
             rewardsConfigurations: List<RewardConfiguration>
         ): Builder {
-            return Builder(appCredential, userCredential, user, publicUrl, webhookSecret, rewardsConfigurations)
+            return Builder(appCredential, userCredential, user, publicUrl, configFilepath, webhookSecret, rewardsConfigurations)
         }
     }
 
@@ -93,12 +90,14 @@ class ChannelTwitchClient(
         private val userCredential: TwitchUserCredential,
         private val user: TwitchUser,
         private val publicUrl: String,
+        private val configFilepath: String,
         private val webhookSecret: String,
         private val rewardsConfigurations: List<RewardConfiguration>
     ) {
         val channel = TwitchChannel(user.name)
 
         private val eventSubConfigurations = mutableListOf<EventSubConfiguration<*, *, *>>()
+        private var listenerClipCreated: (suspend (ClipCreated) -> Unit)? = null
 
         fun listenToReward(listener: suspend (RewardRedemption) -> Unit): Builder {
             eventSubConfigurations.add(
@@ -178,6 +177,12 @@ class ChannelTwitchClient(
             return this
         }
 
+        fun listenToClipCreated(listener: suspend (ClipCreated) -> Unit): Builder {
+            listenerClipCreated = listener
+
+            return this
+        }
+
         fun build(): ChannelTwitchClient {
             val helixApi = ChannelHelixClient(appCredential, userCredential, user.id)
 
@@ -189,9 +194,22 @@ class ChannelTwitchClient(
                 eventSubConfigurations
             )
 
+            val lastClipApi = LastClipClient(
+                channel,
+                helixApi,
+                Duration.ofMinutes(1),
+                configFilepath,
+                listenerClipCreated
+            )
+
+            listenerClipCreated?.also {
+                lastClipApi.listen()
+            }
+
             return ChannelTwitchClient(
                 helixApi,
                 webhookApi,
+                lastClipApi,
                 rewardsConfigurations
             )
         }

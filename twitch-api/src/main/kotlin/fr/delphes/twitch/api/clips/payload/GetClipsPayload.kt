@@ -2,6 +2,9 @@
 
 package fr.delphes.twitch.api.clips.payload
 
+import fr.delphes.twitch.api.clips.Clip
+import fr.delphes.twitch.api.streams.ThumbnailUrl
+import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.utils.serialization.LocalDateTimeAsInstantSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
@@ -23,4 +26,15 @@ data class GetClipsPayload(
     val view_count: Long,
     val created_at: LocalDateTime,
     val thumbnail_url: String
-)
+) {
+    fun toClip(): Clip {
+        return Clip(
+            url,
+            TwitchUser(creator_id, creator_name),
+            game_id, //TODO game repository to retrieve game name
+            title,
+            created_at,
+            ThumbnailUrl(thumbnail_url)
+        )
+    }
+}
