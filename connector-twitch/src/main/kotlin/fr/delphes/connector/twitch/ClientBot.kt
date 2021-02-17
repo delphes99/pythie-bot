@@ -30,7 +30,7 @@ class ClientBot(
 
     private val twitchApi = AppTwitchClient.build(configuration.clientId, credentialsManager)
 
-    val ircClient = IrcClient.builder(configuration.botIdentity?.channel!!, credentialsManager).build()
+    lateinit var ircClient: IrcClient
 
     fun register(channel: Channel) {
         channels.add(channel)
@@ -48,6 +48,7 @@ class ClientBot(
     }
 
     fun connect() {
+        ircClient = IrcClient.builder(configuration.botIdentity?.channel!!, credentialsManager).build()
         ircClient.connect()
 
         channels.forEach { channel ->
