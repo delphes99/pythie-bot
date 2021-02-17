@@ -1,11 +1,8 @@
 <template>
   <div class="m-3 w-full">
-    <div class="border-b border-2">
-      <div class="primary-color p-2">
-        <h1 class="inline text-2xl font-medium title-font">Twitch bot configuration</h1>
-        <img class="inline-block align-middle" src="@/assets/refresh.svg" style="height: 20px"
-             v-on:click="refreshCurrentConfiguration"/>
-      </div>
+    <panel title="Twitch bot configuration">
+      <img class="inline-block align-middle" src="@/assets/refresh.svg" style="height: 20px"
+           v-on:click="refreshCurrentConfiguration"/>
       <h2 class="text-xl font-medium text-black">App credential</h2>
       <div class="px-2 grid grid-cols-2 space-y-1">
         <label for="clientId">Client Id</label>
@@ -41,11 +38,8 @@
           Connect bot account
         </a>
       </div>
-    </div>
-    <div class="border-b border-2">
-      <div class="primary-color p-2">
-        <h1 class="inline text-2xl font-medium title-font">Channels</h1>
-      </div>
+    </panel>
+    <panel title="Channels">
       <div>
         <a
             :href="buildAddChannelUrl()"
@@ -85,16 +79,18 @@
           </table>
         </div>
       </div>
-    </div>
+    </panel>
   </div>
 </template>
 
 <script lang="ts">
 import {ref} from 'vue'
 import axios from "axios";
+import Panel from "@/components/Panel.vue";
 
 export default {
   name: `TwitchConfiguration`,
+  components: {Panel},
   setup() {
     //TODO inject back url
     const backUrl = 'http://localhost:8080'
