@@ -19,16 +19,17 @@ import fr.delphes.connector.twitch.eventMapper.TwitchIncomingEventMapper
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.streams.Stream
-import fr.delphes.twitch.auth.AuthTokenRepository
-import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
 import kotlinx.coroutines.runBlocking
 
 class Channel(
-    configuration: ChannelConfiguration,
+    private val channel: TwitchChannel,
+    configuration: ChannelConfiguration?,
+    credentialsManager: CredentialsManager,
     val bot: ClientBot,
-    val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${configuration.ownerChannel}"))
+    val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${channel.name}"))
 ) {
     val currentStream: Stream? get() = state.currentStream
     val statistics: Statistics get() = state.statistics
@@ -36,18 +37,10 @@ class Channel(
 
     fun isOnline(): Boolean = currentStream != null
 
-    val name = configuration.ownerChannel
-    private val channelCredential = TwitchUserCredential.of(
-        bot.appCredential,
-        AuthTokenRepository(
-            "${bot.configFilepath}\\auth\\channel-$name.json"
-        )
-    )
-
-    private val oAuth = configuration.ownerAccountOauth
+    val name = channel.name
 
     //TODO move irc client to twitch API
-    val ircClient = IrcClient.builder(oAuth)
+    val ircClient = IrcClient.builder(channel, credentialsManager)
         .withOnMessage { message ->
             runBlocking {
                 IRCMessageMapper(TwitchChannel(name)).handleTwitchEvent(message)
@@ -74,7 +67,7 @@ class Channel(
         val clipCreatedMapper = ClipCreatedMapper()
 
         twitchApi =
-            bot.channelApiBuilder(configuration, channelCredential, bot.configFilepath)
+            bot.channelApiBuilder(bot.configFilepath, configuration?.rewards ?: emptyList(), channel)
                 .listenToReward { rewardRedeemedMapper.handleTwitchEvent(it) }
                 .listenToNewFollow { newFollowMapper.handleTwitchEvent(it) }
                 .listenToNewSub { newSubMapper.handleTwitchEvent(it) }

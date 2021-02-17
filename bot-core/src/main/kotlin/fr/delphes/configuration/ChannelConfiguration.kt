@@ -1,11 +1,12 @@
 package fr.delphes.configuration
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import java.util.Properties
 
+//TODO add channel to reward configuration to remove this
 data class ChannelConfiguration(
-    val ownerChannel: String,
-    val ownerAccountOauth: String,
+    val channel: TwitchChannel,
     val rewards: List<RewardConfiguration>
 ) {
     companion object {

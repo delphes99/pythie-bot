@@ -3,8 +3,6 @@ package fr.delphes.connector.twitch
 import fr.delphes.bot.Bot
 import fr.delphes.twitch.AppTwitchApi
 import fr.delphes.twitch.AppTwitchClient
-import fr.delphes.twitch.auth.AuthTokenRepository
-import fr.delphes.twitch.auth.TwitchAppCredential
 
 sealed class TwitchState {
     abstract fun connect(bot: Bot): TwitchState
@@ -18,7 +16,7 @@ sealed class TwitchState {
     object Unconfigured : TwitchState() {
         fun configure(
             configuration: TwitchConfiguration,
-            configFilepath: String
+            connector: TwitchConnector
         ): TwitchState {
             if (configuration == TwitchConfiguration.empty) {
                 return this
@@ -35,14 +33,8 @@ sealed class TwitchState {
                 return AppConfigurationFailed("Bot identity not configured")
             }
 
-            val appCredential = TwitchAppCredential.of(
-                configuration.clientId,
-                configuration.clientSecret,
-                tokenRepository = { getToken -> AuthTokenRepository("${configFilepath}\\auth\\bot.json", getToken) }
-            )
-
             return AppConfigured(
-                AppTwitchClient.build(appCredential)
+                AppTwitchClient.build(connector.configuration.clientId, connector.credentialsManager)
             )
         }
 

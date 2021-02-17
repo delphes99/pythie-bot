@@ -1,6 +1,10 @@
 package fr.delphes.connector.twitch
 
+import fr.delphes.twitch.TwitchChannel
+import fr.delphes.twitch.auth.AuthToken
+import fr.delphes.twitch.auth.AuthTokenRepository
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class TwitchConfiguration(
@@ -8,9 +12,15 @@ data class TwitchConfiguration(
     val clientSecret: String,
     val botAccountName: String?,
     val channelsName: Set<String> = emptySet(),
-    private val channelsCredentials: List<ConfigurationTwitchAccount> = emptyList()
+    private val channelsCredentials: List<ConfigurationTwitchAccount> = emptyList(),
+    val appToken: AuthToken? = null
 ) {
     val botIdentity get() = channelsCredentials.firstOrNull { account -> account.userName == botAccountName }
+
+    val listenedChannels get() = run {
+        //TODO normalize twitch channel name
+        channelsCredentials.filter { account -> channelsName.any { it.equals(account.userName, true) } }
+    }
 
     companion object {
         val empty = TwitchConfiguration("", "", null)
@@ -53,5 +63,24 @@ data class TwitchConfiguration(
             channelsCredentials = this.channelsCredentials
                 .filter { channel -> channelsName.contains(channel.userName) || channel.userName == botAccountName }
         )
+    }
+
+    fun newAppToken(token: AuthToken): TwitchConfiguration {
+        return this.copy(
+            appToken = token
+        )
+    }
+
+    fun getChannelConfiguration(channel: TwitchChannel): ConfigurationTwitchAccount? {
+        return this.channelsCredentials.firstOrNull { credential ->
+            credential.userName.equals(
+                channel.name,
+                ignoreCase = true
+            )
+        }
+    }
+
+    fun newChannelToken(channel: TwitchChannel, newToken: AuthToken): TwitchConfiguration {
+        return addChannel(ConfigurationTwitchAccount(newToken, channel.name))
     }
 }

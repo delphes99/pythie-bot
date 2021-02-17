@@ -138,7 +138,7 @@ export default {
       params.append('response_type', 'code',)
       params.append('client_id', clientId.value)
       params.append('redirect_uri', backUrl + '/twitch/configuration/userCredential',)
-      params.append('scope', 'user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read channel:moderate channel:read:redemptions channel:manage:redemptions',)
+      params.append('scope', 'user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions',)
       params.append('state', state)
 
       return twitchAuthUrl + '?' + params.toString()

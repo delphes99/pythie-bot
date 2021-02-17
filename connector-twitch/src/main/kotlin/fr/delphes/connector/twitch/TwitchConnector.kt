@@ -7,8 +7,11 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
+import fr.delphes.twitch.TwitchChannel
+import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.auth.AuthToken
+import fr.delphes.twitch.auth.AuthTokenRepository
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -16,18 +19,26 @@ import mu.KotlinLogging
 class TwitchConnector(
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
-) : Connector {
+) : Connector, AuthTokenRepository {
+
     private lateinit var bot: Bot
     lateinit var clientBot: ClientBot
 
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
-    internal var configuration: TwitchConfiguration = runBlocking { repository.load() }
+    var configuration = runBlocking { repository.load() }
+
+    internal val credentialsManager = CredentialsManager(
+        configuration.clientId,
+        configuration.clientSecret,
+        this
+    )
+
     private val twitchHelixApi = TwitchHelixClient()
     private var state: TwitchState = TwitchState.Unconfigured
 
     init {
         runBlocking {
-            state = TwitchState.Unconfigured.configure(repository.load(), configFilepath)
+            state = TwitchState.Unconfigured.configure(repository.load(), this@TwitchConnector)
         }
     }
 
@@ -47,17 +58,24 @@ class TwitchConnector(
     override fun init(bot: Bot) {
         this.bot = bot
         this.clientBot = ClientBot(
-            bot.configuration,
+            configuration,
             bot.publicUrl,
             bot.configFilepath,
             bot.features,
-            bot
+            bot,
+            credentialsManager
         )
 
-        channels.forEach { channelConfiguration ->
+        configuration.listenedChannels.forEach { configuredAccount ->
+            val legacyChannelConfiguration = channels
+                //TODO normalize twitch channel name
+                .firstOrNull { channel -> channel.channel.name.equals(configuredAccount.channel.name, true) }
+
             clientBot.register(
                 Channel(
-                    channelConfiguration,
+                    configuredAccount.channel,
+                    legacyChannelConfiguration,
+                    credentialsManager,
                     clientBot
                 )
             )
@@ -136,5 +154,21 @@ class TwitchConnector(
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}
+    }
+
+    override fun getAppToken(): AuthToken? {
+        return configuration.appToken
+    }
+
+    override fun newAppToken(token: AuthToken) {
+        configuration = configuration.newAppToken(token)
+    }
+
+    override fun getChannelToken(channel: TwitchChannel): AuthToken? {
+        return configuration.getChannelConfiguration(channel)?.authToken
+    }
+
+    override fun newChannelToken(channel: TwitchChannel, newToken: AuthToken) {
+        configuration = configuration.newChannelToken(channel, newToken)
     }
 }

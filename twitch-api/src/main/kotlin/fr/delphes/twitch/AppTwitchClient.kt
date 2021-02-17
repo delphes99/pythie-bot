@@ -1,7 +1,7 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.user.TwitchUser
-import fr.delphes.twitch.auth.TwitchAppCredential
+import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
@@ -38,8 +38,11 @@ class AppTwitchClient(
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}
-        fun build(appCredential: TwitchAppCredential): AppTwitchApi {
-            return AppTwitchClient(AppHelixClient(appCredential))
+        fun build(
+            clientId: String,
+            credentialsManager: CredentialsManager
+        ): AppTwitchApi {
+            return AppTwitchClient(AppHelixClient(clientId, credentialsManager))
         }
     }
 }

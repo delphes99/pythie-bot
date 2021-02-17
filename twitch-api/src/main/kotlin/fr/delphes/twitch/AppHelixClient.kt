@@ -2,7 +2,7 @@ package fr.delphes.twitch
 
 import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
 import fr.delphes.twitch.api.user.payload.GetUsersPayload
-import fr.delphes.twitch.auth.TwitchAppCredential
+import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.eventSub.EventSubSubscribe
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
@@ -10,8 +10,13 @@ import fr.delphes.twitch.eventSub.payload.subscription.SubscriptionPayload
 import io.ktor.client.statement.HttpResponse
 
 class AppHelixClient(
-    appCredential: TwitchAppCredential
-) : ScopedHelixClient(appCredential, appCredential), AppHelixApi {
+    clientId: String,
+    credentialsManager: CredentialsManager
+) : ScopedHelixClient(
+    clientId = clientId,
+    getToken = { credentialsManager.getAppToken() },
+    getTokenRefreshed = { credentialsManager.getAppTokenRefreshed() }
+), AppHelixApi {
     override suspend fun getEventSubSubscriptions(): ListSubscriptionsPayload {
         return "https://api.twitch.tv/helix/eventsub/subscriptions".get()
     }

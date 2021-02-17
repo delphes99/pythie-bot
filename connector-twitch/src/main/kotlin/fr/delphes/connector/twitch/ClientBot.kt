@@ -1,16 +1,13 @@
 package fr.delphes.connector.twitch
 
 import fr.delphes.bot.Bot
-import fr.delphes.configuration.BotConfiguration
-import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.feature.Feature
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.auth.AuthTokenRepository
-import fr.delphes.twitch.auth.TwitchAppCredential
-import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
 import kotlinx.coroutines.coroutineScope
@@ -19,39 +16,36 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ClientBot(
-    configuration: BotConfiguration,
+    private val configuration: TwitchConfiguration,
     private val publicUrl: String,
     val configFilepath: String,
     private val features: List<Feature>,
-    val bot: Bot
+    val bot: Bot,
+    private val credentialsManager: CredentialsManager
 ) {
     val channels = mutableListOf<Channel>()
 
     //TODO random secret
-    private val webhookSecret = configuration.webhookSecret
+    private val webhookSecret = "secretWithMoreThan10caracters"
 
-    val appCredential = TwitchAppCredential.of(
-        configuration.clientId,
-        configuration.secretKey,
-        tokenRepository = { getToken -> AuthTokenRepository("${configFilepath}\\auth\\bot.json", getToken) }
-    )
+    private val twitchApi = AppTwitchClient.build(configuration.clientId, credentialsManager)
 
-    private val twitchApi = AppTwitchClient.build(appCredential)
-
-    val ircClient = IrcClient.builder(configuration.botAccountOauth).build()
+    val ircClient = IrcClient.builder(configuration.botIdentity?.channel!!, credentialsManager).build()
 
     fun register(channel: Channel) {
         channels.add(channel)
     }
 
     fun channelOf(channel: TwitchChannel): Channel? {
-        return channels.firstOrNull { it.name == channel.name }
+        //TODO normalize twitch channel name
+        return channels.firstOrNull { it.name.equals(channel.name, true) }
     }
 
     fun commandsFor(channel: TwitchChannel): List<Command> {
         return features
             .filterIsInstance<TwitchFeature>()
-            .filter { feature -> feature.channel == channel }
+            //TODO normalize twitch channel name
+            .filter { feature -> feature.channel.name.equals(channel.name, true) }
             .flatMap(TwitchFeature::commands)
     }
 
@@ -65,22 +59,22 @@ class ClientBot(
     }
 
     fun channelApiBuilder(
-        configuration: ChannelConfiguration,
-        channelCredential: TwitchUserCredential,
-        configFilepath: String
+        configFilepath: String,
+        rewards: List<RewardConfiguration>,
+        channel: TwitchChannel
     ): ChannelTwitchClient.Builder {
         val user = runBlocking {
-            twitchApi.getUserByName(configuration.ownerChannel)!!
+            twitchApi.getUserByName(channel.name)!!
         }
 
         return ChannelTwitchClient.builder(
-            appCredential,
-            channelCredential,
+            configuration.clientId,
+            credentialsManager,
             user,
             publicUrl,
             configFilepath,
             webhookSecret,
-            configuration.rewards
+            rewards
         )
     }
 

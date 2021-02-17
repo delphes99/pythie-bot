@@ -240,8 +240,7 @@ val delphes99Features = listOf(
 )
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(
-        properties.getProperty("channel.name"),
-        properties.getProperty("account.oAuth"),
+        TwitchChannel(properties.getProperty("channel.name")),
         DelphesReward.toRewardList()
     )
 }

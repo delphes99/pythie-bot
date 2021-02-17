@@ -2,9 +2,9 @@ package fr.delphes.bot.state
 
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.utils.FileRepository
+import fr.delphes.utils.serialization.Serializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 class FileStatisticsRepository(
     private val configFilepath: String
@@ -12,8 +12,8 @@ class FileStatisticsRepository(
     private val globalRepository = FileRepository(
         "$configFilepath\\stats\\globalStats.json",
         initializer =  { Statistics() },
-        serializer = { Json.encodeToString(it) },
-        deserializer = { Json.decodeFromString(it) }
+        serializer = { Serializer.encodeToString(it) },
+        deserializer = { Serializer.decodeFromString(it) }
     )
 
     override suspend fun globalStatistics(): Statistics {
@@ -35,7 +35,7 @@ class FileStatisticsRepository(
     private fun buildStreamStatisticsRepository(streamId: String) = FileRepository(
         "$configFilepath\\stats\\stream_stats_$streamId.json",
         initializer = { StreamStatistics(streamId) },
-        serializer = { Json.encodeToString(it) },
-        deserializer = { Json.decodeFromString(it) }
+        serializer = { Serializer.encodeToString(it) },
+        deserializer = { Serializer.decodeFromString(it) }
     )
 }

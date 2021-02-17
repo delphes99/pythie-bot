@@ -90,8 +90,7 @@ val delphestestFeatures = listOf(
 )
 val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.properties") { properties ->
     ChannelConfiguration(
-        properties.getProperty("channel.name"),
-        properties.getProperty("account.oAuth"),
+        TwitchChannel(properties.getProperty("channel.name")),
         emptyList()
     )
 }

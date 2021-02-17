@@ -8,7 +8,8 @@ interface TwitchIncomingEvent : IncomingEvent {
     val channel: TwitchChannel
 
     fun isFor(channel: TwitchChannel) : Boolean {
-        return this.channel == channel
+        //TODO normalize twitch channel name
+        return this.channel.name.equals(channel.name, true)
     }
 
     suspend fun isFor(

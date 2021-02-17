@@ -13,16 +13,20 @@ import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataP
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
-import fr.delphes.twitch.auth.TwitchAppCredential
-import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.auth.CredentialsManager
 import io.ktor.client.statement.HttpResponse
 import java.time.LocalDateTime
 
 internal class ChannelHelixClient(
-    appCredential: TwitchAppCredential,
-    userCredential: TwitchUserCredential,
+    channel: TwitchChannel,
+    clientId: String,
+    credentialsManager: CredentialsManager,
     private val userId: String
-) : ScopedHelixClient(appCredential, userCredential), ChannelHelixApi {
+) : ScopedHelixClient(
+    clientId = clientId,
+    getToken = { credentialsManager.getChannelToken(channel) ?: error("Token must be provided for channel ${channel.name}") },
+    getTokenRefreshed = { credentialsManager.getChannelTokenRefreshed(channel) }
+), ChannelHelixApi {
     override suspend fun getGameByName(name: String): GetGamesDataPayload? {
         val payload = "https://api.twitch.tv/helix/games".get<GetGamesPayload>(
             "name" to name

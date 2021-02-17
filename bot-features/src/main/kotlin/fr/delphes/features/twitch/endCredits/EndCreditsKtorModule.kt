@@ -31,11 +31,11 @@ fun EndCreditsModule(
 ): Application.() -> Unit {
     return {
         routing {
-            twitchConnector.channels.forEach { channelConfiguration ->
-                get("/${channelConfiguration.ownerChannel}/endcredits") {
+            twitchConnector.configuration.listenedChannels.forEach { channelConfiguration ->
+                get("/${channelConfiguration.channel.name}/endcredits") {
                     twitchConnector.whenRunning(
                         whenRunning = {
-                            val channel = this.clientBot.channelOf(TwitchChannel(channelConfiguration.ownerChannel))!!
+                            val channel = this.clientBot.channelOf(TwitchChannel(channelConfiguration.channel.name))!!
                             channel.streamStatistics?.let { statistics ->
                                 this@get.call.respondOutputStream(
                                     contentType = ContentType.parse("image/png"),

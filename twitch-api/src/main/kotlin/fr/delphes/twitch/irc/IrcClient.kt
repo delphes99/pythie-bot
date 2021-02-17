@@ -1,8 +1,11 @@
 package fr.delphes.twitch.irc
 
+import fr.delphes.twitch.TwitchChannel
+import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.irc.handler.ChannelMessageHandler
 import fr.delphes.twitch.irc.handler.GlobalMessageHandler
 import fr.delphes.twitch.irc.handler.JoinHandler
+import kotlinx.coroutines.runBlocking
 import org.kitteh.irc.client.library.Client
 import org.kitteh.irc.client.library.feature.twitch.TwitchSupport
 
@@ -22,11 +25,12 @@ class IrcClient(
     }
 
     companion object {
-        fun builder(token: String) = Builder(token)
+        fun builder(channel: TwitchChannel, credentialsManager: CredentialsManager) = Builder(channel, credentialsManager)
     }
 
     class Builder(
-        private val token: String
+        private val channel: TwitchChannel,
+        private val credentialsManager: CredentialsManager
     ) {
         var onChannelMessage: ((IrcChannelMessage) -> Unit)? = null
         var onJoin: ((IrcChannel, IrcUser) -> Unit)? = null
@@ -49,12 +53,18 @@ class IrcClient(
         }
 
         fun build(): IrcClient {
+            //TODO refresh token on error ?
+            val token = runBlocking {
+                credentialsManager.getChannelToken(channel)
+            } ?: error("Token must be provided for channel ${channel.name}")
+
             val client = Client
                 .builder()
-                .nick("pythiebot")
+                .nick(channel.name.toLowerCase())
                 .server()
                 .host("irc.twitch.tv")
-                .password("oauth:$token")
+                .password("oauth:${token.access_token}")
+
                 .then().build()
 
             TwitchSupport.addSupport(client)

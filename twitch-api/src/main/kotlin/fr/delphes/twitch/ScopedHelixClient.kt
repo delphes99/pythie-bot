@@ -1,7 +1,6 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.auth.TwitchAppCredential
-import fr.delphes.twitch.auth.WithAuthToken
+import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.utils.serialization.Serializer
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
@@ -21,9 +20,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 abstract class ScopedHelixClient(
-    protected val appCredential: TwitchAppCredential,
+    private val clientId: String,
     @PublishedApi
-    internal val scopedToken: WithAuthToken
+    internal val getToken : suspend () -> AuthToken,
+    @PublishedApi
+    internal val getTokenRefreshed: suspend () -> AuthToken
 ) {
     @PublishedApi
     internal val httpClient = HttpClient {
@@ -35,9 +36,9 @@ abstract class ScopedHelixClient(
     protected suspend inline fun <reified T> String.get(
         vararg parameters: Pair<String, Any>
     ): T {
-        return authorizeCall(scopedToken) {
+        return authorizeCall { token ->
             httpClient.get(this) {
-                headersAndParameters(scopedToken, *parameters)
+                headersAndParameters(token, *parameters)
             }
         }
     }
@@ -46,9 +47,9 @@ abstract class ScopedHelixClient(
         payload: Any,
         vararg parameters: Pair<String, String>
     ): T {
-        return authorizeCall(scopedToken) {
+        return authorizeCall { token ->
             httpClient.post(this) {
-                headersAndParameters(scopedToken, *parameters)
+                headersAndParameters(token, *parameters)
                 contentType(ContentType.Application.Json)
                 body = payload
             }
@@ -59,9 +60,9 @@ abstract class ScopedHelixClient(
         payload: Any,
         vararg parameters: Pair<String, String>
     ): T {
-        return authorizeCall(scopedToken) {
+        return authorizeCall { token ->
             httpClient.patch(this) {
-                headersAndParameters(scopedToken, *parameters)
+                headersAndParameters(token, *parameters)
                 contentType(ContentType.Application.Json)
                 body = payload
             }
@@ -71,20 +72,20 @@ abstract class ScopedHelixClient(
     protected suspend inline fun <reified T> String.delete(
         vararg parameters: Pair<String, String>
     ): T {
-        return authorizeCall(scopedToken) {
+        return authorizeCall() { token ->
             httpClient.delete(this) {
-                headersAndParameters(scopedToken, *parameters)
+                headersAndParameters(token, *parameters)
             }
         }
     }
 
     @PublishedApi
     internal fun HttpRequestBuilder.headersAndParameters(
-        credentials: WithAuthToken,
+        authToken: AuthToken,
         vararg parameters: Pair<String, Any>
     ) {
-        header("Authorization", "Bearer ${credentials.authToken!!.access_token}")
-        header("Client-Id", appCredential.clientId)
+        header("Authorization", "Bearer ${authToken.access_token}")
+        header("Client-Id", clientId)
         parameters.forEach { parameter ->
             val serializedValue = when (parameter.second) {
                 is LocalDateTime -> {
@@ -99,16 +100,13 @@ abstract class ScopedHelixClient(
 
     @PublishedApi
     internal suspend inline fun <reified T> authorizeCall(
-        credentials: WithAuthToken,
-        doCall: () -> T
+        doCall: (AuthToken) -> T
     ): T {
         try {
-            return doCall()
+            return doCall(getToken())
         } catch (e: ClientRequestException) {
             if (e.response.status == HttpStatusCode.Unauthorized) {
-                credentials.refreshToken()
-
-                return doCall()
+                return doCall(getTokenRefreshed())
             }
             throw e
         }

@@ -2,7 +2,6 @@ package fr.delphes
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.Ngrok
-import fr.delphes.configuration.PropertiesBotConfiguration
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99Features
 import fr.delphes.configuration.channel.delphestestChannel
@@ -17,15 +16,12 @@ fun main() {
     Ngrok.launch(props.getProperty("ngrok.path"))
     val tunnel = Ngrok.createHttpTunnel(80, props.getProperty("ngrok.tunnel.name"))
 
-    val configuration = PropertiesBotConfiguration()
-
     val configFilepath = "A:\\pythiebot\\"
     Bot(
-        configuration,
         tunnel.publicUrl,
         configFilepath,
         listOf(
-            TwitchConnector(configFilepath, delphes99Channel, delphestestChannel),
+            TwitchConnector(configFilepath, delphes99Channel , delphestestChannel),
             DiscordConnector(configFilepath)
         ),
         listOf(

@@ -22,12 +22,12 @@ class AuthClient : AuthApi {
         }
     }
 
-    override suspend fun refreshToken(oldToken: AuthToken, appCredential: TwitchAppCredential): AuthToken {
+    override suspend fun refreshToken(oldToken: AuthToken, clientId: String, clientSecret: String): AuthToken {
         return "https://id.twitch.tv/oauth2/token".post(
             "grant_type" to "refresh_token",
             "refresh_token" to oldToken.refresh_token!!,
-            "client_id" to appCredential.clientId,
-            "client_secret" to appCredential.clientSecret
+            "client_id" to clientId,
+            "client_secret" to clientSecret
         )
     }
 

@@ -25,14 +25,16 @@ fun OverlayModule(
     return {
         routing {
             val twitchConnector = bot.connectors.filterIsInstance<TwitchConnector>().first()
-            twitchConnector.channels.forEach { channelConfiguration ->
-                static("/${channelConfiguration.ownerChannel}/overlay") {
+            twitchConnector.configuration.listenedChannels.forEach { channelConfiguration ->
+                //TODO normalize twitch channel name
+                static("/${channelConfiguration.channel.name.toLowerCase()}/overlay") {
                     resources("overlay")
                 }
-                get("/${channelConfiguration.ownerChannel}/overlay/infos") {
+                //TODO normalize twitch channel name
+                get("/${channelConfiguration.channel.name.toLowerCase()}/overlay/infos") {
                     twitchConnector.whenRunning(
                         whenRunning = {
-                            val channel = this.clientBot.channelOf(TwitchChannel(channelConfiguration.ownerChannel))!!
+                            val channel = this.clientBot.channelOf(TwitchChannel(channelConfiguration.channel.name))!!
                             val statistics = channel.statistics
                             val overlayInfos = OverlayInfos(
                                 last_follows = statistics.lastFollows.take(3).map(User::name),

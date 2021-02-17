@@ -4,13 +4,11 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
-import fr.delphes.configuration.BotConfiguration
 import fr.delphes.feature.Feature
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 
 class Bot(
-    val configuration: BotConfiguration,
     val publicUrl: String,
     val configFilepath: String,
     val connectors: List<Connector>,

@@ -23,8 +23,7 @@ import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.api.streams.ThumbnailUrl
 import fr.delphes.twitch.api.user.TwitchUser
-import fr.delphes.twitch.auth.TwitchAppCredential
-import fr.delphes.twitch.auth.TwitchUserCredential
+import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.clip.ClipCreated
 import fr.delphes.twitch.clip.LastClipClient
 import fr.delphes.twitch.eventSub.EventSubConfiguration
@@ -35,7 +34,6 @@ import java.time.LocalDateTime
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
     private val webhookApi: WebhookApi,
-    private val lastClipApi: LastClipApi,
     rewardsConfigurations: List<RewardConfiguration>
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
     private val rewards = RewardCache(rewardsConfigurations, helixApi)
@@ -73,21 +71,21 @@ class ChannelTwitchClient(
         private val LOGGER = KotlinLogging.logger {}
 
         fun builder(
-            appCredential: TwitchAppCredential,
-            userCredential: TwitchUserCredential,
+            clientId: String,
+            credentialsManager: CredentialsManager,
             user: TwitchUser,
             publicUrl: String,
             configFilepath: String,
             webhookSecret: String,
             rewardsConfigurations: List<RewardConfiguration>
         ): Builder {
-            return Builder(appCredential, userCredential, user, publicUrl, configFilepath, webhookSecret, rewardsConfigurations)
+            return Builder(clientId, credentialsManager, user, publicUrl, configFilepath, webhookSecret, rewardsConfigurations)
         }
     }
 
     class Builder(
-        private val appCredential: TwitchAppCredential,
-        private val userCredential: TwitchUserCredential,
+        private val clientId: String,
+        private val credentialsManager: CredentialsManager,
         private val user: TwitchUser,
         private val publicUrl: String,
         private val configFilepath: String,
@@ -184,13 +182,13 @@ class ChannelTwitchClient(
         }
 
         fun build(): ChannelTwitchClient {
-            val helixApi = ChannelHelixClient(appCredential, userCredential, user.id)
+            val helixApi = ChannelHelixClient(channel, clientId, credentialsManager, user.id)
 
             val webhookApi = WebhookClient(
                 publicUrl,
                 user,
                 webhookSecret,
-                AppHelixClient(appCredential),
+                AppHelixClient(clientId, credentialsManager),
                 eventSubConfigurations
             )
 
@@ -209,7 +207,6 @@ class ChannelTwitchClient(
             return ChannelTwitchClient(
                 helixApi,
                 webhookApi,
-                lastClipApi,
                 rewardsConfigurations
             )
         }
