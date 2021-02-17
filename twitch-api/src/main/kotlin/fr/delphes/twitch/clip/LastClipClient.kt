@@ -19,7 +19,7 @@ class LastClipClient(
     private val clock: Clock = SystemClock
 ) : LastClipApi {
     private val repository = LastClipRefreshRepository(
-        "$configPath\\twitch\\clips\\${channel.name}.json"
+        "$configPath\\twitch\\clips\\${channel.normalizeName}.json"
     ) {
         LastClipRefresh("-1", clock.now().minus(Duration.ofDays(6)))
     }

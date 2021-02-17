@@ -8,7 +8,6 @@ data class IrcChannelMessage(
     val message: String
 ) {
     fun isFor(twitchChannel: TwitchChannel): Boolean {
-        //TODO normalize twitch channel name
-        return channel.toTwitchChannel().name.equals(twitchChannel.name, true)
+        return channel.toTwitchChannel() == twitchChannel
     }
 }

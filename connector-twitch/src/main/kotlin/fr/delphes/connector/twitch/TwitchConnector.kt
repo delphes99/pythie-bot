@@ -68,8 +68,7 @@ class TwitchConnector(
 
         configuration.listenedChannels.forEach { configuredAccount ->
             val legacyChannelConfiguration = channels
-                //TODO normalize twitch channel name
-                .firstOrNull { channel -> channel.channel.name.equals(configuredAccount.channel.name, true) }
+                .firstOrNull { channel -> channel.channel == configuredAccount.channel }
 
             clientBot.register(
                 Channel(
@@ -132,7 +131,7 @@ class TwitchConnector(
     private suspend fun AuthToken.toConfigurationTwitchAccount(): ConfigurationTwitchAccount {
         val userInfos = twitchHelixApi.getUserInfosOf(this)
 
-        return ConfigurationTwitchAccount(this, userInfos.preferred_username)
+        return ConfigurationTwitchAccount(this, userInfos.preferred_username.toLowerCase())
     }
 
     private suspend fun updateConfiguration(newConfiguration: TwitchConfiguration) {

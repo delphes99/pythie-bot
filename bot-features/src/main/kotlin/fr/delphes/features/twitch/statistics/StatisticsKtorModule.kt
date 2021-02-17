@@ -17,7 +17,7 @@ fun StatisticsModule(
 ): Application.() -> Unit {
     return {
         routing {
-            get("/${channel.name}/stats") {
+            get("/${channel.normalizeName}/stats") {
                 connector.whenRunning(
                     whenRunning = {
                         val channelImpl = this.clientBot.channelOf(channel)!!

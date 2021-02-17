@@ -18,5 +18,9 @@ data class IrcChannel private constructor(
             }
             return IrcChannel(commonName)
         }
+
+        fun of(channel: TwitchChannel) : IrcChannel {
+            return withName(channel.normalizeName)
+        }
     }
 }

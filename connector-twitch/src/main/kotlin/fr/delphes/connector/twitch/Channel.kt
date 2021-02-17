@@ -25,11 +25,11 @@ import fr.delphes.twitch.irc.IrcClient
 import kotlinx.coroutines.runBlocking
 
 class Channel(
-    private val channel: TwitchChannel,
+    val channel: TwitchChannel,
     configuration: ChannelConfiguration?,
     credentialsManager: CredentialsManager,
     val bot: ClientBot,
-    val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${channel.name}"))
+    val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${channel.normalizeName}"))
 ) {
     val currentStream: Stream? get() = state.currentStream
     val statistics: Statistics get() = state.statistics
@@ -37,18 +37,16 @@ class Channel(
 
     fun isOnline(): Boolean = currentStream != null
 
-    val name = channel.name
-
     //TODO move irc client to twitch API
     val ircClient = IrcClient.builder(channel, credentialsManager)
         .withOnMessage { message ->
             runBlocking {
-                IRCMessageMapper(TwitchChannel(name)).handleTwitchEvent(message)
+                IRCMessageMapper(channel).handleTwitchEvent(message)
             }
         }
         .withOnChannelMessage { message ->
             runBlocking {
-                ChannelMessageMapper(TwitchChannel(name), bot).handleTwitchEvent(message)
+                ChannelMessageMapper(channel, bot).handleTwitchEvent(message)
             }
         }
         .build()
@@ -97,6 +95,6 @@ class Channel(
 
     fun join() {
         ircClient.connect()
-        ircClient.join(IrcChannel.withName(name))
+        ircClient.join(IrcChannel.of(channel))
     }
 }

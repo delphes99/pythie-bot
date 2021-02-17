@@ -37,15 +37,13 @@ class ClientBot(
     }
 
     fun channelOf(channel: TwitchChannel): Channel? {
-        //TODO normalize twitch channel name
-        return channels.firstOrNull { it.name.equals(channel.name, true) }
+        return channels.firstOrNull { it.channel == channel }
     }
 
     fun commandsFor(channel: TwitchChannel): List<Command> {
         return features
             .filterIsInstance<TwitchFeature>()
-            //TODO normalize twitch channel name
-            .filter { feature -> feature.channel.name.equals(channel.name, true) }
+            .filter { feature -> feature.channel == channel }
             .flatMap(TwitchFeature::commands)
     }
 
@@ -53,7 +51,7 @@ class ClientBot(
         ircClient.connect()
 
         channels.forEach { channel ->
-            ircClient.join(IrcChannel.withName(channel.name))
+            ircClient.join(IrcChannel.withName(channel.channel.normalizeName))
             channel.join()
         }
     }
@@ -64,7 +62,7 @@ class ClientBot(
         channel: TwitchChannel
     ): ChannelTwitchClient.Builder {
         val user = runBlocking {
-            twitchApi.getUserByName(channel.name)!!
+            twitchApi.getUserByName(channel.normalizeName)!!
         }
 
         return ChannelTwitchClient.builder(

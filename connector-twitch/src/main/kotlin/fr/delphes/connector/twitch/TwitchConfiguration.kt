@@ -72,7 +72,7 @@ data class TwitchConfiguration(
     fun getChannelConfiguration(channel: TwitchChannel): ConfigurationTwitchAccount? {
         return this.channelsCredentials.firstOrNull { credential ->
             credential.userName.equals(
-                channel.name,
+                channel.normalizeName,
                 ignoreCase = true
             )
         }
@@ -81,8 +81,8 @@ data class TwitchConfiguration(
     fun newChannelToken(channel: TwitchChannel, newToken: AuthToken): TwitchConfiguration {
         return copy(
             channelsCredentials = channelsCredentials
-                .filter { savedChannel -> savedChannel.userName != channel.name }
-                .plus(ConfigurationTwitchAccount(newToken, channel.name))
+                .filter { savedChannel -> savedChannel.userName != channel.normalizeName }
+                .plus(ConfigurationTwitchAccount(newToken, channel.normalizeName))
         )
     }
 }

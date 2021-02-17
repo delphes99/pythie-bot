@@ -3,7 +3,6 @@ package fr.delphes.features.overlay
 import fr.delphes.bot.Bot
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.features.twitch.voth.VOTH
-import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.prettyPrint
 import io.ktor.application.Application
@@ -26,15 +25,13 @@ fun OverlayModule(
         routing {
             val twitchConnector = bot.connectors.filterIsInstance<TwitchConnector>().first()
             twitchConnector.configuration.listenedChannels.forEach { channelConfiguration ->
-                //TODO normalize twitch channel name
-                static("/${channelConfiguration.channel.name.toLowerCase()}/overlay") {
+                static("/${channelConfiguration.channel.normalizeName}/overlay") {
                     resources("overlay")
                 }
-                //TODO normalize twitch channel name
-                get("/${channelConfiguration.channel.name.toLowerCase()}/overlay/infos") {
+                get("/${channelConfiguration.channel.normalizeName}/overlay/infos") {
                     twitchConnector.whenRunning(
                         whenRunning = {
-                            val channel = this.clientBot.channelOf(TwitchChannel(channelConfiguration.channel.name))!!
+                            val channel = this.clientBot.channelOf(channelConfiguration.channel)!!
                             val statistics = channel.statistics
                             val overlayInfos = OverlayInfos(
                                 last_follows = statistics.lastFollows.take(3).map(User::name),

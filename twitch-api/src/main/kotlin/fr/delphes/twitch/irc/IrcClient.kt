@@ -102,19 +102,13 @@ class IrcClient(
         internal fun buildClient(token: AuthToken): Client {
             val builder = Client
                 .builder()
-                .nick(channel.name.toLowerCase())
+                .nick(channel.normalizeName)
                 .server()
                 .host("irc.twitch.tv")
                 .password("oauth:${token.access_token}")
                 .then()
 
-            builder.listeners().input { line -> println("[I] " + line) }
-            builder.listeners().output { line -> println("[O] " + line) }
-            builder.listeners().exception { e -> e.printStackTrace() }
-
             val client = builder.build()
-
-
 
             TwitchSupport.addSupport(client)
 
