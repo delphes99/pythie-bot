@@ -5,9 +5,9 @@ import fr.delphes.twitch.TwitchChannel
 interface AuthTokenRepository {
     fun getAppToken(): AuthToken?
 
-    fun newAppToken(token: AuthToken)
+    suspend fun newAppToken(token: AuthToken)
 
     fun getChannelToken(channel: TwitchChannel): AuthToken?
 
-    fun newChannelToken(channel: TwitchChannel, newToken: AuthToken)
+    suspend fun newChannelToken(channel: TwitchChannel, newToken: AuthToken)
 }

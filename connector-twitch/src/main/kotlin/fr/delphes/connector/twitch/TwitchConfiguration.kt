@@ -2,9 +2,7 @@ package fr.delphes.connector.twitch
 
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.auth.AuthToken
-import fr.delphes.twitch.auth.AuthTokenRepository
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 @Serializable
 data class TwitchConfiguration(
@@ -81,6 +79,10 @@ data class TwitchConfiguration(
     }
 
     fun newChannelToken(channel: TwitchChannel, newToken: AuthToken): TwitchConfiguration {
-        return addChannel(ConfigurationTwitchAccount(newToken, channel.name))
+        return copy(
+            channelsCredentials = channelsCredentials
+                .filter { savedChannel -> savedChannel.userName != channel.name }
+                .plus(ConfigurationTwitchAccount(newToken, channel.name))
+        )
     }
 }

@@ -50,7 +50,6 @@ class CredentialsManager(
                 error("Token must be provided for channel ${channel.name}")
             } else {
                 val newToken = authApi.refreshToken(currentToken, clientId, clientSecret)
-
                 authTokenRepository.newChannelToken(channel, newToken)
 
                 return newToken

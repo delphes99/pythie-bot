@@ -160,15 +160,15 @@ class TwitchConnector(
         return configuration.appToken
     }
 
-    override fun newAppToken(token: AuthToken) {
-        configuration = configuration.newAppToken(token)
+    override suspend fun newAppToken(token: AuthToken) {
+        updateConfiguration(configuration.newAppToken(token))
     }
 
     override fun getChannelToken(channel: TwitchChannel): AuthToken? {
         return configuration.getChannelConfiguration(channel)?.authToken
     }
 
-    override fun newChannelToken(channel: TwitchChannel, newToken: AuthToken) {
-        configuration = configuration.newChannelToken(channel, newToken)
+    override suspend fun newChannelToken(channel: TwitchChannel, newToken: AuthToken) {
+        updateConfiguration(configuration.newChannelToken(channel, newToken))
     }
 }
