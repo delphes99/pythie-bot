@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import Discord from "../views/Discord.vue";
 import Twitch from "@/views/Twitch.vue";
-import TwitchConfiguration from "@/components/TwitchConfiguration.vue";
+import TwitchConfiguration from "@/components/twitch/TwitchConfiguration.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {

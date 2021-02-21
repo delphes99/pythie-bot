@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import DiscordStatus from "@/components/DiscordStatus.vue";
-import TwitchStatus from "@/components/TwitchStatus.vue";
+import TwitchStatus from "@/components/twitch/TwitchStatus.vue";
 
 export default {
   name: `StatusBar`,
