@@ -17,8 +17,8 @@ import fr.delphes.features.handle
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.RewardId
 import fr.delphes.twitch.api.user.User
 import io.mockk.every
 import io.mockk.mockk
@@ -30,13 +30,14 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 internal class VOTHTest {
-    private val CHANNEL = TwitchChannel("channel")
-    private val reward = RewardConfiguration("voth", 100)
-    private val rewardRedemption = RewardRedemption(CHANNEL, Reward("id", reward), "user", 50)
-    private val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
-    private val DEFAULT_STATE = VOTHState(true, VOTHWinner("oldVip", NOW.minusMinutes(5), 50))
-    private val CLOCK = TestClock(NOW)
-    private val CONFIGURATION = VOTHConfiguration(
+    private val channel = TwitchChannel("channel")
+    private val rewardName = "voth"
+    private val reward = RewardConfiguration(rewardName, 100)
+    private val rewardRedemption = RewardRedemption(channel, RewardId("id", rewardName), "user", 50)
+    private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
+    private val defaultState = VOTHState(true, VOTHWinner("oldVip", now.minusMinutes(5), 50))
+    private val clock = TestClock(now)
+    private val configuration = VOTHConfiguration(
         reward,
         { emptyList() },
         "!cmdstats",
@@ -53,17 +54,17 @@ internal class VOTHTest {
             val voth = voth(VOTHState())
 
             voth.handle(rewardRedemption, clientBot)
-            assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", NOW, 50))
+            assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now, 50))
             assertThat(voth.vothChanged).isTrue()
         }
 
         @Test
         internal suspend fun `don't promote vip if already VOTH`() {
-            val state = VOTHState(currentVip = VOTHWinner("user", NOW.minusMinutes(1), 50))
+            val state = VOTHState(currentVip = VOTHWinner("user", now.minusMinutes(1), 50))
             val voth = voth(state)
 
             voth.handle(rewardRedemption, clientBot)
-            assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", NOW.minusMinutes(1), 50))
+            assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now.minusMinutes(1), 50))
             assertThat(voth.vothChanged).isFalse()
         }
 
@@ -72,7 +73,7 @@ internal class VOTHTest {
             val voth = voth()
 
             val messages = voth.handle(rewardRedemption, clientBot)
-            assertThat(messages).contains(RetrieveVip(CHANNEL))
+            assertThat(messages).contains(RetrieveVip(channel))
         }
     }
 
@@ -83,30 +84,30 @@ internal class VOTHTest {
         internal suspend fun `remove all old vip`() {
             val voth = voth()
 
-            val messages = voth.handle(VIPListReceived(CHANNEL, "oldVip", "oldVip2"), clientBot)
+            val messages = voth.handle(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
             assertThat(messages).contains(
-                RemoveVIP("oldVip", CHANNEL),
-                RemoveVIP("oldVip2", CHANNEL)
+                RemoveVIP("oldVip", channel),
+                RemoveVIP("oldVip2", channel)
             )
         }
 
         @Test
         internal suspend fun `promote vip`() {
-            val state = VOTHState(true, VOTHWinner("newVip", NOW.minusMinutes(1), 50))
+            val state = VOTHState(true, VOTHWinner("newVip", now.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.handle(VIPListReceived(CHANNEL, "oldVip", "oldVip2"), clientBot)
+            val messages = voth.handle(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
             assertThat(messages).contains(
-                PromoteVIP("newVip", CHANNEL)
+                PromoteVIP("newVip", channel)
             )
         }
 
         @Test
         internal suspend fun `do nothing when on vip change`() {
-            val state = VOTHState(false, VOTHWinner("user", NOW.minusMinutes(1), 50))
+            val state = VOTHState(false, VOTHWinner("user", now.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.handle(VIPListReceived(CHANNEL, "oldVip", "oldVip2"), clientBot)
+            val messages = voth.handle(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
             assertThat(messages).isEmpty()
         }
     }
@@ -116,7 +117,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.handle(StreamOffline(CHANNEL), clientBot)
+        val messages = voth.handle(StreamOffline(channel), clientBot)
 
         verify(exactly = 1) { state.pause(any()) }
         assertThat(messages).isEmpty()
@@ -127,7 +128,7 @@ internal class VOTHTest {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val incomingEvent = StreamOnline(CHANNEL, "title", NOW, Game(GameId("gameId"), "game title"), "thumbnailUrl")
+        val incomingEvent = StreamOnline(channel, "title", now, Game(GameId("gameId"), "game title"), "thumbnailUrl")
         val messages = voth.handle(incomingEvent, clientBot)
 
         verify(exactly = 1) { state.unpause(any()) }
@@ -140,31 +141,31 @@ internal class VOTHTest {
         every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
 
         val voth = VOTH(
-            CHANNEL,
+            channel,
             VOTHConfiguration(
                 reward,
                 { emptyList() },
                 "!cmdstats",
                 { emptyList() },
                 "!top3",
-                { top1, top2, top3 -> listOf(SendMessage("${top1?.user?.name}, ${top2?.user?.name}, ${top3?.user?.name}", CHANNEL)) }),
+                { top1, top2, top3 -> listOf(SendMessage("${top1?.user?.name}, ${top2?.user?.name}, ${top3?.user?.name}", channel)) }),
             stateRepository = TestStateRepository { state },
             state = state,
-            clock = CLOCK
+            clock = clock
         )
 
-        val events = voth.handle(CommandAsked(CHANNEL, Command("!top3"), User("user")), mockk())
+        val events = voth.handle(CommandAsked(channel, Command("!top3"), User("user")), mockk())
 
-        assertThat(events).contains(SendMessage("user1, user2, user3", CHANNEL))
+        assertThat(events).contains(SendMessage("user1, user2, user3", channel))
     }
 
-    private fun voth(state: VOTHState = DEFAULT_STATE): VOTH {
+    private fun voth(state: VOTHState = defaultState): VOTH {
         return VOTH(
-            CHANNEL,
-            CONFIGURATION,
+            channel,
+            configuration,
             stateRepository = TestStateRepository { state },
             state = state,
-            clock = CLOCK
+            clock = clock
         )
     }
 }

@@ -2,15 +2,12 @@ package fr.delphes.twitch.api.channelPointsCustomRewardRedemption
 
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.parseToModel
-import fr.delphes.twitch.api.reward.Reward
-import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.RewardId
 import fr.delphes.twitch.api.user.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class CustomRewardRedemptionEventSubConfigurationTest {
-    private val configuredReward = RewardConfiguration("reward_title", 100)
-
     @Test
     fun `transform RewardRedemption`() {
         val payload = """
@@ -49,17 +46,15 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
         """.trimIndent()
 
         val model = CustomRewardRedemptionEventSubConfiguration(
-            channel = TwitchChannel("channel"),
-            listener = { },
-            rewardsConfigurations = listOf(configuredReward)
-        ).parseToModel(payload)
+            channel = TwitchChannel("channel")
+        ) { }.parseToModel(payload)
 
         assertThat(model).isEqualTo(
             RewardRedemption(
                 TwitchChannel("channel"),
-                Reward(
+                RewardId(
                     "9001",
-                    configuredReward
+                    "reward_title"
                 ),
                 User("cooler_user"),
                 100,
@@ -107,10 +102,8 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
         """.trimIndent()
 
         val model = CustomRewardRedemptionEventSubConfiguration(
-            channel = TwitchChannel("channel"),
-            listener = { },
-            rewardsConfigurations = listOf(configuredReward)
-        ).parseToModel(payload)
+            channel = TwitchChannel("channel")
+        ) { }.parseToModel(payload)
 
         assertThat(model).isNull()
     }

@@ -4,8 +4,7 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionCondition
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionEventPayload
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.SubscribechannelPointsCustomRewardRedemption
-import fr.delphes.twitch.api.reward.Reward
-import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.RewardId
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
@@ -16,8 +15,7 @@ import io.ktor.request.receive
 
 class CustomRewardRedemptionEventSubConfiguration(
     channel: TwitchChannel,
-    listener: suspend (RewardRedemption) -> Unit,
-    private val rewardsConfigurations: List<RewardConfiguration>
+    listener: suspend (RewardRedemption) -> Unit
 ) : EventSubConfiguration<RewardRedemption,
         ChannelPointsCustomRewardRedemptionEventPayload,
         ChannelPointsCustomRewardRedemptionCondition>(
@@ -27,16 +25,12 @@ class CustomRewardRedemptionEventSubConfiguration(
 ) {
     override fun transform(
         payload: ChannelPointsCustomRewardRedemptionEventPayload
-    ): RewardRedemption? {
-        val configuration = rewardsConfigurations
-            .find { configuration -> configuration.title == payload.reward.title }
-            ?: return null
-
+    ): RewardRedemption {
         return RewardRedemption(
             channel = channel,
-            reward = Reward(
+            reward = RewardId(
                 payload.reward.id,
-                configuration
+                payload.reward.title
             ),
             user = User(payload.user_name),
             cost = payload.reward.cost,

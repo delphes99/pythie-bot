@@ -20,7 +20,7 @@ class RewardRedeem(
 
     inner class RewardRedemptionHandler : TwitchEventHandler<RewardRedemption>(channel) {
         override suspend fun handleIfGoodChannel(event: RewardRedemption, bot: Bot): List<OutgoingEvent> {
-            return if(event.reward.rewardConfiguration == rewardConfiguration.rewardConfiguration) {
+            return if(rewardConfiguration.rewardConfiguration.match(event.reward)) {
                 rewardRedeemResponse(event)
             } else {
                 emptyList()

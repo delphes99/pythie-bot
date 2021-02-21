@@ -101,8 +101,7 @@ class ChannelTwitchClient(
             eventSubConfigurations.add(
                 CustomRewardRedemptionEventSubConfiguration(
                     channel,
-                    listener,
-                    rewardsConfigurations
+                    listener
                 )
             )
 

@@ -62,7 +62,7 @@ class VOTH(
     internal inner class VOTHRewardRedemptionHandler : TwitchEventHandler<RewardRedemption>(channel) {
         override suspend fun handleIfGoodChannel(event: RewardRedemption, bot: Bot): List<OutgoingEvent> {
             val redeemUser = event.user
-            return if (event.reward.rewardConfiguration == configuration.reward.rewardConfiguration && currentVip?.user != redeemUser) {
+            return if (configuration.reward.rewardConfiguration.match(event.reward) && currentVip?.user != redeemUser) {
                 val oldVOTH = currentVip
                 val newVOTH = state.newVOTH(event, clock.now())
 

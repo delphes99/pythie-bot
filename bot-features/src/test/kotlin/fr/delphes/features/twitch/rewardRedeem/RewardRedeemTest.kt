@@ -4,8 +4,8 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.features.handle
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.reward.Reward
 import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.RewardId
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -23,7 +23,7 @@ internal class RewardRedeemTest {
             .handle(
                 RewardRedemption(
                     CHANNEL,
-                    Reward("featureID", reward),
+                    RewardId("featureID", "reward"),
                     "user",
                     50
                 ),
@@ -41,7 +41,7 @@ internal class RewardRedeemTest {
             .handle(
                 RewardRedemption(
                     CHANNEL,
-                    Reward("featureID", reward),
+                    RewardId("featureID", "reward"),
                     "user",
                     50
                 ),

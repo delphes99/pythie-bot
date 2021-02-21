@@ -18,4 +18,8 @@ data class RewardConfiguration(
     val shouldRedemptionsSkipRequestQueue: Boolean? = null
 ): WithRewardConfiguration {
     override val rewardConfiguration = this
+
+    fun match(rewardId: RewardId): Boolean {
+        return title == rewardId.name
+    }
 }
