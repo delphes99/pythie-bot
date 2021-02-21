@@ -63,7 +63,9 @@
           <tbody>
           <tr v-for="channel in channels" :key="channel" class="hover:bg-grey-lighter">
             <td class="py-4 px-6 border-b border-grey-light">
-              {{ channel }}
+              <router-link :to="`/twitch/${channel}`">
+                {{ channel }}
+              </router-link>
             </td>
             <td class="py-4 px-6 border-b border-grey-light">
               <button
