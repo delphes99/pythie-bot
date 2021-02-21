@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import Discord from "../views/Discord.vue";
 import Twitch from "@/views/Twitch.vue";
+import TwitchConfiguration from "@/components/TwitchConfiguration.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -17,7 +18,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/twitch",
     name: "Twitch",
-    component: Twitch
+    component: Twitch,
+    children: [
+      {
+        path: '',
+        component: TwitchConfiguration
+      }
+    ]
   },
   {
     path: "/about",
