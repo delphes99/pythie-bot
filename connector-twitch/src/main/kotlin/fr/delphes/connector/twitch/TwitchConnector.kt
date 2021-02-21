@@ -6,6 +6,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
+import fr.delphes.connector.twitch.webservice.RewardKtorModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.auth.CredentialsManager
@@ -49,11 +50,13 @@ class TwitchConnector(
 
     override fun internalEndpoints(application: Application) {
         application.ConfigurationModule(this)
+        application.RewardKtorModule(this)
     }
 
     override fun publicEndpoints(application: Application) {
         application.WebhookModule(this)
     }
+
 
     override fun init(bot: Bot) {
         this.bot = bot

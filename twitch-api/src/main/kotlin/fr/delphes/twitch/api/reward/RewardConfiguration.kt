@@ -1,7 +1,10 @@
 package fr.delphes.twitch.api.reward
 
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardCost
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 data class RewardConfiguration(
     val title: String,
     val cost: RewardCost,
@@ -17,6 +20,7 @@ data class RewardConfiguration(
     val globalCooldownSeconds: Long? = null,
     val shouldRedemptionsSkipRequestQueue: Boolean? = null
 ): WithRewardConfiguration {
+    @Transient
     override val rewardConfiguration = this
 
     fun match(rewardId: RewardId): Boolean {
