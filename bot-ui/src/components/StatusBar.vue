@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import DiscordStatus from "@/components/DiscordStatus.vue";
+import DiscordStatus from "@/components/discord/DiscordStatus.vue";
 import TwitchStatus from "@/components/twitch/TwitchStatus.vue";
 
 export default {
