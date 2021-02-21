@@ -33,7 +33,7 @@ export default {
     const status = ref<Status>({ status: DiscordStatus.unconfigured});
     const statusColor = ref<StatusColor>(StatusColor.transparent)
 
-    async function getSkillList() {
+    async function getStatus() {
       const response = await fetch(`http://localhost:8080/status/discord`);
       status.value = await response.json();
 
@@ -53,7 +53,7 @@ export default {
       }
     }
 
-    setInterval(() => { getSkillList() }, 5000)
+    setInterval(() => { getStatus() }, 5000)
 
     return {
       status,

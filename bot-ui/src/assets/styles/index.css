@@ -7,4 +7,10 @@
     .primary-color {
         @apply bg-gray-600 text-white
     }
+    .primary-button {
+        @apply inline-block text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none bg-indigo-500 hover:bg-indigo-600 focus:outline-none
+    }
+    .secondary-button {
+        @apply inline-block text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none bg-red-500 hover:bg-red-800 focus:outline-none
+    }
 }

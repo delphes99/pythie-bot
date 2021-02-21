@@ -7,6 +7,7 @@ enum class DelphesReward(override val rewardConfiguration: RewardConfiguration):
     VOTH(vothReward),
     DEV_TEST(testDev),
     DEV_TEST2(testDev2),
+    DEV_TEST3(testDev3),
     SATISFACTORY_COLOR(satisfactoryBaseColor);
 
     companion object {
@@ -26,6 +27,11 @@ private val testDev = RewardConfiguration(
 )
 private val testDev2 = RewardConfiguration(
     "Test dev 2",
+    1,
+    "Test lors des live coding"
+)
+private val testDev3 = RewardConfiguration(
+    "Test dev 3",
     1,
     "Test lors des live coding"
 )

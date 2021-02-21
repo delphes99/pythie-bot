@@ -194,6 +194,7 @@ val delphes99Features = listOf(
         channel,
         DelphesReward.DEV_TEST to Games.SCIENCE_TECHNOLOGY,
         DelphesReward.DEV_TEST2 to Games.SCIENCE_TECHNOLOGY,
+        DelphesReward.DEV_TEST3 to Games.SCIENCE_TECHNOLOGY,
         DelphesReward.SATISFACTORY_COLOR to Games.SATISFACTORY
     ),
     Command(

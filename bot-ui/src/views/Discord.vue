@@ -14,7 +14,7 @@
 <script lang="ts">
 import { ref } from 'vue'
 import axios from "axios";
-import Panel from "@/components/Panel.vue";
+import Panel from "@/components/common/Panel.vue";
 
 export default {
   name: `DiscordConfiguration`,

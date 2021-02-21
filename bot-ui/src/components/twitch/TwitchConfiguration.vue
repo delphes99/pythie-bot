@@ -12,7 +12,7 @@
     <div>
       <button
           v-on:click="saveAppCredential"
-          class="inline-block bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+          class="primary-button focus:shadow-outline"
       >
         Save
       </button>
@@ -24,7 +24,7 @@
       </div>
       <a
           :href="buildBotIdentityUrl()"
-          class="inline-block bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+          class="primary-button focus:shadow-outline"
       >
         Change bot account
       </a>
@@ -32,7 +32,7 @@
     <div v-else>
       <a
           :href="buildBotIdentityUrl()"
-          class="inline-block bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+          class="primary-button focus:shadow-outline"
       >
         Connect bot account
       </a>
@@ -42,7 +42,7 @@
     <div>
       <a
           :href="buildAddChannelUrl()"
-          class="inline-block bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+          class="primary-button focus:shadow-outline"
       >
         Add channel
       </a>
@@ -68,7 +68,7 @@
             <td class="py-4 px-6 border-b border-grey-light">
               <button
                   v-on:click="deleteChannel(channel)"
-                  class="inline-block bg-red-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 select-none hover:bg-red-800 focus:outline-none focus:shadow-outline"
+                  class="secondary-button focus:shadow-outline"
               >
                 Delete
               </button>
@@ -84,7 +84,7 @@
 <script lang="ts">
 import {ref} from 'vue'
 import axios from "axios";
-import Panel from "@/components/Panel.vue";
+import Panel from "@/components/common/Panel.vue";
 
 export default {
   name: `TwitchConfiguration`,
