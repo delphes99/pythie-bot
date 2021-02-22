@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue"
+import { ref, inject } from "vue"
 
 enum DiscordStatus {
   unconfigured = "unconfigured",
@@ -29,12 +29,14 @@ interface Status {
 
 export default {
   name: `DiscordStatus`,
+
   setup() {
+    const backendUrl = inject("backendUrl")
     const status = ref<Status>({ status: DiscordStatus.unconfigured});
     const statusColor = ref<StatusColor>(StatusColor.transparent)
 
     async function getStatus() {
-      const response = await fetch(`http://localhost:8080/status/discord`);
+      const response = await fetch(`${backendUrl}/status/discord`);
       status.value = await response.json();
 
       switch (status.value.status) {

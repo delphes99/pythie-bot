@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import {ref} from 'vue'
+import {inject, ref} from 'vue'
 import axios from "axios";
 import Panel from "@/components/common/Panel.vue";
 
@@ -92,8 +92,7 @@ export default {
   name: `TwitchConfiguration`,
   components: {Panel},
   setup() {
-    //TODO inject back url
-    const backUrl = 'http://localhost:8080'
+    const backendUrl = inject('backendUrl')
 
     const clientId = ref("")
     const clientSecret = ref("")
@@ -101,7 +100,7 @@ export default {
     const channels = ref([])
 
     const refreshCurrentConfiguration = async () => {
-      const response = await axios.get(backUrl + '/twitch/configuration')
+      const response = await axios.get(`${backendUrl}/twitch/configuration`)
 
       clientId.value = response.data.clientId
       botAccount.value = response.data.botUsername
@@ -115,7 +114,7 @@ export default {
         clientId: clientId.value,
         clientSecret: clientSecret.value
       }
-      const response = await axios.post(backUrl + '/twitch/configuration/appCredential', payload, {
+      const response = await axios.post(`${backendUrl}/twitch/configuration/appCredential`, payload, {
         headers: {'Content-Type': 'application/json'}
       })
 
@@ -124,7 +123,7 @@ export default {
     }
 
     const deleteChannel = async (channel: string) => {
-      await axios.delete(backUrl + '/twitch/configuration/channel/' + channel)
+      await axios.delete(`${backendUrl}/twitch/configuration/channel/` + channel)
       await refreshCurrentConfiguration()
     }
 
@@ -133,7 +132,7 @@ export default {
       const params = new URLSearchParams()
       params.append('response_type', 'code',)
       params.append('client_id', clientId.value)
-      params.append('redirect_uri', backUrl + '/twitch/configuration/userCredential',)
+      params.append('redirect_uri', `${backendUrl}/twitch/configuration/userCredential`,)
       params.append('scope', 'user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions',)
       params.append('state', state)
 

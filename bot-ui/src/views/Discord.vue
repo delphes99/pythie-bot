@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import {inject, ref} from 'vue'
 import axios from "axios";
 import Panel from "@/components/common/Panel.vue";
 
@@ -20,12 +20,12 @@ export default {
   name: `DiscordConfiguration`,
   components: {Panel},
   setup() {
+    const backendUrl = inject('backendUrl')
     const oAuthToken = ref("")
 
     const saveOauthToken = () => {
       const payload = { oAuthToken: oAuthToken.value }
-      //TODO inject back url
-      axios.post('http://localhost:8080/discord/configuration', payload, {
+      axios.post(`${backendUrl}/discord/configuration`, payload, {
         headers: {'Content-Type': 'application/json'}
       })
           .then(function (response) {

@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Panel from "@/components/common/Panel.vue";
-import {defineComponent, ref} from "vue";
+import {defineComponent, inject, ref} from "vue";
 import Card from "@/components/common/Card.vue";
 
 interface Reward {
@@ -33,10 +33,11 @@ export default defineComponent({
     channelName: String
   },
   setup(props) {
+    const backendUrl = inject("backendUrl")
     const rewards = ref([])
 
     async function getRewards() {
-      const response = await fetch(`http://localhost:8080/twitch/${props.channelName}/rewards`);
+      const response = await fetch(`${backendUrl}/twitch/${props.channelName}/rewards`);
       rewards.value = await response.json()
     }
 
