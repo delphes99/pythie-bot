@@ -1,9 +1,15 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.user.User
+
 data class TwitchChannel(
     val name: String
 ) {
     val normalizeName = name.toLowerCase()
+
+    fun toUser(): User {
+        return User(name)
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

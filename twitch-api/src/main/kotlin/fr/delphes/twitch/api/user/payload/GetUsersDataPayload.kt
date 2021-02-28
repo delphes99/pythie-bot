@@ -8,7 +8,7 @@ data class GetUsersDataPayload(
     val login: String,
     val display_name: String,
     val type: String,
-    val broadcaster_type: String,
+    val broadcaster_type: BroadcasterType,
     val description: String,
     val profile_image_url: String,
     val offline_image_url: String,

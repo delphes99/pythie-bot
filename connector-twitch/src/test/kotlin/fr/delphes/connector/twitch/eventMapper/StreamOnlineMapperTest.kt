@@ -3,6 +3,7 @@ package fr.delphes.connector.twitch.eventMapper
 import fr.delphes.bot.state.ChannelState
 import fr.delphes.connector.twitch.Channel
 import fr.delphes.connector.twitch.ClientBot
+import fr.delphes.connector.twitch.TestClock
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game

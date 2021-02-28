@@ -47,4 +47,8 @@ class Bot(
             connectors.forEach { it.resetWebhook() }
         }
     }
+
+    inline fun <reified T: Connector> connector(): T? {
+        return connectors.filterIsInstance<T>().firstOrNull()
+    }
 }

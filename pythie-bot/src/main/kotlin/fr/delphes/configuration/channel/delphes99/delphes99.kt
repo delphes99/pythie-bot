@@ -25,6 +25,7 @@ import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.StreamOffline
 import fr.delphes.features.twitch.streamOnline.StreamOnline
 import fr.delphes.features.twitch.streamUpdate.StreamUpdate
+import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightFeature
 import fr.delphes.features.twitch.voth.FileVOTHStateRepository
 import fr.delphes.features.twitch.voth.VOTH
 import fr.delphes.features.twitch.voth.VOTHConfiguration
@@ -236,6 +237,11 @@ val delphes99Features = listOf(
                 null,
                 "Catégorie" to clip.gameId
             )
+        )
+    },
+    StreamerHighlightFeature(channel) { messageReceived ->
+        listOf(
+            SendMessage("\uD83D\uDCFA N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", channel)
         )
     }
 )

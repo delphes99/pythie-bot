@@ -1,6 +1,7 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.user.TwitchUser
+import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
 import kotlinx.coroutines.coroutineScope
@@ -9,7 +10,7 @@ import kotlinx.coroutines.launch
 import mu.KotlinLogging
 
 class AppTwitchClient(
-    private val twitchAppHelixApi: AppHelixApi
+    private val twitchAppHelixApi: AppHelixApi,
 ) : AppTwitchApi {
     override suspend fun getAllSubscriptions(): ListSubscriptionsPayload {
         return coroutineScope {
@@ -28,10 +29,15 @@ class AppTwitchClient(
         }
     }
 
-    override suspend fun getUserByName(name: String): TwitchUser? {
+    override suspend fun getUserByName(user: User): TwitchUser? {
         return coroutineScope {
-            twitchAppHelixApi.getUser(name)?.let { user ->
-                TwitchUser(user.id, user.login)
+            twitchAppHelixApi.getUser(user.name)?.let { user ->
+                TwitchUser(
+                    user.id,
+                    user.login,
+                    user.broadcaster_type,
+                    user.view_count
+                )
             }
         }
     }
@@ -40,7 +46,7 @@ class AppTwitchClient(
         private val LOGGER = KotlinLogging.logger {}
         fun build(
             clientId: String,
-            credentialsManager: CredentialsManager
+            credentialsManager: CredentialsManager,
         ): AppTwitchApi {
             return AppTwitchClient(AppHelixClient(clientId, credentialsManager))
         }

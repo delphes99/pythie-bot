@@ -1,6 +1,7 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.user.TwitchUser
+import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
 
 interface AppTwitchApi {
@@ -8,5 +9,5 @@ interface AppTwitchApi {
 
     suspend fun removeAllSubscriptions()
 
-    suspend fun getUserByName(name: String): TwitchUser?
+    suspend fun getUserByName(user: User): TwitchUser?
 }
