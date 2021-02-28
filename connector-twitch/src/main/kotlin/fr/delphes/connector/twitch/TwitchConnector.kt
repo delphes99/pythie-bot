@@ -57,11 +57,12 @@ class TwitchConnector(
         application.WebhookModule(this)
     }
 
+    val botAccount get() = configuration.botAccountName?.let { TwitchChannel(it) }
 
     override fun init(bot: Bot) {
         this.bot = bot
         this.clientBot = ClientBot(
-            configuration,
+            this,
             bot.publicUrl,
             bot.configFilepath,
             bot.features,

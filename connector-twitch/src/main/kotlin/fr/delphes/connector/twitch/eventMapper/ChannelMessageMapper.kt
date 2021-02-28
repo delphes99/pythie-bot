@@ -22,12 +22,18 @@ class ChannelMessageMapper(
         return if(twitchEvent.isFor(channel)) {
             val command = bot.commandsFor(channel).find { it.triggerMessage == message }
 
-            listOf(
-                if (command != null) {
-                    CommandAsked(channel, command, user)
-                } else {
-                    bot.channelOf(twitchEvent.channel.toTwitchChannel())?.state?.addMessage(UserMessage(user, message))
-                    MessageReceived(channel, twitchEvent)
+            listOfNotNull(
+                when {
+                    command != null -> {
+                        CommandAsked(channel, command, user)
+                    }
+                    TwitchChannel(user.name) != bot.connector.botAccount -> {
+                        bot.channelOf(twitchEvent.channel.toTwitchChannel())?.state?.addMessage(UserMessage(user, message))
+                        MessageReceived(channel, twitchEvent)
+                    }
+                    else -> {
+                        null
+                    }
                 }
             )
         } else {

@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ClientBot(
-    private val configuration: TwitchConfiguration,
+    internal val connector: TwitchConnector,
     private val publicUrl: String,
     val configFilepath: String,
     private val features: List<Feature>,
@@ -28,7 +28,7 @@ class ClientBot(
     //TODO random secret
     private val webhookSecret = "secretWithMoreThan10caracters"
 
-    private val twitchApi = AppTwitchClient.build(configuration.clientId, credentialsManager)
+    private val twitchApi = AppTwitchClient.build(connector.configuration.clientId, credentialsManager)
 
     lateinit var ircClient: IrcClient
 
@@ -48,7 +48,7 @@ class ClientBot(
     }
 
     fun connect() {
-        ircClient = IrcClient.builder(configuration.botIdentity?.channel!!, credentialsManager).build()
+        ircClient = IrcClient.builder(connector.configuration.botIdentity?.channel!!, credentialsManager).build()
         ircClient.connect()
 
         channels.forEach { channel ->
@@ -67,7 +67,7 @@ class ClientBot(
         }
 
         return ChannelTwitchClient.builder(
-            configuration.clientId,
+            connector.configuration.clientId,
             credentialsManager,
             user,
             publicUrl,
