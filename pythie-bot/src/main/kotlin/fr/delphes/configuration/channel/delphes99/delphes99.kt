@@ -242,12 +242,14 @@ val delphes99Features = listOf(
     },
     StreamerHighlightFeature(
         channel = channel,
+        highlightExpiration = Duration.ofHours(2),
         stateRepository = FileStreamerHighlightRepository(
             "A:\\pythiebot\\feature\\streamer_highlight.json"
         ),
         response = { messageReceived ->
             listOf(
-                SendMessage("\uD83D\uDCFA N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", channel)
+                SendMessage("\uD83D\uDCFA N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", channel),
+                DiscordMessage("\uD83D\uDCFA N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", 789537633487159396)
             )
         }
     )

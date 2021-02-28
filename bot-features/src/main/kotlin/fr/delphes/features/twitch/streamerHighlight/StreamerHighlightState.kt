@@ -13,8 +13,8 @@ import java.time.LocalDateTime
 data class StreamerHighlightState(
     val streamerHighlighted: MutableMap<String, LocalDateTime> = mutableMapOf(),
 ) : State {
-    fun isAlreadyHighlighted(user: User): Boolean {
-        return streamerHighlighted.containsKey(user.normalizeName)
+    fun isAlreadyHighlighted(user: User, isExpired: (LocalDateTime) -> Boolean): Boolean {
+        return streamerHighlighted[user.normalizeName]?.let(isExpired) ?: false
     }
 
     fun highlight(user: User, highlightDate: LocalDateTime) {

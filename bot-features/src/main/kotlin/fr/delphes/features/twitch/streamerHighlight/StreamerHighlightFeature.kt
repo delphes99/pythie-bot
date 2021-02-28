@@ -14,9 +14,11 @@ import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
+import java.time.Duration
 
 class StreamerHighlightFeature(
     private val channel: TwitchChannel,
+    private val highlightExpiration: Duration,
     private val response: (MessageReceived) -> List<OutgoingEvent>,
     override val stateRepository: StateRepository<StreamerHighlightState>,
     override val state: StreamerHighlightState = runBlocking { stateRepository.load() },
@@ -32,7 +34,7 @@ class StreamerHighlightFeature(
                 whenRunning = {
                     val user = event.user
                     val userInfos = this.clientBot.userCache.getUser(user)
-                    if (userInfos.isStreamer() && !state.isAlreadyHighlighted(user)) {
+                    if (userInfos.isStreamer() && !user.isHighlighted()) {
                         highlight(user)
                         response(event)
                     } else {
@@ -44,6 +46,11 @@ class StreamerHighlightFeature(
                 }
             )
         }
+
+        private fun User.isHighlighted() =
+            state.isAlreadyHighlighted(this) { cacheTime ->
+                cacheTime.plus(highlightExpiration).isAfter(clock.now())
+            }
     }
 
     private suspend fun highlight(user: User) {
