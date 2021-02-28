@@ -20,7 +20,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 abstract class ScopedHelixClient(
-    private val clientId: String,
+    protected val clientId: String,
     @PublishedApi
     internal val getToken : suspend () -> AuthToken,
     @PublishedApi

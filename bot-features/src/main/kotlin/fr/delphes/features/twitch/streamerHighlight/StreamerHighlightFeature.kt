@@ -6,6 +6,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived
+import fr.delphes.connector.twitch.user.UserInfos
 import fr.delphes.feature.Feature
 import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.StateRepository
@@ -19,7 +20,7 @@ import java.time.Duration
 class StreamerHighlightFeature(
     private val channel: TwitchChannel,
     private val highlightExpiration: Duration,
-    private val response: (MessageReceived) -> List<OutgoingEvent>,
+    private val response: (MessageReceived, UserInfos) -> List<OutgoingEvent>,
     override val stateRepository: StateRepository<StreamerHighlightState>,
     override val state: StreamerHighlightState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock,
@@ -36,7 +37,7 @@ class StreamerHighlightFeature(
                     val userInfos = this.clientBot.userCache.getUser(user)
                     if (userInfos.isStreamer() && !user.isHighlighted()) {
                         highlight(user)
-                        response(event)
+                        response(event, userInfos)
                     } else {
                         emptyList()
                     }

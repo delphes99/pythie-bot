@@ -246,10 +246,10 @@ val delphes99Features = listOf(
         stateRepository = FileStreamerHighlightRepository(
             "A:\\pythiebot\\feature\\streamer_highlight.json"
         ),
-        response = { messageReceived ->
+        response = { messageReceived, user ->
             listOf(
-                SendMessage("\uD83D\uDCFA N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", channel),
-                DiscordMessage("\uD83D\uDCFA N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", 789537633487159396)
+                SendMessage("\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", channel),
+                DiscordMessage("\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", 789537633487159396)
             )
         }
     )

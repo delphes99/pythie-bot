@@ -2,16 +2,20 @@ package fr.delphes.twitch
 
 import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
 import fr.delphes.twitch.api.user.payload.GetUsersPayload
+import fr.delphes.twitch.api.video.payload.ChannelVideoPayload
+import fr.delphes.twitch.api.video.payload.ChannelVideosPayload
 import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.eventSub.EventSubSubscribe
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscriptionPayload
+import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.statement.HttpResponse
 
 class AppHelixClient(
     clientId: String,
-    credentialsManager: CredentialsManager
+    credentialsManager: CredentialsManager,
 ) : ScopedHelixClient(
     clientId = clientId,
     getToken = { credentialsManager.getAppToken() },
@@ -38,5 +42,17 @@ class AppHelixClient(
         )
 
         return payload.data.firstOrNull()
+    }
+
+    override suspend fun getVideosOf(userId: String, limit: Int): List<ChannelVideoPayload> {
+        val payload = authorizeCall { token ->
+            httpClient.get<ChannelVideosPayload>("https://api.twitch.tv/kraken/channels/$userId/videos?limit=$limit") {
+                this.header("Authorization", "Bearer ${token.access_token}")
+                this.header("Client-Id", clientId)
+                this.header("Accept", "application/vnd.twitchtv.v5+json")
+            }
+        }
+
+        return payload.videos
     }
 }

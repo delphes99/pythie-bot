@@ -8,8 +8,9 @@ data class UserInfos(
     val since: LocalDateTime,
     val broadcasterType: BroadcasterType,
     val viewCount: Long,
+    val categories: List<String>,
 ) {
     fun isStreamer(): Boolean {
-        return broadcasterType == BroadcasterType.AFFILIATE || broadcasterType == BroadcasterType.PARTNER
+        return broadcasterType == BroadcasterType.AFFILIATE || broadcasterType == BroadcasterType.PARTNER || categories.isNotEmpty()
     }
 }

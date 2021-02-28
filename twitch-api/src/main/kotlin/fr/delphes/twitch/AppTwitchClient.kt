@@ -2,6 +2,7 @@ package fr.delphes.twitch
 
 import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.video.ChannelVideo
 import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
 import kotlinx.coroutines.coroutineScope
@@ -39,6 +40,20 @@ class AppTwitchClient(
                     user.view_count
                 )
             }
+        }
+    }
+
+    override suspend fun getVideosOf(channelId: String, limit: Int): List<ChannelVideo> {
+        return coroutineScope {
+            twitchAppHelixApi
+                .getVideosOf(channelId, limit)
+                .map { payload ->
+                    ChannelVideo(
+                        payload.title,
+                        payload.game,
+                        payload.url
+                    )
+                }
         }
     }
 
