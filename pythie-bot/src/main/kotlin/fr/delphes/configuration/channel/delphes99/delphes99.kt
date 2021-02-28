@@ -25,6 +25,7 @@ import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.StreamOffline
 import fr.delphes.features.twitch.streamOnline.StreamOnline
 import fr.delphes.features.twitch.streamUpdate.StreamUpdate
+import fr.delphes.features.twitch.streamerHighlight.FileStreamerHighlightRepository
 import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightFeature
 import fr.delphes.features.twitch.voth.FileVOTHStateRepository
 import fr.delphes.features.twitch.voth.VOTH
@@ -60,8 +61,8 @@ val delphes99Features = listOf(
                 listOf(
                     SendMessage(
                         "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +
-                                "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
-                                "\uD83D\uDCB8 Dépensés : ${stats.totalCost}",
+                            "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
+                            "\uD83D\uDCB8 Dépensés : ${stats.totalCost}",
                         channel
                     )
                 )
@@ -85,7 +86,7 @@ val delphes99Features = listOf(
             }
         ),
         stateRepository = FileVOTHStateRepository(
-            "A:\\pythiebot\\vothstate.json"
+            "A:\\pythiebot\\feature\\voth.json"
         )
     ),
     Command(
@@ -239,11 +240,17 @@ val delphes99Features = listOf(
             )
         )
     },
-    StreamerHighlightFeature(channel) { messageReceived ->
-        listOf(
-            SendMessage("\uD83D\uDCFA N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", channel)
-        )
-    }
+    StreamerHighlightFeature(
+        channel = channel,
+        stateRepository = FileStreamerHighlightRepository(
+            "A:\\pythiebot\\feature\\streamer_highlight.json"
+        ),
+        response = { messageReceived ->
+            listOf(
+                SendMessage("\uD83D\uDCFA N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", channel)
+            )
+        }
+    )
 )
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(
