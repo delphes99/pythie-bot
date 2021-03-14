@@ -21,7 +21,6 @@ class TwitchConnector(
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
 ) : Connector, AuthTokenRepository {
-
     private lateinit var bot: Bot
     lateinit var clientBot: ClientBot
 
@@ -35,12 +34,11 @@ class TwitchConnector(
     )
 
     private val twitchHelixApi = TwitchHelixClient()
-    private var state: TwitchState = TwitchState.Unconfigured
     private val stateMachine = TwitchStateMachine(this)
 
     init {
         runBlocking {
-            state = TwitchState.Unconfigured.on(
+            stateMachine.on(
                 TwitchStateEvent.Configure(
                     repository.load(),
                     this@TwitchConnector
@@ -92,7 +90,7 @@ class TwitchConnector(
     }
 
     override fun connect() {
-        this.state = state.on(TwitchStateEvent.Connect(bot))
+        this.stateMachine.on(TwitchStateEvent.Connect(bot))
     }
 
     override suspend fun execute(event: OutgoingEvent) {
@@ -107,7 +105,7 @@ class TwitchConnector(
     }
 
     override suspend fun resetWebhook() {
-        state.whenRunning {
+        stateMachine.whenRunning {
             clientBot.resetWebhook()
         }
     }
@@ -147,12 +145,7 @@ class TwitchConnector(
         whenRunning: suspend TwitchState.AppConnected.() -> T,
         whenNotRunning: suspend () -> T,
     ): T {
-        val currentState = state
-        return if (currentState is TwitchState.AppConnected) {
-            currentState.whenRunning()
-        } else {
-            whenNotRunning()
-        }
+        return stateMachine.whenRunning(whenRunning, whenNotRunning)
     }
 
     companion object {
