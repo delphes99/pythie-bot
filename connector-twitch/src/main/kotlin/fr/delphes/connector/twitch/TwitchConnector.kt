@@ -36,10 +36,16 @@ class TwitchConnector(
 
     private val twitchHelixApi = TwitchHelixClient()
     private var state: TwitchState = TwitchState.Unconfigured
+    private val stateMachine = TwitchStateMachine(this)
 
     init {
         runBlocking {
-            state = TwitchState.Unconfigured.configure(repository.load(), this@TwitchConnector)
+            state = TwitchState.Unconfigured.on(
+                TwitchStateEvent.Configure(
+                    repository.load(),
+                    this@TwitchConnector
+                )
+            )
         }
     }
 
@@ -86,13 +92,7 @@ class TwitchConnector(
     }
 
     override fun connect() {
-        val oldState = state
-        this.state = when (oldState) {
-            is TwitchState.AppConfigurationFailed -> oldState
-            is TwitchState.AppConfigured -> oldState.connect(bot)
-            is TwitchState.AppConnected -> oldState
-            TwitchState.Unconfigured -> oldState
-        }
+        this.state = state.on(TwitchStateEvent.Connect(bot))
     }
 
     override suspend fun execute(event: OutgoingEvent) {

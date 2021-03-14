@@ -1,11 +1,10 @@
 package fr.delphes.connector.twitch
 
-import fr.delphes.bot.Bot
 import fr.delphes.twitch.AppTwitchApi
 import fr.delphes.twitch.AppTwitchClient
 
 sealed class TwitchState {
-    abstract fun connect(bot: Bot): TwitchState
+    abstract fun on(event: TwitchStateEvent): TwitchState
 
     suspend fun whenRunning(function: suspend AppConnected.() -> Unit) {
         if (this is AppConnected) {
@@ -13,61 +12,73 @@ sealed class TwitchState {
         }
     }
 
-    object Unconfigured : TwitchState() {
-        fun configure(
-            configuration: TwitchConfiguration,
-            connector: TwitchConnector
-        ): TwitchState {
-            if (configuration == TwitchConfiguration.empty) {
-                return this
-            }
-
-            if (configuration.clientId.isEmpty()) {
-                return AppConfigurationFailed("Empty Client ID")
-            }
-            if (configuration.clientSecret.isEmpty()) {
-                return AppConfigurationFailed("Empty Client Secret")
-            }
-            //TODO validation credential
-            if (configuration.botIdentity == null) {
-                return AppConfigurationFailed("Bot identity not configured")
-            }
-
-            return AppConfigured(
-                AppTwitchClient.build(connector.configuration.clientId, connector.credentialsManager)
-            )
+    protected fun configure(event: TwitchStateEvent.Configure): TwitchState {
+        if (event.configuration == TwitchConfiguration.empty) {
+            return this
         }
 
-        override fun connect(bot: Bot): TwitchState {
-            TODO("Not yet implemented")
+        if (event.configuration.clientId.isEmpty()) {
+            return AppConfigurationFailed("Empty Client ID")
+        }
+
+        if (event.configuration.clientSecret.isEmpty()) {
+            return AppConfigurationFailed("Empty Client Secret")
+        }
+
+        //TODO validation credential
+        if (event.configuration.botIdentity == null) {
+            return AppConfigurationFailed("Bot identity not configured")
+        }
+
+        return AppConfigured(
+            AppTwitchClient.build(event.connector.configuration.clientId, event.connector.credentialsManager)
+        )
+    }
+
+    object Unconfigured : TwitchState() {
+        override fun on(event: TwitchStateEvent): TwitchState {
+            return when (event) {
+                is TwitchStateEvent.Connect -> this
+                is TwitchStateEvent.Configure -> return configure(event)
+            }
         }
     }
 
     class AppConfigured(
         val appTwitchApi: AppTwitchApi
     ) : TwitchState() {
-        override fun connect(bot: Bot): TwitchState {
-            val twitchConnector = bot.connectors.filterIsInstance<TwitchConnector>().first()
-            val clientBot = twitchConnector.clientBot
+        override fun on(event: TwitchStateEvent): TwitchState {
+            return when (event) {
+                is TwitchStateEvent.Connect -> {
+                    val twitchConnector = event.bot.connectors.filterIsInstance<TwitchConnector>().first()
+                    val clientBot = twitchConnector.clientBot
 
-            clientBot.connect()
+                    clientBot.connect()
 
-            return AppConnected(clientBot)
+                    AppConnected(clientBot)
+                }
+                is TwitchStateEvent.Configure -> configure(event)
+            }
         }
-
     }
 
     class AppConnected(
         val clientBot: ClientBot
     ) : TwitchState() {
-        override fun connect(bot: Bot): TwitchState {
-            return this
+        override fun on(event: TwitchStateEvent): TwitchState {
+            return when (event) {
+                is TwitchStateEvent.Connect -> this
+                is TwitchStateEvent.Configure -> configure(event)
+            }
         }
     }
 
     class AppConfigurationFailed(val error: String) : TwitchState() {
-        override fun connect(bot: Bot): TwitchState {
-            TODO("Not yet implemented")
+        override fun on(event: TwitchStateEvent): TwitchState {
+            return when (event) {
+                is TwitchStateEvent.Connect -> this
+                is TwitchStateEvent.Configure -> configure(event)
+            }
         }
     }
 }
