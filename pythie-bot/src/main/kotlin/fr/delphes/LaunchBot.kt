@@ -17,16 +17,25 @@ fun main() {
     val tunnel = Ngrok.createHttpTunnel(80, props.getProperty("ngrok.tunnel.name"))
 
     val configFilepath = "A:\\pythiebot\\"
-    Bot(
+    val bot = Bot(
         tunnel.publicUrl,
         configFilepath,
-        listOf(
-            TwitchConnector(configFilepath, delphes99Channel , delphestestChannel),
-            DiscordConnector(configFilepath)
-        ),
         listOf(
             delphes99Features,
             delphestestFeatures
         ).flatten()
-    ).init()
+    )
+
+    bot.init(
+        TwitchConnector(
+            bot,
+            configFilepath,
+            delphes99Channel,
+            delphestestChannel
+        ),
+        DiscordConnector(
+            bot,
+            configFilepath
+        )
+    )
 }

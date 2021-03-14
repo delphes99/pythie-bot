@@ -11,40 +11,44 @@ import kotlinx.coroutines.runBlocking
 class Bot(
     val publicUrl: String,
     val configFilepath: String,
-    val connectors: List<Connector>,
     val features: List<Feature>
 ) {
+    private val _connectors = mutableListOf<Connector>()
+    val connectors get(): List<Connector> = _connectors
+
     val alerts = Channel<Alert>()
     private val eventHandlers = EventHandlers()
 
     suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
         eventHandlers.handleEvent(incomingEvent, this).forEach { event ->
-            connectors.forEach { connector ->
+            _connectors.forEach { connector ->
                 connector.execute(event)
             }
         }
     }
 
-    fun init() {
+    fun init(vararg connectorsToAdd: Connector) {
+        _connectors.addAll(connectorsToAdd)
+
         features.forEach { feature ->
             feature.registerHandlers(eventHandlers)
         }
 
         //TODO breack interdependency
-        connectors.forEach { it.init(this) }
+        _connectors.forEach { it.init() }
 
         WebServer(
             bot = this,
-            internalModules = connectors.map { connector -> { application -> connector.internalEndpoints(application) } },
-            publicModules = connectors.map { connector -> { application -> connector.publicEndpoints(application) } }
+            internalModules = _connectors.map { connector -> { application -> connector.internalEndpoints(application) } },
+            publicModules = _connectors.map { connector -> { application -> connector.publicEndpoints(application) } }
         )
 
         // After initial state
-        connectors.forEach { it.connect() }
+        _connectors.forEach { it.connect() }
 
         //TODO move to connector
         runBlocking {
-            connectors.forEach { it.resetWebhook() }
+            _connectors.forEach { it.resetWebhook() }
         }
     }
 

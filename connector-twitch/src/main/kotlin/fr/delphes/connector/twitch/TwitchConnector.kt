@@ -18,10 +18,10 @@ import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 
 class TwitchConnector(
+    val bot: Bot,
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
 ) : Connector, AuthTokenRepository {
-    private lateinit var bot: Bot
     lateinit var clientBot: ClientBot
 
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
@@ -48,9 +48,10 @@ class TwitchConnector(
     }
 
     constructor(
+        bot: Bot,
         configFilepath: String,
         vararg channels: ChannelConfiguration
-    ) : this(configFilepath, listOf(*channels))
+    ) : this(bot, configFilepath, listOf(*channels))
 
     override fun internalEndpoints(application: Application) {
         application.ConfigurationModule(this)
@@ -63,8 +64,7 @@ class TwitchConnector(
 
     val botAccount get() = configuration.botAccountName?.let(::TwitchChannel)
 
-    override fun init(bot: Bot) {
-        this.bot = bot
+    override fun init() {
         this.clientBot = ClientBot(
             this,
             bot.publicUrl,
@@ -94,12 +94,12 @@ class TwitchConnector(
     }
 
     override suspend fun execute(event: OutgoingEvent) {
-        if (event is TwitchOutgoingEvent) {
-            val channel = clientBot.channelOf(event.channel)!!
-            try {
-                event.executeOnTwitch(clientBot.ircClient, channel.ircClient, channel.twitchApi, channel)
-            } catch (e: Exception) {
-                LOGGER.error(e) { "Error while handling event ${e.message}" }
+            if (event is TwitchOutgoingEvent) {
+                val channel = clientBot.channelOf(event.channel)!!
+                try {
+                    event.executeOnTwitch(clientBot.ircClient, channel.ircClient, channel.twitchApi, channel)
+                } catch (e: Exception) {
+                    LOGGER.error(e) { "Error while handling event ${e.message}" }
             }
         }
     }

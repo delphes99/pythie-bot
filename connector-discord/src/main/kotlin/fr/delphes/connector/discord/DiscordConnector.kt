@@ -9,12 +9,11 @@ import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 
 class DiscordConnector(
+    val bot: Bot,
     override val configFilepath: String
 ) : Connector {
     private val repository = DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     var state: DiscordState = DiscordState.Unconfigured
-    //TODO non null
-    lateinit var bot: Bot
 
     init {
         runBlocking {
@@ -22,8 +21,7 @@ class DiscordConnector(
         }
     }
 
-    override fun init(bot: Bot) {
-        this.bot = bot
+    override fun init() {
     }
 
     override fun connect() {
