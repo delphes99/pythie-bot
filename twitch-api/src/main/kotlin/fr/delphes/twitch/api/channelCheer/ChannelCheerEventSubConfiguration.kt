@@ -13,15 +13,14 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelCheerEventSubConfiguration(
-    channel: TwitchChannel,
     listener: suspend (NewCheer) -> Unit
 ) : EventSubConfiguration<NewCheer, ChannelCheerEventPayload, ChannelCheerCondition>(
-    channel,
     EventSubTopic.NEW_CHEER,
     listener
 ) {
     override fun transform(
-        payload: ChannelCheerEventPayload
+        payload: ChannelCheerEventPayload,
+        channel: TwitchChannel
     ): NewCheer {
         return NewCheer(
             channel,

@@ -14,17 +14,16 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class CustomRewardRedemptionEventSubConfiguration(
-    channel: TwitchChannel,
     listener: suspend (RewardRedemption) -> Unit
 ) : EventSubConfiguration<RewardRedemption,
         ChannelPointsCustomRewardRedemptionEventPayload,
         ChannelPointsCustomRewardRedemptionCondition>(
-    channel,
     EventSubTopic.CUSTOM_REWARD_REDEMPTION,
     listener
 ) {
     override fun transform(
-        payload: ChannelPointsCustomRewardRedemptionEventPayload
+        payload: ChannelPointsCustomRewardRedemptionEventPayload,
+        channel: TwitchChannel
     ): RewardRedemption {
         return RewardRedemption(
             channel = channel,

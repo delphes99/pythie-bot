@@ -148,6 +148,10 @@ class TwitchConnector(
         return stateMachine.whenRunning(whenRunning, whenNotRunning)
     }
 
+    suspend fun whenRunning(function: suspend TwitchState.AppConnected.() -> Unit) {
+        stateMachine.whenRunning(function)
+    }
+
     companion object {
         private val LOGGER = KotlinLogging.logger {}
     }

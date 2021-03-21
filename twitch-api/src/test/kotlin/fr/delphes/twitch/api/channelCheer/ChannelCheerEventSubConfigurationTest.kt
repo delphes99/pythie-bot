@@ -37,10 +37,11 @@ internal class ChannelCheerEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = ChannelCheerEventSubConfiguration(TwitchChannel("channel")) { }.parseToModel(payload)
+        val channel = TwitchChannel("channel")
+        val model = ChannelCheerEventSubConfiguration { }.parseToModel(payload, channel)
 
         assertThat(model).isEqualTo(
-            NewCheer(TwitchChannel("channel"), User("cool_user"), 1000, "pogchamp")
+            NewCheer(channel, User("cool_user"), 1000, "pogchamp")
         )
     }
 }

@@ -36,7 +36,7 @@ internal class ChannelSubscribeEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = ChannelSubscribeEventSubConfiguration(TwitchChannel("channel")) { }.parseToModel(payload)
+        val model = ChannelSubscribeEventSubConfiguration() { }.parseToModel(payload, TwitchChannel("channel"))
 
         assertThat(model).isEqualTo(
             NewSub(TwitchChannel("channel"), User("cool_user"), SubscribeTier.TIER_1, false)

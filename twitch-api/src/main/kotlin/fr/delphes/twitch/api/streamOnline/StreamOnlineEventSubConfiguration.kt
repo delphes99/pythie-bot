@@ -12,15 +12,14 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class StreamOnlineEventSubConfiguration(
-    channel: TwitchChannel,
     listener: suspend (StreamOnline) -> Unit
 ) : EventSubConfiguration<StreamOnline, StreamOnlineEventPayload, StreamOnlineCondition>(
-    channel,
     EventSubTopic.STREAM_ONLINE,
     listener
 ) {
     override fun transform(
-        payload: StreamOnlineEventPayload
+        payload: StreamOnlineEventPayload,
+        channel: TwitchChannel
     ): StreamOnline {
         return StreamOnline(
             channel,

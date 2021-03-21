@@ -1,5 +1,6 @@
 package fr.delphes.twitch.eventSub
 
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import io.ktor.application.ApplicationCall
@@ -15,12 +16,13 @@ import mu.KotlinLogging
 class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
     private val topic: EventSubTopic,
     private val parse: suspend (ApplicationCall) -> NotificationPayload<PAYLOAD, CONDITION>,
-    private val notify: suspend (PAYLOAD) -> Unit
+    private val notify: suspend (PAYLOAD, TwitchChannel) -> Unit
 ) {
-    fun webhookPath(channelName: String) = "$channelName/${topic.webhookPathSuffix}"
+    fun webhookPath(channelName: String) = "eventSub/${topic.webhookPathSuffix}/$channelName"
 
-    fun callbackDefinition(routing: Routing, channelName: String) {
-        routing.post("/${webhookPath(channelName)}") {
+    fun callbackDefinition(routing: Routing) {
+        routing.post("/eventSub/${topic.webhookPathSuffix}/{channelName}") {
+            val channelName = call.parameters["channelName"].toString()
             val payload = parse(this.call)
             //TODO Verify the request signature  to make sure it came from Twitch.
             //TODO manage duplicate event
@@ -30,7 +32,7 @@ class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
                     this.challengeWebHook(payload.challenge)
                 }
                 payload.event != null -> {
-                    notify(payload.event)
+                    notify(payload.event, TwitchChannel(channelName))
 
                     this.context.response.status(HttpStatusCode.OK)
                 }

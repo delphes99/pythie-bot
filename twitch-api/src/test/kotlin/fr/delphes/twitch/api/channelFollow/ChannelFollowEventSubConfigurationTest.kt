@@ -34,7 +34,7 @@ internal class ChannelFollowEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = ChannelFollowEventSubConfiguration(TwitchChannel("channel")) { }.parseToModel(payload)
+        val model = ChannelFollowEventSubConfiguration() { }.parseToModel(payload, TwitchChannel("channel"))
 
         assertThat(model).isEqualTo(
             NewFollow(TwitchChannel("channel"), User("cool_user"))

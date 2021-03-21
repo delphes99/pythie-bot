@@ -100,7 +100,6 @@ class ChannelTwitchClient(
         fun listenToReward(listener: suspend (RewardRedemption) -> Unit): Builder {
             eventSubConfigurations.add(
                 CustomRewardRedemptionEventSubConfiguration(
-                    channel,
                     listener
                 )
             )
@@ -111,7 +110,6 @@ class ChannelTwitchClient(
         fun listenToNewFollow(listener: suspend (NewFollow) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelFollowEventSubConfiguration(
-                    channel,
                     listener
                 )
             )
@@ -122,7 +120,6 @@ class ChannelTwitchClient(
         fun listenToNewSub(listener: suspend (NewSub) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelSubscribeEventSubConfiguration(
-                    channel,
                     listener
                 )
             )
@@ -133,7 +130,6 @@ class ChannelTwitchClient(
         fun listenToNewCheer(listener: suspend (NewCheer) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelCheerEventSubConfiguration(
-                    channel,
                     listener
                 )
             )
@@ -144,7 +140,6 @@ class ChannelTwitchClient(
         fun listenToChannelUpdate(listener: suspend (ChannelUpdate) -> Unit): Builder {
             eventSubConfigurations.add(
                 ChannelUpdateEventSubConfiguration(
-                    channel,
                     listener
                 )
             )
@@ -155,7 +150,6 @@ class ChannelTwitchClient(
         fun listenToStreamOnline(listener: suspend (StreamOnline) -> Unit): Builder {
             eventSubConfigurations.add(
                 StreamOnlineEventSubConfiguration(
-                    channel,
                     listener
                 )
             )
@@ -166,7 +160,6 @@ class ChannelTwitchClient(
         fun listenToStreamOffline(listener: suspend (StreamOffline) -> Unit): Builder {
             eventSubConfigurations.add(
                 StreamOfflineEventSubConfiguration(
-                    channel,
                     listener
                 )
             )

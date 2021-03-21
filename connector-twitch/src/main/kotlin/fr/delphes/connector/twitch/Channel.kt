@@ -5,16 +5,9 @@ import fr.delphes.bot.state.FileStatisticsRepository
 import fr.delphes.bot.state.Statistics
 import fr.delphes.bot.state.StreamStatistics
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.connector.twitch.eventMapper.ChannelBitsMapper
 import fr.delphes.connector.twitch.eventMapper.ChannelMessageMapper
-import fr.delphes.connector.twitch.eventMapper.ChannelUpdateMapper
 import fr.delphes.connector.twitch.eventMapper.ClipCreatedMapper
 import fr.delphes.connector.twitch.eventMapper.IRCMessageMapper
-import fr.delphes.connector.twitch.eventMapper.NewFollowMapper
-import fr.delphes.connector.twitch.eventMapper.NewSubMapper
-import fr.delphes.connector.twitch.eventMapper.RewardRedeemedMapper
-import fr.delphes.connector.twitch.eventMapper.StreamOfflineMapper
-import fr.delphes.connector.twitch.eventMapper.StreamOnlineMapper
 import fr.delphes.connector.twitch.eventMapper.TwitchIncomingEventMapper
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
@@ -55,24 +48,17 @@ class Channel(
 
     //TODO subscribe only when feature requires
     init {
-        val rewardRedeemedMapper = RewardRedeemedMapper()
-        val newFollowMapper = NewFollowMapper(bot)
-        val newSubMapper = NewSubMapper(bot)
-        val channelBitsMapper = ChannelBitsMapper(bot)
-        val streamOnlineMapper = StreamOnlineMapper(this, bot)
-        val streamOfflineMapper = StreamOfflineMapper(bot)
-        val channelUpdateMapper = ChannelUpdateMapper(bot)
         val clipCreatedMapper = ClipCreatedMapper()
 
         twitchApi =
             bot.channelApiBuilder(bot.configFilepath, configuration?.rewards ?: emptyList(), channel)
-                .listenToReward { rewardRedeemedMapper.handleTwitchEvent(it) }
-                .listenToNewFollow { newFollowMapper.handleTwitchEvent(it) }
-                .listenToNewSub { newSubMapper.handleTwitchEvent(it) }
-                .listenToNewCheer { channelBitsMapper.handleTwitchEvent(it) }
-                .listenToStreamOnline { streamOnlineMapper.handleTwitchEvent(it) }
-                .listenToStreamOffline { streamOfflineMapper.handleTwitchEvent(it) }
-                .listenToChannelUpdate { channelUpdateMapper.handleTwitchEvent(it) }
+                .listenToReward { }
+                .listenToNewFollow { }
+                .listenToNewSub { }
+                .listenToNewCheer { }
+                .listenToStreamOnline { }
+                .listenToStreamOffline { }
+                .listenToChannelUpdate { }
                 .listenToClipCreated { clipCreatedMapper.handleTwitchEvent(it) }
                 .build()
 

@@ -33,7 +33,7 @@ internal class StreamOnlineEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = StreamOnlineEventSubConfiguration(TwitchChannel("channel")) { }.parseToModel(payload)
+        val model = StreamOnlineEventSubConfiguration() { }.parseToModel(payload, TwitchChannel("channel"))
 
         Assertions.assertThat(model).isEqualTo(
             StreamOnline(

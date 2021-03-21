@@ -14,15 +14,14 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelUpdateEventSubConfiguration(
-    channel: TwitchChannel,
     listener: suspend (ChannelUpdate) -> Unit
 ) : EventSubConfiguration<ChannelUpdate, ChannelUpdateEventPayload, ChannelUpdateCondition>(
-    channel,
     EventSubTopic.CHANNEL_UPDATE,
     listener
 ) {
     override fun transform(
-        payload: ChannelUpdateEventPayload
+        payload: ChannelUpdateEventPayload,
+        channel: TwitchChannel
     ): ChannelUpdate {
         return ChannelUpdate(
             channel,
