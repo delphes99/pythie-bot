@@ -45,7 +45,7 @@ internal class CustomRewardRedemptionEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = CustomRewardRedemptionEventSubConfiguration() { }.parseToModel(payload, TwitchChannel("channel"))
+        val model = CustomRewardRedemptionEventSubConfiguration().parseToModel(payload, TwitchChannel("channel"))
 
         assertThat(model).isEqualTo(
             RewardRedemption(

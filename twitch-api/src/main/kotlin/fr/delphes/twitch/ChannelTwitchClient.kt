@@ -1,14 +1,9 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
-import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
-import fr.delphes.twitch.api.channelFollow.NewFollow
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
-import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
-import fr.delphes.twitch.api.channelSubscribe.NewSub
-import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
@@ -16,9 +11,7 @@ import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
-import fr.delphes.twitch.api.streamOffline.StreamOffline
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
-import fr.delphes.twitch.api.streamOnline.StreamOnline
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.api.streams.ThumbnailUrl
@@ -97,71 +90,57 @@ class ChannelTwitchClient(
         private val eventSubConfigurations = mutableListOf<EventSubConfiguration<*, *, *>>()
         private var listenerClipCreated: (suspend (ClipCreated) -> Unit)? = null
 
-        fun listenToReward(listener: suspend (RewardRedemption) -> Unit): Builder {
+        fun listenToReward(): Builder {
             eventSubConfigurations.add(
-                CustomRewardRedemptionEventSubConfiguration(
-                    listener
-                )
+                CustomRewardRedemptionEventSubConfiguration()
             )
 
             return this
         }
 
-        fun listenToNewFollow(listener: suspend (NewFollow) -> Unit): Builder {
+        fun listenToNewFollow(): Builder {
             eventSubConfigurations.add(
-                ChannelFollowEventSubConfiguration(
-                    listener
-                )
+                ChannelFollowEventSubConfiguration()
             )
 
             return this
         }
 
-        fun listenToNewSub(listener: suspend (NewSub) -> Unit): Builder {
+        fun listenToNewSub(): Builder {
             eventSubConfigurations.add(
-                ChannelSubscribeEventSubConfiguration(
-                    listener
-                )
+                ChannelSubscribeEventSubConfiguration()
             )
 
             return this
         }
 
-        fun listenToNewCheer(listener: suspend (NewCheer) -> Unit): Builder {
+        fun listenToNewCheer(): Builder {
             eventSubConfigurations.add(
-                ChannelCheerEventSubConfiguration(
-                    listener
-                )
+                ChannelCheerEventSubConfiguration()
             )
 
             return this
         }
 
-        fun listenToChannelUpdate(listener: suspend (ChannelUpdate) -> Unit): Builder {
+        fun listenToChannelUpdate(): Builder {
             eventSubConfigurations.add(
-                ChannelUpdateEventSubConfiguration(
-                    listener
-                )
+                ChannelUpdateEventSubConfiguration()
             )
 
             return this
         }
 
-        fun listenToStreamOnline(listener: suspend (StreamOnline) -> Unit): Builder {
+        fun listenToStreamOnline(): Builder {
             eventSubConfigurations.add(
-                StreamOnlineEventSubConfiguration(
-                    listener
-                )
+                StreamOnlineEventSubConfiguration()
             )
 
             return this
         }
 
-        fun listenToStreamOffline(listener: suspend (StreamOffline) -> Unit): Builder {
+        fun listenToStreamOffline(): Builder {
             eventSubConfigurations.add(
-                StreamOfflineEventSubConfiguration(
-                    listener
-                )
+                StreamOfflineEventSubConfiguration()
             )
 
             return this

@@ -11,12 +11,10 @@ import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
-class StreamOfflineEventSubConfiguration(
-    listener: suspend (StreamOffline) -> Unit
-) : EventSubConfiguration<StreamOffline, StreamOfflineEventPayload, StreamOfflineCondition>(
-    EventSubTopic.STREAM_OFFLINE,
-    listener
-) {
+class StreamOfflineEventSubConfiguration :
+    EventSubConfiguration<StreamOffline, StreamOfflineEventPayload, StreamOfflineCondition>(
+        EventSubTopic.STREAM_OFFLINE
+    ) {
     override fun transform(
         payload: StreamOfflineEventPayload,
         channel: TwitchChannel

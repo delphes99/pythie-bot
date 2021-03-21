@@ -7,14 +7,9 @@ import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.application.ApplicationCall
 
 abstract class EventSubConfiguration<MODEL, PAYLOAD, CONDITION : GenericCondition>(
-    topic: EventSubTopic,
-    private val listener: suspend (MODEL) -> Unit
+    topic: EventSubTopic
 ) {
-    val callback = EventSubCallback(topic, ::parse, ::notify)
-
-    private suspend fun notify(event: PAYLOAD, channel: TwitchChannel): MODEL? {
-        return transform(event, channel)?.also { listener(it) }
-    }
+    val callback = EventSubCallback(topic, ::parse, ::transform)
 
     internal abstract fun transform(payload: PAYLOAD, channel: TwitchChannel): MODEL?
 

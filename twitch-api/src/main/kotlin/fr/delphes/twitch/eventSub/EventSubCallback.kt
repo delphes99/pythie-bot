@@ -13,14 +13,14 @@ import io.ktor.routing.post
 import io.ktor.util.pipeline.PipelineContext
 import mu.KotlinLogging
 
-class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
+class EventSubCallback<MODEL, PAYLOAD, CONDITION : GenericCondition>(
     private val topic: EventSubTopic,
     private val parse: suspend (ApplicationCall) -> NotificationPayload<PAYLOAD, CONDITION>,
-    private val notify: suspend (PAYLOAD, TwitchChannel) -> Unit
+    private val transform: suspend (PAYLOAD, TwitchChannel) -> MODEL?
 ) {
     fun webhookPath(channelName: String) = "eventSub/${topic.webhookPathSuffix}/$channelName"
 
-    fun callbackDefinition(routing: Routing) {
+    fun callbackDefinition(routing: Routing, listener: suspend (MODEL) -> Unit) {
         routing.post("/eventSub/${topic.webhookPathSuffix}/{channelName}") {
             val channelName = call.parameters["channelName"].toString()
             val payload = parse(this.call)
@@ -32,7 +32,9 @@ class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
                     this.challengeWebHook(payload.challenge)
                 }
                 payload.event != null -> {
-                    notify(payload.event, TwitchChannel(channelName))
+                    transform(payload.event, TwitchChannel(channelName))?.also { model ->
+                        listener(model)
+                    }
 
                     this.context.response.status(HttpStatusCode.OK)
                 }

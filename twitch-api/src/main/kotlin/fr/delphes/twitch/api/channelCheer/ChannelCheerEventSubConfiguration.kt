@@ -12,12 +12,10 @@ import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
-class ChannelCheerEventSubConfiguration(
-    listener: suspend (NewCheer) -> Unit
-) : EventSubConfiguration<NewCheer, ChannelCheerEventPayload, ChannelCheerCondition>(
-    EventSubTopic.NEW_CHEER,
-    listener
-) {
+class ChannelCheerEventSubConfiguration :
+    EventSubConfiguration<NewCheer, ChannelCheerEventPayload, ChannelCheerCondition>(
+        EventSubTopic.NEW_CHEER
+    ) {
     override fun transform(
         payload: ChannelCheerEventPayload,
         channel: TwitchChannel

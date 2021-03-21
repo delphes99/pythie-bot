@@ -46,19 +46,19 @@ class Channel(
 
     val twitchApi: ChannelTwitchApi
 
-    //TODO subscribe only when feature requires
     init {
         val clipCreatedMapper = ClipCreatedMapper()
 
+        //TODO subscribe only when feature requires
         twitchApi =
             bot.channelApiBuilder(bot.configFilepath, configuration?.rewards ?: emptyList(), channel)
-                .listenToReward { }
-                .listenToNewFollow { }
-                .listenToNewSub { }
-                .listenToNewCheer { }
-                .listenToStreamOnline { }
-                .listenToStreamOffline { }
-                .listenToChannelUpdate { }
+                .listenToReward()
+                .listenToNewFollow()
+                .listenToNewSub()
+                .listenToNewCheer()
+                .listenToStreamOnline()
+                .listenToStreamOffline()
+                .listenToChannelUpdate()
                 .listenToClipCreated { clipCreatedMapper.handleTwitchEvent(it) }
                 .build()
 

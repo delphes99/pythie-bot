@@ -38,7 +38,7 @@ internal class ChannelCheerEventSubConfigurationTest {
         """.trimIndent()
 
         val channel = TwitchChannel("channel")
-        val model = ChannelCheerEventSubConfiguration { }.parseToModel(payload, channel)
+        val model = ChannelCheerEventSubConfiguration().parseToModel(payload, channel)
 
         assertThat(model).isEqualTo(
             NewCheer(channel, User("cool_user"), 1000, "pogchamp")

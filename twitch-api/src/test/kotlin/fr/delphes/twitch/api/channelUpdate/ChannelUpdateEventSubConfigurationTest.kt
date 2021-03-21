@@ -38,7 +38,7 @@ internal class ChannelUpdateEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = ChannelUpdateEventSubConfiguration() { }.parseToModel(payload, TwitchChannel("channel"))
+        val model = ChannelUpdateEventSubConfiguration().parseToModel(payload, TwitchChannel("channel"))
 
         assertThat(model).isEqualTo(
             ChannelUpdate(

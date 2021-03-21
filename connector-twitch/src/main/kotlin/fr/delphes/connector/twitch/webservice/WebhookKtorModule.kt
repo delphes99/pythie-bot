@@ -16,8 +16,11 @@ import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfigurat
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
+import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
+import fr.delphes.twitch.eventSub.payload.GenericCondition
 import io.ktor.application.Application
+import io.ktor.routing.Routing
 import io.ktor.routing.routing
 
 fun Application.WebhookModule(connector: TwitchConnector) {
@@ -29,39 +32,46 @@ fun Application.WebhookModule(connector: TwitchConnector) {
     val streamOfflineMapper = StreamOfflineMapper(connector)
     val channelUpdateMapper = ChannelUpdateMapper(connector)
 
+
     routing {
         EventSubTopic.values()
-            .map {
-                when (it) {
-                    EventSubTopic.CHANNEL_UPDATE -> ChannelUpdateEventSubConfiguration { channelUpdate ->
-                        channelUpdateMapper.mapAndHandle(connector, channelUpdate)
+            .forEach { topic ->
+                when (topic) {
+                    EventSubTopic.CHANNEL_UPDATE -> {
+                        definition(ChannelUpdateEventSubConfiguration(), channelUpdateMapper, connector)
                     }
-                    EventSubTopic.CUSTOM_REWARD_REDEMPTION -> CustomRewardRedemptionEventSubConfiguration { redemption ->
-                        rewardRedeemedMapper.mapAndHandle(connector, redemption)
+                    EventSubTopic.CUSTOM_REWARD_REDEMPTION -> {
+                        definition(CustomRewardRedemptionEventSubConfiguration(), rewardRedeemedMapper, connector)
                     }
-                    EventSubTopic.NEW_CHEER -> ChannelCheerEventSubConfiguration { newCheer ->
-                        channelBitsMapper.mapAndHandle(connector, newCheer)
+                    EventSubTopic.NEW_CHEER -> {
+                        definition(ChannelCheerEventSubConfiguration(), channelBitsMapper, connector)
                     }
-                    EventSubTopic.NEW_FOLLOW -> ChannelFollowEventSubConfiguration { newFollow ->
-                        newFollowMapper.mapAndHandle(connector, newFollow)
+                    EventSubTopic.NEW_FOLLOW -> {
+                        definition(ChannelFollowEventSubConfiguration(), newFollowMapper, connector)
                     }
-                    EventSubTopic.NEW_SUB -> ChannelSubscribeEventSubConfiguration { newSub ->
-                        newSubMapper.mapAndHandle(connector, newSub)
+                    EventSubTopic.NEW_SUB -> {
+                        definition(ChannelSubscribeEventSubConfiguration(), newSubMapper, connector)
                     }
-                    EventSubTopic.STREAM_OFFLINE -> StreamOfflineEventSubConfiguration { streamOffline ->
-                        streamOfflineMapper.mapAndHandle(connector, streamOffline)
+                    EventSubTopic.STREAM_OFFLINE -> {
+                        definition(StreamOfflineEventSubConfiguration(), streamOfflineMapper, connector)
                     }
-                    EventSubTopic.STREAM_ONLINE -> StreamOnlineEventSubConfiguration { streamOnline ->
-                        streamOnlineMapper.mapAndHandle(connector, streamOnline)
+                    EventSubTopic.STREAM_ONLINE -> {
+                        definition(StreamOnlineEventSubConfiguration(), streamOnlineMapper, connector)
                     }
                 }
-            }
-            .forEach { configuration ->
-                configuration.callback.callbackDefinition(this)
             }
     }
 }
 
+private fun <MODEL, PAYLOAD, CONDITION : GenericCondition> Routing.definition(
+    configuration: EventSubConfiguration<MODEL, PAYLOAD, CONDITION>,
+    mapper: TwitchIncomingEventMapper<MODEL>,
+    connector: TwitchConnector
+) {
+    configuration.callback.callbackDefinition(this) {
+        mapper.mapAndHandle(connector, it)
+    }
+}
 
 private suspend fun <T> TwitchIncomingEventMapper<T>.mapAndHandle(connector: TwitchConnector, event: T) {
     this.handle(event).forEach { mappedEvent ->

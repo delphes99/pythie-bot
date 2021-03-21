@@ -31,7 +31,7 @@ internal class StreamOfflineEventSubConfigurationTest {
             }
         """.trimIndent()
 
-        val model = StreamOfflineEventSubConfiguration() { }.parseToModel(payload, TwitchChannel("channel"))
+        val model = StreamOfflineEventSubConfiguration().parseToModel(payload, TwitchChannel("channel"))
 
         assertThat(model).isEqualTo(
             StreamOffline(TwitchChannel("channel"))
