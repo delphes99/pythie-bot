@@ -21,10 +21,7 @@ class DiscordConnector(
         }
     }
 
-    override fun init() {
-    }
-
-    override fun connect() {
+    override suspend fun connect() {
         val newState = when(val oldState = state) {
             DiscordState.Unconfigured -> oldState
             is DiscordState.Configured -> oldState.connect()
@@ -39,9 +36,6 @@ class DiscordConnector(
         if(event is DiscordOutgoingEvent) {
             event.executeOnDiscord(this)
         }
-    }
-
-    override suspend fun resetWebhook() {
     }
 
     override fun internalEndpoints(application: Application) {

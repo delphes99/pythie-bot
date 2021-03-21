@@ -5,6 +5,8 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.feature.Feature
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
 
@@ -34,9 +36,6 @@ class Bot(
             feature.registerHandlers(eventHandlers)
         }
 
-        //TODO breack interdependency
-        _connectors.forEach { it.init() }
-
         WebServer(
             bot = this,
             internalModules = _connectors.map { connector -> { application -> connector.internalEndpoints(application) } },
@@ -44,15 +43,12 @@ class Bot(
         )
 
         // After initial state
-        _connectors.forEach { it.connect() }
-
-        //TODO move to connector
         runBlocking {
-            _connectors.forEach { it.resetWebhook() }
+            _connectors.map { connector -> async { connector.connect() } }.awaitAll()
         }
     }
 
-    inline fun <reified T: Connector> connector(): T? {
+    inline fun <reified T : Connector> connector(): T? {
         return connectors.filterIsInstance<T>().firstOrNull()
     }
 }

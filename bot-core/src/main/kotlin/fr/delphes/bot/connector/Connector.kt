@@ -10,12 +10,7 @@ interface Connector {
 
     fun publicEndpoints(application: Application)
 
-    //TODO remove
-    fun init()
-
-    fun connect()
+    suspend fun connect()
 
     suspend fun execute(event: OutgoingEvent)
-
-    suspend fun resetWebhook()
 }

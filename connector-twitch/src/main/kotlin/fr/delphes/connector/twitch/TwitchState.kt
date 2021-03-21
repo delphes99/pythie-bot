@@ -4,7 +4,7 @@ import fr.delphes.twitch.AppTwitchApi
 import fr.delphes.twitch.AppTwitchClient
 
 sealed class TwitchState {
-    abstract fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState
+    abstract suspend fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState
 
     suspend fun whenRunning(function: suspend AppConnected.() -> Unit) {
         if (this is AppConnected) {
@@ -36,7 +36,7 @@ sealed class TwitchState {
     }
 
     object Unconfigured : TwitchState() {
-        override fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
+        override suspend fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
             return when (event) {
                 is TwitchStateEvent.Connect -> this
                 is TwitchStateEvent.Configure -> return configure(event)
@@ -47,7 +47,7 @@ sealed class TwitchState {
     class AppConfigured(
         val appTwitchApi: AppTwitchApi
     ) : TwitchState() {
-        override fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
+        override suspend fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
             return when (event) {
                 is TwitchStateEvent.Connect -> {
                     val clientBot = ClientBot(
@@ -75,6 +75,8 @@ sealed class TwitchState {
 
                     clientBot.connect()
 
+                    clientBot.resetWebhook()
+
                     AppConnected(clientBot)
                 }
                 is TwitchStateEvent.Configure -> configure(event)
@@ -85,7 +87,7 @@ sealed class TwitchState {
     class AppConnected(
         val clientBot: ClientBot
     ) : TwitchState() {
-        override fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
+        override suspend fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
             return when (event) {
                 is TwitchStateEvent.Connect -> this
                 is TwitchStateEvent.Configure -> configure(event)
@@ -94,7 +96,7 @@ sealed class TwitchState {
     }
 
     class AppConfigurationFailed(val error: String) : TwitchState() {
-        override fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
+        override suspend fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
             return when (event) {
                 is TwitchStateEvent.Connect -> this
                 is TwitchStateEvent.Configure -> configure(event)

@@ -62,10 +62,7 @@ class TwitchConnector(
 
     val botAccount get() = configuration.botAccountName?.let(::TwitchChannel)
 
-    override fun init() {
-    }
-
-    override fun connect() {
+    override suspend fun connect() {
         this.stateMachine.on(TwitchStateEvent.Connect(bot))
     }
 
@@ -79,12 +76,6 @@ class TwitchConnector(
                     LOGGER.error(e) { "Error while handling event ${e.message}" }
                 }
             }
-        }
-    }
-
-    override suspend fun resetWebhook() {
-        stateMachine.whenRunning {
-            clientBot.resetWebhook()
         }
     }
 
