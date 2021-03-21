@@ -35,7 +35,7 @@ class StreamerHighlightFeature(
                 whenRunning = {
                     val user = event.user
                     val userInfos = this.clientBot.userCache.getUser(user)
-                    if (userInfos.isStreamer() && !user.isHighlighted()) {
+                    if (userInfos.isStreamer() && !user.isHighlighted() && event.channel.toUser() != user) {
                         highlight(user)
                         response(event, userInfos)
                     } else {
