@@ -22,8 +22,6 @@ class TwitchConnector(
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
 ) : Connector, AuthTokenRepository {
-    lateinit var clientBot: ClientBot
-
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
     var configuration = runBlocking { repository.load() }
 
@@ -65,28 +63,6 @@ class TwitchConnector(
     val botAccount get() = configuration.botAccountName?.let(::TwitchChannel)
 
     override fun init() {
-        this.clientBot = ClientBot(
-            this,
-            bot.publicUrl,
-            bot.configFilepath,
-            bot.features,
-            bot,
-            credentialsManager
-        )
-
-        configuration.listenedChannels.forEach { configuredAccount ->
-            val legacyChannelConfiguration = channels
-                .firstOrNull { channel -> channel.channel == configuredAccount.channel }
-
-            clientBot.register(
-                Channel(
-                    configuredAccount.channel,
-                    legacyChannelConfiguration,
-                    credentialsManager,
-                    clientBot
-                )
-            )
-        }
     }
 
     override fun connect() {
@@ -94,12 +70,14 @@ class TwitchConnector(
     }
 
     override suspend fun execute(event: OutgoingEvent) {
-            if (event is TwitchOutgoingEvent) {
+        if (event is TwitchOutgoingEvent) {
+            whenRunning {
                 val channel = clientBot.channelOf(event.channel)!!
                 try {
                     event.executeOnTwitch(clientBot.ircClient, channel.ircClient, channel.twitchApi, channel)
                 } catch (e: Exception) {
                     LOGGER.error(e) { "Error while handling event ${e.message}" }
+                }
             }
         }
     }

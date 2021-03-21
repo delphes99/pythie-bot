@@ -6,7 +6,7 @@ class TwitchStateMachine(
     private var state: TwitchState = TwitchState.Unconfigured
 
     fun on(event: TwitchStateEvent) {
-        state = state.on(event)
+        state = state.on(event, twitchConnector)
     }
 
     suspend fun whenRunning(function: suspend TwitchState.AppConnected.() -> Unit) {

@@ -4,7 +4,7 @@ import fr.delphes.twitch.AppTwitchApi
 import fr.delphes.twitch.AppTwitchClient
 
 sealed class TwitchState {
-    abstract fun on(event: TwitchStateEvent): TwitchState
+    abstract fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState
 
     suspend fun whenRunning(function: suspend AppConnected.() -> Unit) {
         if (this is AppConnected) {
@@ -36,7 +36,7 @@ sealed class TwitchState {
     }
 
     object Unconfigured : TwitchState() {
-        override fun on(event: TwitchStateEvent): TwitchState {
+        override fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
             return when (event) {
                 is TwitchStateEvent.Connect -> this
                 is TwitchStateEvent.Configure -> return configure(event)
@@ -47,11 +47,31 @@ sealed class TwitchState {
     class AppConfigured(
         val appTwitchApi: AppTwitchApi
     ) : TwitchState() {
-        override fun on(event: TwitchStateEvent): TwitchState {
+        override fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
             return when (event) {
                 is TwitchStateEvent.Connect -> {
-                    val twitchConnector = event.bot.connectors.filterIsInstance<TwitchConnector>().first()
-                    val clientBot = twitchConnector.clientBot
+                    val clientBot = ClientBot(
+                        connector,
+                        connector.bot.publicUrl,
+                        connector.bot.configFilepath,
+                        connector.bot.features,
+                        connector.bot,
+                        connector.credentialsManager
+                    )
+
+                    connector.configuration.listenedChannels.forEach { configuredAccount ->
+                        val legacyChannelConfiguration = connector.channels
+                            .firstOrNull { channel -> channel.channel == configuredAccount.channel }
+
+                        clientBot.register(
+                            Channel(
+                                configuredAccount.channel,
+                                legacyChannelConfiguration,
+                                connector.credentialsManager,
+                                clientBot
+                            )
+                        )
+                    }
 
                     clientBot.connect()
 
@@ -65,7 +85,7 @@ sealed class TwitchState {
     class AppConnected(
         val clientBot: ClientBot
     ) : TwitchState() {
-        override fun on(event: TwitchStateEvent): TwitchState {
+        override fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
             return when (event) {
                 is TwitchStateEvent.Connect -> this
                 is TwitchStateEvent.Configure -> configure(event)
@@ -74,7 +94,7 @@ sealed class TwitchState {
     }
 
     class AppConfigurationFailed(val error: String) : TwitchState() {
-        override fun on(event: TwitchStateEvent): TwitchState {
+        override fun on(event: TwitchStateEvent, connector: TwitchConnector): TwitchState {
             return when (event) {
                 is TwitchStateEvent.Connect -> this
                 is TwitchStateEvent.Configure -> configure(event)
