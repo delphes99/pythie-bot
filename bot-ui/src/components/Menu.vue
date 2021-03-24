@@ -4,6 +4,10 @@
       <img src="@/assets/home.svg" width="20" />
       Home
     </router-link>
+    <router-link class="router-link" to="/features">
+      <img src="@/assets/features.svg" width="20" />
+      Features
+    </router-link>
     <router-link class="router-link" to="/about">
       <img src="@/assets/about.svg" width="20" />
       About

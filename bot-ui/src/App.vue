@@ -2,7 +2,9 @@
   <status-bar />
   <div class="flex">
     <Menu class="w-52" />
-    <router-view/>
+    <div class="m-3 w-full">
+      <router-view/>
+    </div>
   </div>
 </template>
 
