@@ -6,9 +6,12 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import mu.KotlinLogging
 import kotlin.reflect.KClass
 
 class EventHandlers {
+    private val LOGGER = KotlinLogging.logger {}
+
     @PublishedApi
     internal val map = mutableMapOf<KClass<*>, MutableList<EventHandler<*>>>()
 
@@ -18,11 +21,22 @@ class EventHandlers {
     }
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun handleEvent(event: IncomingEvent, bot: Bot) : List<OutgoingEvent> {
+    suspend fun handleEvent(event: IncomingEvent, bot: Bot): List<OutgoingEvent> {
         return coroutineScope {
             map[event::class]
                 ?.map { it as EventHandler<IncomingEvent> }
-                ?.let { it.map { handler -> async { handler.handle(event, bot) } } }
+                ?.let { handlers ->
+                    handlers.map { handler ->
+                        async {
+                            try {
+                                handler.handle(event, bot)
+                            } catch (e: Exception) {
+                                LOGGER.error(e) { "Skip ${handler::class.simpleName} : Error while handling event" }
+                                emptyList()
+                            }
+                        }
+                    }
+                }
                 ?.awaitAll()
                 ?.flatten()
                 ?: emptyList()
