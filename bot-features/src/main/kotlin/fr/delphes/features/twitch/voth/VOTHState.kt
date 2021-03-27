@@ -30,7 +30,7 @@ class VOTHState(
 
     fun pause(now: LocalDateTime) {
         val currentVip = currentVip
-        if (currentVip != null) {
+        if (currentVip?.since != null) {
             val currentPeriod = Duration.between(currentVip.since, now)
             this.currentVip = currentVip.copy(
                 since = null,
