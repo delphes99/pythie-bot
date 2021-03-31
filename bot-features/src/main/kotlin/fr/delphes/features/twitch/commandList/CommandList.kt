@@ -9,9 +9,11 @@ import fr.delphes.twitch.TwitchChannel
 
 class CommandList(
     channel: TwitchChannel,
-    triggerMessage: String,
+    private val triggerMessage: String,
     displayCommands: (List<String>) -> List<OutgoingEvent>
 ) : TwitchFeature(channel) {
+    override fun description() = CommandListDescription(channel.name, triggerMessage)
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(commandHandler)
     }

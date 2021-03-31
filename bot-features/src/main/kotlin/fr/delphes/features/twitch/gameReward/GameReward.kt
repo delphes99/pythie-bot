@@ -21,6 +21,8 @@ class GameReward(
     channel: TwitchChannel,
     private val gameRewards: Map<GameId, List<RewardConfiguration>>
 ) : TwitchFeature(channel) {
+    override fun description() = GameRewardDescription(channel.name)
+
     constructor(
         channel: TwitchChannel,
         vararg gameRewards: Pair<WithRewardConfiguration, WithGameId>

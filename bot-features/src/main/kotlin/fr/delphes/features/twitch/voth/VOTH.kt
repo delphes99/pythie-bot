@@ -29,6 +29,13 @@ class VOTH(
     override val state: VOTHState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock
 ) : TwitchFeature(channel), HavePersistantState<VOTHState> {
+    override fun description() = VOTHDescription(
+        channel.name,
+        configuration.reward.rewardConfiguration.title,
+        configuration.statsCommand,
+        configuration.top3Command
+    )
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(VOTHRewardRedemptionHandler())
         eventHandlers.addHandler(VOTHVIPListReceivedHandler())

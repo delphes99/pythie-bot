@@ -9,17 +9,28 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 
 class Bot(
     val publicUrl: String,
     val configFilepath: String,
-    val features: List<Feature>
+    val features: List<Feature>,
+    val featureSerializationModule: SerializersModule
 ) {
     private val _connectors = mutableListOf<Connector>()
     val connectors get(): List<Connector> = _connectors
 
     val alerts = Channel<Alert>()
     private val eventHandlers = EventHandlers()
+
+    val serializer = Json {
+        ignoreUnknownKeys = true
+        isLenient = false
+        encodeDefaults = true
+        coerceInputValues = true
+        serializersModule = featureSerializationModule
+    }
 
     suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
         eventHandlers.handleEvent(incomingEvent, this).forEach { event ->

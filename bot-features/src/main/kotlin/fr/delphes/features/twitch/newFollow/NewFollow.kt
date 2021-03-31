@@ -12,6 +12,8 @@ class NewFollow(
     channel: TwitchChannel,
     val newFollowResponse: (NewFollowEvent) -> List<OutgoingEvent>
 ) : TwitchFeature(channel) {
+    override fun description() = NewFollowDescription(channel.name)
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(NewFollowHandler())
     }

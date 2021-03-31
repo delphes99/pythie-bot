@@ -12,6 +12,8 @@ class StreamOffline(
     channel: TwitchChannel,
     val streamOfflineResponse: (StreamOfflineEvent) -> List<OutgoingEvent>
 ) : TwitchFeature(channel) {
+    override fun description() = StreamOfflineDescription(channel.name)
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(StreamOfflineHandler())
     }

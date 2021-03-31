@@ -12,6 +12,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import kotlinx.serialization.json.Json
 
 class WebServer(
     val bot: Bot,
@@ -19,11 +20,11 @@ class WebServer(
     publicModules: List<(Application) -> Unit>
 ) {
     init {
-        launchServer(80) {
+        launchServer(80, bot.serializer) {
             publicModules.forEach { module -> module(this) }
         }
 
-        launchServer(8080) {
+        launchServer(8080, bot.serializer) {
             install(CORS) {
                 anyHost()
                 allowNonSimpleContentTypes = true
@@ -37,11 +38,11 @@ class WebServer(
         }
     }
 
-    private fun launchServer(port: Int, modules: Application.() -> Unit) {
+    private fun launchServer(port: Int, serializer: Json, modules: Application.() -> Unit) {
         embeddedServer(Netty, port) {
             install(ContentNegotiation) {
                 json(
-                    json = Serializer
+                    json = serializer
                 )
             }
             modules()

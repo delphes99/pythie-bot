@@ -1,6 +1,6 @@
 <template>
   <panel title="Rewards">
-    <div class="flex flex-row flex-wrap">
+    <card-panel>
       <card v-for="reward in rewards" :key="reward.title" :title="reward.title">
         {{reward.cost}}
         <template v-slot:actions>
@@ -12,7 +12,7 @@
           </button>
         </template>
       </card>
-    </div>
+    </card-panel>
   </panel>
 </template>
 
@@ -20,6 +20,7 @@
 import Panel from "@/components/common/Panel.vue";
 import {defineComponent, inject, ref} from "vue";
 import Card from "@/components/common/Card.vue";
+import CardPanel from "@/components/common/CardPanel.vue";
 
 interface Reward {
   title: string,
@@ -28,7 +29,7 @@ interface Reward {
 
 export default defineComponent({
   name: "TwitchReward",
-  components: {Card, Panel},
+  components: {CardPanel, Card, Panel},
   props: {
     channelName: String
   },

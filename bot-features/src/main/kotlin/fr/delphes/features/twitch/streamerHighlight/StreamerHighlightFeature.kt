@@ -25,6 +25,8 @@ class StreamerHighlightFeature(
     override val state: StreamerHighlightState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock,
 ) : Feature, HavePersistantState<StreamerHighlightState> {
+    override fun description() = StreamerHighlightDescription(channel.name)
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(MessageReceivedHandler())
     }

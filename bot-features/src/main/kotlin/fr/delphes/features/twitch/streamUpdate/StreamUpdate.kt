@@ -13,6 +13,8 @@ class StreamUpdate(
     channel: TwitchChannel,
     private val handleChanges: (List<StreamChanges>) -> List<OutgoingEvent>
 ) : TwitchFeature(channel) {
+    override fun description() = StreamUpdateDescription(channel.name)
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(StreamChangedHandler())
     }

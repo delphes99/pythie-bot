@@ -1,17 +1,19 @@
 <template>
   <panel title="Features">
-    <div class="flex flex-col p-2">
-      <div v-for="feature in features" :key="feature" class="w-full mb-2 border-black border-2">{{ feature }}</div>
-    </div>
+    <card-panel>
+      <feature-card v-for="feature in features" :key="feature" :feature="feature"></feature-card>
+    </card-panel>
   </panel>
 </template>
 
 <script>
 import Panel from "@/components/common/Panel";
 import {inject, ref} from "vue";
+import FeatureCard from "@/components/feature/FeatureCard";
+import CardPanel from "@/components/common/CardPanel";
 
 export default {
-  components: {Panel},
+  components: {CardPanel, FeatureCard, Panel},
   setup() {
     const backendUrl = inject("backendUrl")
     const features = ref([])

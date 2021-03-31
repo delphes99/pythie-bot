@@ -12,6 +12,8 @@ class NewSub(
     channel: TwitchChannel,
     val newSubResponse: (NewSubEvent) -> List<OutgoingEvent>
 ) : TwitchFeature(channel) {
+    override fun description() = NewSubDescription(channel.name)
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(NewSubHandler())
     }

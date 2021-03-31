@@ -14,6 +14,8 @@ import fr.delphes.twitch.TwitchChannel
 import io.ktor.application.Application
 
 class Overlay(private val channel: TwitchChannel) : Feature, HaveHttp {
+    override fun description() = OverlayDescription()
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(NewFollowHandler())
         eventHandlers.addHandler(NewSubHandler())

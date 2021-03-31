@@ -8,6 +8,8 @@ import fr.delphes.feature.HaveHttp
 import io.ktor.application.Application
 
 class EndCredits : Feature, HaveHttp {
+    override fun description() = EndCreditsDescription()
+
     override fun registerHandlers(eventHandlers: EventHandlers) {}
 
     override val module: (Bot) -> Application.() -> Unit = {

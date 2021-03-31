@@ -9,7 +9,10 @@ import fr.delphes.configuration.channel.delphestestFeatures
 import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.twitch.TwitchConnector
+import fr.delphes.features.FeatureConfiguration
+import kotlinx.serialization.InternalSerializationApi
 
+@InternalSerializationApi
 fun main() {
     val props = loadProperties("configuration-pythiebot.properties")
 
@@ -23,7 +26,8 @@ fun main() {
         listOf(
             delphes99Features,
             delphestestFeatures
-        ).flatten()
+        ).flatten(),
+        FeatureConfiguration.serializersModule
     )
 
     bot.init(

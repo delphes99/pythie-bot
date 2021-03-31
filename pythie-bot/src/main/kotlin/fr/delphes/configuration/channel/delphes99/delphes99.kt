@@ -49,7 +49,7 @@ val delphes99Features = listOf(
                 listOf(
                     SendMessage(
                         listOfNotNull(
-                            "\uD83D\uDC51 ${announce.rewardRedemption.user.name} est le nouveau VIP. \uD83D\uDC51",
+                            "\uD83D\uDC51 ${announce.rewardRedemption.user.name} devient notre VIP. \uD83D\uDC51",
                             announce.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP ${oldVOTH.user} [règne : ${announce.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
                         ).joinToString(" "),
                         channel
@@ -232,7 +232,7 @@ val delphes99Features = listOf(
                 clip.title,
                 clip.url,
                 "${clip.thumbnailUrl.withResolution(320, 160)}?r=${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}",
-                789537633487159396,
+                752185895050018937,
                 clip.creator.name,
                 "https://www.twitch.tv/${clip.creator.name}",
                 null,

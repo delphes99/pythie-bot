@@ -10,6 +10,8 @@ import fr.delphes.feature.Feature
 class NewGuildMember(
     val newGuildMember: (NewGuildMember) -> List<OutgoingEvent>
 ) : Feature {
+    override fun description() = NewGuildMemberDescription()
+
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(NewGuildMemberHandler())
     }
