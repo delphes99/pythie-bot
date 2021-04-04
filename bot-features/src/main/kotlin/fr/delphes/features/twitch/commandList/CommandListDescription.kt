@@ -11,5 +11,6 @@ class CommandListDescription(
     override val channel: String,
     val triggerMessage: String
 ) : TwitchFeatureDescription {
+    override val editable = false
     override val id: String = UUID.randomUUID().toString()
 }

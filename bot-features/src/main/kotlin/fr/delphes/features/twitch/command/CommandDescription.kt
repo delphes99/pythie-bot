@@ -12,4 +12,6 @@ data class CommandDescription(
     val trigger: String,
     val cooldown: Long,
     override val id: String = UUID.randomUUID().toString()
-) : TwitchFeatureDescription
+) : TwitchFeatureDescription {
+    override val editable = false
+}

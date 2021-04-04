@@ -10,5 +10,6 @@ import java.util.UUID
 class ClipCreatedDescription(
     override val channel: String
 ) : TwitchFeatureDescription {
+    override val editable = false
     override val id: String = UUID.randomUUID().toString()
 }

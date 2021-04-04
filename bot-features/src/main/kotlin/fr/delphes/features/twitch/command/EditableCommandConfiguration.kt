@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.command
 
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
-import fr.delphes.features.twitch.TwitchFeatureDescription
+import fr.delphes.features.twitch.EditableTwitchFeatureDescription
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.UUID
@@ -14,11 +14,13 @@ data class EditableCommandConfiguration(
     val cooldown: Long,
     val responses: List<OutgoingEventBuilder>,
     override val id: String = UUID.randomUUID().toString()
-) : TwitchFeatureDescription {
+) : EditableTwitchFeatureDescription {
     constructor(
         channel: String,
         trigger: String,
         cooldown: Long,
         vararg responses: OutgoingEventBuilder,
     ) : this(channel, trigger, cooldown, listOf(*responses))
+
+    override val editable = true
 }

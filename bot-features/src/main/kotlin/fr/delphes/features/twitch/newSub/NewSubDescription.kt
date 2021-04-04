@@ -10,5 +10,6 @@ import java.util.UUID
 class NewSubDescription(
     override val channel: String
 ) : TwitchFeatureDescription {
+    override val editable = false
     override val id: String = UUID.randomUUID().toString()
 }

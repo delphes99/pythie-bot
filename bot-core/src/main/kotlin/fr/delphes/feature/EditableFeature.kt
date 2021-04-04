@@ -1,3 +1,3 @@
 package fr.delphes.feature
 
-interface EditableFeature<DESC : FeatureDescription> : Feature<DESC>
+interface EditableFeature<DESC : EditableFeatureDescription> : Feature<DESC>

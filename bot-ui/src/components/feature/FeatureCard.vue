@@ -1,8 +1,15 @@
 <template>
-  <card :title="feature.type">
+  <card :title="feature.type" container-class="h-full">
+    <template v-slot:icon v-if="icon">
+      <img :src="icon" width="30" height="20" />
+    </template>
     <component :is="component" :feature="feature" />
     <template v-slot:actions>
-      <button class="primary-button" v-on:click="openSettings()">
+      <button
+        v-if="feature.editable"
+        class="primary-button"
+        v-on:click="openSettings()"
+      >
         Edit
       </button>
     </template>
@@ -58,12 +65,16 @@ export default defineComponent({
     const component = componentToCard(props.feature);
 
     const openSettings = () => (isSettingOpened.value = true);
+    const icon = props.feature.editable
+      ? null
+      : require("@/assets/readonly.svg");
 
     return {
       isSettingOpened,
       featureType,
       openSettings,
-      component
+      component,
+      icon
     };
   }
 });

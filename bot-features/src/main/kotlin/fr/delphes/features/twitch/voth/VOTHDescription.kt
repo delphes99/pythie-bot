@@ -13,5 +13,6 @@ class VOTHDescription(
     val statsCommand: String,
     val top3Command: String
 ): TwitchFeatureDescription {
+    override val editable = false
     override val id: String = UUID.randomUUID().toString()
 }

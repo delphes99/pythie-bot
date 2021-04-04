@@ -1,5 +1,4 @@
 <template>
-  Command :
   <div>Channel : {{ feature.channel }}</div>
   <div>Command : {{ feature.trigger }}</div>
 </template>
