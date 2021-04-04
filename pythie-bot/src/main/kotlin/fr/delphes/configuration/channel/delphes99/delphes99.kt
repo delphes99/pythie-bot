@@ -61,8 +61,8 @@ val delphes99Features = listOf(
                 listOf(
                     SendMessage(
                         "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +
-                            "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
-                            "\uD83D\uDCB8 Dépensés : ${stats.totalCost}",
+                                "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
+                                "\uD83D\uDCB8 Dépensés : ${stats.totalCost}",
                         channel
                     )
                 )
@@ -93,17 +93,21 @@ val delphes99Features = listOf(
         channel,
         "!bot",
         cooldown = Duration.ofMinutes(2),
-        responses = listOf(
-            SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot", channel)
-        )
+        responses = {
+            listOf(
+                SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot", channel)
+            )
+        }
     ),
     Command(
         channel,
         "!discord",
         cooldown = Duration.ofSeconds(10),
-        responses = listOf(
-            SendMessage("https://discord.com/invite/SAdBhbu", channel)
-        )
+        responses = {
+            listOf(
+                SendMessage("https://discord.com/invite/SAdBhbu", channel)
+            )
+        }
     ),
     NewFollow(channel) { newFollow ->
         listOf(SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F", channel))
@@ -111,14 +115,23 @@ val delphes99Features = listOf(
     NewSub(channel) { newSub ->
         listOf(SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F", channel))
     },
-    StreamOffline(channel) { listOf(SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18", channel)) },
+    StreamOffline(channel) {
+        listOf(
+            SendMessage(
+                "\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18",
+                channel
+            )
+        )
+    },
     StreamOnline(channel) {
         listOf(
             SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !", channel),
             DiscordEmbeddedMessage(
                 it.title,
                 "https://www.twitch.tv/delphes99",
-                "${it.thumbnailUrl.withResolution(320, 160)}?r=${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}",
+                "${it.thumbnailUrl.withResolution(320, 160)}?r=${
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+                }",
                 708949759725010984,
                 "Delphes99",
                 "https://www.twitch.tv/delphes99",
@@ -171,7 +184,7 @@ val delphes99Features = listOf(
         "!tufekoi",
         Games.SCIENCE_TECHNOLOGY to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
         Games.JUST_CHATTING to "\uD83D\uDDE3️ bla bla bla",
-&        Games.SATISFACTORY to "Pionnier, vous êtes envoyé colonniser Jeu de construction d'usine \uD83C\uDFED en première personne, automatisation, optimisation, exploration !",
+        Games.SATISFACTORY to "Pionnier, vous êtes envoyé colonniser Jeu de construction d'usine \uD83C\uDFED en première personne, automatisation, optimisation, exploration !",
         Games.PATH_OF_EXILE to "Vous êtes un exilé errant sur Wraeclast, cherchant à vous venger de ceux qui vous ont banni. ⚔️Hack'n slash free to play, avec un système de ligue de quelques mois. Constellation de talent, lien entre gemmes, craft, mécaniques... complexe mais passionnant",
         Games.GEOGUESSR to "Vous entrez dans un streetview dans un lieu aléatoire, vous devez vous retrouver sur une carte \uD83D\uDDFA️",
         Games.GHOSTRUNNER to "Mara, le Maître des clés règne sur la Tour du Dharma, le dernier refuge de l'humanité. Grimpez la Tour et prennez votre revanche. \uD83C\uDFC3 Runner en première personne dans un environnement cyberpunk.",
@@ -203,36 +216,52 @@ val delphes99Features = listOf(
     Command(
         channel,
         "!deactivateTest",
-        responses = listOf(DesactivateReward(DelphesReward.DEV_TEST, channel))
+        responses = {
+            listOf(DesactivateReward(DelphesReward.DEV_TEST, channel))
+        }
     ),
     Command(
         channel,
         "!activateTest",
-        responses = listOf(ActivateReward(DelphesReward.DEV_TEST, channel))
+        responses = {
+            listOf(ActivateReward(DelphesReward.DEV_TEST, channel))
+        }
     ),
     Command(
         channel,
         "!ping",
-        responses = listOf(SendMessage("pong", channel))
+        responses = {
+            listOf(SendMessage("pong", channel))
+        }
     ),
     Command(
         channel,
         "!helloDiscord",
-        responses = listOf(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
+        responses = {
+            listOf(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
+        }
     ),
     NewGuildMember { newGuildMember ->
         listOf(
-            SendMessage("${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même !", channel)
+            SendMessage(
+                "${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même !",
+                channel
+            )
         )
     },
     ClipCreated(channel) { clipCreated ->
         val clip = clipCreated.clip
         listOf(
-            SendMessage("\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}", channel),
+            SendMessage(
+                "\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}",
+                channel
+            ),
             DiscordEmbeddedMessage(
                 clip.title,
                 clip.url,
-                "${clip.thumbnailUrl.withResolution(320, 160)}?r=${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}",
+                "${clip.thumbnailUrl.withResolution(320, 160)}?r=${
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+                }",
                 752185895050018937,
                 clip.creator.name,
                 "https://www.twitch.tv/${clip.creator.name}",
@@ -249,11 +278,27 @@ val delphes99Features = listOf(
         ),
         response = { messageReceived, user ->
             listOf(
-                SendMessage("\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", channel),
-                DiscordMessage("\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}", 789537633487159396)
+                SendMessage(
+                    "\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}",
+                    channel
+                ),
+                DiscordMessage(
+                    "\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}",
+                    789537633487159396
+                )
             )
         }
-    )
+    ),
+    Command(
+        channel,
+        "!coucou",
+        cooldown = Duration.ofSeconds(10),
+        responses = { commandAsked ->
+            listOf(
+                SendMessage("Coucou ${commandAsked.by.name} !", channel)
+            )
+        }
+    ),
 )
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(

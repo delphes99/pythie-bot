@@ -39,7 +39,9 @@ internal class SimpleCommandHandlerTest {
             channel = channel,
             command = command,
             clock = clock,
-            responses = listOf(SendMessage("response", channel))
+            responses = {
+                listOf(SendMessage("response", channel))
+            }
         )
         val event = CommandAsked(channel, command, User("user"))
 
@@ -56,7 +58,9 @@ internal class SimpleCommandHandlerTest {
             command = command,
             clock = clock,
             cooldown = Duration.ofMinutes(10),
-            responses = listOf(SendMessage("response", channel))
+            responses = {
+                listOf(SendMessage("response", channel))
+            }
         )
         val event = CommandAsked(channel, command, User("user"))
 
@@ -75,7 +79,9 @@ internal class SimpleCommandHandlerTest {
             command = command,
             clock = clock,
             cooldown = Duration.ofMinutes(10),
-            responses = listOf(SendMessage("response", channel))
+            responses = {
+                listOf(SendMessage("response", channel))
+            }
         )
         val event = CommandAsked(channel, command, User("user"))
 

@@ -16,7 +16,7 @@ class SimpleCommandHandler(
     private var lastActivation: LocalDateTime = LocalDateTime.MIN,
     private val clock: Clock = SystemClock,
     private val cooldown: Duration? = null,
-    private val responses: List<OutgoingEvent>
+    private val responses: (CommandAsked) -> List<OutgoingEvent>
 ) : TwitchEventHandler<CommandAsked>(channel) {
     override suspend fun handleIfGoodChannel(event: CommandAsked, bot: Bot): List<OutgoingEvent> {
         return event.isFor(channel) {
@@ -24,7 +24,7 @@ class SimpleCommandHandler(
                 cooldown?.let { Duration.between(lastActivation, clock.now()) > it } != false
             ) {
                 lastActivation = clock.now()
-                responses
+                responses(event)
             } else {
                 emptyList()
             }

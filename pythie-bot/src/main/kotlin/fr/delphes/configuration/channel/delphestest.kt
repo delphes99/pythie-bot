@@ -24,9 +24,11 @@ val delphestestFeatures = listOf(
         channel,
         "!test",
         cooldown = Duration.ofSeconds(10),
-        responses = listOf(
-            SendMessage("Compte de test opérationnel !", channel)
-        )
+        responses = {
+            listOf(
+                SendMessage("Compte de test opérationnel !", channel)
+            )
+        },
     ),
     NewFollow(channel) { newFollow ->
         listOf(SendMessage("Merci du follow ${newFollow.follower.name}", channel))
@@ -85,7 +87,9 @@ val delphestestFeatures = listOf(
     Command(
         channel,
         "!ping",
-        responses = listOf(SendMessage("pong", channel))
+        responses = {
+            listOf(SendMessage("pong", channel))
+        },
     )
 )
 val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.properties") { properties ->

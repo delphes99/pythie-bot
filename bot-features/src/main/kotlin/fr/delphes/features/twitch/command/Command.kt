@@ -5,6 +5,7 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
+import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.feature.FeatureDescription
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.Clock
@@ -18,7 +19,7 @@ class Command(
     lastActivation: LocalDateTime = LocalDateTime.MIN,
     clock: Clock = SystemClock,
     cooldown: Duration? = null,
-    responses: List<OutgoingEvent>
+    responses: (CommandAsked) -> List<OutgoingEvent>
 ) : TwitchFeature(channel) {
     override fun description(): FeatureDescription {
         return CommandDescription(
