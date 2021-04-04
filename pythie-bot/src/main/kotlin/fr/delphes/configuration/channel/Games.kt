@@ -7,5 +7,6 @@ enum class Games(override val id: String) : WithGameId {
     JUST_CHATTING("509658"),
     SATISFACTORY("506456"),
     PATH_OF_EXILE("29307"),
-    GEOGUESSR("369418");
+    GEOGUESSR("369418"),
+    GHOSTRUNNER("513971"),
 }

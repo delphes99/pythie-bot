@@ -1,6 +1,6 @@
-import {FeatureType} from "@/twitch/feature/type/FeatureTypeEnum";
+import { FeatureType } from "@/twitch/feature/type/FeatureTypeEnum.ts";
 
-export interface Feature {
-    type: FeatureType
-    id: string
+export default interface Feature {
+  type: FeatureType;
+  id: string;
 }

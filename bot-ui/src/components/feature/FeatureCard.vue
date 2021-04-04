@@ -1,7 +1,6 @@
 <template>
   <card :title="feature.type">
-    <div v-if="feature.channel">Channel : {{ feature.channel }}</div>
-    <div v-if="feature.trigger">Command : {{ feature.trigger }}</div>
+    <component :is="component" :feature="feature" />
     <template v-slot:actions>
       <button class="primary-button" v-on:click="openSettings()">
         Edit
@@ -22,34 +21,50 @@
 <script lang="ts">
 import Card from "@/components/common/Card.vue";
 
-import {defineComponent, PropType, ref} from 'vue'
-import {FeatureType} from "@/twitch/feature/type/FeatureTypeEnum";
-import {Feature} from "@/twitch/feature/type/Feature";
+import { defineComponent, PropType, ref } from "vue";
+import { FeatureType } from "@/twitch/feature/type/FeatureTypeEnum.ts";
+import Feature from "@/twitch/feature/type/Feature.ts";
 import Modal from "@/components/common/Modal.vue";
+import FeatureDefaultCard from "@/components/feature/FeatureDefaultCard.vue";
+import FeatureTwitchCommandCard from "@/twitch/feature/component/FeatureTwitchCommandCard.vue";
+
+function componentToCard(feature: Feature) {
+  switch (feature.type) {
+    case FeatureType.TWITCH_COMMAND:
+      return FeatureTwitchCommandCard;
+    default:
+      return FeatureDefaultCard;
+  }
+}
 
 export default defineComponent({
-  name: 'FeatureCard',
-  components: {Card, Modal},
+  name: "FeatureCard",
+  components: {
+    Card,
+    Modal,
+    FeatureDefaultCard,
+    FeatureTwitchCommandCard
+  },
   props: {
     feature: {
       type: Object as PropType<Feature>,
       required: true
-    },
+    }
   },
   setup(props) {
-    const isSettingOpened = ref(false)
-    const featureType = () => props.feature.type
+    const isSettingOpened = ref(false);
+    const featureType = () => props.feature.type;
 
-    const isCommand = props.feature.type === FeatureType.TWITCH_COMMAND
+    const component = componentToCard(props.feature);
 
-    const openSettings = () => isSettingOpened.value = true
+    const openSettings = () => (isSettingOpened.value = true);
 
     return {
       isSettingOpened,
       featureType,
-      isCommand,
-      openSettings
-    }
+      openSettings,
+      component
+    };
   }
-})
+});
 </script>
