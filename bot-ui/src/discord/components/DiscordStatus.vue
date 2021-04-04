@@ -1,14 +1,17 @@
 <template>
   <div class="relative">
     <router-link to="/discord">
-      <img src="@/assets/discord.png">
+      <img src="@/common/assets/discord.png" />
     </router-link>
-    <div class="absolute -bottom-1 -right-1 z-2 rounded-full shadow-lg" :class="[statusColor]" />
+    <div
+      class="absolute -bottom-1 -right-1 z-2 rounded-full shadow-lg"
+      :class="[statusColor]"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { ref, inject } from "vue"
+import { ref, inject } from "vue";
 
 enum DiscordStatus {
   unconfigured = "unconfigured",
@@ -31,9 +34,9 @@ export default {
   name: `DiscordStatus`,
 
   setup() {
-    const backendUrl = inject("backendUrl")
-    const status = ref<Status>({ status: DiscordStatus.unconfigured});
-    const statusColor = ref<StatusColor>(StatusColor.transparent)
+    const backendUrl = inject("backendUrl");
+    const status = ref<Status>({ status: DiscordStatus.unconfigured });
+    const statusColor = ref<StatusColor>(StatusColor.transparent);
 
     async function getStatus() {
       const response = await fetch(`${backendUrl}/status/discord`);
@@ -41,26 +44,28 @@ export default {
 
       switch (status.value.status) {
         case DiscordStatus.unconfigured:
-          statusColor.value = StatusColor.transparent
+          statusColor.value = StatusColor.transparent;
           break;
         case DiscordStatus.configured:
-          statusColor.value = StatusColor.grey
+          statusColor.value = StatusColor.grey;
           break;
         case DiscordStatus.connected:
-          statusColor.value = StatusColor.green
+          statusColor.value = StatusColor.green;
           break;
         case DiscordStatus.error:
-          statusColor.value = StatusColor.red
+          statusColor.value = StatusColor.red;
           break;
       }
     }
 
-    setInterval(() => { getStatus() }, 5000)
+    setInterval(() => {
+      getStatus();
+    }, 5000);
 
     return {
       status,
       statusColor
-    }
+    };
   }
-}
+};
 </script>

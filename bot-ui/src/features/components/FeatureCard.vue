@@ -1,5 +1,5 @@
 <template>
-  <card :title="feature.type" container-class="h-full">
+  <card :title="feature.type">
     <template v-slot:icon v-if="icon">
       <img :src="icon" width="30" height="20" />
     </template>
@@ -26,13 +26,13 @@
 </template>
 
 <script lang="ts">
-import Card from "@/components/common/Card.vue";
+import Card from "@/common/components/common/Card.vue";
 
 import { defineComponent, PropType, ref } from "vue";
 import { FeatureType } from "@/twitch/feature/type/FeatureTypeEnum.ts";
 import Feature from "@/twitch/feature/type/Feature.ts";
-import Modal from "@/components/common/Modal.vue";
-import FeatureDefaultCard from "@/components/feature/FeatureDefaultCard.vue";
+import Modal from "@/common/components/common/Modal.vue";
+import FeatureDefaultCard from "@/features/components/FeatureDefaultCard.vue";
 import FeatureTwitchCommandCard from "@/twitch/feature/component/FeatureTwitchCommandCard.vue";
 
 function componentToCard(feature: Feature) {
@@ -67,7 +67,7 @@ export default defineComponent({
     const openSettings = () => (isSettingOpened.value = true);
     const icon = props.feature.editable
       ? null
-      : require("@/assets/readonly.svg");
+      : require("@/common/assets/readonly.svg");
 
     return {
       isSettingOpened,

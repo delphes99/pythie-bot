@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Panel from "@/components/common/Panel.vue";
+import Panel from "@/common/components/common/Panel.vue";
 
 export default defineComponent({
   name: "Modal",
