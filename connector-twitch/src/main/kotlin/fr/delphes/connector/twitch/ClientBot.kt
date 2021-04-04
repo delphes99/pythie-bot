@@ -23,7 +23,7 @@ class ClientBot(
     internal val connector: TwitchConnector,
     private val publicUrl: String,
     val configFilepath: String,
-    private val features: List<Feature>,
+    private val features: List<Feature<*>>,
     val bot: Bot,
     private val credentialsManager: CredentialsManager,
 ) {
@@ -51,9 +51,9 @@ class ClientBot(
 
     fun commandsFor(channel: TwitchChannel): List<Command> {
         return features
-            .filterIsInstance<TwitchFeature>()
+            .filterIsInstance<TwitchFeature<*>>()
             .filter { feature -> feature.channel == channel }
-            .flatMap(TwitchFeature::commands)
+            .flatMap(TwitchFeature<*>::commands)
     }
 
     fun connect() {

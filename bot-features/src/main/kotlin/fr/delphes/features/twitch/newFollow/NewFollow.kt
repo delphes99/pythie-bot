@@ -11,7 +11,7 @@ import fr.delphes.connector.twitch.incomingEvent.NewFollow as NewFollowEvent
 class NewFollow(
     channel: TwitchChannel,
     val newFollowResponse: (NewFollowEvent) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
+) : TwitchFeature<NewFollowDescription>(channel) {
     override fun description() = NewFollowDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

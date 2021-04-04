@@ -7,7 +7,7 @@ import fr.delphes.feature.Feature
 import fr.delphes.feature.HaveHttp
 import io.ktor.application.Application
 
-class EndCredits : Feature, HaveHttp {
+class EndCredits : Feature<EndCreditsDescription>, HaveHttp {
     override fun description() = EndCreditsDescription()
 
     override fun registerHandlers(eventHandlers: EventHandlers) {}

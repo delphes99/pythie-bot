@@ -2,8 +2,8 @@ package fr.delphes.feature
 
 import fr.delphes.bot.event.eventHandler.EventHandlers
 
-interface Feature {
+interface Feature<DESC : FeatureDescription> {
     fun registerHandlers(eventHandlers: EventHandlers)
 
-    fun description() : FeatureDescription
+    fun description() : DESC
 }

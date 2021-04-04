@@ -11,7 +11,7 @@ class CommandList(
     channel: TwitchChannel,
     private val triggerMessage: String,
     displayCommands: (List<String>) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
+) : TwitchFeature<CommandListDescription>(channel) {
     override fun description() = CommandListDescription(channel.name, triggerMessage)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

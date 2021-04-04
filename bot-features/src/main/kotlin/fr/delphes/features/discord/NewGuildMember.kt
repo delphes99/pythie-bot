@@ -9,7 +9,7 @@ import fr.delphes.feature.Feature
 
 class NewGuildMember(
     val newGuildMember: (NewGuildMember) -> List<OutgoingEvent>
-) : Feature {
+) : Feature<NewGuildMemberDescription> {
     override fun description() = NewGuildMemberDescription()
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

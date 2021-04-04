@@ -16,7 +16,7 @@ class GameDescription(
     channel: TwitchChannel,
     commandTrigger: String,
     private val descriptions: Map<GameId, String>
-) : TwitchFeature(channel) {
+) : TwitchFeature<GameDescriptionDescription>(channel) {
     override fun description() = GameDescriptionDescription(channel.name)
 
     constructor(

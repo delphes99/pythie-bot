@@ -10,7 +10,7 @@ import io.ktor.application.Application
 
 class Statistics(
     private val channel: TwitchChannel
-) : Feature, HaveHttp {
+) : Feature<StatisticsDescription>, HaveHttp {
     override fun description() = StatisticsDescription()
 
     override val module: (Bot) -> Application.() -> Unit = {

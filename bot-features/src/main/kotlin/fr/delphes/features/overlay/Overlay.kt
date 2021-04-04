@@ -13,7 +13,7 @@ import fr.delphes.feature.HaveHttp
 import fr.delphes.twitch.TwitchChannel
 import io.ktor.application.Application
 
-class Overlay(private val channel: TwitchChannel) : Feature, HaveHttp {
+class Overlay(private val channel: TwitchChannel) : Feature<OverlayDescription>, HaveHttp {
     override fun description() = OverlayDescription()
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

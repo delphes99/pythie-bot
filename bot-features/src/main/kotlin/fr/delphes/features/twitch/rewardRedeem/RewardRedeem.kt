@@ -13,7 +13,7 @@ class RewardRedeem(
     channel: TwitchChannel,
     private val rewardConfiguration: WithRewardConfiguration,
     private val rewardRedeemResponse: (RewardRedemption) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
+) : TwitchFeature<RewardRedeemDescription>(channel) {
     override fun description() = RewardRedeemDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

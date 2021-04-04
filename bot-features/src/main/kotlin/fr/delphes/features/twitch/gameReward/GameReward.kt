@@ -20,7 +20,7 @@ import fr.delphes.twitch.api.reward.WithRewardConfiguration
 class GameReward(
     channel: TwitchChannel,
     private val gameRewards: Map<GameId, List<RewardConfiguration>>
-) : TwitchFeature(channel) {
+) : TwitchFeature<GameRewardDescription>(channel) {
     override fun description() = GameRewardDescription(channel.name)
 
     constructor(

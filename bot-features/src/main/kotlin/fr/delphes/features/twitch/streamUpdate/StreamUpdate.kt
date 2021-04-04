@@ -12,7 +12,7 @@ import fr.delphes.twitch.TwitchChannel
 class StreamUpdate(
     channel: TwitchChannel,
     private val handleChanges: (List<StreamChanges>) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
+) : TwitchFeature<StreamUpdateDescription>(channel) {
     override fun description() = StreamUpdateDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

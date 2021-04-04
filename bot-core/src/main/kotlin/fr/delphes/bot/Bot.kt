@@ -15,7 +15,7 @@ import kotlinx.serialization.modules.SerializersModule
 class Bot(
     val publicUrl: String,
     val configFilepath: String,
-    val features: List<Feature>,
+    val features: List<Feature<*>>,
     val featureSerializationModule: SerializersModule
 ) {
     private val _connectors = mutableListOf<Connector>()

@@ -11,7 +11,7 @@ import fr.delphes.twitch.TwitchChannel
 class BitCheer(
     channel: TwitchChannel,
     val bitCheeredResponse: (BitCheered) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
+) : TwitchFeature<BitCheerDescription>(channel) {
     override fun description() = BitCheerDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

@@ -20,13 +20,11 @@ class Command(
     clock: Clock = SystemClock,
     cooldown: Duration? = null,
     responses: (CommandAsked) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
-    override fun description(): FeatureDescription {
-        return CommandDescription(
-            channel.name,
-            trigger
-        )
-    }
+) : TwitchFeature<CommandDescription>(channel) {
+    override fun description() = CommandDescription(
+        channel.name,
+        trigger
+    )
 
     override fun registerHandlers(eventHandlers: EventHandlers) {
         eventHandlers.addHandler(commandHandler)

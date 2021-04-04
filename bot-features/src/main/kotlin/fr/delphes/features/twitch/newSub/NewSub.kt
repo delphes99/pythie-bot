@@ -11,7 +11,7 @@ import fr.delphes.connector.twitch.incomingEvent.NewSub as NewSubEvent
 class NewSub(
     channel: TwitchChannel,
     val newSubResponse: (NewSubEvent) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
+) : TwitchFeature<NewSubDescription>(channel) {
     override fun description() = NewSubDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

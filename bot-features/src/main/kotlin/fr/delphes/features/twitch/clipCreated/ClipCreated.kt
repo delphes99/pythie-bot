@@ -11,7 +11,7 @@ import fr.delphes.twitch.TwitchChannel
 class ClipCreated(
     channel: TwitchChannel,
     val clipCreatedResponse: (ClipCreated) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
+) : TwitchFeature<ClipCreatedDescription>(channel) {
     override fun description() = ClipCreatedDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

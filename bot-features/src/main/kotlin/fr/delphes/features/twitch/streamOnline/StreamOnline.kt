@@ -11,7 +11,7 @@ import fr.delphes.connector.twitch.incomingEvent.StreamOnline as StreamOnlineEve
 class StreamOnline(
     channel: TwitchChannel,
     val streamOnlineResponse: (StreamOnlineEvent) -> List<OutgoingEvent>
-) : TwitchFeature(channel) {
+) : TwitchFeature<StreamOnlineDescription>(channel) {
     override fun description() = StreamOnlineDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {
