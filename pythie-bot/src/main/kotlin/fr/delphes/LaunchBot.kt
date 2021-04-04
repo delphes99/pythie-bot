@@ -9,7 +9,10 @@ import fr.delphes.configuration.channel.delphestestFeatures
 import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.twitch.TwitchConnector
+import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.features.FeatureConfiguration
+import fr.delphes.features.twitch.command.EditableCommand
+import fr.delphes.features.twitch.command.EditableCommandConfiguration
 import kotlinx.serialization.InternalSerializationApi
 
 @InternalSerializationApi
@@ -27,6 +30,16 @@ fun main() {
             delphes99Features,
             delphestestFeatures
         ).flatten(),
+        listOf(
+            EditableCommand(
+                EditableCommandConfiguration(
+                    "delphes99",
+                    "!commandeTest",
+                    0,
+                    SendMessageBuilder("test !", "delphes99")
+                )
+            )
+        ),
         FeatureConfiguration.serializersModule
     )
 

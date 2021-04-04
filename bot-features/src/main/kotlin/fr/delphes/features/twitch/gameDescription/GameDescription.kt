@@ -3,7 +3,7 @@ package fr.delphes.features.twitch.gameDescription
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchConnector
-import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.NonEditableTwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.command.CommandHandler
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
@@ -16,7 +16,7 @@ class GameDescription(
     channel: TwitchChannel,
     commandTrigger: String,
     private val descriptions: Map<GameId, String>
-) : TwitchFeature<GameDescriptionDescription>(channel) {
+) : NonEditableTwitchFeature<GameDescriptionDescription>(channel) {
     override fun description() = GameDescriptionDescription(channel.name)
 
     constructor(

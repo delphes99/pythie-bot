@@ -13,11 +13,12 @@ import java.time.LocalDateTime
 class SimpleCommandHandler(
     val channel: TwitchChannel,
     val command: Command,
-    private var lastActivation: LocalDateTime = LocalDateTime.MIN,
     private val clock: Clock = SystemClock,
     private val cooldown: Duration? = null,
     private val responses: (CommandAsked) -> List<OutgoingEvent>
 ) : TwitchEventHandler<CommandAsked>(channel) {
+    private var lastActivation: LocalDateTime = LocalDateTime.MIN
+
     override suspend fun handleIfGoodChannel(event: CommandAsked, bot: Bot): List<OutgoingEvent> {
         return event.isFor(channel) {
             if(event.command == command &&

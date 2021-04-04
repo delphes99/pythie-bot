@@ -10,5 +10,6 @@ import java.util.UUID
 data class CommandDescription(
     override val channel: String,
     val trigger: String,
+    val cooldown: Long,
     override val id: String = UUID.randomUUID().toString()
 ) : TwitchFeatureDescription

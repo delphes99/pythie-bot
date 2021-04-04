@@ -5,7 +5,7 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
-import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.NonEditableTwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.command.CommandHandler
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
@@ -28,7 +28,7 @@ class VOTH(
     override val stateRepository: StateRepository<VOTHState>,
     override val state: VOTHState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock
-) : TwitchFeature<VOTHDescription>(channel), HavePersistantState<VOTHState> {
+) : NonEditableTwitchFeature<VOTHDescription>(channel), HavePersistantState<VOTHState> {
     override fun description() = VOTHDescription(
         channel.name,
         configuration.reward.rewardConfiguration.title,

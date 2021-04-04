@@ -1,11 +1,14 @@
 package fr.delphes.features
 
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.feature.FeatureDescription
 import fr.delphes.features.discord.NewGuildMemberDescription
 import fr.delphes.features.overlay.OverlayDescription
 import fr.delphes.features.twitch.bitCheer.BitCheerDescription
 import fr.delphes.features.twitch.clipCreated.ClipCreatedDescription
 import fr.delphes.features.twitch.command.CommandDescription
+import fr.delphes.features.twitch.command.EditableCommandConfiguration
 import fr.delphes.features.twitch.commandList.CommandListDescription
 import fr.delphes.features.twitch.endCredits.EndCreditsDescription
 import fr.delphes.features.twitch.gameDescription.GameDescriptionDescription
@@ -24,6 +27,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.SerializersModuleBuilder
 import kotlinx.serialization.serializer
 
+//TODO split into connectors
 object FeatureConfiguration {
     @InternalSerializationApi
     val serializersModule = SerializersModule {
@@ -48,10 +52,18 @@ object FeatureConfiguration {
         registerFeatureConfiguration<StreamOnlineDescription>()
         registerFeatureConfiguration<StreamUpdateDescription>()
         registerFeatureConfiguration<VOTHDescription>()
+        registerFeatureConfiguration<EditableCommandConfiguration>()
+
+        registerOutgoingMessageBuilder<SendMessageBuilder>()
     }
 
     @InternalSerializationApi
-    inline fun <reified T: FeatureDescription> SerializersModuleBuilder.registerFeatureConfiguration() {
+    inline fun <reified T : FeatureDescription> SerializersModuleBuilder.registerFeatureConfiguration() {
         polymorphic(FeatureDescription::class, T::class, T::class.serializer())
+    }
+
+    @InternalSerializationApi
+    inline fun <reified T : OutgoingEventBuilder> SerializersModuleBuilder.registerOutgoingMessageBuilder() {
+        polymorphic(OutgoingEventBuilder::class, T::class, T::class.serializer())
     }
 }

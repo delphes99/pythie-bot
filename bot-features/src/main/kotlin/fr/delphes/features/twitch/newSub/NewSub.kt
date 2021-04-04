@@ -4,14 +4,14 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
-import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.NonEditableTwitchFeature
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.connector.twitch.incomingEvent.NewSub as NewSubEvent
 
 class NewSub(
     channel: TwitchChannel,
     val newSubResponse: (NewSubEvent) -> List<OutgoingEvent>
-) : TwitchFeature<NewSubDescription>(channel) {
+) : NonEditableTwitchFeature<NewSubDescription>(channel) {
     override fun description() = NewSubDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

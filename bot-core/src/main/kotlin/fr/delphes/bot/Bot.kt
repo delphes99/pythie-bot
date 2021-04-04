@@ -4,7 +4,9 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
+import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.Feature
+import fr.delphes.feature.NonEditableFeature
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
@@ -15,7 +17,8 @@ import kotlinx.serialization.modules.SerializersModule
 class Bot(
     val publicUrl: String,
     val configFilepath: String,
-    val features: List<Feature<*>>,
+    val features: List<NonEditableFeature<*>>,
+    val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
     val featureSerializationModule: SerializersModule
 ) {
     private val _connectors = mutableListOf<Connector>()

@@ -8,12 +8,12 @@ import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.incomingEvent.BitCheered
 import fr.delphes.connector.twitch.incomingEvent.NewFollow
 import fr.delphes.connector.twitch.incomingEvent.NewSub
-import fr.delphes.feature.Feature
 import fr.delphes.feature.HaveHttp
+import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
 import io.ktor.application.Application
 
-class Overlay(private val channel: TwitchChannel) : Feature<OverlayDescription>, HaveHttp {
+class Overlay(private val channel: TwitchChannel) : NonEditableFeature<OverlayDescription>, HaveHttp {
     override fun description() = OverlayDescription()
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

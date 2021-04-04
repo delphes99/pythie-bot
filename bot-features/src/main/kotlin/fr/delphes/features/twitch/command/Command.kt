@@ -1,29 +1,27 @@
 package fr.delphes.features.twitch.command
 
-import fr.delphes.connector.twitch.command.SimpleCommandHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.NonEditableTwitchFeature
 import fr.delphes.connector.twitch.command.Command
+import fr.delphes.connector.twitch.command.SimpleCommandHandler
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
-import fr.delphes.feature.FeatureDescription
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import java.time.Duration
-import java.time.LocalDateTime
 
 class Command(
     channel: TwitchChannel,
     private val trigger: String,
-    lastActivation: LocalDateTime = LocalDateTime.MIN,
     clock: Clock = SystemClock,
-    cooldown: Duration? = null,
+    private val cooldown: Duration? = null,
     responses: (CommandAsked) -> List<OutgoingEvent>
-) : TwitchFeature<CommandDescription>(channel) {
+) : NonEditableTwitchFeature<CommandDescription>(channel) {
     override fun description() = CommandDescription(
         channel.name,
-        trigger
+        trigger,
+        cooldown?.let { cooldown.toSeconds() } ?: 0
     )
 
     override fun registerHandlers(eventHandlers: EventHandlers) {
@@ -33,7 +31,6 @@ class Command(
     private val commandHandler = SimpleCommandHandler(
         channel,
         Command(trigger),
-        lastActivation,
         clock,
         cooldown,
         responses

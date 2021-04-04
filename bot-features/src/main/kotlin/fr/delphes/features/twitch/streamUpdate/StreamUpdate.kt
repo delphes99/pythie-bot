@@ -4,7 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
-import fr.delphes.connector.twitch.TwitchFeature
+import fr.delphes.connector.twitch.NonEditableTwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.twitch.TwitchChannel
@@ -12,7 +12,7 @@ import fr.delphes.twitch.TwitchChannel
 class StreamUpdate(
     channel: TwitchChannel,
     private val handleChanges: (List<StreamChanges>) -> List<OutgoingEvent>
-) : TwitchFeature<StreamUpdateDescription>(channel) {
+) : NonEditableTwitchFeature<StreamUpdateDescription>(channel) {
     override fun description() = StreamUpdateDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {
