@@ -1,3 +1,3 @@
 export enum FeatureType {
-    TWITCH_COMMAND = "twitch-command"
+  TWITCH_COMMAND_EDITABLE = "twitch-command-editable"
 }

@@ -15,32 +15,35 @@
     </template>
   </card>
   <Modal v-model:is-open="isSettingOpened" :title="feature.id">
-    <div v-if="feature.channel">Channel : {{ feature.channel }}</div>
-    <div v-if="feature.trigger">Command : {{ feature.trigger }}</div>
-    <div class="flex justify-center">
-      <label class="w-11/12">
-        <textarea class="w-full" v-text="feature"></textarea>
-      </label>
-    </div>
+    <component :is="componentEdit" :feature="feature"></component>
   </Modal>
 </template>
 
 <script lang="ts">
 import Card from "@/common/components/common/Card.vue";
-
-import { defineComponent, PropType, ref } from "vue";
-import { FeatureType } from "@/twitch/feature/type/FeatureTypeEnum.ts";
-import Feature from "@/twitch/feature/type/Feature.ts";
 import Modal from "@/common/components/common/Modal.vue";
 import FeatureDefaultCard from "@/features/components/FeatureDefaultCard.vue";
 import FeatureTwitchCommandCard from "@/twitch/feature/component/FeatureTwitchCommandCard.vue";
+import FeatureTwitchCommandEdit from "@/twitch/feature/component/FeatureTwitchCommandEdit.vue";
+import Feature from "@/twitch/feature/type/Feature.ts";
+import { FeatureType } from "@/twitch/feature/type/FeatureTypeEnum.ts";
+import { defineComponent, PropType, ref } from "vue";
 
 function componentToCard(feature: Feature) {
   switch (feature.type) {
-    case FeatureType.TWITCH_COMMAND:
+    case FeatureType.TWITCH_COMMAND_EDITABLE:
       return FeatureTwitchCommandCard;
     default:
       return FeatureDefaultCard;
+  }
+}
+
+function componentToEditPopup(feature: Feature) {
+  switch (feature.type) {
+    case FeatureType.TWITCH_COMMAND_EDITABLE:
+      return FeatureTwitchCommandEdit;
+    default:
+      return null;
   }
 }
 
@@ -63,6 +66,7 @@ export default defineComponent({
     const featureType = () => props.feature.type;
 
     const component = componentToCard(props.feature);
+    const componentEdit = componentToEditPopup(props.feature);
 
     const openSettings = () => (isSettingOpened.value = true);
     const icon = props.feature.editable
@@ -74,6 +78,7 @@ export default defineComponent({
       featureType,
       openSettings,
       component,
+      componentEdit,
       icon
     };
   }
