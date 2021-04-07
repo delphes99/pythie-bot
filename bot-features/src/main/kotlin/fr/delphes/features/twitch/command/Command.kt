@@ -2,22 +2,23 @@ package fr.delphes.features.twitch.command
 
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.connector.twitch.NonEditableTwitchFeature
+import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.command.SimpleCommandHandler
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
+import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import java.time.Duration
 
 class Command(
-    channel: TwitchChannel,
+    override val channel: TwitchChannel,
     private val trigger: String,
     clock: Clock = SystemClock,
     private val cooldown: Duration? = null,
     responses: (CommandAsked) -> List<OutgoingEvent>
-) : NonEditableTwitchFeature<CommandDescription>(channel) {
+) : NonEditableFeature<CommandDescription>, TwitchFeature {
     override fun description() = CommandDescription(
         channel.name,
         trigger,

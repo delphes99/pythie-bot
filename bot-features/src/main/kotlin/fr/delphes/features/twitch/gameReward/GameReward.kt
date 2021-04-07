@@ -4,12 +4,13 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
-import fr.delphes.connector.twitch.NonEditableTwitchFeature
+import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
+import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -18,9 +19,9 @@ import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
 class GameReward(
-    channel: TwitchChannel,
+    override val channel: TwitchChannel,
     private val gameRewards: Map<GameId, List<RewardConfiguration>>
-) : NonEditableTwitchFeature<GameRewardDescription>(channel) {
+) : NonEditableFeature<GameRewardDescription>, TwitchFeature {
     override fun description() = GameRewardDescription(channel.name)
 
     constructor(

@@ -5,7 +5,7 @@ import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
-import fr.delphes.connector.twitch.NonEditableTwitchFeature
+import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.command.CommandHandler
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
@@ -16,6 +16,7 @@ import fr.delphes.connector.twitch.outgoingEvent.PromoteVIP
 import fr.delphes.connector.twitch.outgoingEvent.RemoveVIP
 import fr.delphes.connector.twitch.outgoingEvent.RetrieveVip
 import fr.delphes.feature.HavePersistantState
+import fr.delphes.feature.NonEditableFeature
 import fr.delphes.feature.StateRepository
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.Clock
@@ -23,12 +24,12 @@ import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
 
 class VOTH(
-    channel: TwitchChannel,
+    override val channel: TwitchChannel,
     private val configuration: VOTHConfiguration,
     override val stateRepository: StateRepository<VOTHState>,
     override val state: VOTHState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock
-) : NonEditableTwitchFeature<VOTHDescription>(channel), HavePersistantState<VOTHState> {
+) : NonEditableFeature<VOTHDescription>, TwitchFeature, HavePersistantState<VOTHState> {
     override fun description() = VOTHDescription(
         channel.name,
         configuration.reward.rewardConfiguration.title,

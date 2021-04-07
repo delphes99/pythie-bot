@@ -2,16 +2,17 @@ package fr.delphes.features.twitch.commandList
 
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.connector.twitch.NonEditableTwitchFeature
+import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.command.CommandHandler
+import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
 
 class CommandList(
-    channel: TwitchChannel,
+    override val channel: TwitchChannel,
     private val triggerMessage: String,
     displayCommands: (List<String>) -> List<OutgoingEvent>
-) : NonEditableTwitchFeature<CommandListDescription>(channel) {
+) : NonEditableFeature<CommandListDescription>, TwitchFeature {
     override fun description() = CommandListDescription(channel.name, triggerMessage)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

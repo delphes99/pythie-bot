@@ -3,12 +3,13 @@ package fr.delphes.features.twitch.streamerHighlight
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.connector.twitch.NonEditableTwitchFeature
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.TwitchEventHandler
+import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived
 import fr.delphes.connector.twitch.user.UserInfos
 import fr.delphes.feature.HavePersistantState
+import fr.delphes.feature.NonEditableFeature
 import fr.delphes.feature.StateRepository
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
@@ -18,13 +19,13 @@ import kotlinx.coroutines.runBlocking
 import java.time.Duration
 
 class StreamerHighlightFeature(
-    channel: TwitchChannel,
+    override val channel: TwitchChannel,
     private val highlightExpiration: Duration,
     private val response: (MessageReceived, UserInfos) -> List<OutgoingEvent>,
     override val stateRepository: StateRepository<StreamerHighlightState>,
     override val state: StreamerHighlightState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock,
-) : NonEditableTwitchFeature<StreamerHighlightDescription>(channel), HavePersistantState<StreamerHighlightState> {
+) : NonEditableFeature<StreamerHighlightDescription>, TwitchFeature, HavePersistantState<StreamerHighlightState> {
     override fun description() = StreamerHighlightDescription(channel.name)
 
     override fun registerHandlers(eventHandlers: EventHandlers) {

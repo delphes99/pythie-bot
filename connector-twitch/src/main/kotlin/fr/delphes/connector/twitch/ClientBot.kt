@@ -51,9 +51,9 @@ class ClientBot(
 
     fun commandsFor(channel: TwitchChannel): List<Command> {
         return features
-            .filterIsInstance<NonEditableTwitchFeature<*>>()
+            .filterIsInstance<TwitchFeature>()
             .filter { feature -> feature.channel == channel }
-            .flatMap(NonEditableTwitchFeature<*>::commands)
+            .flatMap(TwitchFeature::commands)
 
         //TODO editable command
     }
