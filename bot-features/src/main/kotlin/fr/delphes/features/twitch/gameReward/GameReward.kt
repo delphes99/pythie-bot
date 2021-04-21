@@ -37,9 +37,11 @@ class GameReward(
 
     //TODO change visibility on start of the bot when the stream is already started
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(StreamOnlineHandler())
-        eventHandlers.addHandler(StreamChangedHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(StreamOnlineHandler())
+        handlers.addHandler(StreamChangedHandler())
+        handlers
     }
 
     inner class StreamOnlineHandler : TwitchEventHandler<StreamOnline>(channel) {

@@ -13,7 +13,6 @@ import fr.delphes.connector.twitch.outgoingEvent.RetrieveVip
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.TestClock
 import fr.delphes.features.TestStateRepository
-import fr.delphes.features.handle
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -23,6 +22,7 @@ import fr.delphes.twitch.api.user.User
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -50,29 +50,34 @@ internal class VOTHTest {
     @DisplayName("RewardRedemption")
     inner class RewardRedemptionHandlers {
         @Test
-        internal suspend fun `promote vip`() {
+        internal fun `promote vip`() {
             val voth = voth(VOTHState())
 
-            voth.handle(rewardRedemption, clientBot)
+            runBlocking {
+                voth.handleIncomingEvent(rewardRedemption, clientBot)
+            }
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now, 50))
-            assertThat(voth.vothChanged).isTrue()
+            assertThat(voth.vothChanged).isTrue
         }
 
         @Test
-        internal suspend fun `don't promote vip if already VOTH`() {
+        internal fun `don't promote vip if already VOTH`() {
             val state = VOTHState(currentVip = VOTHWinner("user", now.minusMinutes(1), 50))
             val voth = voth(state)
 
-            voth.handle(rewardRedemption, clientBot)
+            runBlocking {
+                voth.handleIncomingEvent(rewardRedemption, clientBot)
+            }
             assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now.minusMinutes(1), 50))
-            assertThat(voth.vothChanged).isFalse()
+            assertThat(voth.vothChanged).isFalse
         }
 
         @Test
-        internal suspend fun `redeem launch vip list`() {
+        internal fun `redeem launch vip list`() {
             val voth = voth()
-
-            val messages = voth.handle(rewardRedemption, clientBot)
+            val messages = runBlocking {
+                voth.handleIncomingEvent(rewardRedemption, clientBot)
+            }
             assertThat(messages).contains(RetrieveVip(channel))
         }
     }
@@ -81,10 +86,12 @@ internal class VOTHTest {
     @DisplayName("VIPListReceived")
     inner class VipListReceivedHandlers {
         @Test
-        internal suspend fun `remove all old vip`() {
+        internal fun `remove all old vip`() {
             val voth = voth()
 
-            val messages = voth.handle(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+            val messages = runBlocking {
+                voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+            }
             assertThat(messages).contains(
                 RemoveVIP("oldVip", channel),
                 RemoveVIP("oldVip2", channel)
@@ -92,51 +99,59 @@ internal class VOTHTest {
         }
 
         @Test
-        internal suspend fun `promote vip`() {
+        internal fun `promote vip`() {
             val state = VOTHState(true, VOTHWinner("newVip", now.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.handle(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+            val messages = runBlocking {
+                voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+            }
             assertThat(messages).contains(
                 PromoteVIP("newVip", channel)
             )
         }
 
         @Test
-        internal suspend fun `do nothing when on vip change`() {
+        internal fun `do nothing when on vip change`() {
             val state = VOTHState(false, VOTHWinner("user", now.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = voth.handle(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+            val messages = runBlocking {
+                voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+            }
             assertThat(messages).isEmpty()
         }
     }
 
     @Test
-    internal suspend fun `pause when stream goes offline`() {
+    internal fun `pause when stream goes offline`() {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = voth.handle(StreamOffline(channel), clientBot)
+        val messages = runBlocking {
+            voth.handleIncomingEvent(StreamOffline(channel), clientBot)
+        }
 
         verify(exactly = 1) { state.pause(any()) }
         assertThat(messages).isEmpty()
     }
 
     @Test
-    internal suspend fun `unpause when stream goes online`() {
+    internal fun `unpause when stream goes online`() {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
         val incomingEvent = StreamOnline(channel, "title", now, Game(GameId("gameId"), "game title"), "thumbnailUrl")
-        val messages = voth.handle(incomingEvent, clientBot)
+        val messages = runBlocking {
+            voth.handleIncomingEvent(incomingEvent, clientBot)
+        }
 
         verify(exactly = 1) { state.unpause(any()) }
         assertThat(messages).isEmpty()
     }
 
     @Test
-    internal suspend fun `display top 3`() {
+    internal fun `display top 3`() {
         val state = mockk<VOTHState>(relaxed = true)
         every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
 
@@ -154,7 +169,9 @@ internal class VOTHTest {
             clock = clock
         )
 
-        val events = voth.handle(CommandAsked(channel, Command("!top3"), User("user")), mockk())
+        val events = runBlocking {
+            voth.handleIncomingEvent(CommandAsked(channel, Command("!top3"), User("user")), mockk())
+        }
 
         assertThat(events).contains(SendMessage("user1, user2, user3", channel))
     }

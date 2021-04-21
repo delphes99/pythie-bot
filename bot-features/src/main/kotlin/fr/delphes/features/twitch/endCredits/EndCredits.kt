@@ -10,7 +10,7 @@ import io.ktor.application.Application
 class EndCredits : NonEditableFeature<EndCreditsDescription>, HaveHttp {
     override fun description() = EndCreditsDescription()
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {}
+    override val eventHandlers = EventHandlers()
 
     override val module: (Bot) -> Application.() -> Unit = {
         val twitchConnector = it.connectors.filterIsInstance<TwitchConnector>().first()

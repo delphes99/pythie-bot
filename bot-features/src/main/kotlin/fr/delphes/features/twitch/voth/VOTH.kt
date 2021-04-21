@@ -36,33 +36,37 @@ class VOTH(
         configuration.statsCommand,
         configuration.top3Command
     )
+    private val statsCommand = Command(configuration.statsCommand)
+    private val top3Command = Command(configuration.top3Command)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(VOTHRewardRedemptionHandler())
-        eventHandlers.addHandler(VOTHVIPListReceivedHandler())
-        eventHandlers.addHandler(StreamOnlineHandler())
-        eventHandlers.addHandler(StreamOfflineHandler())
-        eventHandlers.addHandler(commandStatsHandler)
-        eventHandlers.addHandler(commandTop3Handler)
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(VOTHRewardRedemptionHandler())
+        handlers.addHandler(VOTHVIPListReceivedHandler())
+        handlers.addHandler(StreamOnlineHandler())
+        handlers.addHandler(StreamOfflineHandler())
+        handlers.addHandler(buildCommandStatsHandler())
+        handlers.addHandler(buildCommandTop3Handler())
+        handlers
     }
 
-    private val commandStatsHandler = CommandHandler(
+    private fun buildCommandStatsHandler() = CommandHandler(
         channel,
-        Command(configuration.statsCommand)
+        statsCommand
     ) { user, _ ->
         val stats = state.getReignsFor(user, clock.now())
         configuration.statsResponse(stats)
     }
 
-    private val commandTop3Handler = CommandHandler(
+    private fun buildCommandTop3Handler() = CommandHandler(
         channel,
-        Command(configuration.top3Command)
+        top3Command
     ) { _, _ ->
         val tops = state.top3(clock.now())
         configuration.top3Response(tops.getOrNull(0), tops.getOrNull(1), tops.getOrNull(2))
     }
 
-    override val commands: Iterable<Command> = listOf(commandStatsHandler.command, commandTop3Handler.command)
+    override val commands: Iterable<Command> = listOf(statsCommand, top3Command)
 
     internal val currentVip get() = state.currentVip
     internal val vothChanged get() = state.vothChanged

@@ -15,8 +15,10 @@ class StreamOnline(
 ) : NonEditableFeature<StreamOnlineDescription>, TwitchFeature {
     override fun description() = StreamOnlineDescription(channel.name)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(StreamOnlineHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(StreamOnlineHandler())
+        handlers
     }
 
     inner class StreamOnlineHandler : TwitchEventHandler<StreamOnlineEvent>(channel) {

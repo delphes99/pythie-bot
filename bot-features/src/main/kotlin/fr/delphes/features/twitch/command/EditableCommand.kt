@@ -15,17 +15,24 @@ class EditableCommand(
 
     override fun description() = configuration
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(commandHandler)
-    }
-    private val commandHandler = SimpleCommandHandler(
-        channel,
-        Command(configuration.trigger),
-        cooldown = Duration.ofSeconds(configuration.cooldown),
-        responses = {
-            configuration.responses.map { it.build() }
-        }
-    )
+    val command = Command(configuration.trigger)
 
-    override val commands: Iterable<Command> = listOf(commandHandler.command)
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(buildCommandHandler())
+        handlers
+    }
+
+    private fun buildCommandHandler(): SimpleCommandHandler {
+        return SimpleCommandHandler(
+            channel,
+            command,
+            cooldown = Duration.ofSeconds(configuration.cooldown),
+            responses = {
+                configuration.responses.map { it.build() }
+            }
+        )
+    }
+
+    override val commands: Iterable<Command> = listOf(command)
 }

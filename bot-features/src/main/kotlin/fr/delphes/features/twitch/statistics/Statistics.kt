@@ -18,5 +18,5 @@ class Statistics(
         StatisticsModule(channel, twitchConnector)
     }
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {}
+    override val eventHandlers = EventHandlers()
 }

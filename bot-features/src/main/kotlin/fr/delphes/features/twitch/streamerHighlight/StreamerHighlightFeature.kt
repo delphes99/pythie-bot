@@ -28,8 +28,10 @@ class StreamerHighlightFeature(
 ) : NonEditableFeature<StreamerHighlightDescription>, TwitchFeature, HavePersistantState<StreamerHighlightState> {
     override fun description() = StreamerHighlightDescription(channel.name)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(MessageReceivedHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(MessageReceivedHandler())
+        handlers
     }
 
     inner class MessageReceivedHandler : TwitchEventHandler<MessageReceived>(channel) {

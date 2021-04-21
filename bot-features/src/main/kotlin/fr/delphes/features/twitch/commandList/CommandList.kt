@@ -11,21 +11,25 @@ import fr.delphes.twitch.TwitchChannel
 class CommandList(
     override val channel: TwitchChannel,
     private val triggerMessage: String,
-    displayCommands: (List<String>) -> List<OutgoingEvent>
+    private val displayCommands: (List<String>) -> List<OutgoingEvent>
 ) : NonEditableFeature<CommandListDescription>, TwitchFeature {
     override fun description() = CommandListDescription(channel.name, triggerMessage)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(commandHandler)
+    private val command = Command(triggerMessage)
+
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(buildCommandHandler())
+        handlers
     }
 
-    private val commandHandler = CommandHandler(
+    private fun buildCommandHandler() = CommandHandler(
         channel,
-        Command(triggerMessage)
+        command
     ) { _, twitchConnector ->
         twitchConnector.whenRunning(
             whenRunning = {
-                val commands = this.clientBot.commandsFor(channel).map(Command::triggerMessage)
+                val commands = clientBot.commandsFor(this@CommandList.channel).map(Command::triggerMessage)
 
                 displayCommands(commands)
             },
@@ -35,5 +39,5 @@ class CommandList(
         )
     }
 
-    override val commands: Iterable<Command> = listOf(commandHandler.command)
+    override val commands: Iterable<Command> = listOf(command)
 }

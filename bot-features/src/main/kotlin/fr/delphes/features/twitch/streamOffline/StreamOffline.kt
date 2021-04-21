@@ -15,8 +15,10 @@ class StreamOffline(
 ) : NonEditableFeature<StreamOfflineDescription>, TwitchFeature {
     override fun description() = StreamOfflineDescription(channel.name)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(StreamOfflineHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(StreamOfflineHandler())
+        handlers
     }
 
     inner class StreamOfflineHandler : TwitchEventHandler<StreamOfflineEvent>(channel) {

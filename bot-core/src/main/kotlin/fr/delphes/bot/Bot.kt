@@ -1,11 +1,10 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.connector.Connector
-import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.EditableFeature
-import fr.delphes.feature.Feature
 import fr.delphes.feature.NonEditableFeature
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -19,13 +18,12 @@ class Bot(
     val configFilepath: String,
     val features: List<NonEditableFeature<*>>,
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
-    val featureSerializationModule: SerializersModule
+    val featureSerializationModule: SerializersModule,
 ) {
     private val _connectors = mutableListOf<Connector>()
     val connectors get(): List<Connector> = _connectors
 
     val alerts = Channel<Alert>()
-    private val eventHandlers = EventHandlers()
 
     val serializer = Json {
         ignoreUnknownKeys = true
@@ -36,19 +34,20 @@ class Bot(
     }
 
     suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
-        eventHandlers.handleEvent(incomingEvent, this).forEach { event ->
-            _connectors.forEach { connector ->
-                connector.execute(event)
-            }
+        listOf(features, editableFeatures)
+            .flatten()
+            .flatMap { feature -> feature.handleIncomingEvent(incomingEvent, this) }
+            .forEach { event -> handleOutgoingEvent(event) }
+    }
+
+    private suspend fun handleOutgoingEvent(event: OutgoingEvent) {
+        _connectors.forEach { connector ->
+            connector.execute(event)
         }
     }
 
     fun init(vararg connectorsToAdd: Connector) {
         _connectors.addAll(connectorsToAdd)
-
-        features.forEach { feature ->
-            feature.registerHandlers(eventHandlers)
-        }
 
         WebServer(
             bot = this,

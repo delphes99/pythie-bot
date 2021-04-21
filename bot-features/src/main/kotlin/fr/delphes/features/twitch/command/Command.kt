@@ -15,9 +15,9 @@ import java.time.Duration
 class Command(
     override val channel: TwitchChannel,
     private val trigger: String,
-    clock: Clock = SystemClock,
+    private val clock: Clock = SystemClock,
     private val cooldown: Duration? = null,
-    responses: (CommandAsked) -> List<OutgoingEvent>
+    private val responses: (CommandAsked) -> List<OutgoingEvent>
 ) : NonEditableFeature<CommandDescription>, TwitchFeature {
     override fun description() = CommandDescription(
         channel.name,
@@ -25,17 +25,21 @@ class Command(
         cooldown?.let { cooldown.toSeconds() } ?: 0
     )
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(commandHandler)
+    private val command = Command(trigger)
+
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(buildCommandHandler())
+        handlers
     }
 
-    private val commandHandler = SimpleCommandHandler(
+    private fun buildCommandHandler() = SimpleCommandHandler(
         channel,
-        Command(trigger),
+        command,
         clock,
         cooldown,
         responses
     )
 
-    override val commands: Iterable<Command> = listOf(commandHandler.command)
+    override val commands: Iterable<Command> = listOf(command)
 }

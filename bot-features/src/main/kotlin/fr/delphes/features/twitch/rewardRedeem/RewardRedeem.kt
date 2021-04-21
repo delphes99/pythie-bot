@@ -17,8 +17,10 @@ class RewardRedeem(
 ) : NonEditableFeature<RewardRedeemDescription>, TwitchFeature {
     override fun description() = RewardRedeemDescription(channel.name)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(RewardRedemptionHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(RewardRedemptionHandler())
+        handlers
     }
 
     inner class RewardRedemptionHandler : TwitchEventHandler<RewardRedemption>(channel) {

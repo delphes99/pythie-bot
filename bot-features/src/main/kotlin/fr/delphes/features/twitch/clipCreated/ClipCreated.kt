@@ -15,8 +15,10 @@ class ClipCreated(
 ) : NonEditableFeature<ClipCreatedDescription>, TwitchFeature {
     override fun description() = ClipCreatedDescription(channel.name)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(ClipCreatedHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(ClipCreatedHandler())
+        handlers
     }
 
     inner class ClipCreatedHandler : TwitchEventHandler<ClipCreated>(channel) {

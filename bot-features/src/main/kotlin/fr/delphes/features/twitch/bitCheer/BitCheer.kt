@@ -15,8 +15,10 @@ class BitCheer(
 ) : NonEditableFeature<BitCheerDescription>, TwitchFeature {
     override fun description() = BitCheerDescription(channel.name)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(BitCheeredHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(BitCheeredHandler())
+        handlers
     }
 
     inner class BitCheeredHandler : TwitchEventHandler<BitCheered>(channel) {

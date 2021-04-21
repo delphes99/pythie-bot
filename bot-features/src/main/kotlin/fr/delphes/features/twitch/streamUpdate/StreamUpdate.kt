@@ -16,8 +16,10 @@ class StreamUpdate(
 ) : NonEditableFeature<StreamUpdateDescription>, TwitchFeature {
     override fun description() = StreamUpdateDescription(channel.name)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(StreamChangedHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(StreamChangedHandler())
+        handlers
     }
 
     inner class StreamChangedHandler : TwitchEventHandler<StreamChanged>(channel) {

@@ -18,20 +18,24 @@ class GameDescription(
     commandTrigger: String,
     private val descriptions: Map<GameId, String>
 ) : NonEditableFeature<GameDescriptionDescription>, TwitchFeature {
-    override fun description() = GameDescriptionDescription(channel.name)
-
     constructor(
         channel: TwitchChannel,
         commandTrigger: String,
         vararg descriptions: Pair<WithGameId, String>
     ) : this(channel, commandTrigger, mapOf(*descriptions).mapKeys { entry -> entry.key.gameId })
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(commandHandler)
+    override fun description() = GameDescriptionDescription(channel.name)
+
+    val command = Command(commandTrigger)
+
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(buildCommandHandler())
+        handlers
     }
 
-    private val commandHandler = CommandHandler(channel, Command(commandTrigger)) { _, twitchConnector ->  this.displayInfoFor(twitchConnector) }
-    override val commands: Iterable<Command> = listOf(commandHandler.command)
+    private fun buildCommandHandler() = CommandHandler(channel, command) { _, twitchConnector ->  this.displayInfoFor(twitchConnector) }
+    override val commands: Iterable<Command> = listOf(command)
 
     private suspend fun displayInfoFor(
         twitchConnector: TwitchConnector

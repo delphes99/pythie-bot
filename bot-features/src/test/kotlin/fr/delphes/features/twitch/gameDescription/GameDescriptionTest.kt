@@ -7,7 +7,6 @@ import fr.delphes.connector.twitch.TwitchState
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
-import fr.delphes.features.handle
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -40,7 +39,7 @@ internal class GameDescriptionTest {
         `current game is`(GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handle(commandAsked, bot)
+        val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 
         assertThat(outgoingEvents).contains(SendMessage("description", channel))
     }
@@ -51,7 +50,7 @@ internal class GameDescriptionTest {
         `current game is`(GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handle(commandAsked, bot)
+        val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 
         assertThat(outgoingEvents).contains(SendMessage("description", channel))
     }
@@ -62,7 +61,7 @@ internal class GameDescriptionTest {
         `current game is`(OTHER_GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handle(commandAsked, bot)
+        val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 
         assertThat(outgoingEvents).isEmpty()
     }

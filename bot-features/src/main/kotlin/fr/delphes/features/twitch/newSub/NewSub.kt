@@ -15,8 +15,10 @@ class NewSub(
 ) : NonEditableFeature<NewSubDescription>, TwitchFeature {
     override fun description() = NewSubDescription(channel.name)
 
-    override fun registerHandlers(eventHandlers: EventHandlers) {
-        eventHandlers.addHandler(NewSubHandler())
+    override val eventHandlers = run {
+        val handlers = EventHandlers()
+        handlers.addHandler(NewSubHandler())
+        handlers
     }
 
     inner class NewSubHandler : TwitchEventHandler<NewSubEvent>(channel) {

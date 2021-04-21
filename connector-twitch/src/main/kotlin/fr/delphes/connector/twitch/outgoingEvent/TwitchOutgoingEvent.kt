@@ -58,7 +58,7 @@ data class RemoveVIP(
     }
 }
 
-class RetrieveVip(
+data class RetrieveVip(
     override val channel: TwitchChannel
 ) : TwitchOutgoingEvent(channel) {
     override suspend fun executeOnTwitch(
