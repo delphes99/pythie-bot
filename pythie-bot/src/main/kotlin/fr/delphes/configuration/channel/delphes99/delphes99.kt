@@ -95,7 +95,7 @@ val delphes99Features = listOf(
         cooldown = Duration.ofMinutes(2),
         responses = {
             listOf(
-                SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot", channel)
+                SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !", channel)
             )
         }
     ),

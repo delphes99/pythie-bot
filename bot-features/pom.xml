@@ -25,6 +25,10 @@
         </dependency>
         <dependency>
             <groupId>fr.delphes</groupId>
+            <artifactId>connector-obs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>fr.delphes</groupId>
             <artifactId>connector-twitch</artifactId>
         </dependency>
         <!-- Tests -->

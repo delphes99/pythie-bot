@@ -8,6 +8,7 @@ import fr.delphes.configuration.channel.delphestestChannel
 import fr.delphes.configuration.channel.delphestestFeatures
 import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
+import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.features.FeatureConfiguration
@@ -53,6 +54,9 @@ fun main() {
         DiscordConnector(
             bot,
             configFilepath
-        )
+        ),
+        ObsConnector(
+            configFilepath
+        ),
     )
 }

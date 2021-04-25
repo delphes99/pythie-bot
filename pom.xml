@@ -14,6 +14,7 @@
         <module>utils</module>
         <module>bot-ui</module>
         <module>connector-discord</module>
+        <module>connector-obs</module>
         <module>connector-twitch</module>
         <module>bot-features</module>
     </modules>
@@ -103,6 +104,12 @@
             <dependency>
                 <groupId>fr.delphes</groupId>
                 <artifactId>connector-discord</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- Obs -->
+            <dependency>
+                <groupId>fr.delphes</groupId>
+                <artifactId>connector-obs</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

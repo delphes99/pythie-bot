@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>pythie-bot-parent</artifactId>
         <groupId>fr.delphes</groupId>
@@ -10,11 +10,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>connector-discord</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <name>connector-discord</name>
+    <artifactId>connector-obs</artifactId>
+    <name>connector-obs</name>
 
     <dependencies>
         <dependency>
@@ -24,12 +21,6 @@
         <dependency>
             <groupId>fr.delphes</groupId>
             <artifactId>bot-core</artifactId>
-        </dependency>
-
-        <!-- Discord -->
-        <dependency>
-            <groupId>net.dv8tion</groupId>
-            <artifactId>JDA</artifactId>
         </dependency>
 
         <!-- Http server -->
