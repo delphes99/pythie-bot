@@ -7,6 +7,7 @@
       <div
         class="flex flex-row-reverse items-center space-x-reverse space-x-3 h-16 px-5"
       >
+        <obs-status></obs-status>
         <twitch-status></twitch-status>
         <discord-status></discord-status>
       </div>
@@ -16,10 +17,11 @@
 
 <script lang="ts">
 import DiscordStatus from "@/discord/components/DiscordStatus.vue";
+import ObsStatus from "@/obs/components/ObsStatus.vue";
 import TwitchStatus from "@/twitch/components/TwitchStatus.vue";
 
 export default {
   name: `StatusBar`,
-  components: { TwitchStatus, DiscordStatus }
+  components: { ObsStatus, TwitchStatus, DiscordStatus }
 };
 </script>

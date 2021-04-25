@@ -1,11 +1,15 @@
 <template>
-  <panel title="Discord configuration">
+  <panel title="Obs configuration">
     <div class="grid grid-cols-2 gap-4 p-4">
-      <label for="discordOauth">Oauth bot token</label>
+      <label for="obs-ws-url">Obs-websocket URL</label>
+      <input v-model="url" type="text" id="obs-ws-url" class="border-b-2" />
+      <label for="obs-password">
+        Obs-websocket password (leave empty if no password)
+      </label>
       <input
-        v-model="oAuthToken"
+        v-model="password"
         type="password"
-        id="discordOauth"
+        id="obs-password"
         class="border-b-2"
       />
       <div class="flex col-span-2 justify-items-center justify-center">
@@ -26,16 +30,17 @@ import axios from "axios";
 import Panel from "@/common/components/common/Panel.vue";
 
 export default {
-  name: `DiscordConfiguration`,
+  name: `ObsConfiguration`,
   components: { Panel },
   setup() {
     const backendUrl = inject("backendUrl");
-    const oAuthToken = ref("");
+    const url = ref("");
+    const password = ref("");
 
     const saveConfiguration = () => {
-      const payload = { oAuthToken: oAuthToken.value };
+      const payload = { url: url.value, password: password.value };
       axios
-        .post(`${backendUrl}/discord/configuration`, payload, {
+        .post(`${backendUrl}/obs/configuration`, payload, {
           headers: { "Content-Type": "application/json" }
         })
         .then(function(response) {
@@ -49,7 +54,8 @@ export default {
     };
 
     return {
-      oAuthToken,
+      url,
+      password,
       saveConfiguration
     };
   }

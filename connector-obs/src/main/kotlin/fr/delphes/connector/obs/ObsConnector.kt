@@ -2,6 +2,7 @@ package fr.delphes.connector.obs
 
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.connector.obs.endpoints.ObsModule
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 
@@ -9,7 +10,7 @@ class ObsConnector(
     override val configFilepath: String,
 ) : Connector {
     private val repository = ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")
-    private var state: ObsState = ObsState.Unconfigured
+    var state: ObsState = ObsState.Unconfigured
 
     init {
         runBlocking {
@@ -17,7 +18,9 @@ class ObsConnector(
         }
     }
 
-    override fun internalEndpoints(application: Application) {}
+    override fun internalEndpoints(application: Application) {
+        application.ObsModule(this)
+    }
 
     override fun publicEndpoints(application: Application) {}
 

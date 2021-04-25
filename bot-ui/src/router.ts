@@ -1,4 +1,5 @@
 import About from "@/about/About.vue";
+import Obs from "@/obs/Obs.vue";
 import TwitchChannelConfiguration from "@/twitch/TwitchChannelConfiguration.vue";
 import TwitchConfiguration from "@/twitch/TwitchConfiguration.vue";
 import TwitchFeature from "@/twitch/feature/TwitchFeature.vue";
@@ -29,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/discord",
     name: "Discord",
     component: Discord
+  },
+  {
+    path: "/obs",
+    name: "Obs",
+    component: Obs
   },
   {
     path: "/twitch",
