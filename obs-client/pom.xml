@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>pythie-bot-parent</artifactId>
@@ -9,24 +10,19 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>twitch-api</artifactId>
-
-    <name>twitch-api</name>
+    <artifactId>obs-client</artifactId>
+    <name>obs-client</name>
 
     <dependencies>
         <dependency>
             <groupId>fr.delphes</groupId>
             <artifactId>utils</artifactId>
         </dependency>
-        <!-- http server -->
         <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-core</artifactId>
+            <groupId>fr.delphes</groupId>
+            <artifactId>bot-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-serialization</artifactId>
-        </dependency>
+
         <!-- http client -->
         <dependency>
             <groupId>io.ktor</groupId>
@@ -44,28 +40,6 @@
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client-logging-jvm</artifactId>
         </dependency>
-        <!-- Irc -->
-        <dependency>
-            <groupId>org.kitteh.irc</groupId>
-            <artifactId>client-lib</artifactId>
-        </dependency>
-
-        <!-- Tests -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <!-- Logging -->
         <dependency>
@@ -81,7 +55,6 @@
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>

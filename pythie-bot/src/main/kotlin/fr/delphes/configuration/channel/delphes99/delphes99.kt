@@ -10,6 +10,7 @@ import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.discord.NewGuildMember
+import fr.delphes.features.obs.SceneChanged
 import fr.delphes.features.overlay.Overlay
 import fr.delphes.features.twitch.bitCheer.BitCheer
 import fr.delphes.features.twitch.clipCreated.ClipCreated
@@ -95,7 +96,8 @@ val delphes99Features = listOf(
         cooldown = Duration.ofMinutes(2),
         responses = {
             listOf(
-                SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !", channel)
+                SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !",
+                    channel)
             )
         }
     ),
@@ -299,6 +301,15 @@ val delphes99Features = listOf(
             )
         }
     ),
+    SceneChanged { sceneChanged ->
+        if(sceneChanged.newScene == "End credits") {
+            listOf(SendMessage("Ca sent la fin", channel))
+        } else {
+            listOf(
+                SendMessage("Nouvelle scene : ${sceneChanged.newScene}", channel)
+            )
+        }
+    }
 )
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(

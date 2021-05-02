@@ -1,12 +1,16 @@
 package fr.delphes.connector.obs
 
+import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.endpoints.ObsModule
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.InternalSerializationApi
 
+@InternalSerializationApi
 class ObsConnector(
+    val bot: Bot,
     override val configFilepath: String,
 ) : Connector {
     private val repository = ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")

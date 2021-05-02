@@ -23,6 +23,12 @@
             <artifactId>bot-core</artifactId>
         </dependency>
 
+        <!-- Obs-ws -->
+        <dependency>
+            <groupId>fr.delphes</groupId>
+            <artifactId>obs-client</artifactId>
+        </dependency>
+
         <!-- Http server -->
         <dependency>
             <groupId>io.ktor</groupId>

@@ -17,6 +17,7 @@
         <module>connector-obs</module>
         <module>connector-twitch</module>
         <module>bot-features</module>
+        <module>obs-client</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -106,6 +107,11 @@
                 <artifactId>connector-discord</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.dv8tion</groupId>
+                <artifactId>JDA</artifactId>
+                <version>${JDA.version}</version>
+            </dependency>
             <!-- Obs -->
             <dependency>
                 <groupId>fr.delphes</groupId>
@@ -113,9 +119,9 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.dv8tion</groupId>
-                <artifactId>JDA</artifactId>
-                <version>${JDA.version}</version>
+                <groupId>fr.delphes</groupId>
+                <artifactId>obs-client</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <!-- Irc -->
             <dependency>

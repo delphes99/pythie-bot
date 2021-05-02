@@ -56,6 +56,7 @@ fun main() {
             configFilepath
         ),
         ObsConnector(
+            bot,
             configFilepath
         ),
     )

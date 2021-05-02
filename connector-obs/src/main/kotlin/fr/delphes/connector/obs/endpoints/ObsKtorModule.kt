@@ -11,8 +11,10 @@ import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
+@InternalSerializationApi
 fun Application.ObsModule(connector: ObsConnector) {
     routing {
         get("/obs/status") {
@@ -39,6 +41,7 @@ private data class DiscordConfigurationRequest(
     val password: String?,
 )
 
+@InternalSerializationApi
 private fun ObsState.toStatus(): ObsStatus {
     val status = when (this) {
         ObsState.Unconfigured -> ObsStatusEnum.unconfigured
