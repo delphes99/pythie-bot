@@ -45,7 +45,7 @@ sealed class ObsState {
             }
         }
 
-        private fun ObsConfiguration.toObsConfiguration() = Configuration(url, password)
+        private fun ObsConfiguration.toObsConfiguration() = Configuration(host, port, password)
     }
 
     class Error(

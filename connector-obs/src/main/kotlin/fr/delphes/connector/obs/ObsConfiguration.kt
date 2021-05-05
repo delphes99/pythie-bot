@@ -4,10 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ObsConfiguration(
-    val url: String,
+    val host: String,
+    val port: Int,
     val password: String?,
 ) {
     companion object {
-        fun empty() : ObsConfiguration = ObsConfiguration("ws://localhost:4444", null)
+        fun empty(): ObsConfiguration = ObsConfiguration("localhost", 4444, null)
     }
 }

@@ -24,7 +24,8 @@ fun Application.ObsModule(connector: ObsConnector) {
             val configuration = this.call.receive<DiscordConfigurationRequest>()
             connector.configure(
                 ObsConfiguration(
-                    configuration.url,
+                    configuration.host,
+                    configuration.port,
                     configuration.password?.takeIf { it.isNotBlank() }
                 )
             )
@@ -37,7 +38,8 @@ fun Application.ObsModule(connector: ObsConnector) {
 
 @Serializable
 private data class DiscordConfigurationRequest(
-    val url: String,
+    val host: String,
+    val port: Int,
     val password: String?,
 )
 

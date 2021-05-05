@@ -62,11 +62,10 @@ class ObsClient(
     }
 
     suspend fun connect() {
-        //TODO configuration
         httpClient.ws(
             method = HttpMethod.Get,
-            host = "localhost",
-            port = 4444,
+            host = configuration.host,
+            port = configuration.port,
         ) {
             authenticate()
 

@@ -1,8 +1,10 @@
 <template>
   <panel title="Obs configuration">
     <div class="grid grid-cols-2 gap-4 p-4">
-      <label for="obs-ws-url">Obs-websocket URL</label>
-      <input v-model="url" type="text" id="obs-ws-url" class="border-b-2" />
+      <label for="obs-ws-host">Obs-websocket Host</label>
+      <input v-model="host" type="text" id="obs-ws-host" class="border-b-2" />
+      <label for="obs-ws-host">Obs-websocket URL</label>
+      <input v-model="port" type="text" id="obs-ws-port" class="border-b-2" />
       <label for="obs-password">
         Obs-websocket password (leave empty if no password)
       </label>
@@ -34,11 +36,16 @@ export default {
   components: { Panel },
   setup() {
     const backendUrl = inject("backendUrl");
-    const url = ref("");
+    const host = ref("");
+    const port = ref("");
     const password = ref("");
 
     const saveConfiguration = () => {
-      const payload = { url: url.value, password: password.value };
+      const payload = {
+        host: host.value,
+        port: port.value,
+        password: password.value
+      };
       axios
         .post(`${backendUrl}/obs/configuration`, payload, {
           headers: { "Content-Type": "application/json" }
@@ -54,7 +61,8 @@ export default {
     };
 
     return {
-      url,
+      host,
+      port,
       password,
       saveConfiguration
     };
