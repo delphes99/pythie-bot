@@ -2,6 +2,7 @@ package fr.delphes.connector.obs
 
 import fr.delphes.obs.Configuration
 import fr.delphes.obs.ObsClient
+import fr.delphes.obs.ObsListener
 import fr.delphes.obs.incomingEvent.SceneChanged
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -21,22 +22,29 @@ sealed class ObsState {
         private val configuration: ObsConfiguration,
         private val connector: ObsConnector,
     ) : ObsState() {
-        suspend fun connect(): ObsState {
+        suspend fun connect() {
             return coroutineScope {
-                 try {
-                    val client = ObsClient(configuration.toObsConfiguration()) {
-                        //TODO non blocking
-                        runBlocking {
-                            connector.bot.handleIncomingEvent(SceneChanged(it.sceneName))
+                try {
+                    val listeners = ObsListener(
+                        onSwitchScene = {
+                            //TODO non blocking
+                            runBlocking {
+                                connector.bot.handleIncomingEvent(SceneChanged(it.sceneName))
+                            }
+                        },
+                        onError = {
+                            LOGGER.error { "Obs client error" }
+                            connector.state = Error(configuration, connector)
                         }
-                    }
+                    )
+                    val client = ObsClient(configuration.toObsConfiguration(), listeners)
+                    connector.state = Connected
                     launch {
                         client.listen()
                     }
-                    Connected()
                 } catch (e: Exception) {
                     LOGGER.error(e) { "Connection failed" }
-                    Error
+                    connector.state = Error(configuration, connector)
                 }
             }
         }
@@ -44,9 +52,17 @@ sealed class ObsState {
         private fun ObsConfiguration.toObsConfiguration() = Configuration(url, password)
     }
 
-    object Error : ObsState()
+    class Error(
+        private val configuration: ObsConfiguration,
+        private val connector: ObsConnector,
+    ) : ObsState() {
+        suspend fun connect() {
+            connector.state = Configured(configuration, connector)
+            connector.connect()
+        }
+    }
 
-    class Connected() : ObsState()
+    object Connected : ObsState()
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}

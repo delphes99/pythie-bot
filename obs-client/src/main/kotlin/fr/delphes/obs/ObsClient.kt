@@ -4,9 +4,9 @@ import fr.delphes.obs.event.EventType
 import fr.delphes.obs.event.SwitchScenes
 import fr.delphes.obs.request.Authenticate
 import fr.delphes.obs.request.AuthenticateResponse
-import fr.delphes.obs.request.ReceivedMessage
 import fr.delphes.obs.request.GetAuthRequired
 import fr.delphes.obs.request.GetAuthRequiredResponse
+import fr.delphes.obs.request.ReceivedMessage
 import fr.delphes.obs.request.Request
 import fr.delphes.obs.request.Response
 import fr.delphes.obs.request.ResponseStatus
@@ -24,7 +24,6 @@ import io.ktor.client.features.websocket.ws
 import io.ktor.http.HttpMethod
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.isActive
 import kotlinx.serialization.InternalSerializationApi
@@ -36,13 +35,12 @@ import kotlin.coroutines.coroutineContext
 import kotlin.reflect.KClass
 
 @InternalSerializationApi
-@KtorExperimentalAPI
 class ObsClient(
     private val configuration: Configuration,
-    //TODO Generalize
-    private val listener: (SwitchScenes) -> Unit
+    private val listeners: ObsListener
 ) {
     private val typeForMessage = mutableMapOf<String, KClass<*>>()
+
     private val httpClient = HttpClient(CIO) {
         install(JsonFeature) {
             serializer = KotlinxSerializer(Serializer)
@@ -53,9 +51,13 @@ class ObsClient(
     }
 
     suspend fun listen() {
-        while (coroutineContext.isActive) {
-            connect()
-            LOGGER.info { "Restart connection" }
+        try {
+            while (coroutineContext.isActive) {
+                connect()
+                LOGGER.info { "Restart connection" }
+            }
+        } catch (e: Exception) {
+            listeners.onError()
         }
     }
 
@@ -129,7 +131,7 @@ class ObsClient(
                         receivedMessage.event != null -> {
                             EventType.deserialize(receivedMessage.event, text)?.let { event ->
                                 when(event) {
-                                    is SwitchScenes -> listener(event)
+                                    is SwitchScenes -> listeners.onSwitchScene(event)
                                 }.exhaustive()
                             }
                             LOGGER.info { "Event received : ${receivedMessage.event}" }

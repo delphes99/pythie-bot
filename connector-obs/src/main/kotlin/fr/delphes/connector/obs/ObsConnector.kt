@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.endpoints.ObsModule
+import fr.delphes.utils.exhaustive
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.InternalSerializationApi
@@ -29,14 +30,12 @@ class ObsConnector(
     override fun publicEndpoints(application: Application) {}
 
     override suspend fun connect() {
-        val newState = when(val oldState = state) {
-            ObsState.Unconfigured -> oldState
+        when (val oldState = state) {
             is ObsState.Configured -> oldState.connect()
-            is ObsState.Error -> oldState
-            is ObsState.Connected -> oldState
-        }
-
-        state = newState
+            is ObsState.Error -> oldState.connect()
+            ObsState.Unconfigured,
+            is ObsState.Connected -> Unit //Nothing
+        }.exhaustive()
     }
 
     override suspend fun execute(event: OutgoingEvent) {}
