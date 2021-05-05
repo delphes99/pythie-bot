@@ -6,7 +6,6 @@ import fr.delphes.obs.ObsListener
 import fr.delphes.obs.incomingEvent.SceneChanged
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.InternalSerializationApi
 import mu.KotlinLogging
 
@@ -27,10 +26,7 @@ sealed class ObsState {
                 try {
                     val listeners = ObsListener(
                         onSwitchScene = {
-                            //TODO non blocking
-                            runBlocking {
-                                connector.bot.handleIncomingEvent(SceneChanged(it.sceneName))
-                            }
+                            connector.bot.handleIncomingEvent(SceneChanged(it.sceneName))
                         },
                         onError = {
                             LOGGER.error { "Obs client error" }
