@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class ListSubscriptionsPayload(
     val total: Long,
     val data: List<SubscriptionPayload>,
-    val limit: Long
+    val total_cost: Long,
+    val max_total_cost: Long,
 )
