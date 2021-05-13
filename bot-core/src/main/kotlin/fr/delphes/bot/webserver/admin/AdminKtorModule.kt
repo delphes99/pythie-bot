@@ -15,7 +15,7 @@ fun Application.AdminModule(bot: Bot) {
             .map { feature -> feature.module(bot) }
             .forEach { it() }
 
-        static("/admin") {
+        static("admin") {
             resources("admin")
             defaultResource("index.html", "admin")
         }
