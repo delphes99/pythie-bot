@@ -3,7 +3,7 @@ package fr.delphes.connector.obs
 import fr.delphes.obs.Configuration
 import fr.delphes.obs.ObsClient
 import fr.delphes.obs.ObsListener
-import fr.delphes.obs.incomingEvent.SceneChanged
+import fr.delphes.connector.obs.incomingEvent.SceneChanged
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi

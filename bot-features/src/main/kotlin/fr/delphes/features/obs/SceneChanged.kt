@@ -5,7 +5,7 @@ import fr.delphes.bot.event.eventHandler.EventHandler
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.NonEditableFeature
-import fr.delphes.obs.incomingEvent.SceneChanged
+import fr.delphes.connector.obs.incomingEvent.SceneChanged
 
 class SceneChanged(
     val sceneChanged: (SceneChanged) -> List<OutgoingEvent>

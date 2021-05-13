@@ -1,4 +1,4 @@
-package fr.delphes.obs.incomingEvent
+package fr.delphes.connector.obs.incomingEvent
 
 import fr.delphes.bot.event.incoming.IncomingEvent
 
