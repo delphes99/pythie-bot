@@ -177,7 +177,7 @@
 		vm.load()
 	}, 1000);
 
-	let socket = new WebSocket("ws://localhost:8080/delphes99");
+	let socket = new WebSocket("ws://localhost:8080");
 
 	socket.onopen = function () {
 		this.onmessage = function (event) {

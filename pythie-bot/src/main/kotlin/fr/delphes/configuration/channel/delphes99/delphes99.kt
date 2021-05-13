@@ -1,6 +1,7 @@
 package fr.delphes.configuration.channel.delphes99
 
 import fr.delphes.bot.event.outgoing.Alert
+import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
@@ -8,6 +9,7 @@ import fr.delphes.connector.discord.outgoingEvent.DiscordMessage
 import fr.delphes.connector.obs.business.SourceFilter
 import fr.delphes.connector.obs.outgoingEvent.ActivateFilter
 import fr.delphes.connector.obs.outgoingEvent.ChangeItemPosition
+import fr.delphes.connector.obs.outgoingEvent.DeactivateFilter
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
@@ -37,6 +39,7 @@ import fr.delphes.features.twitch.voth.VOTH
 import fr.delphes.features.twitch.voth.VOTHConfiguration
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.prettyPrint
+import fr.delphes.utils.time.secondsOf
 import kotlinx.serialization.InternalSerializationApi
 import org.apache.commons.lang3.RandomUtils.nextDouble
 import java.time.Duration
@@ -47,7 +50,7 @@ import java.time.format.DateTimeFormatter
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
 val channel = TwitchChannel("delphes99")
-
+val matrixFilter = SourceFilter("VCam", "ascii")
 @InternalSerializationApi
 val delphes99Features = listOf(
     VOTH(
@@ -207,7 +210,7 @@ val delphes99Features = listOf(
     ) {
         listOf(
             SendMessage("-> test dev", channel),
-            Alert("test")
+            Alert("test"),
         )
     },
     RewardRedeem(
@@ -215,9 +218,7 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST2
     ) {
         listOf(
-            DiscordMessage("Coucou discord depuis une récompense !", 789537633487159396),
             ChangeItemPosition("Webcam", 1176.0, 807.0),
-            ActivateFilter("VCam", "ascii", false),
         )
     },
     RewardRedeem(
@@ -226,8 +227,25 @@ val delphes99Features = listOf(
     ) {
         listOf(
             ChangeItemPosition("Webcam", nextDouble(0.0, (1920.0 - 515.00)), nextDouble(0.0, (1080.0 - 246.00))),
-            ActivateFilter("VCam", "ascii", true),
         )
+    },
+    RewardRedeem(
+        channel,
+        DelphesReward.ENTER_THE_MATRIX
+    ) {
+        listOf(
+            ActivateFilter(matrixFilter),
+        )
+    },
+    SourceFilterActivated { sourceFilterActivated ->
+        if (sourceFilterActivated.filter == matrixFilter) {
+            listOf(
+                Pause(secondsOf(30)),
+                DeactivateFilter(matrixFilter),
+            )
+        } else {
+            emptyList()
+        }
     },
     GameReward(
         channel,
@@ -315,7 +333,7 @@ val delphes99Features = listOf(
     Command(
         channel,
         "!coucou",
-        cooldown = Duration.ofSeconds(10),
+        cooldown = secondsOf(10),
         responses = { commandAsked ->
             listOf(
                 SendMessage("Coucou ${commandAsked.by.name} !", channel)
@@ -329,13 +347,6 @@ val delphes99Features = listOf(
             emptyList()
         }
     },
-    SourceFilterActivated { sourceFilterActivated ->
-        if (sourceFilterActivated.filter == SourceFilter("VCam", "ascii")) {
-            listOf(SendMessage("Enter matrix mode", channel))
-        } else {
-            emptyList()
-        }
-    }
 )
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(

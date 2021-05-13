@@ -3,12 +3,16 @@ package fr.delphes.bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
+import fr.delphes.bot.event.outgoing.CoreOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
+import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -41,8 +45,15 @@ class Bot(
     }
 
     private suspend fun handleOutgoingEvent(event: OutgoingEvent) {
-        _connectors.forEach { connector ->
-            connector.execute(event)
+        if(event is CoreOutgoingEvent) {
+            when(event) {
+                is Alert -> alerts.send(event)
+                is Pause -> delay(event.delay.toMillis())
+            }.exhaustive()
+        } else {
+            _connectors.forEach { connector ->
+                connector.execute(event)
+            }
         }
     }
 

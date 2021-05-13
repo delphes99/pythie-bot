@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import java.util.UUID
 
 @Serializable
-@SerialName("obs-source-filter-deactivated-description")
+@SerialName("obs-source-filter-deactivated")
 class SourceFilterDeactivatedDescription : NonEditableFeatureDescription {
     override val editable = false
     override val id: String = UUID.randomUUID().toString()

@@ -12,3 +12,5 @@ fun Duration.prettyPrint(): String {
         .split('.')[0] + 's')
         .toLowerCase()
 }
+
+fun secondsOf(seconds: Int): Duration = Duration.ofSeconds(seconds.toLong())

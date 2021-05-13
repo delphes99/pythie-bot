@@ -5,6 +5,8 @@ import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.feature.FeatureDescription
 import fr.delphes.features.discord.NewGuildMemberDescription
 import fr.delphes.features.obs.SceneChangedDescription
+import fr.delphes.features.obs.SourceFilterActivatedDescription
+import fr.delphes.features.obs.SourceFilterDeactivatedDescription
 import fr.delphes.features.overlay.OverlayDescription
 import fr.delphes.features.twitch.bitCheer.BitCheerDescription
 import fr.delphes.features.twitch.clipCreated.ClipCreatedDescription
@@ -55,6 +57,8 @@ object FeatureConfiguration {
         registerFeatureConfiguration<VOTHDescription>()
         registerFeatureConfiguration<EditableCommandConfiguration>()
         registerFeatureConfiguration<SceneChangedDescription>()
+        registerFeatureConfiguration<SourceFilterActivatedDescription>()
+        registerFeatureConfiguration<SourceFilterDeactivatedDescription>()
 
         registerOutgoingMessageBuilder<SendMessageBuilder>()
     }

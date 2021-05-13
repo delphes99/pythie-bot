@@ -5,6 +5,7 @@ import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
 enum class DelphesReward(override val rewardConfiguration: RewardConfiguration): WithRewardConfiguration {
     VOTH(vothReward),
+    ENTER_THE_MATRIX(enterTheMatrix),
     DEV_TEST(testDev),
     DEV_TEST2(testDev2),
     DEV_TEST3(testDev3),
@@ -19,6 +20,11 @@ private val vothReward = RewardConfiguration(
     "VIP of the hill",
     300,
     "Prenez la place du VIP of hill : le dernier à réclamer cette récompense prends la place du VIP"
+)
+private val enterTheMatrix = RewardConfiguration(
+    "Enter the matrix",
+    150,
+    "Pillule bleue ou pillule rouge"
 )
 private val testDev = RewardConfiguration(
     "Test dev",

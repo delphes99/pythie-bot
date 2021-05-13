@@ -2,6 +2,7 @@ package fr.delphes.connector.obs.outgoingEvent
 
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.ObsConnector
+import fr.delphes.connector.obs.business.SourceFilter
 import fr.delphes.obs.request.Position
 import fr.delphes.obs.request.SetSceneItemProperties
 import fr.delphes.obs.request.SetSourceFilterVisibility
@@ -49,17 +50,32 @@ data class ChangeItemPosition(
 
 @InternalSerializationApi
 data class ActivateFilter(
-    val sourceName: String,
-    val filterName: String,
-    val activate: Boolean,
+    val filter: SourceFilter,
 ) : ObsOutgoingEvent() {
     override suspend fun executeOnObs(connector: ObsConnector) {
         connector.connected {
             client.sendRequest(
                 SetSourceFilterVisibility(
-                    sourceName = sourceName,
-                    filterName = filterName,
-                    filterEnabled = activate
+                    sourceName = filter.sourceName,
+                    filterName = filter.filterName,
+                    filterEnabled = true
+                )
+            )
+        }
+    }
+}
+
+@InternalSerializationApi
+data class DeactivateFilter(
+    val filter: SourceFilter,
+) : ObsOutgoingEvent() {
+    override suspend fun executeOnObs(connector: ObsConnector) {
+        connector.connected {
+            client.sendRequest(
+                SetSourceFilterVisibility(
+                    sourceName = filter.sourceName,
+                    filterName = filter.filterName,
+                    filterEnabled = false
                 )
             )
         }
