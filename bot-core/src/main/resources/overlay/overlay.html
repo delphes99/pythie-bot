@@ -181,7 +181,13 @@
 
 	socket.onopen = function () {
 		this.onmessage = function (event) {
-			vm.alert = JSON.parse(event.data)
+			const data = JSON.parse(event.data)
+			if(data.type === 'playSound') {
+				const audio = new Audio('http://localhost:8080/media/'+data.parameters.mediaName);
+				audio.play();
+			} else {
+				vm.alert = data
+			}
 			setTimeout(() => vm.alert = null, 5000)
 		};
 	};

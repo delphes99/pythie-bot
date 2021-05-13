@@ -15,6 +15,7 @@ import fr.delphes.features.FeatureConfiguration
 import fr.delphes.features.twitch.command.EditableCommand
 import fr.delphes.features.twitch.command.EditableCommandConfiguration
 import kotlinx.serialization.InternalSerializationApi
+import java.io.File
 
 @InternalSerializationApi
 fun main() {
@@ -23,7 +24,7 @@ fun main() {
     Ngrok.launch(props.getProperty("ngrok.path"))
     val tunnel = Ngrok.createHttpTunnel(80, props.getProperty("ngrok.tunnel.name"))
 
-    val configFilepath = "A:\\pythiebot\\"
+    val configFilepath = "A:${File.separator}pythiebot${File.separator}"
     val bot = Bot(
         tunnel.publicUrl,
         configFilepath,

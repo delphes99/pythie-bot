@@ -2,6 +2,7 @@ package fr.delphes.configuration.channel.delphes99
 
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.Pause
+import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
@@ -65,7 +66,8 @@ val delphes99Features = listOf(
                             announce.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP ${oldVOTH.user} [règne : ${announce.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
                         ).joinToString(" "),
                         channel
-                    )
+                    ),
+                    PlaySound(listOf("kill.mp3", "kill2.mp3").random()),
                 )
             },
             statsCommand = "!vothstats",

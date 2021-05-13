@@ -6,6 +6,7 @@ import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.CoreOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.Pause
+import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.utils.exhaustive
@@ -49,6 +50,7 @@ class Bot(
             when(event) {
                 is Alert -> alerts.send(event)
                 is Pause -> delay(event.delay.toMillis())
+                is PlaySound -> alerts.send(Alert("playSound", "mediaName" to event.mediaName)) // TODO move appart from alert
             }.exhaustive()
         } else {
             _connectors.forEach { connector ->

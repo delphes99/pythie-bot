@@ -2,6 +2,7 @@ package fr.delphes.configuration.channel.delphes99
 
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
+import java.time.Duration
 
 enum class DelphesReward(override val rewardConfiguration: RewardConfiguration): WithRewardConfiguration {
     VOTH(vothReward),
@@ -29,22 +30,25 @@ private val enterTheMatrix = RewardConfiguration(
 private val testDev = RewardConfiguration(
     "Test dev",
     1,
-    "Test lors des live coding"
+    "Test lors des live coding",
+    isGlobalCooldownEnabled = false
 )
 private val testDev2 = RewardConfiguration(
     "Test dev 2",
     1,
-    "Test lors des live coding"
+    "Test lors des live coding",
+    isGlobalCooldownEnabled = false
 )
 private val testDev3 = RewardConfiguration(
     "Test dev 3",
     1,
-    "Test lors des live coding"
+    "Test lors des live coding",
+    isGlobalCooldownEnabled = false
 )
 private val satisfactoryBaseColor = RewardConfiguration(
     "Couleur de la base",
     1500,
     "Choisissez la couleur de la base (pour le meilleur ou pour le pire...)",
     isGlobalCooldownEnabled = true,
-    globalCooldownSeconds = 30 * 60
+    globalCooldownSeconds = Duration.ofMinutes(30).toSeconds()
 )
