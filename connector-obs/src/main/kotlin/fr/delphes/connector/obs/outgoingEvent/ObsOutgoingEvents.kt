@@ -4,6 +4,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.obs.request.Position
 import fr.delphes.obs.request.SetSceneItemProperties
+import fr.delphes.obs.request.SetSourceFilterVisibility
 import kotlinx.serialization.InternalSerializationApi
 
 @InternalSerializationApi
@@ -40,6 +41,25 @@ data class ChangeItemPosition(
                 SetSceneItemProperties(
                     item = itemName,
                     position = Position(x, y)
+                )
+            )
+        }
+    }
+}
+
+@InternalSerializationApi
+data class ActivateFilter(
+    val sourceName: String,
+    val filterName: String,
+    val activate: Boolean,
+) : ObsOutgoingEvent() {
+    override suspend fun executeOnObs(connector: ObsConnector) {
+        connector.connected {
+            client.sendRequest(
+                SetSourceFilterVisibility(
+                    sourceName = sourceName,
+                    filterName = filterName,
+                    filterEnabled = activate
                 )
             )
         }

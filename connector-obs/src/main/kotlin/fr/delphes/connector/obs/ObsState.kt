@@ -1,9 +1,12 @@
 package fr.delphes.connector.obs
 
+import fr.delphes.connector.obs.business.SourceFilter
 import fr.delphes.obs.Configuration
 import fr.delphes.obs.ObsClient
 import fr.delphes.obs.ObsListener
 import fr.delphes.connector.obs.incomingEvent.SceneChanged
+import fr.delphes.connector.obs.incomingEvent.SourceFilterActivated
+import fr.delphes.connector.obs.incomingEvent.SourceFilterDeactivated
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
@@ -24,9 +27,19 @@ sealed class ObsState {
         suspend fun connect() {
             return coroutineScope {
                 try {
+                    //TODO move listener build
                     val listeners = ObsListener(
                         onSwitchScene = {
                             connector.bot.handleIncomingEvent(SceneChanged(it.sceneName))
+                        },
+                        onSourceFilterVisibilityChanged = {
+                            val filter = SourceFilter(it.sourceName, it.filterName)
+                            val event = if(it.filterEnabled) {
+                                SourceFilterActivated(filter)
+                            } else {
+                                SourceFilterDeactivated(filter)
+                            }
+                            connector.bot.handleIncomingEvent(event)
                         },
                         onError = {
                             LOGGER.error { "Obs client error" }

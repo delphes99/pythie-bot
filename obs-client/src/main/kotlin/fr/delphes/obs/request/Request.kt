@@ -40,11 +40,11 @@ data class Authenticate(
 
 @Serializable
 data class SetSceneItemProperties(
-    @SerialName("message-id")
-    override val messageId: String = UUID.randomUUID().toString(),
     val item: String,
     val position: Position? = null,
     val visible: Boolean? = null,
+    @SerialName("message-id")
+    override val messageId: String = UUID.randomUUID().toString(),
 ) : Request() {
     @SerialName("request-type")
     override val requestType: String = "SetSceneItemProperties"
@@ -58,3 +58,18 @@ data class Position(
     val x: Double,
     val y: Double,
 )
+
+@Serializable
+data class SetSourceFilterVisibility(
+    val sourceName: String,
+    val filterName: String,
+    val filterEnabled: Boolean,
+    @SerialName("message-id")
+    override val messageId: String = UUID.randomUUID().toString(),
+) : Request() {
+    @SerialName("request-type")
+    override val requestType: String = "SetSourceFilterVisibility"
+
+    @Transient
+    override val responseType = SetSourceFilterVisibilityResponse::class
+}

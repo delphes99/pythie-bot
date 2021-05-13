@@ -5,6 +5,8 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
 import fr.delphes.connector.discord.outgoingEvent.DiscordMessage
+import fr.delphes.connector.obs.business.SourceFilter
+import fr.delphes.connector.obs.outgoingEvent.ActivateFilter
 import fr.delphes.connector.obs.outgoingEvent.ChangeItemPosition
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
@@ -12,6 +14,7 @@ import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.obs.SceneChanged
+import fr.delphes.features.obs.SourceFilterActivated
 import fr.delphes.features.overlay.Overlay
 import fr.delphes.features.twitch.bitCheer.BitCheer
 import fr.delphes.features.twitch.clipCreated.ClipCreated
@@ -213,7 +216,8 @@ val delphes99Features = listOf(
     ) {
         listOf(
             DiscordMessage("Coucou discord depuis une récompense !", 789537633487159396),
-            ChangeItemPosition("Webcam", 1176.0, 807.0)
+            ChangeItemPosition("Webcam", 1176.0, 807.0),
+            ActivateFilter("VCam", "ascii", false),
         )
     },
     RewardRedeem(
@@ -221,7 +225,8 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST3
     ) {
         listOf(
-            ChangeItemPosition("Webcam", nextDouble(0.0, (1920.0 - 515.00)), nextDouble(0.0, (1080.0 - 246.00)))
+            ChangeItemPosition("Webcam", nextDouble(0.0, (1920.0 - 515.00)), nextDouble(0.0, (1080.0 - 246.00))),
+            ActivateFilter("VCam", "ascii", true),
         )
     },
     GameReward(
@@ -321,9 +326,14 @@ val delphes99Features = listOf(
         if (sceneChanged.newScene == "End credits") {
             listOf(SendMessage("Ca sent la fin", channel))
         } else {
-            listOf(
-                SendMessage("Nouvelle scene : ${sceneChanged.newScene}", channel)
-            )
+            emptyList()
+        }
+    },
+    SourceFilterActivated { sourceFilterActivated ->
+        if (sourceFilterActivated.filter == SourceFilter("VCam", "ascii")) {
+            listOf(SendMessage("Enter matrix mode", channel))
+        } else {
+            emptyList()
         }
     }
 )

@@ -10,7 +10,17 @@ sealed class Event
 data class SwitchScenes(
     @SerialName("scene-name")
     val sceneName: String
-): Event() {
+) : Event() {
     @SerialName("update-type")
     val updateType: String = "SwitchScenes"
+}
+
+@Serializable
+data class SourceFilterVisibilityChanged(
+    val sourceName: String,
+    val filterName: String,
+    val filterEnabled: Boolean,
+) : Event() {
+    @SerialName("update-type")
+    val updateType: String = "SourceFilterVisibilityChanged"
 }

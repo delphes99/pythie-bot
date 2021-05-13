@@ -34,3 +34,11 @@ data class SetSceneItemPropertiesResponse(
     override val status: ResponseStatus? = null,
     override val error: String? = null,
 ) : Response()
+
+@Serializable
+data class SetSourceFilterVisibilityResponse(
+    @SerialName("message-id")
+    override val messageId: String,
+    override val status: ResponseStatus? = null,
+    override val error: String? = null,
+) : Response()

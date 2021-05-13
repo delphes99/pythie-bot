@@ -1,6 +1,7 @@
 package fr.delphes.obs
 
 import fr.delphes.obs.event.EventType
+import fr.delphes.obs.event.SourceFilterVisibilityChanged
 import fr.delphes.obs.event.SwitchScenes
 import fr.delphes.obs.request.Authenticate
 import fr.delphes.obs.request.AuthenticateResponse
@@ -11,6 +12,7 @@ import fr.delphes.obs.request.Request
 import fr.delphes.obs.request.Response
 import fr.delphes.obs.request.ResponseStatus
 import fr.delphes.obs.request.SetSceneItemPropertiesResponse
+import fr.delphes.obs.request.SetSourceFilterVisibilityResponse
 import fr.delphes.utils.exhaustive
 import fr.delphes.utils.serialization.Serializer
 import fr.delphes.utils.toBase64
@@ -134,12 +136,14 @@ class ObsClient(
                                 }
                                 is AuthenticateResponse -> handleError(payload)
                                 is SetSceneItemPropertiesResponse -> handleError(payload)
+                                is SetSourceFilterVisibilityResponse -> handleError(payload)
                             }.exhaustive()
                         }
                         receivedMessage.event != null -> {
                             EventType.deserialize(receivedMessage.event, text)?.let { event ->
                                 when (event) {
                                     is SwitchScenes -> listeners.onSwitchScene(event)
+                                    is SourceFilterVisibilityChanged -> listeners.onSourceFilterVisibilityChanged(event)
                                 }.exhaustive()
                             }
                             LOGGER.info { "Event received : ${receivedMessage.event}" }

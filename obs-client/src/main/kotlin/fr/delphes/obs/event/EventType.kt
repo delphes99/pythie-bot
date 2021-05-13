@@ -9,7 +9,8 @@ enum class EventType(
     private val label: String,
     private val responseClazz: KClass<out Event>,
 ) {
-    SWITCH_SCENE("SwitchScenes", SwitchScenes::class);
+    SWITCH_SCENE("SwitchScenes", SwitchScenes::class),
+    SOURCE_FILTER_VISIBILITY_CHANGED("SourceFilterVisibilityChanged", SourceFilterVisibilityChanged::class);
 
     @InternalSerializationApi
     companion object {
