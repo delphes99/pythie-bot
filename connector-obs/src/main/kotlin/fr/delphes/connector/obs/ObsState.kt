@@ -34,7 +34,7 @@ sealed class ObsState {
                         }
                     )
                     val client = ObsClient(configuration.toObsConfiguration(), listeners)
-                    connector.state = Connected
+                    connector.state = Connected(client)
                     launch {
                         client.listen()
                     }
@@ -58,7 +58,9 @@ sealed class ObsState {
         }
     }
 
-    object Connected : ObsState()
+    class Connected(
+        val client: ObsClient
+    ) : ObsState()
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}

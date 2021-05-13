@@ -5,6 +5,7 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
 import fr.delphes.connector.discord.outgoingEvent.DiscordMessage
+import fr.delphes.connector.obs.outgoingEvent.ChangeItemPosition
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
@@ -33,6 +34,8 @@ import fr.delphes.features.twitch.voth.VOTH
 import fr.delphes.features.twitch.voth.VOTHConfiguration
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.prettyPrint
+import kotlinx.serialization.InternalSerializationApi
+import org.apache.commons.lang3.RandomUtils.nextDouble
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -41,6 +44,8 @@ import java.time.format.DateTimeFormatter
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
 val channel = TwitchChannel("delphes99")
+
+@InternalSerializationApi
 val delphes99Features = listOf(
     VOTH(
         channel,
@@ -96,8 +101,10 @@ val delphes99Features = listOf(
         cooldown = Duration.ofMinutes(2),
         responses = {
             listOf(
-                SendMessage("\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !",
-                    channel)
+                SendMessage(
+                    "\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !",
+                    channel
+                )
             )
         }
     ),
@@ -205,7 +212,16 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST2
     ) {
         listOf(
-            DiscordMessage("Coucou discord depuis une récompense !", 789537633487159396)
+            DiscordMessage("Coucou discord depuis une récompense !", 789537633487159396),
+            ChangeItemPosition("Webcam", 1176.0, 807.0)
+        )
+    },
+    RewardRedeem(
+        channel,
+        DelphesReward.DEV_TEST3
+    ) {
+        listOf(
+            ChangeItemPosition("Webcam", nextDouble(0.0, (1920.0 - 515.00)), nextDouble(0.0, (1080.0 - 246.00)))
         )
     },
     GameReward(
@@ -302,7 +318,7 @@ val delphes99Features = listOf(
         }
     ),
     SceneChanged { sceneChanged ->
-        if(sceneChanged.newScene == "End credits") {
+        if (sceneChanged.newScene == "End credits") {
             listOf(SendMessage("Ca sent la fin", channel))
         } else {
             listOf(

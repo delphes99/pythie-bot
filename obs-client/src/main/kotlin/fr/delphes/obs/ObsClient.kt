@@ -10,6 +10,7 @@ import fr.delphes.obs.request.ReceivedMessage
 import fr.delphes.obs.request.Request
 import fr.delphes.obs.request.Response
 import fr.delphes.obs.request.ResponseStatus
+import fr.delphes.obs.request.SetSceneItemPropertiesResponse
 import fr.delphes.utils.exhaustive
 import fr.delphes.utils.serialization.Serializer
 import fr.delphes.utils.toBase64
@@ -24,8 +25,10 @@ import io.ktor.client.features.websocket.ws
 import io.ktor.http.HttpMethod
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -40,6 +43,7 @@ class ObsClient(
     private val listeners: ObsListener
 ) {
     private val typeForMessage = mutableMapOf<String, KClass<*>>()
+    private val requestsToSend = Channel<Request>()
 
     private val httpClient = HttpClient(CIO) {
         install(JsonFeature) {
@@ -69,12 +73,22 @@ class ObsClient(
         ) {
             authenticate()
 
+            launch {
+                while (isActive) {
+                    sendRequest(requestsToSend.receive())
+                }
+            }
+
             receiveFrames()
         }
     }
 
     private suspend fun ClientWebSocketSession.authenticate() {
         sendRequest(GetAuthRequired())
+    }
+
+    suspend fun sendRequest(request: Request) {
+        requestsToSend.send(request)
     }
 
     private suspend inline fun <reified T : Request> ClientWebSocketSession.sendRequest(request: T) {
@@ -118,18 +132,13 @@ class ObsClient(
                                     }
                                     Unit
                                 }
-                                is AuthenticateResponse -> {
-                                    if (payload.status == ResponseStatus.error) {
-                                        LOGGER.error { "logging error : ${payload.error}" }
-                                    } else {
-                                        LOGGER.info { "connected" }
-                                    }
-                                }
+                                is AuthenticateResponse -> handleError(payload)
+                                is SetSceneItemPropertiesResponse -> handleError(payload)
                             }.exhaustive()
                         }
                         receivedMessage.event != null -> {
                             EventType.deserialize(receivedMessage.event, text)?.let { event ->
-                                when(event) {
+                                when (event) {
                                     is SwitchScenes -> listeners.onSwitchScene(event)
                                 }.exhaustive()
                             }
@@ -148,6 +157,14 @@ class ObsClient(
             }
         }
         return Reconnect.CONTINUE
+    }
+
+    private inline fun <reified T : Response> handleError(payload: T) {
+        if (payload.status == ResponseStatus.error) {
+            LOGGER.error { "Request error [${T::class.simpleName}] : ${payload.error}" }
+        } else {
+            LOGGER.info { "connected" }
+        }
     }
 
     private fun parseResponse(text: String): Response {

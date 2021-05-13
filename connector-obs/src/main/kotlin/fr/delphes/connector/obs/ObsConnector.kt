@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.endpoints.ObsModule
+import fr.delphes.connector.obs.outgoingEvent.ObsOutgoingEvent
 import fr.delphes.utils.exhaustive
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
@@ -38,7 +39,18 @@ class ObsConnector(
         }.exhaustive()
     }
 
-    override suspend fun execute(event: OutgoingEvent) {}
+    override suspend fun execute(event: OutgoingEvent) {
+        if(event is ObsOutgoingEvent) {
+            event.executeOnObs(this)
+        }
+    }
+
+    suspend fun connected(doStuff: suspend ObsState.Connected.() -> Unit) {
+        val currentState = state
+        if(currentState is ObsState.Connected) {
+            currentState.doStuff()
+        }
+    }
 
     suspend fun configure(configuration: ObsConfiguration) {
         repository.save(configuration)

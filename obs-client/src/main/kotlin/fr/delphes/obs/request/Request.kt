@@ -6,10 +6,10 @@ import kotlinx.serialization.Transient
 import java.util.UUID
 import kotlin.reflect.KClass
 
-sealed class Request{
+@Serializable
+sealed class Request {
     abstract val messageId: String
     abstract val requestType: String
-    @Transient
     abstract val responseType: KClass<*>
 }
 
@@ -20,9 +20,9 @@ class GetAuthRequired(
 ) : Request() {
     @SerialName("request-type")
     override val requestType = "GetAuthRequired"
+
     @Transient
     override val responseType = GetAuthRequiredResponse::class
-
 }
 
 @Serializable
@@ -30,9 +30,31 @@ data class Authenticate(
     val auth: String,
     @SerialName("message-id")
     override val messageId: String = UUID.randomUUID().toString()
-): Request() {
+) : Request() {
     @SerialName("request-type")
     override val requestType: String = "Authenticate"
+
     @Transient
     override val responseType = AuthenticateResponse::class
 }
+
+@Serializable
+data class SetSceneItemProperties(
+    @SerialName("message-id")
+    override val messageId: String = UUID.randomUUID().toString(),
+    val item: String,
+    val position: Position? = null,
+    val visible: Boolean? = null,
+) : Request() {
+    @SerialName("request-type")
+    override val requestType: String = "SetSceneItemProperties"
+
+    @Transient
+    override val responseType = SetSceneItemPropertiesResponse::class
+}
+
+@Serializable
+data class Position(
+    val x: Double,
+    val y: Double,
+)
