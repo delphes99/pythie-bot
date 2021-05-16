@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(val name: String) {
-    val normalizeName = name.toLowerCase()
+    val normalizeName = name.lowercase()
 
     override fun toString(): String {
         return name

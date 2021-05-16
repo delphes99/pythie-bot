@@ -5,7 +5,7 @@ import fr.delphes.twitch.TwitchChannel
 data class IrcChannel private constructor(
     val name: String
 ) {
-    val ircName = "#${name.toLowerCase()}"
+    val ircName = "#${name.lowercase()}"
 
     fun toTwitchChannel() = TwitchChannel(name)
 

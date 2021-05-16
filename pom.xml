@@ -26,9 +26,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.5.0</kotlin.version>
-        <kotlinx-coroutines-core.version>1.5.0-RC</kotlinx-coroutines-core.version>
+        <kotlinx-coroutines-core.version>1.5.0</kotlinx-coroutines-core.version>
         <ktor.version>1.5.4</ktor.version>
-        <serialization.version>1.2.0</serialization.version>
+        <serialization.version>1.2.1</serialization.version>
         <kotlin.code.style>official</kotlin.code.style>
         <assertj-core.version>3.17.2</assertj-core.version>
         <logback-classic.version>1.2.3</logback-classic.version>

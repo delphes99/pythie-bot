@@ -18,7 +18,7 @@ class TwitchHelixClient : TwitchHelixApi {
 
     override suspend fun getUserInfosOf(authToken: AuthToken): UserInfosForToken {
         return httpClient.get("https://id.twitch.tv/oauth2/userinfo") {
-            header("Authorization", "Bearer ${authToken!!.access_token}")
+            header("Authorization", "Bearer ${authToken.access_token}")
         }
     }
 }

@@ -102,7 +102,7 @@ class TwitchConnector(
     private suspend fun AuthToken.toConfigurationTwitchAccount(): ConfigurationTwitchAccount {
         val userInfos = twitchHelixApi.getUserInfosOf(this)
 
-        return ConfigurationTwitchAccount(this, userInfos.preferred_username.toLowerCase())
+        return ConfigurationTwitchAccount(this, userInfos.preferred_username.lowercase())
     }
 
     private suspend fun updateConfiguration(newConfiguration: TwitchConfiguration) {

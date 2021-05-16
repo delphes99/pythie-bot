@@ -1,5 +1,6 @@
 package fr.delphes.twitch.irc
 
-inline class IrcUser(
+@JvmInline
+value class IrcUser(
     val name: String
 )

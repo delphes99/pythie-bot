@@ -5,7 +5,7 @@ import fr.delphes.twitch.api.user.User
 data class TwitchChannel(
     val name: String
 ) {
-    val normalizeName = name.toLowerCase()
+    val normalizeName = name.lowercase()
 
     fun toUser(): User {
         return User(name)

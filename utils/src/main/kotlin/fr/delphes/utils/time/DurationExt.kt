@@ -10,7 +10,7 @@ fun Duration.prettyPrint(): String {
         .substring(2)
         .replace("(\\d[HMS])(?!$)", "$1 ")
         .split('.')[0] + 's')
-        .toLowerCase()
+        .lowercase()
 }
 
 fun secondsOf(seconds: Int): Duration = Duration.ofSeconds(seconds.toLong())
