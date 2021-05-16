@@ -8,6 +8,10 @@
       <img src="@/common/assets/features.svg" width="20" />
       Features
     </router-link>
+    <router-link class="router-link" to="/overlay">
+      <img src="@/common/assets/overlay.svg" width="20" />
+      Overlay
+    </router-link>
     <router-link class="router-link" to="/about">
       <img src="@/common/assets/about.svg" width="20" />
       About

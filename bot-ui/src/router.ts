@@ -6,6 +6,9 @@ import TwitchFeature from "@/twitch/feature/TwitchFeature.vue";
 import TwitchReward from "@/twitch/reward/TwitchReward.vue";
 import Discord from "@/discord/Discord.vue";
 import Features from "@/features/Features.vue";
+import Overlays from "@/overlay/Overlays.vue";
+import OverlaysList from "@/overlay/OverlaysList.vue";
+import OverlayEditor from "@/overlay/editor/OverlayEditor.vue";
 import Home from "@/home/Home.vue";
 import Twitch from "@/twitch/Twitch.vue";
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
@@ -20,6 +23,22 @@ const routes: Array<RouteRecordRaw> = [
     path: "/features",
     name: "Features",
     component: Features
+  },
+  {
+    path: "/overlay",
+    name: "Overlays",
+    component: Overlays,
+    children: [
+      {
+        path: "",
+        component: OverlaysList
+      },
+      {
+        path: ":overlayId",
+        component: OverlayEditor,
+        props: true
+      }
+    ]
   },
   {
     path: "/about",
