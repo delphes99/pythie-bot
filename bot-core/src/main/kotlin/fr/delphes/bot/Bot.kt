@@ -7,6 +7,7 @@ import fr.delphes.bot.event.outgoing.CoreOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
+import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.utils.exhaustive
@@ -17,6 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
+import java.io.File
 
 class Bot(
     val publicUrl: String,
@@ -27,6 +29,8 @@ class Bot(
 ) {
     private val _connectors = mutableListOf<Connector>()
     val connectors get(): List<Connector> = _connectors
+
+    internal val overlayRepository = OverlayRepository("${configFilepath}${File.separator}overlays${File.separator}overlays.json")
 
     val alerts = Channel<Alert>()
 

@@ -26,7 +26,6 @@ export default {
       const response = await fetch(`${backendUrl}/features`);
 
       features.value = await response.json();
-      console.log(features.value);
     }
 
     getFeatures();

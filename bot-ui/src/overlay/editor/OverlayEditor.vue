@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-row">
-    <editor-props :bus="bus"></editor-props>
-    <editor-preview
-      class="flex-grow"
-      :overlay="overlay"
-      :bus="bus"
-    ></editor-preview>
+    <div class="w-1/6">
+      <editor-props :bus="bus"></editor-props>
+    </div>
+    <div class="w-5/6">
+      <editor-preview :overlay="overlay" :bus="bus"></editor-preview>
+    </div>
   </div>
 </template>
 

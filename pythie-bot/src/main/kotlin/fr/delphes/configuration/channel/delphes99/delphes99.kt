@@ -213,6 +213,7 @@ val delphes99Features = listOf(
         listOf(
             SendMessage("-> test dev", channel),
             Alert("test"),
+            PlaySound(listOf("kill.mp3", "kill2.mp3").random()),
         )
     },
     RewardRedeem(
@@ -220,7 +221,7 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST2
     ) {
         listOf(
-            ChangeItemPosition("Webcam", 1176.0, 807.0),
+            ChangeItemPosition("Webcam", 1028.0, 784.0),
         )
     },
     RewardRedeem(
@@ -228,7 +229,7 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST3
     ) {
         listOf(
-            ChangeItemPosition("Webcam", nextDouble(0.0, (1920.0 - 515.00)), nextDouble(0.0, (1080.0 - 246.00))),
+            ChangeItemPosition("Webcam", nextDouble(0.0, (1920.0 - 486.0)), nextDouble(0.0, (1080.0 - 273.0))),
         )
     },
     RewardRedeem(

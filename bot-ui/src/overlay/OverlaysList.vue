@@ -24,7 +24,7 @@ export default {
     const overlays = ref([]);
 
     async function getFeatures() {
-      overlays.value = OverlayRepository.list();
+      overlays.value = await OverlayRepository.list();
     }
 
     getFeatures();
