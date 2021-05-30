@@ -12,4 +12,8 @@ class OverlayRepository(
     serializer = { Serializer.encodeToString(it) },
     deserializer = { Serializer.decodeFromString(it) },
     initializer = { emptyList() }
-)
+) {
+    suspend fun add(overlay: Overlay) {
+        save(load().plus(overlay))
+    }
+}

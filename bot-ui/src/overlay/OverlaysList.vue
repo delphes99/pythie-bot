@@ -6,31 +6,105 @@
         :key="overlay"
         :overlay="overlay"
       ></overlay-card>
+      <card class="align-middle">
+        <div class="flex items-center justify-center h-full">
+          <button class="primary-button" @click="openCreate">Add</button>
+        </div>
+      </card>
+      <Modal v-model:is-open="isCreateModalOpened" title="Create overlay">
+        <fieldset class="flex flex-col border border-black p-1">
+          <legend>Overlay</legend>
+          <label for="name">Name</label>
+          <input type="text" id="name" v-model="addName" />
+          <fieldset class="flex flex-col border border-black p-1">
+            <legend>Resolution</legend>
+            <label for="width">Width</label>
+            <input type="text" id="width" v-model="addWidth" />
+            <label for="height">Height</label>
+            <input type="text" id="height" v-model="addHeight" />
+          </fieldset>
+        </fieldset>
+        <button class="primary-button" @click="createOverlay">Add</button>
+      </Modal>
     </card-panel>
   </panel>
 </template>
 
-<script>
+<script lang="ts">
+import Card from "@/common/components/common/Card.vue";
 import CardPanel from "@/common/components/common/CardPanel.vue";
+import Modal from "@/common/components/common/Modal.vue";
 import Panel from "@/common/components/common/Panel.vue";
 import OverlayCard from "@/overlay/components/OverlayCard.vue";
+import Overlay from "@/overlay/Overlay.ts";
 import OverlayRepository from "@/overlay/OverlayRepository.ts";
-import { ref } from "vue";
+import Resolution from "@/overlay/Resolution.ts";
+import router from "@/router.ts";
+import axios from "axios";
+import { inject, ref } from "vue";
+import { v4 as uuidv4 } from "uuid";
+
+function useOverlayList() {
+  const overlays = ref([]);
+
+  async function getOverlays() {
+    overlays.value = await OverlayRepository.list();
+  }
+
+  return {
+    overlays,
+    getOverlays
+  };
+}
+
+function useCreateOverlay(backendUrl: string) {
+  const isCreateModalOpened = ref(false);
+  const addName = ref("");
+  const addWidth = ref(1920);
+  const addHeight = ref(1080);
+
+  function openCreate() {
+    isCreateModalOpened.value = true;
+  }
+
+  async function createOverlay() {
+    //TODO better validation
+    if (!addName.value || !addWidth.value || !addHeight.value) {
+      alert("missing field");
+    }
+    const payload = new Overlay(
+      uuidv4(),
+      addName.value,
+      new Resolution(addWidth.value, addHeight.value)
+    );
+    await axios.post(`${backendUrl}/overlay`, payload, {
+      headers: { "Content-Type": "application/json" }
+    });
+    await router.push({ path: `/overlay/${payload.id}` });
+  }
+
+  return {
+    isCreateModalOpened,
+    openCreate,
+    addName,
+    addWidth,
+    addHeight,
+    createOverlay
+  };
+}
 
 export default {
   name: `OverlaysList`,
-  components: { OverlayCard, CardPanel, Panel },
+  components: { Modal, Card, OverlayCard, CardPanel, Panel },
   setup() {
-    const overlays = ref([]);
+    const backendUrl = inject("backendUrl");
+    const { overlays, getOverlays } = useOverlayList();
 
-    async function getFeatures() {
-      overlays.value = await OverlayRepository.list();
-    }
-
-    getFeatures();
+    getOverlays();
 
     return {
-      overlays
+      overlays,
+      ...useCreateOverlay(backendUrl)
     };
   }
 };

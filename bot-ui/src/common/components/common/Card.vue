@@ -1,11 +1,11 @@
 <template>
   <div class="m-0 lg:w-1/4 md:w-1/3 w-1/2 p-2">
-    <div class="border shadow-md p-3">
-      <div class="flex flex-row flex-grow space-x-2">
+    <div class="border shadow-md p-3 h-full flex flex-col">
+      <div class="flex flex-row flex-shrink space-x-2">
         <slot name="icon"></slot>
-        <h1 class="text-xl font-bold">{{ title }}</h1>
+        <h1 v-if="title" class="text-xl font-bold">{{ title }}</h1>
       </div>
-      <div>
+      <div class="flex-grow flex-shrink-0">
         <slot></slot>
       </div>
       <div>
@@ -19,10 +19,7 @@
 export default {
   name: "Card",
   props: {
-    title: {
-      type: String,
-      required: true
-    }
+    title: String
   }
 };
 </script>

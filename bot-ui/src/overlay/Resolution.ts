@@ -1,4 +1,9 @@
-export default interface Resolution {
-  width: Number;
-  height: Number;
+export default class Resolution {
+  width: number;
+  height: number;
+
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+  }
 }
