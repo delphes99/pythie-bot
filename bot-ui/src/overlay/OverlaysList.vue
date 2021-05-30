@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import Panel from "@/common/components/common/Panel";
+import CardPanel from "@/common/components/common/CardPanel.vue";
+import Panel from "@/common/components/common/Panel.vue";
+import OverlayCard from "@/overlay/components/OverlayCard.vue";
+import OverlayRepository from "@/overlay/OverlayRepository.ts";
 import { ref } from "vue";
-import CardPanel from "@/common/components/common/CardPanel";
-import OverlayCard from "@/overlay/components/OverlayCard";
-import OverlayRepository from "@/overlay/OverlayRepository";
 
 export default {
   name: `OverlaysList`,

@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-row">
+  <div v-if="isLoading">Loading</div>
+  <div v-else class="flex flex-row">
     <div class="w-1/6">
       <editor-props :bus="bus"></editor-props>
     </div>
@@ -10,11 +11,12 @@
 </template>
 
 <script lang="ts">
+import { useLoadingPromise } from "@/common/composition/UseLoadingPromise.ts";
 import EditorPreview from "@/overlay/editor/EditorPreview.vue";
 import EditorProps from "@/overlay/editor/EditorProps.vue";
-import OverlayRepository from "@/overlay/OverlayRepository";
+import OverlayRepository from "@/overlay/OverlayRepository.ts";
 import mitt from "mitt";
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: `OverlayEditor`,
@@ -27,11 +29,15 @@ export default defineComponent({
   },
   setup(props) {
     const bus = mitt();
-    const overlay = ref(OverlayRepository.get(props.overlayId));
+
+    const { isLoading, data: overlay } = useLoadingPromise(
+      OverlayRepository.get(props.overlayId)
+    );
 
     return {
       overlay,
-      bus
+      bus,
+      isLoading
     };
   }
 });
