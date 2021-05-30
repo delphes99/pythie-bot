@@ -7,6 +7,9 @@
           Edit
         </a>
       </router-link>
+      <button class="secondary-button" @click="$emit('deleted')">
+        Delete
+      </button>
     </template>
   </card>
 </template>
@@ -21,6 +24,7 @@ export default defineComponent({
   components: {
     Card
   },
+  emits: ["deleted"],
   props: {
     overlay: {
       type: Object as PropType<Overlay>,

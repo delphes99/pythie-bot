@@ -5,6 +5,7 @@
         v-for="overlay in overlays"
         :key="overlay"
         :overlay="overlay"
+        @deleted="deleteOverlay(overlay)"
       ></overlay-card>
       <card class="align-middle">
         <div class="flex items-center justify-center h-full">
@@ -41,11 +42,11 @@ import OverlayRepository from "@/overlay/OverlayRepository.ts";
 import Resolution from "@/overlay/Resolution.ts";
 import router from "@/router.ts";
 import axios from "axios";
-import { inject, ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import { inject, ref } from "vue";
 
 function useOverlayList() {
-  const overlays = ref([]);
+  const overlays = ref<Overlay[]>([]);
 
   async function getOverlays() {
     overlays.value = await OverlayRepository.list();
@@ -97,13 +98,20 @@ export default {
   name: `OverlaysList`,
   components: { Modal, Card, OverlayCard, CardPanel, Panel },
   setup() {
-    const backendUrl = inject("backendUrl");
-    const { overlays, getOverlays } = useOverlayList();
+    const backendUrl = inject("backendUrl") as string;
+    const { overlays, getOverlays: refresh } = useOverlayList();
 
-    getOverlays();
+    refresh();
+
+    async function deleteOverlay(overlay: Overlay) {
+      await axios.delete(`${backendUrl}/overlay/${overlay.id}`);
+      //TODO notification card
+      await refresh();
+    }
 
     return {
       overlays,
+      deleteOverlay,
       ...useCreateOverlay(backendUrl)
     };
   }
