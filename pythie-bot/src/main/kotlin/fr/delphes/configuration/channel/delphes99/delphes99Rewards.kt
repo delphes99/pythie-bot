@@ -10,7 +10,8 @@ enum class DelphesReward(override val rewardConfiguration: RewardConfiguration):
     DEV_TEST(testDev),
     DEV_TEST2(testDev2),
     DEV_TEST3(testDev3),
-    SATISFACTORY_COLOR(satisfactoryBaseColor);
+    SATISFACTORY_COLOR(satisfactoryBaseColor),
+    RIP(rip);
 
     companion object {
         fun toRewardList() = values().map(DelphesReward::rewardConfiguration).toList()
@@ -51,4 +52,11 @@ private val satisfactoryBaseColor = RewardConfiguration(
     "Choisissez la couleur de la base (pour le meilleur ou pour le pire...)",
     isGlobalCooldownEnabled = true,
     globalCooldownSeconds = Duration.ofMinutes(30).toSeconds()
+)
+private val rip = RewardConfiguration(
+    "R.I.P.",
+    350,
+    "Rest in peace",
+    isGlobalCooldownEnabled = true,
+    globalCooldownSeconds = Duration.ofSeconds(30).toSeconds()
 )

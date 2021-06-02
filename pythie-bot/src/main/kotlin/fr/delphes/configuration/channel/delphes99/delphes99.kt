@@ -10,6 +10,7 @@ import fr.delphes.connector.discord.outgoingEvent.DiscordMessage
 import fr.delphes.connector.obs.business.SourceFilter
 import fr.delphes.connector.obs.outgoingEvent.ActivateFilter
 import fr.delphes.connector.obs.outgoingEvent.ChangeItemPosition
+import fr.delphes.connector.obs.outgoingEvent.ChangeItemVisibility
 import fr.delphes.connector.obs.outgoingEvent.DeactivateFilter
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
@@ -51,7 +52,9 @@ import java.time.format.DateTimeFormatter
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
 val channel = TwitchChannel("delphes99")
-val matrixFilter = SourceFilter("VCam", "ascii")
+val matrixFilter = SourceFilter("webcam", "matrix")
+val blackAndWhiteFilter = SourceFilter("main_capture", "black_and_white")
+
 @InternalSerializationApi
 val delphes99Features = listOf(
     VOTH(
@@ -67,7 +70,7 @@ val delphes99Features = listOf(
                         ).joinToString(" "),
                         channel
                     ),
-                    PlaySound(listOf("kill.mp3", "kill2.mp3").random()),
+                    PlaySound(listOf("kill-1.mp3", "kill-2.mp3", "kill-3.mp3", "kill-4.mp3", "kill-5.mp3").random()),
                 )
             },
             statsCommand = "!vothstats",
@@ -127,10 +130,16 @@ val delphes99Features = listOf(
         }
     ),
     NewFollow(channel) { newFollow ->
-        listOf(SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F", channel))
+        listOf(
+            SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F", channel),
+            PlaySound("welcome.mp3"),
+        )
     },
     NewSub(channel) { newSub ->
-        listOf(SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F", channel))
+        listOf(
+            SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F", channel),
+            PlaySound("thank-you.mp3"),
+        )
     },
     StreamOffline(channel) {
         listOf(
@@ -213,7 +222,6 @@ val delphes99Features = listOf(
         listOf(
             SendMessage("-> test dev", channel),
             Alert("test"),
-            PlaySound(listOf("kill.mp3", "kill2.mp3").random()),
         )
     },
     RewardRedeem(
@@ -285,6 +293,65 @@ val delphes99Features = listOf(
             listOf(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
         }
     ),
+    Command(
+        channel,
+        "!bluff",
+        responses = {
+            listOf(
+                PlaySound(
+                    listOf(
+                        "bluff-1.mp3",
+                        "bluff-2.mp3",
+                        "bluff-3.mp3",
+                        "bluff-4.mp3",
+                        "bluff-5.mp3",
+                        "bluff-6.mp3",
+                        "bluff-7.mp3",
+                        "bluff-8.mp3",
+                        "bluff-9.mp3",
+                        "bluff-10.mp3",
+                        "bluff-11.mp3",
+                        "bluff-12.mp3",
+                        "bluff-13.mp3",
+                        "bluff-14.mp3",
+                        "bluff-15.mp3",
+                    ).random()
+                )
+            )
+        }
+    ),
+    Command(
+        channel,
+        "!clair",
+        responses = {
+            listOf(
+                PlaySound(
+                    "clair.mp3"
+                )
+            )
+        }
+    ),
+    RewardRedeem(
+        channel,
+        DelphesReward.RIP,
+    ) {
+        listOf(
+            PlaySound("sad.mp3"),
+            ActivateFilter(blackAndWhiteFilter),
+            ChangeItemVisibility("rain", true, "main_capture")
+        )
+    },
+    SourceFilterActivated { sourceFilterActivated ->
+        if (sourceFilterActivated.filter == blackAndWhiteFilter) {
+            listOf(
+                Pause(Duration.ofMillis(9700)),
+                DeactivateFilter(blackAndWhiteFilter),
+                ChangeItemVisibility("rain", false, "main_capture")
+            )
+        } else {
+            emptyList()
+        }
+    },
     NewGuildMember { newGuildMember ->
         listOf(
             SendMessage(
@@ -349,7 +416,7 @@ val delphes99Features = listOf(
         } else {
             emptyList()
         }
-    },
+    }
 )
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(

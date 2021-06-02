@@ -41,6 +41,8 @@ data class Authenticate(
 @Serializable
 data class SetSceneItemProperties(
     val item: String,
+    @SerialName("scene-name")
+    val sceneName: String? = null,
     val position: Position? = null,
     val visible: Boolean? = null,
     @SerialName("message-id")

@@ -16,13 +16,15 @@ sealed class ObsOutgoingEvent : OutgoingEvent {
 @InternalSerializationApi
 data class ChangeItemVisibility(
     val itemName: String,
-    val visible: Boolean
+    val visible: Boolean,
+    val sceneName: String? = null,
 ) : ObsOutgoingEvent() {
     override suspend fun executeOnObs(connector: ObsConnector) {
         connector.connected {
             client.sendRequest(
                 SetSceneItemProperties(
                     item = itemName,
+                    sceneName = sceneName,
                     visible = visible
                 )
             )
@@ -35,12 +37,14 @@ data class ChangeItemPosition(
     val itemName: String,
     val x: Double,
     val y: Double,
+    val sceneName: String? = null,
 ) : ObsOutgoingEvent() {
     override suspend fun executeOnObs(connector: ObsConnector) {
         connector.connected {
             client.sendRequest(
                 SetSceneItemProperties(
                     item = itemName,
+                    sceneName = sceneName,
                     position = Position(x, y)
                 )
             )
