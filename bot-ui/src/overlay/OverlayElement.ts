@@ -1,1 +1,3 @@
-export interface OverlayElement {}
+export interface OverlayElement {
+  id: string;
+}

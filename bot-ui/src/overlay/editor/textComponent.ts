@@ -15,3 +15,13 @@ export default class TextComponent implements OverlayElement {
     this.text = text;
   }
 }
+
+export function fromObject(obj: {
+  left: number;
+  top: number;
+  text: string;
+  id: string;
+}): TextComponent {
+  const { left, top, text, id } = obj;
+  return new TextComponent(left, top, text, id);
+}

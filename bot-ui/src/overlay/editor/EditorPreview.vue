@@ -2,11 +2,11 @@
   <canvas id="myCanvas"></canvas>
 </template>
 <script lang="ts">
-import TextComponent from "@/overlay/editor/textComponent";
+import TextComponent, { fromObject } from "@/overlay/editor/textComponent";
 import Overlay from "@/overlay/Overlay.ts";
+import { OverlayElement } from "@/overlay/OverlayElement.ts";
 import { fabric } from "fabric";
-import { Emitter } from "mitt";
-import { defineComponent, onMounted, PropType } from "vue";
+import { defineComponent, onMounted, PropType, watch } from "vue";
 
 export default defineComponent({
   name: "editorPreview",
@@ -15,12 +15,12 @@ export default defineComponent({
       type: Object as PropType<Overlay>,
       required: true
     },
-    bus: {
-      type: Object as PropType<Emitter>,
-      required: true
+    selection: {
+      type: Object as PropType<OverlayElement>
     }
   },
-  setup(props) {
+  emits: ["update:selection"],
+  setup(props, { emit }) {
     const components = new Map<string, fabric.Text>();
 
     const loadCanvas = () => {
@@ -30,51 +30,70 @@ export default defineComponent({
       canvas.setHeight(props.overlay.resolution.height.toString());
 
       canvas.on("selection:cleared", _ => {
-        props.bus.emit("selectionCleared");
+        emit("update:selection", null);
       });
 
-      props.bus.on("modifyText", event => {
-        const { id, text, left, top } = event as TextComponent;
-        const canvasComponent = components.get(id);
-        if (canvasComponent) {
-          canvasComponent.set("text", text);
-          canvasComponent.set({ left: left, top: top });
-          canvas.renderAll();
-        }
-      });
-
-      props.bus.on("selectedText", e => {
-        if (e) {
-          const component = components.get(e.id);
-          if (component) {
-            canvas.setActiveObject(component);
-            canvas.requestRenderAll();
+      watch(
+        () => props.selection,
+        newValue => {
+          if (newValue instanceof TextComponent) {
+            const canvasComponent = components.get(newValue.id);
+            if (canvasComponent) {
+              canvas.setActiveObject(canvasComponent);
+              canvas.requestRenderAll();
+            } else {
+              console.error("Unknown selected object");
+            }
           }
         }
-      });
+      );
 
-      props.bus.on("addText", event => {
-        const component = event as TextComponent;
-        const rect = new fabric.Text(component.text, {
-          left: component.left,
-          top: component.top
-        });
+      function getElement(element: OverlayElement): TextComponent {
+        return props.overlay.elements.find(
+          e => e.id === element.id
+        ) as TextComponent;
+      }
 
-        rect.on("selected", e => {
-          props.bus.emit("selectedText", component);
-        });
-        rect.on("moved", e => {
-          if (e.target) {
-            component.left = e.target.left ?? 0;
-            component.top = e.target.top ?? 0;
-            props.bus.emit("selectedText", component);
-          }
-        });
+      watch(
+        () => props.overlay.elements,
+        newValue => {
+          newValue.forEach(element => {
+            const canvasComponent = components.get(element.id);
+            if (canvasComponent && element instanceof TextComponent) {
+              canvasComponent.top = element.top;
+              canvasComponent.left = element.left;
+              canvasComponent.text = element.text;
+            } else {
+              if (element instanceof TextComponent) {
+                const rect = new fabric.Text(element.text, {
+                  left: element.left,
+                  top: element.top
+                });
 
-        components.set(component.id, rect);
-        canvas.add(rect);
-        canvas.setActiveObject(rect);
-      });
+                rect.on("selected", _ => {
+                  emit("update:selection", getElement(element));
+                });
+
+                rect.on("moved", e => {
+                  if (e.target) {
+                    const updatedElement = {
+                      ...getElement(element),
+                      left: e.target.left ?? 0,
+                      top: e.target.top ?? 0
+                    };
+                    emit("update:selection", fromObject(updatedElement));
+                  }
+                });
+
+                components.set(element.id, rect);
+                canvas.add(rect);
+              }
+            }
+          });
+
+          canvas.requestRenderAll();
+        }
+      );
     };
 
     onMounted(loadCanvas);
