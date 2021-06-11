@@ -27,7 +27,7 @@ import EditorProps from "@/overlay/editor/EditorProps.vue";
 import TextComponent, { fromObject } from "@/overlay/editor/textComponent.ts";
 import { OverlayElement } from "@/overlay/OverlayElement.js";
 import OverlayRepository from "@/overlay/OverlayRepository.ts";
-import { computed, defineComponent, ref, watch } from "vue";
+import { computed, defineComponent, inject, ref, watch } from "vue";
 
 export default defineComponent({
   name: `OverlayEditor`,
@@ -44,9 +44,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const loadPromise = useLoadingPromise(
-      OverlayRepository.get(props.overlayId)
-    );
+    const backendUrl = inject("backendUrl") as string;
+    const repository = new OverlayRepository(backendUrl);
+    const loadPromise = useLoadingPromise(repository.get(props.overlayId));
+
     const overlay = loadPromise.data;
     const selection = ref<OverlayElement | null>(null);
     const components = computed(() => {
@@ -89,9 +90,19 @@ export default defineComponent({
     );
 
     watch(
-      () => components.value,
-      _ => {
-        //TODO save
+      () => overlay.value?.elements,
+      (newV, oldV) => {
+        if (
+          newV &&
+          oldV &&
+          overlay.value &&
+          JSON.stringify(newV) !== JSON.stringify(oldV)
+        ) {
+          if (!repository.save(overlay.value)) {
+            //TODO better error management
+            alert("Save error");
+          }
+        }
       }
     );
 

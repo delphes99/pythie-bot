@@ -41,15 +41,14 @@ import Overlay from "@/overlay/Overlay.ts";
 import OverlayRepository from "@/overlay/OverlayRepository.ts";
 import Resolution from "@/overlay/Resolution.ts";
 import router from "@/router.ts";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { inject, ref } from "vue";
 
-function useOverlayList() {
+function useOverlayList(repository: OverlayRepository) {
   const overlays = ref<Overlay[]>([]);
 
   async function getOverlays() {
-    overlays.value = await OverlayRepository.list();
+    overlays.value = await repository.list();
   }
 
   return {
@@ -58,7 +57,7 @@ function useOverlayList() {
   };
 }
 
-function useCreateOverlay(backendUrl: string) {
+function useCreateOverlay(repository: OverlayRepository) {
   const isCreateModalOpened = ref(false);
   const addName = ref("");
   const addWidth = ref(1920);
@@ -73,15 +72,14 @@ function useCreateOverlay(backendUrl: string) {
     if (!addName.value || !addWidth.value || !addHeight.value) {
       alert("missing field");
     }
-    const payload = new Overlay(
+    const overlay = new Overlay(
       uuidv4(),
       addName.value,
       new Resolution(addWidth.value, addHeight.value)
     );
-    await axios.post(`${backendUrl}/overlay`, payload, {
-      headers: { "Content-Type": "application/json" }
-    });
-    await router.push({ path: `/overlay/${payload.id}` });
+
+    await repository.save(overlay);
+    await router.push({ path: `/overlay/${overlay.id}` });
   }
 
   return {
@@ -99,12 +97,14 @@ export default {
   components: { Modal, Card, OverlayCard, CardPanel, Panel },
   setup() {
     const backendUrl = inject("backendUrl") as string;
-    const { overlays, getOverlays: refresh } = useOverlayList();
+    const repository = new OverlayRepository(backendUrl);
+
+    const { overlays, getOverlays: refresh } = useOverlayList(repository);
 
     refresh();
 
     async function deleteOverlay(overlay: Overlay) {
-      await axios.delete(`${backendUrl}/overlay/${overlay.id}`);
+      await repository.deleteOverlay(overlay);
       //TODO notification card
       await refresh();
     }
@@ -112,7 +112,7 @@ export default {
     return {
       overlays,
       deleteOverlay,
-      ...useCreateOverlay(backendUrl)
+      ...useCreateOverlay(repository)
     };
   }
 };

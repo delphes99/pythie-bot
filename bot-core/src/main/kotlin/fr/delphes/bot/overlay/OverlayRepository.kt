@@ -7,13 +7,17 @@ import kotlinx.serialization.encodeToString
 
 class OverlayRepository(
     path: String
-): FileRepository<List<Overlay>>(
+) : FileRepository<List<Overlay>>(
     path,
     serializer = { Serializer.encodeToString(it) },
     deserializer = { Serializer.decodeFromString(it) },
     initializer = { emptyList() }
 ) {
-    suspend fun add(overlay: Overlay) {
-        save(load().plus(overlay))
+    suspend fun upsert(overlay: Overlay) {
+        save(
+            load()
+                .filterNot { it.id == overlay.id }
+                .plus(overlay)
+        )
     }
 }

@@ -2,7 +2,7 @@
   <canvas id="myCanvas"></canvas>
 </template>
 <script lang="ts">
-import TextComponent, { fromObject } from "@/overlay/editor/textComponent";
+import TextComponent, { fromObject } from "@/overlay/editor/textComponent.ts";
 import Overlay from "@/overlay/Overlay.ts";
 import { OverlayElement } from "@/overlay/OverlayElement.ts";
 import { fabric } from "fabric";
@@ -29,6 +29,52 @@ export default defineComponent({
       canvas.setWidth(props.overlay.resolution.width.toString());
       canvas.setHeight(props.overlay.resolution.height.toString());
 
+      function getElement(element: OverlayElement): TextComponent {
+        return props.overlay.elements.find(
+          e => e.id === element.id
+        ) as TextComponent;
+      }
+
+      function renderElements(elements: OverlayElement[]) {
+        elements.forEach(element => {
+          const canvasComponent = components.get(element.id);
+          if (canvasComponent && element instanceof TextComponent) {
+            canvasComponent.top = element.top;
+            canvasComponent.left = element.left;
+            canvasComponent.text = element.text;
+          } else {
+            if (element instanceof TextComponent) {
+              const rect = new fabric.Text(element.text, {
+                left: element.left,
+                top: element.top
+              });
+
+              rect.on("selected", _ => {
+                emit("update:selection", getElement(element));
+              });
+
+              rect.on("moved", e => {
+                if (e.target) {
+                  const updatedElement = {
+                    ...getElement(element),
+                    left: e.target.left ?? 0,
+                    top: e.target.top ?? 0
+                  };
+                  emit("update:selection", fromObject(updatedElement));
+                }
+              });
+
+              components.set(element.id, rect);
+              canvas.add(rect);
+            }
+          }
+        });
+
+        canvas.requestRenderAll();
+      }
+
+      renderElements(props.overlay.elements);
+
       canvas.on("selection:cleared", _ => {
         emit("update:selection", null);
       });
@@ -48,50 +94,10 @@ export default defineComponent({
         }
       );
 
-      function getElement(element: OverlayElement): TextComponent {
-        return props.overlay.elements.find(
-          e => e.id === element.id
-        ) as TextComponent;
-      }
-
       watch(
         () => props.overlay.elements,
         newValue => {
-          newValue.forEach(element => {
-            const canvasComponent = components.get(element.id);
-            if (canvasComponent && element instanceof TextComponent) {
-              canvasComponent.top = element.top;
-              canvasComponent.left = element.left;
-              canvasComponent.text = element.text;
-            } else {
-              if (element instanceof TextComponent) {
-                const rect = new fabric.Text(element.text, {
-                  left: element.left,
-                  top: element.top
-                });
-
-                rect.on("selected", _ => {
-                  emit("update:selection", getElement(element));
-                });
-
-                rect.on("moved", e => {
-                  if (e.target) {
-                    const updatedElement = {
-                      ...getElement(element),
-                      left: e.target.left ?? 0,
-                      top: e.target.top ?? 0
-                    };
-                    emit("update:selection", fromObject(updatedElement));
-                  }
-                });
-
-                components.set(element.id, rect);
-                canvas.add(rect);
-              }
-            }
-          });
-
-          canvas.requestRenderAll();
+          renderElements(newValue);
         }
       );
     };

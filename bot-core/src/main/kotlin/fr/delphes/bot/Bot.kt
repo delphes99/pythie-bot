@@ -25,7 +25,7 @@ class Bot(
     val configFilepath: String,
     val features: List<NonEditableFeature<*>>,
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
-    val featureSerializationModule: SerializersModule,
+    private val featureSerializationModule: SerializersModule,
 ) {
     private val _connectors = mutableListOf<Connector>()
     val connectors get(): List<Connector> = _connectors
