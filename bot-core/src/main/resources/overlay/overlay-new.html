@@ -1,0 +1,34 @@
+<html>
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script lang="javascript">
+		window.onload = load
+
+		function load() {
+			getOverlay().then(overlay => {
+				overlay.data.elements.forEach(element => {
+					const text = document.createElement('div')
+					text.innerHTML = element.text
+					text.style.position = 'absolute'
+					text.style.top = element.top
+					text.style.left = element.left
+					document.body.appendChild(text)
+				})
+
+			})
+		}
+
+		async function getOverlay() {
+			return await axios.get(`http://localhost:8080/api/overlays/${getOverlayId()}`);
+		}
+
+		function getOverlayId() {
+			const urlParams = new URLSearchParams(window.location.search);
+			return urlParams.get('id')
+		}
+	</script>
+</head>
+<body>
+
+</body>
+</html>

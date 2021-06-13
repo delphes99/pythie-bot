@@ -11,7 +11,7 @@ export default class OverlayRepository {
   }
 
   list(): Promise<Overlay[]> {
-    return axios.get(`${this.backendUrl}/overlays`).then(response => {
+    return axios.get(`${this.backendUrl}/api/overlays`).then(response => {
       const data = response.data as Overlay[];
       data.forEach(overlay => {
         overlay.elements = overlay.elements
@@ -28,7 +28,7 @@ export default class OverlayRepository {
 
   async save(overlay: Overlay): Promise<boolean> {
     return await axios
-      .post(`${this.backendUrl}/overlay`, overlay, {
+      .post(`${this.backendUrl}/api/overlay`, overlay, {
         headers: { "Content-Type": "application/json" }
       })
       .then(_ => true);
@@ -36,7 +36,7 @@ export default class OverlayRepository {
 
   async deleteOverlay(overlay: Overlay): Promise<boolean> {
     return await axios
-      .delete(`${this.backendUrl}/overlay/${overlay.id}`)
+      .delete(`${this.backendUrl}/api/overlay/${overlay.id}`)
       .then(_ => true);
   }
 }
