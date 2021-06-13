@@ -59,6 +59,7 @@ class Channel(
                 .listenToStreamOnline()
                 .listenToStreamOffline()
                 .listenToChannelUpdate()
+                .listenToIncomingRaid()
                 .listenToClipCreated { clipCreatedMapper.handleTwitchEvent(it) }
                 .build()
 

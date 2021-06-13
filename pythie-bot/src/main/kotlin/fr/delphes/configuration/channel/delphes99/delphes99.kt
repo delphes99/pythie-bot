@@ -14,6 +14,7 @@ import fr.delphes.connector.obs.outgoingEvent.ChangeItemVisibility
 import fr.delphes.connector.obs.outgoingEvent.DeactivateFilter
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
+import fr.delphes.connector.twitch.outgoingEvent.CreatePoll
 import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.discord.NewGuildMember
@@ -27,6 +28,7 @@ import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.endCredits.EndCredits
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.gameReward.GameReward
+import fr.delphes.features.twitch.incomingRaid.IncomingRaid
 import fr.delphes.features.twitch.newFollow.NewFollow
 import fr.delphes.features.twitch.newSub.NewSub
 import fr.delphes.features.twitch.rewardRedeem.RewardRedeem
@@ -388,18 +390,35 @@ val delphes99Features = listOf(
             "A:\\pythiebot\\feature\\streamer_highlight.json"
         ),
         response = { messageReceived, user ->
-            listOf(
-                SendMessage(
-                    "\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}",
-                    channel
-                ),
-                DiscordMessage(
-                    "\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}",
-                    789537633487159396
+            if (user.name == "streamlabs") {
+                emptyList()
+            } else {
+                listOf(
+                    SendMessage(
+                        "\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}",
+                        channel
+                    )
                 )
-            )
+            }
         }
     ),
+    IncomingRaid(channel) { incomingRaid ->
+        listOf(
+            SendMessage(
+                "\uD83E\uDDED ${incomingRaid.leader.name} explore twitch et fait escale ici avec ses ${incomingRaid.numberOfRaiders} acolytes.",
+                channel
+            ),
+            CreatePoll(
+                channel,
+                "Une présentation ?",
+                Duration.ofSeconds(30),
+                "Qui es-tu ?",
+                "Que fais-tu ?",
+                "La totale !",
+                "On te connait (ou OSEF)"
+            ),
+        )
+    },
     Command(
         channel,
         "!coucou",
@@ -416,7 +435,7 @@ val delphes99Features = listOf(
         } else {
             emptyList()
         }
-    }
+    },
 )
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(

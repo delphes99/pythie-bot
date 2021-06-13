@@ -1,5 +1,6 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.channelPoll.CreatePoll
 import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -17,4 +18,6 @@ interface ChannelTwitchApi : WebhookApi {
     suspend fun activateReward(reward: RewardConfiguration)
 
     suspend fun getClips(startedAfter: LocalDateTime): List<Clip>
+
+    suspend fun createPoll(poll: CreatePoll)
 }

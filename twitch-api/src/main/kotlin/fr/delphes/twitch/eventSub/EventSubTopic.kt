@@ -9,5 +9,7 @@ enum class EventSubTopic(
     NEW_FOLLOW("newFollow"),
     NEW_SUB("newSub"),
     STREAM_OFFLINE("streamOffline"),
-    STREAM_ONLINE("streamOnline");
+    STREAM_ONLINE("streamOnline"),
+    CHANNEL_SUBSCRIPTION_MESSAGE("subscriptionMessage"),
+    INCOMING_RAID("incomingRaid"),
 }

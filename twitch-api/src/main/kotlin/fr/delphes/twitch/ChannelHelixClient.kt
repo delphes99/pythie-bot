@@ -1,6 +1,10 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
+import fr.delphes.twitch.api.channelPoll.CreatePoll
+import fr.delphes.twitch.api.channelPoll.payload.CreatePollDataPayload
+import fr.delphes.twitch.api.channelPoll.payload.CreatePollQuery
+import fr.delphes.twitch.api.channelPoll.payload.CreatePollResponse
 import fr.delphes.twitch.api.clips.payload.GetClips
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
@@ -93,5 +97,13 @@ internal class ChannelHelixClient(
         )
 
         return payload.data
+    }
+
+    override suspend fun createPoll(poll: CreatePoll): CreatePollDataPayload {
+        val payload = "https://api.twitch.tv/helix/polls".post<CreatePollResponse>(
+            CreatePollQuery.of(poll, userId)
+        )
+
+        return payload.data.first()
     }
 }

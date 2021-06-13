@@ -7,15 +7,16 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import java.time.Duration
+import java.time.temporal.ChronoUnit
 
-object DurationSerializer : KSerializer<Duration> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Duration", PrimitiveKind.STRING)
+object DurationToUnitSerializer : KSerializer<Duration> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DurationUnit", PrimitiveKind.LONG)
 
     override fun deserialize(decoder: Decoder): Duration {
-        return Duration.parse(decoder.decodeString())
+        return Duration.of(decoder.decodeLong(), ChronoUnit.SECONDS)
     }
 
     override fun serialize(encoder: Encoder, value: Duration) {
-        encoder.encodeString(value.toString())
+        encoder.encodeLong(value[ChronoUnit.SECONDS])
     }
 }

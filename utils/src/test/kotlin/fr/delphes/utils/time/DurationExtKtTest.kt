@@ -1,17 +1,17 @@
 package fr.delphes.utils.time
 
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
 internal class DurationExtKtTest {
     @Test
     internal fun `minute and second`() {
-        assertThat(Duration.parse("PT9M11.4806089S").prettyPrint()).isEqualTo("9m11s")
+        Duration.parse("PT9M11.4806089S").prettyPrint() shouldBe "9m11s"
     }
 
     @Test
     internal fun zero() {
-        assertThat(Duration.ZERO.prettyPrint()).isEqualTo("0s")
+        Duration.ZERO.prettyPrint() shouldBe "0s"
     }
 }

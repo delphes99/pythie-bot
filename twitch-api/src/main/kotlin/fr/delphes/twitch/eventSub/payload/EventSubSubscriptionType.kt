@@ -18,5 +18,9 @@ enum class EventSubSubscriptionType {
     @SerialName("stream.offline")
     STREAM_OFFLINE,
     @SerialName("stream.online")
-    STREAM_ONLINE;
+    STREAM_ONLINE,
+    @SerialName("channel.subscription.message")
+    CHANNEL_SUBSCRIPTION_MESSAGE,
+    @SerialName("channel.raid")
+    CHANNEL_RAID,
 }

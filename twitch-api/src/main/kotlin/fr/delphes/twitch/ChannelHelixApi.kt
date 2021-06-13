@@ -1,6 +1,8 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemption
+import fr.delphes.twitch.api.channelPoll.CreatePoll
+import fr.delphes.twitch.api.channelPoll.payload.CreatePollDataPayload
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
@@ -26,4 +28,6 @@ interface ChannelHelixApi {
     suspend fun updateRewardRedemption(redemption: RewardRedemption, status: RedemptionStatusForUpdate)
 
     suspend fun getClips(startAfter: LocalDateTime): List<GetClipsPayload>
+
+    suspend fun createPoll(poll: CreatePoll): CreatePollDataPayload
 }

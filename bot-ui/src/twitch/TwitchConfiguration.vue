@@ -161,7 +161,7 @@ export default {
       );
       params.append(
         "scope",
-        "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions"
+        "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions channel:manage:polls channel:manage:predictions"
       );
       params.append("state", state);
 

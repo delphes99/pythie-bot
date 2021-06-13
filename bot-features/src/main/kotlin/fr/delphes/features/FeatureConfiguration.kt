@@ -16,6 +16,7 @@ import fr.delphes.features.twitch.commandList.CommandListDescription
 import fr.delphes.features.twitch.endCredits.EndCreditsDescription
 import fr.delphes.features.twitch.gameDescription.GameDescriptionDescription
 import fr.delphes.features.twitch.gameReward.GameRewardDescription
+import fr.delphes.features.twitch.incomingRaid.IncomingRaidDescription
 import fr.delphes.features.twitch.newFollow.NewFollowDescription
 import fr.delphes.features.twitch.newSub.NewSubDescription
 import fr.delphes.features.twitch.rewardRedeem.RewardRedeemDescription
@@ -55,6 +56,7 @@ object FeatureConfiguration {
         registerFeatureConfiguration<StreamOnlineDescription>()
         registerFeatureConfiguration<StreamUpdateDescription>()
         registerFeatureConfiguration<VOTHDescription>()
+        registerFeatureConfiguration<IncomingRaidDescription>()
         registerFeatureConfiguration<EditableCommandConfiguration>()
         registerFeatureConfiguration<SceneChangedDescription>()
         registerFeatureConfiguration<SourceFilterActivatedDescription>()

@@ -3,7 +3,10 @@ package fr.delphes.twitch
 import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
 import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
+import fr.delphes.twitch.api.channelPoll.CreatePoll
+import fr.delphes.twitch.api.channelRaid.ChannelRaidEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
+import fr.delphes.twitch.api.channelSubscribe.ChannelSubscriptionMessageEventSubConfiguration
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdateEventSubConfiguration
 import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
@@ -60,6 +63,10 @@ class ChannelTwitchClient(
         return helixApi.getClips(startedAfter).map(GetClipsPayload::toClip)
     }
 
+    override suspend fun createPoll(poll: CreatePoll) {
+        helixApi.createPoll(poll)
+    }
+
     companion object {
         private val LOGGER = KotlinLogging.logger {}
 
@@ -110,6 +117,10 @@ class ChannelTwitchClient(
             eventSubConfigurations.add(
                 ChannelSubscribeEventSubConfiguration()
             )
+            //TODO same subscription ??
+            eventSubConfigurations.add(
+                ChannelSubscriptionMessageEventSubConfiguration()
+            )
 
             return this
         }
@@ -141,6 +152,14 @@ class ChannelTwitchClient(
         fun listenToStreamOffline(): Builder {
             eventSubConfigurations.add(
                 StreamOfflineEventSubConfiguration()
+            )
+
+            return this
+        }
+
+        fun listenToIncomingRaid(): Builder {
+            eventSubConfigurations.add(
+                ChannelRaidEventSubConfiguration()
             )
 
             return this

@@ -8,20 +8,18 @@ import kotlinx.serialization.encodeToString
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-internal class DurationSerializerTest {
+internal class DurationToUnitSerializerTest {
     @Serializable
     data class Wrapper(
-        @Serializable(with = DurationSerializer::class)
+        @Serializable(with = DurationToUnitSerializer::class)
         val duration: Duration
     )
 
     @Test
     internal fun deserialize() {
-        val wrapper = Serializer.decodeFromString<Wrapper>(
-            """
-            { "duration": "PT1S" }
-            """
-        )
+        val wrapper = Serializer.decodeFromString<Wrapper>("""
+            {"duration": 1}
+        """)
 
         wrapper shouldBe Wrapper(Duration.ofSeconds(1))
     }
@@ -31,7 +29,7 @@ internal class DurationSerializerTest {
         val json = Serializer.encodeToString(Wrapper(Duration.ofSeconds(1)))
 
         json shouldEqualJson """
-            { "duration":"PT1S" }
-            """
+            {"duration": 1}
+        """
     }
 }
