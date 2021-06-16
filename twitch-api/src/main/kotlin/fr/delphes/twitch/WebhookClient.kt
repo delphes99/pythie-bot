@@ -9,7 +9,7 @@ class WebhookClient(
     private val user: TwitchUser,
     private val secret: String,
     private val appHelixApi: AppHelixApi,
-    private val eventSubConfigurations: List<EventSubConfiguration<*, *, *>>
+    private val eventSubConfigurations: List<EventSubConfiguration<*, *>>
 ) : WebhookApi {
     override suspend fun registerWebhooks() {
         eventSubConfigurations.forEach { configuration ->

@@ -6,6 +6,7 @@ import fr.delphes.connector.twitch.eventMapper.ChannelUpdateMapper
 import fr.delphes.connector.twitch.eventMapper.IncomingRaidMapper
 import fr.delphes.connector.twitch.eventMapper.NewFollowMapper
 import fr.delphes.connector.twitch.eventMapper.NewSubMapper
+import fr.delphes.connector.twitch.eventMapper.NewSubMessageMapper
 import fr.delphes.connector.twitch.eventMapper.RewardRedeemedMapper
 import fr.delphes.connector.twitch.eventMapper.StreamOfflineMapper
 import fr.delphes.connector.twitch.eventMapper.StreamOnlineMapper
@@ -31,6 +32,7 @@ fun Application.WebhookModule(connector: TwitchConnector) {
     val rewardRedeemedMapper = RewardRedeemedMapper()
     val newFollowMapper = NewFollowMapper(connector)
     val newSubMapper = NewSubMapper(connector)
+    val newSubMessageMapper = NewSubMessageMapper(connector)
     val incomingRaidMapper = IncomingRaidMapper()
     val channelBitsMapper = ChannelBitsMapper(connector)
     val streamOnlineMapper = StreamOnlineMapper(connector)
@@ -64,7 +66,7 @@ fun Application.WebhookModule(connector: TwitchConnector) {
                         definition(StreamOnlineEventSubConfiguration(), streamOnlineMapper, connector)
                     }
                     EventSubTopic.CHANNEL_SUBSCRIPTION_MESSAGE -> {
-                        definition(ChannelSubscriptionMessageEventSubConfiguration(), newSubMapper, connector)
+                        definition(ChannelSubscriptionMessageEventSubConfiguration(), newSubMessageMapper, connector)
                     }
                     EventSubTopic.INCOMING_RAID -> {
                         definition(ChannelRaidEventSubConfiguration(), incomingRaidMapper, connector)
@@ -74,9 +76,9 @@ fun Application.WebhookModule(connector: TwitchConnector) {
     }
 }
 
-private fun <MODEL, PAYLOAD, CONDITION : GenericCondition> Routing.definition(
-    configuration: EventSubConfiguration<MODEL, PAYLOAD, CONDITION>,
-    mapper: TwitchIncomingEventMapper<MODEL>,
+private fun <PAYLOAD, CONDITION : GenericCondition> Routing.definition(
+    configuration: EventSubConfiguration<PAYLOAD, CONDITION>,
+    mapper: TwitchIncomingEventMapper<PAYLOAD>,
     connector: TwitchConnector
 ) {
     configuration.callback.callbackDefinition(this) {

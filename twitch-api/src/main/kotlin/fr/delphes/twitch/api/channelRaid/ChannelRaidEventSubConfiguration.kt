@@ -1,10 +1,8 @@
 package fr.delphes.twitch.api.channelRaid
 
-import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelRaid.payload.ChannelRaidCondition
 import fr.delphes.twitch.api.channelRaid.payload.ChannelRaidPayload
 import fr.delphes.twitch.api.channelRaid.payload.SubscribeChannelRaid
-import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -13,19 +11,9 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelRaidEventSubConfiguration :
-    EventSubConfiguration<IncomingRaid, ChannelRaidPayload, ChannelRaidCondition>(
+    EventSubConfiguration<ChannelRaidPayload, ChannelRaidCondition>(
         EventSubTopic.INCOMING_RAID
     ) {
-    override fun transform(
-        payload: ChannelRaidPayload,
-        channel: TwitchChannel
-    ): IncomingRaid {
-        return IncomingRaid(
-            channel,
-            User(payload.from_broadcaster_user_name),
-            payload.viewers
-        )
-    }
 
     override fun subscribePayload(
         userId: String,

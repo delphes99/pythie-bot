@@ -1,10 +1,8 @@
 package fr.delphes.twitch.api.channelSubscribe
 
-import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscriptionMessageCondition
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscriptionMessagePayload
 import fr.delphes.twitch.api.channelSubscribe.payload.SubscribeChannelSubscriptionMessage
-import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubSubscribe
 import fr.delphes.twitch.eventSub.EventSubTopic
@@ -14,19 +12,9 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelSubscriptionMessageEventSubConfiguration :
-    EventSubConfiguration<NewSub, ChannelSubscriptionMessagePayload, ChannelSubscriptionMessageCondition>(
+    EventSubConfiguration<ChannelSubscriptionMessagePayload, ChannelSubscriptionMessageCondition>(
         EventSubTopic.CHANNEL_SUBSCRIPTION_MESSAGE
     ) {
-    override fun transform(payload: ChannelSubscriptionMessagePayload, channel: TwitchChannel): NewSub {
-        //TODO message
-        return NewSub(
-            channel,
-            User(payload.user_name),
-            payload.tier,
-            false
-        )
-    }
-
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport

@@ -1,6 +1,5 @@
 package fr.delphes.twitch.api.streamOnline
 
-import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineCondition
 import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineEventPayload
 import fr.delphes.twitch.api.streamOnline.payload.SubscribeStreamOnline
@@ -12,19 +11,9 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class StreamOnlineEventSubConfiguration :
-    EventSubConfiguration<StreamOnline, StreamOnlineEventPayload, StreamOnlineCondition>(
+    EventSubConfiguration<StreamOnlineEventPayload, StreamOnlineCondition>(
         EventSubTopic.STREAM_ONLINE
     ) {
-    override fun transform(
-        payload: StreamOnlineEventPayload,
-        channel: TwitchChannel
-    ): StreamOnline {
-        return StreamOnline(
-            channel,
-            payload.type
-        )
-    }
-
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport

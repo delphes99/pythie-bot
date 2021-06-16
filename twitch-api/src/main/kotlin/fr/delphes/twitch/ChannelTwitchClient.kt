@@ -94,7 +94,7 @@ class ChannelTwitchClient(
     ) {
         val channel = TwitchChannel(user.name)
 
-        private val eventSubConfigurations = mutableListOf<EventSubConfiguration<*, *, *>>()
+        private val eventSubConfigurations = mutableListOf<EventSubConfiguration<*, *>>()
         private var listenerClipCreated: (suspend (ClipCreated) -> Unit)? = null
 
         fun listenToReward(): Builder {

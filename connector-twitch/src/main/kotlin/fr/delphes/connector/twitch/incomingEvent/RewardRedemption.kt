@@ -14,16 +14,6 @@ data class RewardRedemption(
 ) : TwitchIncomingEvent {
     constructor(
         channel: TwitchChannel,
-        event: RewardRedemption
-    ) : this(
-        channel,
-        event.reward,
-        event.user,
-        event.cost
-    )
-
-    constructor(
-        channel: TwitchChannel,
         reward: RewardId,
         user: String,
         cost: RewardCost

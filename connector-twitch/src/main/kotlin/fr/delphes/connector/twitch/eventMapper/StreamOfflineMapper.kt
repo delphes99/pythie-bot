@@ -3,19 +3,21 @@ package fr.delphes.connector.twitch.eventMapper
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
-import fr.delphes.twitch.api.streamOffline.StreamOffline as StreamOfflineTwitch
+import fr.delphes.twitch.TwitchChannel
+import fr.delphes.twitch.api.streamOffline.payload.StreamOfflineEventPayload
 
 class StreamOfflineMapper(
     private val connector: TwitchConnector
-) : TwitchIncomingEventMapper<StreamOfflineTwitch> {
+) : TwitchIncomingEventMapper<StreamOfflineEventPayload> {
     override suspend fun handle(
-        twitchEvent: fr.delphes.twitch.api.streamOffline.StreamOffline
+        twitchEvent: StreamOfflineEventPayload
     ): List<TwitchIncomingEvent> {
+        val channel = TwitchChannel(twitchEvent.broadcaster_user_name)
         //TODO move to connector implementation
         connector.whenRunning {
-            clientBot.channelOf(twitchEvent.channel)?.state?.changeCurrentStream(null)
+            clientBot.channelOf(channel)?.state?.changeCurrentStream(null)
         }
 
-        return listOf(StreamOffline(twitchEvent.channel))
+        return listOf(StreamOffline(channel))
     }
 }

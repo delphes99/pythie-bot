@@ -1,10 +1,8 @@
 package fr.delphes.twitch.api.channelCheer
 
-import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelCheer.payload.ChannelCheerCondition
 import fr.delphes.twitch.api.channelCheer.payload.ChannelCheerEventPayload
 import fr.delphes.twitch.api.channelCheer.payload.SubscribeChannelCheer
-import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -13,21 +11,11 @@ import io.ktor.application.ApplicationCall
 import io.ktor.request.receive
 
 class ChannelCheerEventSubConfiguration :
-    EventSubConfiguration<NewCheer, ChannelCheerEventPayload, ChannelCheerCondition>(
+    EventSubConfiguration<
+            ChannelCheerEventPayload,
+            ChannelCheerCondition>(
         EventSubTopic.NEW_CHEER
     ) {
-    override fun transform(
-        payload: ChannelCheerEventPayload,
-        channel: TwitchChannel
-    ): NewCheer {
-        return NewCheer(
-            channel,
-            payload.user_name?.let(::User),
-            payload.bits,
-            payload.message
-        )
-    }
-
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport

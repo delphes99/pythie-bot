@@ -1,6 +1,5 @@
 package fr.delphes.twitch.eventSub
 
-import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import io.ktor.application.ApplicationCall
@@ -13,14 +12,13 @@ import io.ktor.routing.post
 import io.ktor.util.pipeline.PipelineContext
 import mu.KotlinLogging
 
-class EventSubCallback<MODEL, PAYLOAD, CONDITION : GenericCondition>(
+class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
     private val topic: EventSubTopic,
     private val parse: suspend (ApplicationCall) -> NotificationPayload<PAYLOAD, CONDITION>,
-    private val transform: suspend (PAYLOAD, TwitchChannel) -> MODEL?
 ) {
     fun webhookPath(channelName: String) = "eventSub/${topic.webhookPathSuffix}/$channelName"
 
-    fun callbackDefinition(routing: Routing, listener: suspend (MODEL) -> Unit) {
+    fun callbackDefinition(routing: Routing, listener: suspend (PAYLOAD) -> Unit) {
         routing.post("/eventSub/${topic.webhookPathSuffix}/{channelName}") {
             val channelName = call.parameters["channelName"].toString()
             val payload = parse(this.call)
@@ -32,9 +30,7 @@ class EventSubCallback<MODEL, PAYLOAD, CONDITION : GenericCondition>(
                     this.challengeWebHook(payload.challenge)
                 }
                 payload.event != null -> {
-                    transform(payload.event, TwitchChannel(channelName))?.also { model ->
-                        listener(model)
-                    }
+                    listener(payload.event)
 
                     this.context.response.status(HttpStatusCode.OK)
                 }

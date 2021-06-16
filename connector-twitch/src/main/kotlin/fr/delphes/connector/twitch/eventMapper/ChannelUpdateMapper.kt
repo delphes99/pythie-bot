@@ -4,18 +4,23 @@ import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
+import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateEventPayload
+import fr.delphes.twitch.api.games.Game
+import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.streams.Stream
 
 class ChannelUpdateMapper(
     private val connector: TwitchConnector
-) : TwitchIncomingEventMapper<ChannelUpdate> {
+) : TwitchIncomingEventMapper<ChannelUpdateEventPayload> {
     override suspend fun handle(
-        twitchEvent: ChannelUpdate
+        twitchEvent: ChannelUpdateEventPayload
     ): List<TwitchIncomingEvent> {
         return connector.whenRunning(
             whenRunning = {
-                val currentStream = clientBot.channelOf(twitchEvent.channel)?.currentStream
+                val channel = TwitchChannel(twitchEvent.broadcaster_user_name)
+                val currentStream = clientBot.channelOf(channel)?.currentStream
 
                 val changes = currentStream?.let {
                     listOfNotNull(
@@ -24,8 +29,12 @@ class ChannelUpdateMapper(
                         } else {
                             null
                         },
-                        if (currentStream.game.id.id != twitchEvent.game.id.id) {
-                            StreamChanges.Game(currentStream.game, twitchEvent.game)
+                        if (currentStream.game.id.id != twitchEvent.category_id) {
+                            val newCategory = Game(
+                                GameId(twitchEvent.category_id),
+                                twitchEvent.category_name
+                            )
+                            StreamChanges.Game(currentStream.game, newCategory)
                         } else {
                             null
                         }
@@ -33,8 +42,8 @@ class ChannelUpdateMapper(
                 }
                 if (!changes.isNullOrEmpty()) {
                     //TODO move to connector implementation
-                    clientBot.channelOf(twitchEvent.channel)?.state?.changeCurrentStream(currentStream.applyChanges(changes))
-                    listOf(StreamChanged(twitchEvent.channel, changes))
+                    clientBot.channelOf(channel)?.state?.changeCurrentStream(currentStream.applyChanges(changes))
+                    listOf(StreamChanged(channel, changes))
                 } else {
                     emptyList()
                 }

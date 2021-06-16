@@ -2,14 +2,18 @@ package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.connector.twitch.incomingEvent.IncomingRaid
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
-import fr.delphes.twitch.api.channelRaid.IncomingRaid as TwitchIncomingRaid
+import fr.delphes.twitch.TwitchChannel
+import fr.delphes.twitch.api.channelRaid.payload.ChannelRaidPayload
+import fr.delphes.twitch.api.user.User
 
-class IncomingRaidMapper : TwitchIncomingEventMapper<TwitchIncomingRaid> {
-    override suspend fun handle(twitchEvent: TwitchIncomingRaid): List<TwitchIncomingEvent> {
+class IncomingRaidMapper : TwitchIncomingEventMapper<ChannelRaidPayload> {
+    override suspend fun handle(twitchEvent: ChannelRaidPayload): List<TwitchIncomingEvent> {
+        val channel = TwitchChannel(twitchEvent.to_broadcaster_user_name)
+
         return listOf(
             IncomingRaid(
-                twitchEvent.channel,
-                twitchEvent.from,
+                channel,
+                User(twitchEvent.from_broadcaster_user_name),
                 twitchEvent.viewers
             )
         )
