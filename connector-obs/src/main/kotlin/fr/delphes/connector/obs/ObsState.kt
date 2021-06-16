@@ -41,8 +41,8 @@ sealed class ObsState {
                             }
                             connector.bot.handleIncomingEvent(event)
                         },
-                        onError = {
-                            LOGGER.error { "Obs client error" }
+                        onError = { exception ->
+                            LOGGER.error { "Obs client error : ${exception.message}" }
                             connector.state = Error(configuration, connector)
                         }
                     )

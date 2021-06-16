@@ -63,7 +63,7 @@ class ObsClient(
                 LOGGER.info { "Restart connection" }
             }
         } catch (e: Exception) {
-            listeners.onError()
+            listeners.onError(e)
         }
     }
 
