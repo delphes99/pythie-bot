@@ -1,6 +1,5 @@
 package fr.delphes.bot.state
 
-import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.user.User
 import kotlinx.serialization.Serializable
 
@@ -18,7 +17,6 @@ class StreamStatistics(
     val numberOfSub: Int get() = newSubs.size
     val numberMessages: Int get() = userMessages.count()
     val numberOfChatters: Int get() = userMessages.map(UserMessage::user).distinct().count()
-    val lastCheers: List<UserCheer> get() = cheers
 
     override fun addMessage(userMessage: UserMessage) {
         userMessages.add(userMessage)
@@ -36,7 +34,7 @@ class StreamStatistics(
         }
     }
 
-    override fun newCheer(newCheer: NewCheer) {
-        this.cheers.add(0, UserCheer(newCheer.cheerer, newCheer.bits))
+    override fun newCheer(cheerer: User?, bits: Long) {
+        this.cheers.add(0, UserCheer(cheerer, bits))
     }
 }

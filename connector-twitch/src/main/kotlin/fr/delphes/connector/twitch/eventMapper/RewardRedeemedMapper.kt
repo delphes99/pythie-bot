@@ -18,8 +18,8 @@ class RewardRedeemedMapper : TwitchIncomingEventMapper<ChannelPointsCustomReward
             RewardRedemption1(
                 channel = channel,
                 reward = RewardId(
-                    twitchEvent.reward.id,
-                    twitchEvent.reward.title
+                    id = twitchEvent.reward.id,
+                    name = twitchEvent.reward.title
                 ),
                 user = User(twitchEvent.user_name),
                 cost = twitchEvent.reward.cost,

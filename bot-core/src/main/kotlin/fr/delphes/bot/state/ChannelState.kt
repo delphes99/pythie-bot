@@ -1,6 +1,5 @@
 package fr.delphes.bot.state
 
-import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.api.user.User
 import kotlinx.coroutines.coroutineScope
@@ -56,9 +55,9 @@ class ChannelState(
         saveStats()
     }
 
-    override suspend fun newCheer(newCheer: NewCheer) {
-        statistics.newCheer(newCheer)
-        streamStatistics?.newCheer(newCheer)
+    override suspend fun newCheer(cheerer: User?, bits: Long) {
+        statistics.newCheer(cheerer, bits)
+        streamStatistics?.newCheer(cheerer, bits)
 
         saveStats()
     }

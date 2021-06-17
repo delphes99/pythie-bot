@@ -23,71 +23,58 @@ import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.GenericCondition
-import fr.delphes.utils.exhaustive
 import io.ktor.application.Application
 import io.ktor.routing.Routing
 import io.ktor.routing.routing
 
 fun Application.WebhookModule(connector: TwitchConnector) {
-    val rewardRedeemedMapper = RewardRedeemedMapper()
-    val newFollowMapper = NewFollowMapper(connector)
-    val newSubMapper = NewSubMapper(connector)
-    val newSubMessageMapper = NewSubMessageMapper(connector)
-    val incomingRaidMapper = IncomingRaidMapper()
-    val channelBitsMapper = ChannelBitsMapper(connector)
-    val streamOnlineMapper = StreamOnlineMapper(connector)
-    val streamOfflineMapper = StreamOfflineMapper(connector)
-    val channelUpdateMapper = ChannelUpdateMapper(connector)
-
-
     routing {
         EventSubTopic.values()
             .forEach { topic ->
-                when (topic) {
+                val configuration = when (topic) {
                     EventSubTopic.CHANNEL_UPDATE -> {
-                        definition(ChannelUpdateEventSubConfiguration(), channelUpdateMapper, connector)
+                        Configuration(ChannelUpdateEventSubConfiguration(), ChannelUpdateMapper(connector))
                     }
                     EventSubTopic.CUSTOM_REWARD_REDEMPTION -> {
-                        definition(CustomRewardRedemptionEventSubConfiguration(), rewardRedeemedMapper, connector)
+                        Configuration(CustomRewardRedemptionEventSubConfiguration(), RewardRedeemedMapper())
                     }
                     EventSubTopic.NEW_CHEER -> {
-                        definition(ChannelCheerEventSubConfiguration(), channelBitsMapper, connector)
+                        Configuration(ChannelCheerEventSubConfiguration(), ChannelBitsMapper())
                     }
                     EventSubTopic.NEW_FOLLOW -> {
-                        definition(ChannelFollowEventSubConfiguration(), newFollowMapper, connector)
+                        Configuration(ChannelFollowEventSubConfiguration(), NewFollowMapper())
                     }
                     EventSubTopic.NEW_SUB -> {
-                        definition(ChannelSubscribeEventSubConfiguration(), newSubMapper, connector)
+                        Configuration(ChannelSubscribeEventSubConfiguration(), NewSubMapper())
                     }
                     EventSubTopic.STREAM_OFFLINE -> {
-                        definition(StreamOfflineEventSubConfiguration(), streamOfflineMapper, connector)
+                        Configuration(StreamOfflineEventSubConfiguration(), StreamOfflineMapper())
                     }
                     EventSubTopic.STREAM_ONLINE -> {
-                        definition(StreamOnlineEventSubConfiguration(), streamOnlineMapper, connector)
+                        Configuration(StreamOnlineEventSubConfiguration(), StreamOnlineMapper(connector))
                     }
                     EventSubTopic.CHANNEL_SUBSCRIPTION_MESSAGE -> {
-                        definition(ChannelSubscriptionMessageEventSubConfiguration(), newSubMessageMapper, connector)
+                        Configuration(ChannelSubscriptionMessageEventSubConfiguration(), NewSubMessageMapper())
                     }
                     EventSubTopic.INCOMING_RAID -> {
-                        definition(ChannelRaidEventSubConfiguration(), incomingRaidMapper, connector)
+                        Configuration(ChannelRaidEventSubConfiguration(), IncomingRaidMapper())
                     }
-                }.exhaustive()
+                }
+
+                configuration.defineCallBack(this, connector)
             }
     }
 }
 
-private fun <PAYLOAD, CONDITION : GenericCondition> Routing.definition(
-    configuration: EventSubConfiguration<PAYLOAD, CONDITION>,
-    mapper: TwitchIncomingEventMapper<PAYLOAD>,
-    connector: TwitchConnector
+private data class Configuration<PAYLOAD, CONDITION : GenericCondition>(
+    val configuration: EventSubConfiguration<PAYLOAD, CONDITION>,
+    val mapper: TwitchIncomingEventMapper<PAYLOAD>,
 ) {
-    configuration.callback.callbackDefinition(this) {
-        mapper.mapAndHandle(connector, it)
-    }
-}
-
-private suspend fun <T> TwitchIncomingEventMapper<T>.mapAndHandle(connector: TwitchConnector, event: T) {
-    this.handle(event).forEach { mappedEvent ->
-        connector.bot.handleIncomingEvent(mappedEvent)
+    fun defineCallBack(routing: Routing, connector: TwitchConnector) {
+        configuration.callback.callbackDefinition(routing) {
+            mapper.handle(it).forEach { mappedEvent ->
+                connector.handleIncomingEvent(mappedEvent)
+            }
+        }
     }
 }

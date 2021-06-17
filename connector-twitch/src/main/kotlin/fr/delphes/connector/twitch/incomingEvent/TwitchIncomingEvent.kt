@@ -4,7 +4,7 @@ import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.twitch.TwitchChannel
 
-interface TwitchIncomingEvent : IncomingEvent {
+sealed interface TwitchIncomingEvent : IncomingEvent {
     val channel: TwitchChannel
 
     fun isFor(channel: TwitchChannel) : Boolean {

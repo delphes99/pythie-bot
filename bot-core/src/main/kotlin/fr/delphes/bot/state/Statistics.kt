@@ -1,6 +1,5 @@
 package fr.delphes.bot.state
 
-import fr.delphes.twitch.api.channelCheer.NewCheer
 import fr.delphes.twitch.api.user.User
 import kotlinx.serialization.Serializable
 
@@ -36,7 +35,7 @@ class Statistics(
         }
     }
 
-    override fun newCheer(newCheer: NewCheer) {
-        this.cheers.add(0, UserCheer(newCheer.cheerer, newCheer.bits))
+    override fun newCheer(cheerer: User?, bits: Long) {
+        this.cheers.add(0, UserCheer(cheerer, bits))
     }
 }

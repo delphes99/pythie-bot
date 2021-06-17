@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
@@ -33,6 +34,7 @@ class TwitchConnector(
 
     private val twitchHelixApi = TwitchHelixClient()
     private val stateMachine = TwitchStateMachine(this)
+    private val internalHandler = TwitchConnectorHandler(this)
 
     init {
         runBlocking {
@@ -139,5 +141,10 @@ class TwitchConnector(
 
     override suspend fun newChannelToken(channel: TwitchChannel, newToken: AuthToken) {
         updateConfiguration(configuration.newChannelToken(channel, newToken))
+    }
+
+    internal suspend fun handleIncomingEvent(event: TwitchIncomingEvent) {
+        internalHandler.handle(event)
+        bot.handleIncomingEvent(event)
     }
 }

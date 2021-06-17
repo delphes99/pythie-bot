@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 
 data class StreamOnline(
     override val channel: TwitchChannel,
+    val id: String,
     val title: String,
     val start: LocalDateTime,
     val game: Game,
@@ -14,12 +15,14 @@ data class StreamOnline(
 ) : TwitchIncomingEvent {
     constructor(
         channel: TwitchChannel,
+        id: String,
         title: String,
         start: LocalDateTime,
         game: Game,
         thumbnailUrl: String
     ) : this(
         channel,
+        id,
         title,
         start,
         game,

@@ -5,11 +5,11 @@ import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineEventPayload
-import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
 
+//TODO test ?
 class StreamOnlineMapper(
     private val connector: TwitchConnector,
     private val clock: Clock = SystemClock
@@ -31,21 +31,16 @@ class StreamOnlineMapper(
                     return@whenRunning emptyList()
                 }
 
-                val incomingEvent =
-                    StreamOnline(twitchChannel, stream.title, clock.now(), stream.game, stream.thumbnailUrl)
-
-                //TODO move to connector implementation
-                channel?.state?.changeCurrentStream(
-                    Stream(
-                        stream.id,
-                        incomingEvent.title,
-                        incomingEvent.start,
-                        incomingEvent.game,
+                listOf(
+                    StreamOnline(
+                        twitchChannel,
+                        twitchEvent.id,
+                        stream.title,
+                        clock.now(),
+                        stream.game,
                         stream.thumbnailUrl
                     )
                 )
-
-                listOf(incomingEvent)
             },
             whenNotRunning = {
                 emptyList()

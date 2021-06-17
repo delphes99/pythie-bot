@@ -5,7 +5,6 @@ import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.channelUpdate.ChannelUpdate
 import fr.delphes.twitch.api.channelUpdate.payload.ChannelUpdateEventPayload
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -17,6 +16,7 @@ class ChannelUpdateMapper(
     override suspend fun handle(
         twitchEvent: ChannelUpdateEventPayload
     ): List<TwitchIncomingEvent> {
+        //TODO move state management (inject + update)
         return connector.whenRunning(
             whenRunning = {
                 val channel = TwitchChannel(twitchEvent.broadcaster_user_name)

@@ -47,6 +47,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-assertions-core-jvm</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-assertions-json-jvm</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk</artifactId>
             <scope>test</scope>
