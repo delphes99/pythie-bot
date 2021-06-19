@@ -23,4 +23,18 @@ enum class EventSubSubscriptionType {
     CHANNEL_SUBSCRIPTION_MESSAGE,
     @SerialName("channel.raid")
     CHANNEL_RAID,
+    @SerialName("channel.poll.begin")
+    CHANNEL_POLL_BEGIN,
+    @SerialName("channel.poll.progress")
+    CHANNEL_POLL_PROGRESS,
+    @SerialName("channel.poll.end")
+    CHANNEL_POLL_END,
+    @SerialName("channel.prediction.begin")
+    CHANNEL_PREDICTION_BEGIN,
+    @SerialName("channel.prediction.progress")
+    CHANNEL_PREDICTION_PROGRESS,
+    @SerialName("channel.prediction.lock")
+    CHANNEL_PREDICTION_LOCK,
+    @SerialName("channel.prediction.end")
+    CHANNEL_PREDICTION_END;
 }

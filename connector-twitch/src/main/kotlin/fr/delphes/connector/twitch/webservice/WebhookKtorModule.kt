@@ -2,6 +2,7 @@ package fr.delphes.connector.twitch.webservice
 
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.eventMapper.ChannelBitsMapper
+import fr.delphes.connector.twitch.eventMapper.ChannelPollBeginMapper
 import fr.delphes.connector.twitch.eventMapper.ChannelUpdateMapper
 import fr.delphes.connector.twitch.eventMapper.IncomingRaidMapper
 import fr.delphes.connector.twitch.eventMapper.NewFollowMapper
@@ -14,6 +15,7 @@ import fr.delphes.connector.twitch.eventMapper.TwitchIncomingEventMapper
 import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
 import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
+import fr.delphes.twitch.api.channelPoll.ChannelPollBeginEventSubConfiguration
 import fr.delphes.twitch.api.channelRaid.ChannelRaidEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscriptionMessageEventSubConfiguration
@@ -59,9 +61,18 @@ fun Application.WebhookModule(connector: TwitchConnector) {
                     EventSubTopic.INCOMING_RAID -> {
                         Configuration(ChannelRaidEventSubConfiguration(), IncomingRaidMapper())
                     }
+                    EventSubTopic.CHANNEL_POLL_BEGIN -> {
+                        Configuration(ChannelPollBeginEventSubConfiguration(), ChannelPollBeginMapper())
+                    }
+                    EventSubTopic.CHANNEL_POLL_PROGRESS -> null //TODO
+                    EventSubTopic.CHANNEL_POLL_END -> null //TODO
+                    EventSubTopic.CHANNEL_PREDICTION_BEGIN -> null //TODO
+                    EventSubTopic.CHANNEL_PREDICTION_PROGRESS -> null //TODO
+                    EventSubTopic.CHANNEL_PREDICTION_LOCK -> null //TODO
+                    EventSubTopic.CHANNEL_PREDICTION_END -> null //TODO
                 }
 
-                configuration.defineCallBack(this, connector)
+                configuration?.defineCallBack(this, connector)
             }
     }
 }

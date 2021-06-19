@@ -17,12 +17,10 @@ class StreamOfflineEventSubConfiguration :
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
-    ): SubscribeStreamOffline {
-        return SubscribeStreamOffline(
-            StreamOfflineCondition(userId),
-            transport
-        )
-    }
+    ) = SubscribeStreamOffline(
+        StreamOfflineCondition(userId),
+        transport
+    )
 
     override suspend fun parse(call: ApplicationCall): NotificationPayload<StreamOfflineEventPayload, StreamOfflineCondition> {
         return call.receive()

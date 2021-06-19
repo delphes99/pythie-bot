@@ -1,5 +1,6 @@
 package fr.delphes.twitch.api.channelSubscribe.payload
 
+import fr.delphes.twitch.api.channelSubscribe.SubscribeTier
 import fr.delphes.twitch.api.payload.MessagePayload
 import kotlinx.serialization.Serializable
 
@@ -12,7 +13,7 @@ data class ChannelSubscriptionMessagePayload(
     val duration_months: Int,
     val message: MessagePayload,
     val streak_months: Int,
-    val tier: String,
+    val tier: SubscribeTier,
     val user_id: String,
     val user_login: String,
     val user_name: String

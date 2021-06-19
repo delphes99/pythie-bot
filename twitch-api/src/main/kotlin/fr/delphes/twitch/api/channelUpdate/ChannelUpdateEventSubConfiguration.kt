@@ -17,12 +17,10 @@ class ChannelUpdateEventSubConfiguration :
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
-    ): SubscribeChannelUpdate {
-        return SubscribeChannelUpdate(
-            ChannelUpdateCondition(userId),
-            transport
-        )
-    }
+    ) = SubscribeChannelUpdate(
+        ChannelUpdateCondition(userId),
+        transport
+    )
 
     override suspend fun parse(call: ApplicationCall): NotificationPayload<ChannelUpdateEventPayload, ChannelUpdateCondition> {
         return call.receive()

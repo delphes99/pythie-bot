@@ -17,12 +17,10 @@ class StreamOnlineEventSubConfiguration :
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
-    ): SubscribeStreamOnline {
-        return SubscribeStreamOnline(
-            StreamOnlineCondition(userId),
-            transport
-        )
-    }
+    ) = SubscribeStreamOnline(
+        StreamOnlineCondition(userId),
+        transport
+    )
 
     override suspend fun parse(call: ApplicationCall): NotificationPayload<StreamOnlineEventPayload, StreamOnlineCondition> {
         return call.receive()

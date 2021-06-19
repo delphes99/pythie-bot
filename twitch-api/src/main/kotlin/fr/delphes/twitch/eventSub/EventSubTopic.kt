@@ -12,4 +12,11 @@ enum class EventSubTopic(
     STREAM_ONLINE("streamOnline"),
     CHANNEL_SUBSCRIPTION_MESSAGE("subscriptionMessage"),
     INCOMING_RAID("incomingRaid"),
+    CHANNEL_POLL_BEGIN("pollBegin"),
+    CHANNEL_POLL_PROGRESS("pollProgress"),
+    CHANNEL_POLL_END("pollEnd"),
+    CHANNEL_PREDICTION_BEGIN("predictionBegin"),
+    CHANNEL_PREDICTION_PROGRESS("predictionProgress"),
+    CHANNEL_PREDICTION_LOCK("predictionLock"),
+    CHANNEL_PREDICTION_END("predictionEnd");
 }

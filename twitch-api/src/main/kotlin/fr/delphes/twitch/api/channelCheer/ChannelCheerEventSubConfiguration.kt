@@ -19,12 +19,10 @@ class ChannelCheerEventSubConfiguration :
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
-    ): SubscribeChannelCheer {
-        return SubscribeChannelCheer(
-            ChannelCheerCondition(userId),
-            transport
-        )
-    }
+    ) = SubscribeChannelCheer(
+        ChannelCheerCondition(userId),
+        transport
+    )
 
     override suspend fun parse(call: ApplicationCall): NotificationPayload<ChannelCheerEventPayload, ChannelCheerCondition> {
         return call.receive()

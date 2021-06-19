@@ -6,6 +6,7 @@ import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.incomingEvent.IncomingRaid
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived
 import fr.delphes.connector.twitch.incomingEvent.NewFollow
+import fr.delphes.connector.twitch.incomingEvent.NewPoll
 import fr.delphes.connector.twitch.incomingEvent.NewSub
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.connector.twitch.incomingEvent.StreamChanged
@@ -62,6 +63,7 @@ class TwitchConnectorHandler(
                 }
             }
             is VIPListReceived -> Nothing
+            is NewPoll -> Nothing
         }.exhaustive()
     }
 }

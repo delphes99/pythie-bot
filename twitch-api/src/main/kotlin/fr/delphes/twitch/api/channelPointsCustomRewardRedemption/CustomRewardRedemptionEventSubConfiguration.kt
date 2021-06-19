@@ -20,12 +20,10 @@ class CustomRewardRedemptionEventSubConfiguration :
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
-    ): SubscribechannelPointsCustomRewardRedemption {
-        return SubscribechannelPointsCustomRewardRedemption(
-            ChannelPointsCustomRewardRedemptionCondition(userId),
-            transport
-        )
-    }
+    ) = SubscribechannelPointsCustomRewardRedemption(
+        ChannelPointsCustomRewardRedemptionCondition(userId),
+        transport
+    )
 
     override suspend fun parse(call: ApplicationCall): NotificationPayload<ChannelPointsCustomRewardRedemptionEventPayload, ChannelPointsCustomRewardRedemptionCondition> {
         return call.receive()

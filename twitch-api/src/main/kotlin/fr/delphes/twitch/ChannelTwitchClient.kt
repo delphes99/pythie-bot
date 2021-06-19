@@ -3,7 +3,14 @@ package fr.delphes.twitch
 import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
 import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
+import fr.delphes.twitch.api.channelPoll.ChannelPollBeginEventSubConfiguration
+import fr.delphes.twitch.api.channelPoll.ChannelPollEndEventSubConfiguration
+import fr.delphes.twitch.api.channelPoll.ChannelPollProgressEventSubConfiguration
 import fr.delphes.twitch.api.channelPoll.CreatePoll
+import fr.delphes.twitch.api.channelPrediction.ChannelPredictionBeginEventSubConfiguration
+import fr.delphes.twitch.api.channelPrediction.ChannelPredictionEndEventSubConfiguration
+import fr.delphes.twitch.api.channelPrediction.ChannelPredictionLockEventSubConfiguration
+import fr.delphes.twitch.api.channelPrediction.ChannelPredictionProgressEventSubConfiguration
 import fr.delphes.twitch.api.channelRaid.ChannelRaidEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscriptionMessageEventSubConfiguration
@@ -79,7 +86,15 @@ class ChannelTwitchClient(
             webhookSecret: String,
             rewardsConfigurations: List<RewardConfiguration>
         ): Builder {
-            return Builder(clientId, credentialsManager, user, publicUrl, configFilepath, webhookSecret, rewardsConfigurations)
+            return Builder(
+                clientId,
+                credentialsManager,
+                user,
+                publicUrl,
+                configFilepath,
+                webhookSecret,
+                rewardsConfigurations
+            )
         }
     }
 
@@ -160,6 +175,37 @@ class ChannelTwitchClient(
         fun listenToIncomingRaid(): Builder {
             eventSubConfigurations.add(
                 ChannelRaidEventSubConfiguration()
+            )
+
+            return this
+        }
+
+        fun listenToPoll(): Builder {
+            eventSubConfigurations.add(
+                ChannelPollBeginEventSubConfiguration()
+            )
+            eventSubConfigurations.add(
+                ChannelPollProgressEventSubConfiguration()
+            )
+            eventSubConfigurations.add(
+                ChannelPollEndEventSubConfiguration()
+            )
+
+            return this
+        }
+
+        fun listenToPrediction(): Builder {
+            eventSubConfigurations.add(
+                ChannelPredictionBeginEventSubConfiguration()
+            )
+            eventSubConfigurations.add(
+                ChannelPredictionProgressEventSubConfiguration()
+            )
+            eventSubConfigurations.add(
+                ChannelPredictionLockEventSubConfiguration()
+            )
+            eventSubConfigurations.add(
+                ChannelPredictionEndEventSubConfiguration()
             )
 
             return this

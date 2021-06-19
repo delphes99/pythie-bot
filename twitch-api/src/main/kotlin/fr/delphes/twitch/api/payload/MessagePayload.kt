@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MessagePayload(
-    val emotes: List<MessageEmotePayload>,
+    val emotes: List<MessageEmotePayload> = emptyList(),
     val text: String
 )

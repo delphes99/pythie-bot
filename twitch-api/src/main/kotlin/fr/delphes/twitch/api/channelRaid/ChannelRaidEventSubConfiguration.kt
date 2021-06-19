@@ -18,12 +18,10 @@ class ChannelRaidEventSubConfiguration :
     override fun subscribePayload(
         userId: String,
         transport: SubscribeTransport
-    ): SubscribeChannelRaid {
-        return SubscribeChannelRaid(
-            ChannelRaidCondition(to_broadcaster_user_id = userId),
-            transport
-        )
-    }
+    ) = SubscribeChannelRaid(
+        ChannelRaidCondition(to_broadcaster_user_id = userId),
+        transport
+    )
 
     override suspend fun parse(call: ApplicationCall): NotificationPayload<ChannelRaidPayload, ChannelRaidCondition> {
         return call.receive()
