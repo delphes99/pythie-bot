@@ -13,7 +13,7 @@ data class CreatePoll(
     val title: String,
     val duration: Duration,
     val choices: List<String>
-): TwitchOutgoingEvent(channel) {
+): TwitchOutgoingEvent {
     constructor(
         channel: TwitchChannel,
         title: String,

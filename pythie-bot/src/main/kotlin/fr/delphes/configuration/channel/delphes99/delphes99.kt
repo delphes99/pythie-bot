@@ -15,7 +15,7 @@ import fr.delphes.connector.obs.outgoingEvent.DeactivateFilter
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.CreatePoll
-import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
+import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.obs.SceneChanged
@@ -271,7 +271,7 @@ val delphes99Features = listOf(
         channel,
         "!deactivateTest",
         responses = {
-            listOf(DesactivateReward(DelphesReward.DEV_TEST, channel))
+            listOf(DeactivateReward(DelphesReward.DEV_TEST, channel))
         }
     ),
     Command(

@@ -9,7 +9,7 @@ import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
-import fr.delphes.connector.twitch.outgoingEvent.DesactivateReward
+import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
@@ -66,7 +66,7 @@ class GameReward(
 
     //TODO cache if the feature is already enabled / disabled
     private fun deactivateFeaturesNotAssociateWith(game: GameId): List<OutgoingEvent> {
-        return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten().map { DesactivateReward(it, channel) }
+        return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten().map { DeactivateReward(it, channel) }
     }
 
     private fun activateFeaturesAssociateWith(game: GameId): List<OutgoingEvent> {
