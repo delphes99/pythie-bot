@@ -33,7 +33,7 @@
         <assertj-core.version>3.17.2</assertj-core.version>
         <logback-classic.version>1.2.3</logback-classic.version>
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
-        <mockk.version>1.10.0</mockk.version>
+        <mockk.version>1.11.0</mockk.version>
         <kotlin-logging.version>1.12.0</kotlin-logging.version>
         <kotlin.compiler.jvmTarget>14</kotlin.compiler.jvmTarget>
         <JDA.version>4.2.0_222</JDA.version>
@@ -44,6 +44,7 @@
         <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
         <maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
         <kotest.version>4.6.0</kotest.version>
+        <byte-buddy.version>1.11.3</byte-buddy.version>
     </properties>
 
     <repositories>
@@ -244,6 +245,12 @@
                 <groupId>io.mockk</groupId>
                 <artifactId>mockk</artifactId>
                 <version>${mockk.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>${byte-buddy.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
