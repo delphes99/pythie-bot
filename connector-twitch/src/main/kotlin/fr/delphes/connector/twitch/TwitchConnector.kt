@@ -6,14 +6,19 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
+import fr.delphes.connector.twitch.state.TwitchConnectorState
+import fr.delphes.connector.twitch.state.TwitchTechnicalConnectorState
+import fr.delphes.connector.twitch.state.twitchReducers
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
+import fr.delphes.connector.twitch.webservice.StateTwitchKtorModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
+import fr.delphes.utils.store.StateManager
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -23,7 +28,13 @@ class TwitchConnector(
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
 ) : Connector, AuthTokenRepository {
+    val technicalState = TwitchTechnicalConnectorState(this)
+    val state = StateManager(TwitchConnectorState(), twitchReducers)
+
+    override val states = listOf(state)
+
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
+    //TODO move to TwitchConnectorState
     var configuration = runBlocking { repository.load() }
 
     internal val credentialsManager = CredentialsManager(
@@ -56,6 +67,7 @@ class TwitchConnector(
     override fun internalEndpoints(application: Application) {
         application.ConfigurationModule(this)
         application.RewardKtorModule(this)
+        application.StateTwitchKtorModule(this)
     }
 
     override fun publicEndpoints(application: Application) {

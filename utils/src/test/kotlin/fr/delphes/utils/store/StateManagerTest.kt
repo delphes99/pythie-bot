@@ -33,6 +33,16 @@ internal class StateManagerTest {
         verify(exactly = 1) { reducer2.applyOn(any(), ACTION) }
     }
 
+    @Test
+    internal fun `called reducer apply the new state`() {
+        val reducer = Reducer<StateImpl, ActionImpl>({ _, _ ->  NEW_STATE }, ActionImpl::class.java)
+        val state = StateManager(INITIAL_STATE, reducer)
+
+        state.handle(ACTION)
+
+        state.currentState shouldBe NEW_STATE
+    }
+
     private fun buildReducer() = mockk<Reducer<StateImpl, ActionImpl>>(relaxed = true)
 
     data class ActionImpl(val actionPayload: String) : Action
@@ -40,6 +50,7 @@ internal class StateManagerTest {
     companion object {
         private val ACTION = ActionImpl("action")
         private val INITIAL_STATE = StateImpl("init")
+        private val NEW_STATE = StateImpl("new state")
     }
 }
 

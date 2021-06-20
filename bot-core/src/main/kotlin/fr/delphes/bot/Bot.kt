@@ -11,6 +11,7 @@ import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.utils.exhaustive
+import fr.delphes.utils.store.Action
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
@@ -80,5 +81,11 @@ class Bot(
 
     inline fun <reified T : Connector> connector(): T? {
         return connectors.filterIsInstance<T>().firstOrNull()
+    }
+
+    fun applyAction(action: Action) {
+        connectors
+            .flatMap { it.states }
+            .forEach { stateManager -> stateManager.handle(action) }
     }
 }

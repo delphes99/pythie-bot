@@ -25,7 +25,7 @@ class ReducerTest {
         verify(exactly = 0) { mutation.invoke(any()) }
     }
 
-    private fun buildStateMutation(): (State) -> State =
+    private fun buildStateMutation(): (State, ActionImpl) -> State =
         mockk(relaxed = true)
 
     companion object {

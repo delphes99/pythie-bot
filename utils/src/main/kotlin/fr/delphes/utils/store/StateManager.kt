@@ -8,7 +8,7 @@ class StateManager<T>(
                 vararg reducers: Reducer<T, *>) : this(initialState, listOf(*reducers))
 
     fun handle(action: Action) {
-        reducers.fold(_currentState) { state, reducer -> reducer.applyOn(state, action) }
+        _currentState = reducers.fold(_currentState) { state, reducer -> reducer.applyOn(state, action) }
     }
 
     val currentState: T get() = _currentState
