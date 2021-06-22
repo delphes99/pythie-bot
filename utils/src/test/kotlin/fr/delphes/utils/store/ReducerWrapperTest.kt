@@ -4,11 +4,11 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class ReducerTest {
+class ReducerWrapperTest {
     @Test
     internal fun `call reducer if same action`() {
         val mutation = buildStateMutation()
-        val reducer = Reducer(mutation, ActionImpl::class.java)
+        val reducer = ReducerWrapper(mutation, ActionImpl::class.java)
 
         reducer.applyOn(mockk(), ACTION)
 
@@ -18,14 +18,14 @@ class ReducerTest {
     @Test
     internal fun `don't call reducer if not same action`() {
         val mutation = buildStateMutation()
-        val reducer = Reducer(mutation, ActionImpl::class.java)
+        val reducer = ReducerWrapper(mutation, ActionImpl::class.java)
 
         reducer.applyOn(mockk(), OTHER_ACTION)
 
         verify(exactly = 0) { mutation.invoke(any()) }
     }
 
-    private fun buildStateMutation(): (State, ActionImpl) -> State =
+    private fun buildStateMutation(): Reducer<State, ActionImpl> =
         mockk(relaxed = true)
 
     companion object {

@@ -1,7 +1,8 @@
 package fr.delphes.connector.twitch.state
 
-import fr.delphes.connector.twitch.state.reducer.MessageReceivedReducer
+import fr.delphes.connector.twitch.state.reducer.messageReceivedReducer
+import fr.delphes.utils.store.wrap
 
 val twitchReducers = listOf(
-    MessageReceivedReducer()
+    messageReceivedReducer.wrap()
 )

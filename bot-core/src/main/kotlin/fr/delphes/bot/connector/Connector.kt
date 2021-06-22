@@ -1,13 +1,13 @@
 package fr.delphes.bot.connector
 
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.utils.store.StateManager
+import fr.delphes.utils.store.Store
 import io.ktor.application.Application
 
 interface Connector {
     val configFilepath: String
 
-    val states: List<StateManager<*>>
+    val states: List<Store<*>>
 
     fun internalEndpoints(application: Application)
 

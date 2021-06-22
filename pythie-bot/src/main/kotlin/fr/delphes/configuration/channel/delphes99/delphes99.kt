@@ -231,7 +231,7 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST2
     ) {
         listOf(
-            ChangeItemPosition("Webcam", 1028.0, 784.0),
+            ChangeItemPosition("webcam", 1028.0, 784.0),
         )
     },
     RewardRedeem(
@@ -239,7 +239,7 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST3
     ) {
         listOf(
-            ChangeItemPosition("Webcam", nextDouble(0.0, (1920.0 - 486.0)), nextDouble(0.0, (1080.0 - 273.0))),
+            ChangeItemPosition("webcam", nextDouble(0.0, (1920.0 - 486.0)), nextDouble(0.0, (1080.0 - 273.0))),
         )
     },
     RewardRedeem(
@@ -411,7 +411,7 @@ val delphes99Features = listOf(
             CreatePoll(
                 channel,
                 "Une présentation ?",
-                Duration.ofSeconds(30),
+                Duration.ofMinutes(1),
                 "Qui es-tu ?",
                 "Que fais-tu ?",
                 "La totale !",

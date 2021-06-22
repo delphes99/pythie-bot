@@ -5,7 +5,7 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.endpoint.DiscordModule
 import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent
-import fr.delphes.utils.store.StateManager
+import fr.delphes.utils.store.Store
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 
@@ -16,7 +16,7 @@ class DiscordConnector(
     private val repository = DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     var state: DiscordState = DiscordState.Unconfigured
 
-    override val states = emptyList<StateManager<*>>()
+    override val states = emptyList<Store<*>>()
 
     init {
         runBlocking {

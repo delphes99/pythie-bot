@@ -18,7 +18,7 @@ import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
-import fr.delphes.utils.store.StateManager
+import fr.delphes.utils.store.Store
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -29,7 +29,7 @@ class TwitchConnector(
     val channels: List<ChannelConfiguration>
 ) : Connector, AuthTokenRepository {
     val technicalState = TwitchTechnicalConnectorState(this)
-    val state = StateManager(TwitchConnectorState(), twitchReducers)
+    val state = Store(TwitchConnectorState(), twitchReducers)
 
     override val states = listOf(state)
 

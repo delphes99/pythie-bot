@@ -86,6 +86,6 @@ class Bot(
     fun applyAction(action: Action) {
         connectors
             .flatMap { it.states }
-            .forEach { stateManager -> stateManager.handle(action) }
+            .forEach { stateManager -> stateManager.dispatch(action) }
     }
 }

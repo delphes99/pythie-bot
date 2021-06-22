@@ -5,47 +5,51 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-internal class StateManagerTest {
+internal class StoreTest {
     @Test
     internal fun init() {
-        StateManager(INITIAL_STATE, mockk<Reducer<StateImpl, ActionImpl>>()).currentState shouldBe INITIAL_STATE
+        Store(INITIAL_STATE, mockk<ReducerWrapper<StateImpl, ActionImpl>>()).currentState shouldBe INITIAL_STATE
     }
 
     @Test
     internal fun `call reducer on action`() {
         val reducer = buildReducer()
-        val state = StateManager(INITIAL_STATE, reducer)
+        val store = Store(INITIAL_STATE, reducer.wrap())
 
-        state.handle(ACTION)
+        store.dispatch(ACTION)
 
-        verify(exactly = 1) { reducer.applyOn(INITIAL_STATE, ACTION) }
+        verify(exactly = 1) { reducer.apply(ACTION, INITIAL_STATE) }
     }
 
     @Test
     internal fun `call all reducers on action`() {
         val reducer1 = buildReducer()
         val reducer2 = buildReducer()
-        val state = StateManager(INITIAL_STATE, reducer1, reducer2)
+        val store = Store(INITIAL_STATE, reducer1.wrap(), reducer2.wrap())
 
-        state.handle(ACTION)
+        store.dispatch(ACTION)
 
-        verify(exactly = 1) { reducer1.applyOn(any(), ACTION) }
-        verify(exactly = 1) { reducer2.applyOn(any(), ACTION) }
+        verify(exactly = 1) { reducer1.apply(ACTION, any()) }
+        verify(exactly = 1) { reducer2.apply(ACTION, any()) }
     }
 
     @Test
     internal fun `called reducer apply the new state`() {
-        val reducer = Reducer<StateImpl, ActionImpl>({ _, _ ->  NEW_STATE }, ActionImpl::class.java)
-        val state = StateManager(INITIAL_STATE, reducer)
+        val store = Store(INITIAL_STATE, Reducer<StateImpl, ActionImpl> { _, _ -> NEW_STATE }.wrap())
 
-        state.handle(ACTION)
+        store.dispatch(ACTION)
 
-        state.currentState shouldBe NEW_STATE
+        store.currentState shouldBe NEW_STATE
     }
 
     private fun buildReducer() = mockk<Reducer<StateImpl, ActionImpl>>(relaxed = true)
 
     data class ActionImpl(val actionPayload: String) : Action
+
+    private data class StateImpl(
+        val value: String
+    )
+
 
     companion object {
         private val ACTION = ActionImpl("action")
@@ -54,7 +58,3 @@ internal class StateManagerTest {
     }
 }
 
-
-private data class StateImpl(
-    val value: String
-)

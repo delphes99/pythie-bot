@@ -5,16 +5,10 @@ import fr.delphes.connector.twitch.state.TwitchConnectorState
 import fr.delphes.connector.twitch.state.action.MessageReceivedAction
 import fr.delphes.utils.store.Reducer
 
-class MessageReceivedReducer :
-    Reducer<TwitchConnectorState, MessageReceivedAction>(
-        ::stateMutation,
-        MessageReceivedAction::class.java
-    ) {
-        companion object {
-            fun stateMutation(state: TwitchConnectorState, action: MessageReceivedAction): TwitchConnectorState {
-                return state.copy(
-                    userMessages = state.userMessages.plus(UserMessage(action.user, action.text))
-                )
-            }
-        }
+val messageReceivedReducer = Reducer { action: MessageReceivedAction, state: TwitchConnectorState ->
+    state.modifyChannelState(action.channel) { oldState ->
+        oldState.copy(
+            userMessages = oldState.userMessages.plus(UserMessage(action.user, action.text))
+        )
+    }
 }

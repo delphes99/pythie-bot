@@ -6,7 +6,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.endpoints.ObsModule
 import fr.delphes.connector.obs.outgoingEvent.ObsOutgoingEvent
 import fr.delphes.utils.exhaustive
-import fr.delphes.utils.store.StateManager
+import fr.delphes.utils.store.Store
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.InternalSerializationApi
@@ -19,7 +19,7 @@ class ObsConnector(
     private val repository = ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")
     var state: ObsState = ObsState.Unconfigured
 
-    override val states = emptyList<StateManager<*>>()
+    override val states = emptyList<Store<*>>()
 
     init {
         runBlocking {

@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 
 inline fun <INCOMING: TwitchIncomingEvent, reified PAYLOAD, reified CONDITION: GenericCondition> String.shouldBeMappedTo(
     mapper: TwitchIncomingEventMapper<PAYLOAD>,
-    @SuppressWarnings("unused")
+    @Suppress("unused")
     kCondition: KClass<CONDITION>,
     expected: INCOMING
 ) {
