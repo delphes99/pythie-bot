@@ -22,6 +22,7 @@ class Channel(
     configuration: ChannelConfiguration?,
     credentialsManager: CredentialsManager,
     val bot: ClientBot,
+    val connector: TwitchConnector,
     val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${channel.normalizeName}"))
 ) {
     val currentStream: Stream? get() = state.currentStream
@@ -77,7 +78,7 @@ class Channel(
         //TODO make suspendable
         runBlocking {
             this@handleTwitchEvent.handle(request).forEach { incomingEvent ->
-                bot.bot.handleIncomingEvent(incomingEvent)
+                connector.handleIncomingEvent(incomingEvent)
             }
         }
     }

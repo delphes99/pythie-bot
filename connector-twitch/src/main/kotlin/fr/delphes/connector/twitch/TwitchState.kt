@@ -68,7 +68,8 @@ sealed class TwitchState {
                                 configuredAccount.channel,
                                 legacyChannelConfiguration,
                                 connector.credentialsManager,
-                                clientBot
+                                clientBot,
+                                connector
                             )
                         )
                     }

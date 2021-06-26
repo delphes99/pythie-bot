@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 
 internal class MessageReceivedReducerTest {
     private val channel1 = TwitchChannel("channel1")
+    private val otherChannel = TwitchChannel("channel2")
 
     @Test
     internal fun initialState() {
@@ -25,11 +26,25 @@ internal class MessageReceivedReducerTest {
         )
         val action = MessageReceivedAction(channel1, User("user"), "message")
 
-        val newState = messageReceivedReducer.apply(action, initialState)
+        val newState = MessageReceivedReducer().apply(action, initialState)
 
         newState.stateOf(channel1).userMessages shouldContainInOrder listOf(
             UserMessage(User("some user"), "old message"),
             UserMessage(User("user"), "message")
+        )
+    }
+
+    @Test
+    internal fun `don't add message if another channel`() {
+        val initialState = TwitchConnectorState(
+            channel1 to TwitchChannelState(userMessages = listOf(UserMessage(User("some user"), "old message")))
+        )
+        val action = MessageReceivedAction(otherChannel, User("user"), "message")
+
+        val newState = MessageReceivedReducer().apply(action, initialState)
+
+        newState.stateOf(channel1).userMessages shouldContainInOrder listOf(
+            UserMessage(User("some user"), "old message"),
         )
     }
 }

@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TwitchChannelState(
-    val userMessages: List<UserMessage> = emptyList()
+    val userMessages: List<UserMessage> = emptyList(),
+    val currentStream: StreamInfos? = null
 )

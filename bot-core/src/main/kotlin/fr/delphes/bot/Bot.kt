@@ -12,6 +12,7 @@ import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.utils.exhaustive
 import fr.delphes.utils.store.Action
+import fr.delphes.utils.store.ActionDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
@@ -27,7 +28,7 @@ class Bot(
     val features: List<NonEditableFeature<*>>,
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
     private val featureSerializationModule: SerializersModule,
-) {
+): ActionDispatcher {
     private val _connectors = mutableListOf<Connector>()
     val connectors get(): List<Connector> = _connectors
 
@@ -83,7 +84,7 @@ class Bot(
         return connectors.filterIsInstance<T>().firstOrNull()
     }
 
-    fun applyAction(action: Action) {
+    override fun applyAction(action: Action) {
         connectors
             .flatMap { it.states }
             .forEach { stateManager -> stateManager.dispatch(action) }

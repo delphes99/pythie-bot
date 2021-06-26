@@ -41,8 +41,10 @@ class ChannelUpdateMapper(
                     )
                 }
                 if (!changes.isNullOrEmpty()) {
-                    //TODO move to connector implementation
+                    //TODO delete when state full migrate
                     clientBot.channelOf(channel)?.state?.changeCurrentStream(currentStream.applyChanges(changes))
+
+
                     listOf(StreamChanged(channel, changes))
                 } else {
                     emptyList()
