@@ -1,0 +1,17 @@
+{
+  "home": "Home",
+  "features": "Features",
+  "overlay": "Overlay",
+  "about": "About",
+  "feature": {
+    "name": "Name"
+  },
+  "common": {
+    "save": "Save",
+    "edit": "Edit"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language"
+  }
+}

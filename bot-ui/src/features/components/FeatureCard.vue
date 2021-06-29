@@ -10,7 +10,7 @@
         class="primary-button"
         v-on:click="openSettings()"
       >
-        Edit
+        {{ $t("common.edit") }}
       </button>
     </template>
   </card>

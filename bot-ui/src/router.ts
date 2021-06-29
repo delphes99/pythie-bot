@@ -11,6 +11,7 @@ import OverlaysList from "@/overlay/OverlaysList.vue";
 import OverlayEditor from "@/overlay/editor/OverlayEditor.vue";
 import Home from "@/home/Home.vue";
 import Twitch from "@/twitch/Twitch.vue";
+import Settings from "@/settings/Settings.vue";
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
@@ -44,6 +45,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/about",
     name: "About",
     component: About
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings
   },
   {
     path: "/discord",

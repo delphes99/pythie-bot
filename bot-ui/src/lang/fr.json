@@ -1,0 +1,17 @@
+{
+  "home": "Accueil",
+  "features": "Module",
+  "overlay": "Overlay",
+  "about": "A propos",
+  "feature": {
+    "name": "Nom"
+  },
+  "common": {
+    "save": "Sauvegarder",
+    "edit": "Editer"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue"
+  }
+}
