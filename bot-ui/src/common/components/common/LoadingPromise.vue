@@ -1,8 +1,6 @@
 <template>
   <div v-if="isLoading">Loading</div>
-  <div v-else>
-    <slot></slot>
-  </div>
+  <slot v-else></slot>
 </template>
 
 <script lang="ts">

@@ -10,7 +10,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.9.0",
-    "fabric": "^4.4.0",
+    "interactjs": "^1.10.11",
     "mitt": "^2.1.0",
     "uuid": "^8.3.2",
     "vue": "^3.0.5",
@@ -20,7 +20,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss7-compat": "^2.0.3",
-    "@types/fabric": "^4.2.6",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",

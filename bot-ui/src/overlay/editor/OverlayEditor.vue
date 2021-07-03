@@ -1,6 +1,6 @@
 <template>
   <loading-promise :loading-promise="loadPromise">
-    <div class="flex flex-row">
+    <div class="flex flex-row h-full">
       <div class="w-1/6" :v-if="selection">
         <editor-props
           v-model:selection="selection"
@@ -66,23 +66,17 @@ export default defineComponent({
       () => selection.value,
       newValue => {
         if (overlay.value && newValue) {
-          const component = overlay.value?.elements.find(
+          const component = overlay.value.elements.find(
             element => element.id === newValue?.id
           );
           if (
             component instanceof TextComponent &&
-            newValue instanceof TextComponent
+            newValue instanceof TextComponent &&
+            !component.equals(newValue)
           ) {
-            const updatedElement = {
-              ...component,
-              left: newValue.left,
-              top: newValue.top,
-              text: newValue.text
-            };
-
             overlay.value.elements = [
               ...overlay.value?.elements.filter(e => e.id !== component.id),
-              fromObject(updatedElement)
+              newValue
             ];
           }
         }

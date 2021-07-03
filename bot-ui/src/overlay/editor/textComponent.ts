@@ -14,6 +14,16 @@ export default class TextComponent implements OverlayElement {
     this.top = top;
     this.text = text;
   }
+
+  equals(other: OverlayElement): boolean {
+    return (
+      other instanceof TextComponent &&
+      this.id === other.id &&
+      this.left === other.left &&
+      this.top === other.top &&
+      this.text === other.text
+    );
+  }
 }
 
 export function fromObject(obj: {

@@ -1,11 +1,18 @@
 <template>
-  <canvas id="myCanvas"></canvas>
+  <div
+    id="preview"
+    class="bg-green-300"
+    :style="
+      `width: ${overlay.resolution.width}px; height: ${overlay.resolution.height}px;`
+    "
+  ></div>
 </template>
 <script lang="ts">
 import TextComponent, { fromObject } from "@/overlay/editor/textComponent.ts";
 import Overlay from "@/overlay/Overlay.ts";
 import { OverlayElement } from "@/overlay/OverlayElement.ts";
-import { fabric } from "fabric";
+import interact from "interactjs";
+import { v4 as uuidv4 } from "uuid";
 import { defineComponent, onMounted, PropType, watch } from "vue";
 
 export default defineComponent({
@@ -21,14 +28,10 @@ export default defineComponent({
   },
   emits: ["update:selection"],
   setup(props, { emit }) {
-    const components = new Map<string, fabric.Text>();
+    const components = new Map<string, HTMLDivElement>();
+    const positions = new Map<string, ElementPosition>();
 
     const loadCanvas = () => {
-      const canvas = new fabric.Canvas("myCanvas");
-      canvas.backgroundColor = "lightgrey";
-      canvas.setWidth(props.overlay.resolution.width.toString());
-      canvas.setHeight(props.overlay.resolution.height.toString());
-
       function getElement(element: OverlayElement): TextComponent {
         return props.overlay.elements.find(
           e => e.id === element.id
@@ -37,56 +40,91 @@ export default defineComponent({
 
       function renderElements(elements: OverlayElement[]) {
         elements.forEach(element => {
-          const canvasComponent = components.get(element.id);
-          if (canvasComponent && element instanceof TextComponent) {
-            canvasComponent.top = element.top;
-            canvasComponent.left = element.left;
-            canvasComponent.text = element.text;
+          const divElement = components.get(element.id);
+          if (divElement && element instanceof TextComponent) {
+            divElement.innerText = element.text;
+            if (element.id == props.selection?.id) {
+              divElement.classList.add("selected");
+            } else {
+              divElement.classList.remove("selected");
+            }
+
+            divElement.style.transform = `translate(${element.left}px, ${element.top}px)`;
+            const elementPosition = positions.get(element.id);
+            if (elementPosition) {
+              elementPosition.x = element.left;
+              elementPosition.y = element.top;
+            }
           } else {
             if (element instanceof TextComponent) {
-              const rect = new fabric.Text(element.text, {
-                left: element.left,
-                top: element.top
-              });
+              const divElement = document.createElement("div");
+              const id = `el-${uuidv4()}`;
+              divElement.id = id;
+              divElement.classList.add("draggable");
+              divElement.style.position = `absolute`;
+              divElement.style.display = `inline-block`;
+              divElement.style.transform = `translate(${element.left}px, ${element.top}px)`;
+              divElement.innerHTML = element.text;
 
-              rect.on("selected", _ => {
-                emit("update:selection", getElement(element));
-              });
+              const position = { x: element.left, y: element.top };
 
-              rect.on("moved", e => {
-                if (e.target) {
-                  const updatedElement = {
-                    ...getElement(element),
-                    left: e.target.left ?? 0,
-                    top: e.target.top ?? 0
-                  };
-                  emit("update:selection", fromObject(updatedElement));
+              const updateSelection = () => {
+                const updatedElement = {
+                  ...getElement(element),
+                  left: position.x ?? 0,
+                  top: position.y ?? 0
+                };
+                emit("update:selection", fromObject(updatedElement));
+              };
+
+              divElement.onclick = _ => {
+                updateSelection();
+              };
+
+              interact(`#${id}`).draggable({
+                modifiers: [
+                  interact.modifiers.restrict({
+                    restriction: "parent",
+                    endOnly: true
+                  })
+                ],
+                listeners: {
+                  start() {
+                    updateSelection();
+                  },
+                  move(event) {
+                    position.x += event.dx;
+                    position.y += event.dy;
+
+                    event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+                  },
+                  end() {
+                    updateSelection();
+                  }
                 }
               });
 
-              components.set(element.id, rect);
-              canvas.add(rect);
+              positions.set(element.id, position);
+              components.set(element.id, divElement);
+              document.getElementById("preview")!.appendChild(divElement);
             }
           }
         });
-
-        canvas.requestRenderAll();
       }
 
       renderElements(props.overlay.elements);
 
-      canvas.on("selection:cleared", _ => {
-        emit("update:selection", null);
-      });
-
       watch(
         () => props.selection,
         newValue => {
+          console.log("change selection", newValue?.id);
           if (newValue instanceof TextComponent) {
             const canvasComponent = components.get(newValue.id);
             if (canvasComponent) {
-              canvas.setActiveObject(canvasComponent);
-              canvas.requestRenderAll();
+              for (const component of components.values()) {
+                component.classList.remove("selected");
+              }
+              canvasComponent.classList.add("selected");
             } else {
               console.error("Unknown selected object");
             }
@@ -107,4 +145,23 @@ export default defineComponent({
     return {};
   }
 });
+
+interface ElementPosition {
+  x: number;
+  y: number;
+}
 </script>
+
+<style>
+.draggable.selected {
+  border-color: white;
+}
+
+.draggable {
+  border-width: 1px;
+  border-color: black;
+  display: inline-block;
+  user-select: none;
+  box-sizing: border-box;
+}
+</style>
