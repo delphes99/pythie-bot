@@ -1,9 +1,9 @@
 <template>
-  <div class="h-screen w-screen flex flex-col">
-    <status-bar />
-    <div class="flex-grow flex flex-row">
-      <Menu class="w-52 flex-shrink-0" />
-      <div class="p-3 w-full">
+  <div>
+    <status-bar class="fixed top-0 right-0 h-16" />
+    <div class="mt-16">
+      <Menu class="fixed top-16 left-0" />
+      <div class="ml-16 h-full overflow-auto">
         <router-view />
       </div>
     </div>

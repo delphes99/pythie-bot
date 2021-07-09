@@ -224,6 +224,7 @@ val delphes99Features = listOf(
         listOf(
             SendMessage("-> test dev", channel),
             Alert("test"),
+            PlaySound(listOf("kill-1.mp3", "kill-2.mp3", "kill-3.mp3", "kill-4.mp3", "kill-5.mp3").random())
         )
     },
     RewardRedeem(

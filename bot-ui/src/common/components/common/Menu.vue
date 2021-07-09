@@ -1,5 +1,10 @@
 <template>
-  <nav class="h-full flex flex-col primary-color text-black">
+  <nav
+    class="h-full flex flex-col primary-color text-black overflow-hidden"
+    :class="expand ? 'w-52' : 'w-12'"
+    :onmouseenter="mouseIn"
+    :onmouseleave="mouseOut"
+  >
     <router-link class="router-link" to="/">
       <img src="@/common/assets/home.svg" width="20" />
       {{ $t("home") }}
@@ -23,9 +28,33 @@
   </nav>
 </template>
 
-<style>
+<script lang="ts">
+import { defineComponent, ref, watch } from "vue";
+
+export default defineComponent({
+  name: "Menu",
+  setup() {
+    const expand = ref(false);
+
+    const mouseIn = () => {
+      expand.value = true;
+    };
+    const mouseOut = () => {
+      expand.value = false;
+    };
+
+    return {
+      expand,
+      mouseIn,
+      mouseOut
+    };
+  }
+});
+</script>
+
+<style scoped>
 .router-link {
-  @apply my-1 border-black space-x-2 p-4 items-center flex flex-row font-bold;
+  @apply w-52 my-1 border-black space-x-2 p-4 items-center flex flex-row font-bold;
 }
 
 .router-link:hover {
@@ -37,9 +66,3 @@
   filter: invert(100%);
 }
 </style>
-
-<script lang="ts">
-export default {
-  name: "Menu"
-};
-</script>

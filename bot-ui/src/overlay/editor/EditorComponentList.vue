@@ -1,19 +1,17 @@
 <template>
-  <fieldset
-    class="flex flex-col border border-black"
-    v-if="components.length !== 0"
-  >
-    <legend>Items</legend>
+  <div class="flex flex-col bg-gray-200" v-if="components.length !== 0">
+    <h2>Items</h2>
     <ul>
       <li
         v-for="component in components"
         :key="component.id"
+        :class="selection && component.id === selection.id ? 'selected' : ''"
         @click="selectComponent(component)"
       >
-        {{ component.id }}
+        {{ component.representation }}
       </li>
     </ul>
-  </fieldset>
+  </div>
 </template>
 <script lang="ts">
 import { OverlayElement } from "@/overlay/OverlayElement.ts";
@@ -42,3 +40,13 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+li {
+  @apply m-2 bg-gray-200 p-1 shadow-md;
+}
+
+.selected {
+  @apply bg-gray-400;
+}
+</style>

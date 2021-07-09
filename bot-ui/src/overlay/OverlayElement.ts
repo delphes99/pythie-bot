@@ -2,6 +2,7 @@ import TextComponent from "@/overlay/editor/textComponent.ts";
 
 export interface OverlayElement {
   id: string;
+  representation: string;
   equals(other: OverlayElement): boolean;
 }
 

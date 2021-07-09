@@ -1,22 +1,26 @@
 <template>
   <loading-promise :loading-promise="loadPromise">
-    <div class="flex flex-row">
-      <div class="w-1/6 flex flex-col">
+    <div class="flex flex-row flex-grow h-full">
+      <div class="w-60 flex flex-col">
         <editor-add-component @add-text="addText" />
-        <editor-props
-          v-model:selection="selection"
-          class="flex-grow"
-        ></editor-props>
         <editor-component-list
           :components="components"
           v-model:selection="selection"
         ></editor-component-list>
       </div>
-      <div class="w-5/6">
+      <div
+        class="mx-60 h-full flex flex-shrink-0 flex-grow items-center justify-center"
+      >
         <editor-preview
           :overlay="overlay"
           v-model:selection="selection"
         ></editor-preview>
+      </div>
+      <div class="w-60">
+        <editor-props
+          v-model:selection="selection"
+          class="flex-grow"
+        ></editor-props>
       </div>
     </div>
   </loading-promise>

@@ -24,6 +24,9 @@ export default class TextComponent implements OverlayElement {
       this.text === other.text
     );
   }
+  public get representation() {
+    return this.text;
+  }
 }
 
 export function fromObject(obj: {

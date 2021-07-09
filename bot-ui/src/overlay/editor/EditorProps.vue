@@ -1,38 +1,40 @@
 <template>
-  <fieldset class="flex flex-col border border-black" v-if="selection">
-    <legend>Selected item</legend>
-    id : {{ selection.id }}
-    <div>
-      <label for="text-attribute">Text : </label>
-      <input
-        class="input"
-        type="text"
-        id="text-attribute"
-        v-model="selectedText"
-        v-on:change="updateComponent"
-      />
+  <div>
+    <div class="flex flex-col border border-black p-2" v-if="selection">
+      <h2>Selected item</h2>
+      id : {{ selection.id }}
+      <div>
+        <label for="text-attribute">Text : </label>
+        <input
+          class="input"
+          type="text"
+          id="text-attribute"
+          v-model="selectedText"
+          v-on:change="updateComponent"
+        />
+      </div>
+      <div>
+        <label for="text-attribute">X : </label>
+        <input
+          class="input"
+          type="text"
+          id="x-attribute"
+          v-model="selectedLeft"
+          v-on:change="updateComponent"
+        />
+      </div>
+      <div>
+        <label for="text-attribute">Y : </label>
+        <input
+          class="input"
+          type="text"
+          id="y-attribute"
+          v-model="selectedTop"
+          v-on:change="updateComponent"
+        />
+      </div>
     </div>
-    <div>
-      <label for="text-attribute">X : </label>
-      <input
-        class="input"
-        type="text"
-        id="x-attribute"
-        v-model="selectedLeft"
-        v-on:change="updateComponent"
-      />
-    </div>
-    <div>
-      <label for="text-attribute">Y : </label>
-      <input
-        class="input"
-        type="text"
-        id="y-attribute"
-        v-model="selectedTop"
-        v-on:change="updateComponent"
-      />
-    </div>
-  </fieldset>
+  </div>
 </template>
 <script lang="ts">
 import TextComponent, { fromObject } from "@/overlay/editor/textComponent";

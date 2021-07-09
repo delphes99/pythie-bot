@@ -1,9 +1,8 @@
 <template>
   <div
     id="preview"
-    class="bg-green-300"
     :style="
-      `width: ${overlay.resolution.width}px; height: ${overlay.resolution.height}px;`
+      `min-width: ${overlay.resolution.width}px; min-height: ${overlay.resolution.height}px;`
     "
   ></div>
 </template>
@@ -117,7 +116,6 @@ export default defineComponent({
       watch(
         () => props.selection,
         newValue => {
-          console.log("change selection", newValue?.id);
           if (newValue instanceof TextComponent) {
             const canvasComponent = components.get(newValue.id);
             if (canvasComponent) {
@@ -154,14 +152,28 @@ interface ElementPosition {
 
 <style>
 .draggable.selected {
-  border-color: white;
+  @apply border-black;
 }
 
 .draggable {
-  border-width: 1px;
-  border-color: black;
-  display: inline-block;
+  @apply border-dashed border border-gray-300 inline-block box-border;
   user-select: none;
-  box-sizing: border-box;
+}
+
+#preview {
+  background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 20px,
+      #dddddd 1px,
+      #dddddd 21px
+    ),
+    repeating-linear-gradient(
+      to right,
+      #eeeeee,
+      #eeeeee 20px,
+      #dddddd 1px,
+      #dddddd 21px
+    );
 }
 </style>
