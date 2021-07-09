@@ -8,7 +8,7 @@
       <li
         v-for="component in components"
         :key="component.id"
-        v-on:click="selectComponent(component)"
+        @click="selectComponent(component)"
       >
         {{ component.id }}
       </li>
@@ -25,12 +25,15 @@ export default defineComponent({
     components: {
       type: Object as PropType<OverlayElement[]>,
       required: true
+    },
+    selection: {
+      type: Object as PropType<OverlayElement>
     }
   },
-  emits: ["selectComponent"],
+  emits: ["update:selection"],
   setup(props, { emit }) {
     const selectComponent = (selected: OverlayElement) => {
-      emit("selectComponent", selected);
+      emit("update:selection", selected);
     };
 
     return {

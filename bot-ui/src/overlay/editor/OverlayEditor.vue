@@ -1,12 +1,16 @@
 <template>
   <loading-promise :loading-promise="loadPromise">
-    <div class="flex flex-row h-full">
-      <div class="w-1/6" :v-if="selection">
+    <div class="flex flex-row">
+      <div class="w-1/6 flex flex-col">
+        <editor-add-component @add-text="addText" />
         <editor-props
           v-model:selection="selection"
-          @add-text="addText"
+          class="flex-grow"
         ></editor-props>
-        <editor-component-list :components="components"></editor-component-list>
+        <editor-component-list
+          :components="components"
+          v-model:selection="selection"
+        ></editor-component-list>
       </div>
       <div class="w-5/6">
         <editor-preview
@@ -21,6 +25,7 @@
 <script lang="ts">
 import LoadingPromise from "@/common/components/common/LoadingPromise.vue";
 import { useLoadingPromise } from "@/common/composition/UseLoadingPromise.ts";
+import EditorAddComponent from "@/overlay/editor/EditorAddComponent.vue";
 import EditorComponentList from "@/overlay/editor/EditorComponentList.vue";
 import EditorPreview from "@/overlay/editor/EditorPreview.vue";
 import EditorProps from "@/overlay/editor/EditorProps.vue";
@@ -32,6 +37,7 @@ import { computed, defineComponent, inject, ref, watch } from "vue";
 export default defineComponent({
   name: `OverlayEditor`,
   components: {
+    EditorAddComponent,
     LoadingPromise,
     EditorComponentList,
     EditorPreview,

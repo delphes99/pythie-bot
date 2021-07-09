@@ -1,9 +1,4 @@
 <template>
-  <div>
-    <button class="primary-button" v-on:click="$emit('addText')">
-      Add text
-    </button>
-  </div>
   <fieldset class="flex flex-col border border-black" v-if="selection">
     <legend>Selected item</legend>
     id : {{ selection.id }}
@@ -51,7 +46,7 @@ export default defineComponent({
       type: Object as PropType<OverlayElement>
     }
   },
-  emits: ["update:selection", "addText"],
+  emits: ["update:selection"],
   setup(props, { emit }) {
     const components = ref<TextComponent[]>([]);
     const selectedLeft = ref();
