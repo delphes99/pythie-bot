@@ -1,0 +1,11 @@
+rootProject.name = "pythie-bot"
+include(":connector-obs")
+include(":bot-ui")
+include(":bot-core")
+include(":pythie-bot")
+include(":connector-twitch")
+include(":connector-discord")
+include(":bot-features")
+include(":obs-client")
+include(":twitch-api")
+include(":utils")

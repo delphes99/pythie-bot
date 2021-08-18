@@ -45,10 +45,10 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.prettyPrint
 import fr.delphes.utils.time.secondsOf
 import kotlinx.serialization.InternalSerializationApi
-import org.apache.commons.lang3.RandomUtils.nextDouble
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random.Default.nextDouble
 
 /**
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
