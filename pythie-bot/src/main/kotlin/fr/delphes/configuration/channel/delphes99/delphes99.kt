@@ -210,7 +210,7 @@ val delphes99Features = listOf(
     GameDescription(
         channel,
         "!tufekoi",
-        Games.SCIENCE_TECHNOLOGY to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
+        Games.SOFTWARE_DEVELOPMENT to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
         Games.JUST_CHATTING to "\uD83D\uDDE3️ bla bla bla",
         Games.SATISFACTORY to "Pionnier, vous êtes envoyé colonniser Jeu de construction d'usine \uD83C\uDFED en première personne, automatisation, optimisation, exploration !",
         Games.PATH_OF_EXILE to "Vous êtes un exilé errant sur Wraeclast, cherchant à vous venger de ceux qui vous ont banni. ⚔️Hack'n slash free to play, avec un système de ligue de quelques mois. Constellation de talent, lien entre gemmes, craft, mécaniques... complexe mais passionnant",
@@ -263,9 +263,9 @@ val delphes99Features = listOf(
     },
     GameReward(
         channel,
-        DelphesReward.DEV_TEST to Games.SCIENCE_TECHNOLOGY,
-        DelphesReward.DEV_TEST2 to Games.SCIENCE_TECHNOLOGY,
-        DelphesReward.DEV_TEST3 to Games.SCIENCE_TECHNOLOGY,
+        DelphesReward.DEV_TEST to Games.SOFTWARE_DEVELOPMENT,
+        DelphesReward.DEV_TEST2 to Games.SOFTWARE_DEVELOPMENT,
+        DelphesReward.DEV_TEST3 to Games.SOFTWARE_DEVELOPMENT,
         DelphesReward.SATISFACTORY_COLOR to Games.SATISFACTORY
     ),
     Command(
