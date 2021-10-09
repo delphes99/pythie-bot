@@ -1,0 +1,9 @@
+# Project exclude paths
+*.class
+*.jar
+*/target/
+*/build/
+.idea/
+*.iml
+/bot-ui/bot-api/
+.gradle/

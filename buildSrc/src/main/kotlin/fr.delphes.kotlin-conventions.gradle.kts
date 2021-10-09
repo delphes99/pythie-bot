@@ -20,11 +20,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
     implementation("io.github.microutils:kotlin-logging:1.12.0")
     implementation("ch.qos.logback:logback-classic:1.2.3")
-    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.5.10")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.10")
+    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.5.30")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.30")
 }
 
 group = "fr.delphes"

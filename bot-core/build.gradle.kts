@@ -12,6 +12,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization:1.6.0")
     implementation("io.ktor:ktor-websockets:1.6.0")
     api("io.ktor:ktor-client:1.6.0")
+    implementation("fr.delphes:bot-api")
     implementation("io.ktor:ktor-client-apache:1.6.0")
     implementation("io.ktor:ktor-client-serialization:1.6.0")
     implementation("io.ktor:ktor-client-serialization-jvm:1.6.0")
