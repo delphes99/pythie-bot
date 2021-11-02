@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    testImplementation("io.mockk:mockk:1.11.0")
+    testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("net.bytebuddy:byte-buddy:1.11.3")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.5.10")

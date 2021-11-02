@@ -21,7 +21,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.17.2")
     testImplementation("io.kotest:kotest-assertions-core-jvm:4.6.0")
     testImplementation("io.kotest:kotest-assertions-json-jvm:4.6.0")
-    testImplementation("io.mockk:mockk:1.11.0")
+    testImplementation("io.mockk:mockk:1.12.0")
 }
 
 tasks.register<Copy>("copyFrontToServer") {
