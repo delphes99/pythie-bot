@@ -6,7 +6,7 @@ sealed interface ConnectorState<CONFIGURATION> {
     val configuration: CONFIGURATION?
 
     suspend fun handle(
-        transition: ConnectorTransition<CONFIGURATION>,
+        transition: ConnectorTransition<out CONFIGURATION>,
         repository: Repository<CONFIGURATION>
     ): ConnectorState<CONFIGURATION>
 }
@@ -19,7 +19,7 @@ internal fun <T> ConnectorState<T>.configureIfNewConfiguration(newConfiguration:
     }
 }
 
-internal fun <T> ConnectorState<T>.errorMessageFor(error: ErrorOccurred<T>) =
+internal fun <T> ConnectorState<T>.errorMessageFor(error: ErrorOccurred<out T>) =
     if (this.configuration == error.configuration) {
         error.error
     } else {

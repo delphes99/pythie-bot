@@ -5,7 +5,7 @@ import fr.delphes.utils.Repository
 data class Connected<CONFIGURATION>(
     override val configuration: CONFIGURATION
 ) : ConnectorState<CONFIGURATION> {
-    override suspend fun handle(transition: ConnectorTransition<CONFIGURATION>, repository: Repository<CONFIGURATION>): ConnectorState<CONFIGURATION> {
+    override suspend fun handle(transition: ConnectorTransition<out CONFIGURATION>, repository: Repository<CONFIGURATION>): ConnectorState<CONFIGURATION> {
         return when(transition) {
             is Configure -> configureIfNewConfiguration(transition.configuration)
             is ConnectionRequested -> this

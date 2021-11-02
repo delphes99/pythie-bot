@@ -1,13 +1,14 @@
 package fr.delphes.bot.connector.state
 
-import fr.delphes.utils.Repository
+import fr.delphes.bot.connector.ConfigurationStub
+import fr.delphes.utils.RepositoryWithInit
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
 internal class InErrorTest {
-    private val repository = mockk<Repository<ConfigurationStub>>(relaxed = true)
+    private val repository = mockk<RepositoryWithInit<ConfigurationStub>>(relaxed = true)
 
     @Test
     internal fun `when the connector is configured should have configured state`() {

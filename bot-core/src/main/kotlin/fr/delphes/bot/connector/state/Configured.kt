@@ -6,7 +6,7 @@ data class Configured<CONFIGURATION>(
     override val configuration: CONFIGURATION
 ) : ConnectorState<CONFIGURATION> {
     override suspend fun handle(
-        transition: ConnectorTransition<CONFIGURATION>,
+        transition: ConnectorTransition<out CONFIGURATION>,
         repository: Repository<CONFIGURATION>
     ): ConnectorState<CONFIGURATION> {
         return when (transition) {

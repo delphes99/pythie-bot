@@ -1,5 +1,6 @@
 package fr.delphes.bot.connector.state
 
+import fr.delphes.bot.connector.ConfigurationStub
 import fr.delphes.utils.Repository
 import io.kotest.matchers.shouldBe
 import io.mockk.coVerify

@@ -1,3 +1,3 @@
-package fr.delphes.bot.connector.state
+package fr.delphes.bot.connector
 
 data class ConfigurationStub(val value: String)

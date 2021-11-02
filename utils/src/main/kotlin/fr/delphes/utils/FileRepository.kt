@@ -9,7 +9,7 @@ open class FileRepository<T>(
     val serializer: (T) -> String,
     val deserializer: (String) -> T,
     val initializer: suspend () -> T
-): Repository<T> {
+): RepositoryWithInit<T> {
     private val file: File = File(filePath)
 
     override suspend fun save(item: T) {

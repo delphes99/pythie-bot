@@ -7,7 +7,7 @@ data class InError<CONFIGURATION>(
     private val error: String
 ) : ConnectorState<CONFIGURATION> {
     override suspend fun handle(
-        transition: ConnectorTransition<CONFIGURATION>,
+        transition: ConnectorTransition<out CONFIGURATION>,
         repository: Repository<CONFIGURATION>
     ): ConnectorState<CONFIGURATION> {
         return when(transition) {

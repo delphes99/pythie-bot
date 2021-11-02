@@ -1,8 +1,10 @@
 package fr.delphes.bot.connector.state
 
-import fr.delphes.utils.Repository
+import fr.delphes.bot.connector.ConfigurationStub
+import fr.delphes.utils.RepositoryWithInit
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -12,7 +14,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
 internal class NotConfiguredTest {
-    private val repository = mockk<Repository<ConfigurationStub>>(relaxed = true)
+    private val repository = mockk<RepositoryWithInit<ConfigurationStub>>(relaxed = true)
 
     @Test
     internal fun `should have no configuration`() {
@@ -53,6 +55,12 @@ internal class NotConfiguredTest {
         }
 
         newState shouldBe oldState
+    }
+
+    @Test
+    internal fun equals() {
+        NotConfigured<String>() shouldBe NotConfigured()
+        NotConfigured<String>() shouldNotBe "String"
     }
 
     companion object {
