@@ -1,0 +1,13 @@
+[versions]
+kotest-version = "4.6.0"
+
+[libraries]
+mockk = { module = "io.mockk:mockk", version = "1.12.0" }
+bytebuddy = { module = "net.bytebuddy:byte-buddy", version = "1.11.3" }
+junit-core = { module = "org.junit.jupiter:junit-jupiter", version = "5.7.0" }
+junit-kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit", version = "1.5.10" }
+kotest-assertion-core = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest-version" }
+kotest-assertion-json = { module = "io.kotest:kotest-assertions-json-jvm", version.ref = "kotest-version" }
+
+[bundles]
+kotlin-test = ["mockk", "bytebuddy", "junit-core", "junit-kotlin","kotest-assertion-core", "kotest-assertion-json"]

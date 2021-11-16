@@ -1,9 +1,9 @@
 package fr.delphes.bot.event.eventHandler
 
 import fr.delphes.bot.event.incoming.IncomingEvent
+import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.coVerify
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class EventHandlersTest {
@@ -20,8 +20,8 @@ internal class EventHandlersTest {
         eventHandlers.addHandler(handlerB)
         eventHandlers.addHandler(handlerBbis)
 
-        assertThat(eventHandlers.getHandlers<EventA>()).containsExactlyInAnyOrder(handlerA)
-        assertThat(eventHandlers.getHandlers<EventB>()).containsExactlyInAnyOrder(handlerB, handlerBbis)
+        eventHandlers.getHandlers<EventA>().shouldContainExactly(handlerA)
+        eventHandlers.getHandlers<EventB>().shouldContainExactly(handlerB, handlerBbis)
     }
 
     @Test

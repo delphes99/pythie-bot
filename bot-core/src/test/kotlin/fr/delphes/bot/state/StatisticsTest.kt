@@ -1,7 +1,7 @@
 package fr.delphes.bot.state
 
 import fr.delphes.twitch.api.user.User
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -13,26 +13,22 @@ internal class StatisticsTest {
     inner class NumberOfChatters {
         @Test
         internal fun `one chatter`() {
-            assertThat(
-                Statistics(
-                    mutableListOf(
-                        UserMessage(USER_1, "message user1"),
-                        UserMessage(USER_1, "second message user1")
-                    )
-                ).numberOfChatters
-            ).isEqualTo(1)
+            Statistics(
+                mutableListOf(
+                    UserMessage(USER_1, "message user1"),
+                    UserMessage(USER_1, "second message user1")
+                )
+            ).numberOfChatters shouldBe 1
         }
 
         @Test
         internal fun `two chatter`() {
-            assertThat(
-                Statistics(
-                    mutableListOf(
-                        UserMessage(USER_1, "message user1"),
-                        UserMessage(USER_2, "second message user1")
-                    )
-                ).numberOfChatters
-            ).isEqualTo(2)
+            Statistics(
+                mutableListOf(
+                    UserMessage(USER_1, "message user1"),
+                    UserMessage(USER_2, "second message user1")
+                )
+            ).numberOfChatters shouldBe 2
         }
     }
 
@@ -40,15 +36,13 @@ internal class StatisticsTest {
     inner class NumberOfMessages {
         @Test
         internal fun `count message`() {
-            assertThat(
-                Statistics(
-                    mutableListOf(
-                        UserMessage(USER_1, "message user1"),
-                        UserMessage(USER_1, "second message user1"),
-                        UserMessage(USER_2, "second message user1")
-                    )
-                ).numberMessages
-            ).isEqualTo(3)
+            Statistics(
+                mutableListOf(
+                    UserMessage(USER_1, "message user1"),
+                    UserMessage(USER_1, "second message user1"),
+                    UserMessage(USER_2, "second message user1")
+                )
+            ).numberMessages shouldBe 3
         }
     }
 
@@ -59,7 +53,7 @@ internal class StatisticsTest {
             val state = Statistics()
             state.newFollow(USER_1)
 
-            assertThat(state.numberOfFollow).isEqualTo(1)
+            state.numberOfFollow shouldBe 1
         }
 
         @Test
@@ -68,7 +62,7 @@ internal class StatisticsTest {
             state.newFollow(USER_1)
             state.newFollow(USER_1)
 
-            assertThat(state.numberOfFollow).isEqualTo(1)
+            state.numberOfFollow shouldBe 1
         }
     }
 
@@ -79,7 +73,7 @@ internal class StatisticsTest {
             val state = Statistics()
             state.newSub(USER_1)
 
-            assertThat(state.numberOfSub).isEqualTo(1)
+            state.numberOfSub shouldBe 1
         }
 
         @Test
@@ -88,7 +82,7 @@ internal class StatisticsTest {
             state.newSub(USER_1)
             state.newSub(USER_1)
 
-            assertThat(state.numberOfSub).isEqualTo(1)
+            state.numberOfSub shouldBe 1
         }
     }
 }
