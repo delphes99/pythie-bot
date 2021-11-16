@@ -11,9 +11,9 @@ dependencyResolutionManagement {
 }
 
 include(":connector-obs")
-includeBuild("bot-api") {
+includeBuild("bot-sdk") {
     dependencySubstitution {
-        substitute(module("fr.delphes:bot-api")).using(project(":"))
+        substitute(module("fr.delphes:bot-sdk")).using(project(":"))
     }
 }
 include(":bot-ui")

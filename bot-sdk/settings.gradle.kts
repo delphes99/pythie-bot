@@ -1,4 +1,4 @@
-rootProject.name = "bot-api"
+rootProject.name = "bot-sdk"
 
 enableFeaturePreview("VERSION_CATALOGS")
 

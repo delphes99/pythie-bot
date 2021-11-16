@@ -5,5 +5,5 @@
 */build/
 .idea/
 *.iml
-/bot-ui/bot-api/
+/bot-ui/bot-sdk/
 .gradle/
