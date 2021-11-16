@@ -28,11 +28,12 @@ class Bot(
     val features: List<NonEditableFeature<*>>,
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
     private val featureSerializationModule: SerializersModule,
-): ActionDispatcher {
+) : ActionDispatcher {
     private val _connectors = mutableListOf<Connector>()
     val connectors get(): List<Connector> = _connectors
 
-    internal val overlayRepository = OverlayRepository("${configFilepath}${File.separator}overlays${File.separator}overlays.json")
+    internal val overlayRepository =
+        OverlayRepository("${configFilepath}${File.separator}overlays${File.separator}overlays.json")
 
     val alerts = Channel<Alert>()
 
@@ -52,8 +53,8 @@ class Bot(
     }
 
     private suspend fun handleOutgoingEvent(event: OutgoingEvent) {
-        if(event is CoreOutgoingEvent) {
-            when(event) {
+        if (event is CoreOutgoingEvent) {
+            when (event) {
                 is Alert -> alerts.send(event)
                 is Pause -> delay(event.delay.toMillis())
                 is PlaySound -> alerts.send(Alert("playSound", "mediaName" to event.mediaName)) // TODO move appart from alert

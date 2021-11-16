@@ -6,6 +6,7 @@ import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.post
@@ -32,7 +33,7 @@ class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
                 payload.event != null -> {
                     listener(payload.event)
 
-                    this.context.response.status(HttpStatusCode.OK)
+                    this.context.respond(HttpStatusCode.OK)
                 }
                 else -> {
                     LOGGER.error { "Twitch webhook ${topic.webhookPathSuffix} for $channelName : Unable to handle message" }
