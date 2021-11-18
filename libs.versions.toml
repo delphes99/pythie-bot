@@ -1,6 +1,5 @@
 [versions]
 kotlin-version = "1.6.0"
-kotlin-serialization-version = "1.5.21"
 node-gradle-version = "3.1.1"
 gradle-shadow-version = "7.1.0"
 ktor-version = "1.6.5"
@@ -9,7 +8,7 @@ kitteh-version = "7.3.0"
 kumo-version = "1.27"
 
 #test
-mockk-version = "1.12.0"
+mockk-version = "1.12.1"
 bytebuddy-version = "1.11.3"
 kotest-version = "4.6.0"
 junit-core-version = "5.7.0"
@@ -53,6 +52,6 @@ ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-client-serialization
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin-version" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization-version" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
 node = { id = "com.github.node-gradle.node", version.ref = "node-gradle-version" }
 fatjar = { id = "com.github.johnrengelman.shadow", version.ref = "gradle-shadow-version" }
