@@ -12,12 +12,13 @@ import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.WithGameId
 import fr.delphes.twitch.api.user.User
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class GameDescriptionTest {
@@ -41,7 +42,7 @@ internal class GameDescriptionTest {
 
         val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 
-        assertThat(outgoingEvents).contains(SendMessage("description", channel))
+        outgoingEvents.shouldContain(SendMessage("description", channel))
     }
 
     @Test
@@ -52,7 +53,7 @@ internal class GameDescriptionTest {
 
         val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 
-        assertThat(outgoingEvents).contains(SendMessage("description", channel))
+        outgoingEvents.shouldContain(SendMessage("description", channel))
     }
 
     @Test
@@ -63,7 +64,7 @@ internal class GameDescriptionTest {
 
         val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 
-        assertThat(outgoingEvents).isEmpty()
+        outgoingEvents.shouldBeEmpty()
     }
 
     private fun `current game is`(game: Game) {

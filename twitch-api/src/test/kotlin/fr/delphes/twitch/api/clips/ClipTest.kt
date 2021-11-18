@@ -3,8 +3,8 @@ package fr.delphes.twitch.api.clips
 import fr.delphes.twitch.api.clips.payload.GetClips
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
@@ -39,25 +39,23 @@ internal class ClipTest {
 
         val model = Serializer.decodeFromString<GetClips>(payloadStr)
 
-        assertThat(model).isEqualTo(
-            GetClips(
-                listOf(
-                    GetClipsPayload(
-                        "RandomClip1",
-                        "https://clips.twitch.tv/AwkwardHelplessSalamanderSwiftRage",
-                        "https://clips.twitch.tv/embed?clip=RandomClip1",
-                        "1234",
-                        "JJ",
-                        "123456",
-                        "MrMarshall",
-                        "1234567",
-                        "33103",
-                        "en",
-                        "random1",
-                        10,
-                        LocalDateTime.of(2017, 11, 30, 22, 34, 18),
-                        "https://clips-media-assets.twitch.tv/157589949-preview-480x272.jpg"
-                    )
+        model shouldBe GetClips(
+            listOf(
+                GetClipsPayload(
+                    "RandomClip1",
+                    "https://clips.twitch.tv/AwkwardHelplessSalamanderSwiftRage",
+                    "https://clips.twitch.tv/embed?clip=RandomClip1",
+                    "1234",
+                    "JJ",
+                    "123456",
+                    "MrMarshall",
+                    "1234567",
+                    "33103",
+                    "en",
+                    "random1",
+                    10,
+                    LocalDateTime.of(2017, 11, 30, 22, 34, 18),
+                    "https://clips-media-assets.twitch.tv/157589949-preview-480x272.jpg"
                 )
             )
         )

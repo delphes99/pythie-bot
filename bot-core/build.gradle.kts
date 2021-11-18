@@ -1,21 +1,16 @@
 plugins {
     id("fr.delphes.kotlin-conventions")
-    kotlin("jvm") version "1.5.21"
-    kotlin("plugin.serialization") version "1.5.21"
+    id(libs.plugins.kotlin.jvm.get().pluginId)
+    id(libs.plugins.kotlin.serialization.get().pluginId)
 }
 
 dependencies {
     api(project(":utils"))
     implementation(project(":twitch-api"))
-    api("io.ktor:ktor-server-core:1.6.0")
-    implementation("io.ktor:ktor-server-netty:1.6.0")
-    implementation("io.ktor:ktor-serialization:1.6.0")
-    implementation("io.ktor:ktor-websockets:1.6.0")
-    api("io.ktor:ktor-client:1.6.0")
     implementation("fr.delphes:bot-sdk")
-    implementation("io.ktor:ktor-client-apache:1.6.0")
-    implementation("io.ktor:ktor-client-serialization:1.6.0")
-    implementation("io.ktor:ktor-client-serialization-jvm:1.6.0")
+    api(libs.ktor.server.core)
+    implementation(libs.bundles.ktor.server)
+    implementation(libs.bundles.ktor.client)
     testImplementation(libs.bundles.kotlin.test)
 }
 

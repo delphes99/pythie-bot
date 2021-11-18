@@ -1,7 +1,7 @@
 plugins {
     id("fr.delphes.kotlin-conventions")
-    kotlin("jvm") version "1.5.21"
-    kotlin("plugin.serialization") version "1.5.21"
+    id(libs.plugins.kotlin.jvm.get().pluginId)
+    id(libs.plugins.kotlin.serialization.get().pluginId)
 }
 
 dependencies {

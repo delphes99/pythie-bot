@@ -1,6 +1,7 @@
 package fr.delphes.features.twitch.voth
 
 import fr.delphes.bot.Bot
+import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
@@ -19,11 +20,16 @@ import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.RewardId
 import fr.delphes.twitch.api.user.User
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -56,8 +62,8 @@ internal class VOTHTest {
             runBlocking {
                 voth.handleIncomingEvent(rewardRedemption, clientBot)
             }
-            assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now, 50))
-            assertThat(voth.vothChanged).isTrue
+            voth.currentVip shouldBe VOTHWinner("user", now, 50)
+            voth.vothChanged.shouldBeTrue()
         }
 
         @Test
@@ -68,8 +74,8 @@ internal class VOTHTest {
             runBlocking {
                 voth.handleIncomingEvent(rewardRedemption, clientBot)
             }
-            assertThat(voth.currentVip).isEqualTo(VOTHWinner("user", now.minusMinutes(1), 50))
-            assertThat(voth.vothChanged).isFalse
+            voth.currentVip shouldBe VOTHWinner("user", now.minusMinutes(1), 50)
+            voth.vothChanged.shouldBeFalse()
         }
 
         @Test
@@ -78,7 +84,7 @@ internal class VOTHTest {
             val messages = runBlocking {
                 voth.handleIncomingEvent(rewardRedemption, clientBot)
             }
-            assertThat(messages).contains(RetrieveVip(channel))
+            messages.shouldContain(RetrieveVip(channel))
         }
     }
 
@@ -92,7 +98,7 @@ internal class VOTHTest {
             val messages = runBlocking {
                 voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
             }
-            assertThat(messages).contains(
+            messages.shouldContainAll(
                 RemoveVIP("oldVip", channel),
                 RemoveVIP("oldVip2", channel)
             )
@@ -106,7 +112,7 @@ internal class VOTHTest {
             val messages = runBlocking {
                 voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
             }
-            assertThat(messages).contains(
+            messages.shouldContain(
                 PromoteVIP("newVip", channel)
             )
         }
@@ -119,7 +125,7 @@ internal class VOTHTest {
             val messages = runBlocking {
                 voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
             }
-            assertThat(messages).isEmpty()
+            messages.shouldBeEmpty()
         }
     }
 
@@ -133,7 +139,7 @@ internal class VOTHTest {
         }
 
         verify(exactly = 1) { state.pause(any()) }
-        assertThat(messages).isEmpty()
+        messages.shouldBeEmpty()
     }
 
     @Test
@@ -147,7 +153,7 @@ internal class VOTHTest {
         }
 
         verify(exactly = 1) { state.unpause(any()) }
-        assertThat(messages).isEmpty()
+        messages.shouldBeEmpty()
     }
 
     @Test
@@ -168,12 +174,14 @@ internal class VOTHTest {
             state = state,
             clock = clock
         )
+        val bot = mockk<Bot>()
+        every { bot.connectors } returns listOf(mockk<TwitchConnector>())
 
         val events = runBlocking {
-            voth.handleIncomingEvent(CommandAsked(channel, Command("!top3"), User("user")), mockk())
+            voth.handleIncomingEvent(CommandAsked(channel, Command("!top3"), User("user")), bot)
         }
 
-        assertThat(events).contains(SendMessage("user1, user2, user3", channel))
+        events.shouldContain(SendMessage("user1, user2, user3", channel))
     }
 
     private fun voth(state: VOTHState = defaultState): VOTH {

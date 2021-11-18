@@ -1,7 +1,8 @@
 package fr.delphes.features.twitch.voth
 
 import fr.delphes.twitch.api.user.User
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.LocalDateTime
@@ -16,9 +17,7 @@ internal class VOTHStateTest {
         val state =
             VOTHState(previousReigns = mutableListOf(reign))
 
-        assertThat(state.getReignsFor(USER, NOW)).isEqualTo(
-            Stats(USER, reign)
-        )
+        state.getReignsFor(USER, NOW) shouldBe Stats(USER, reign)
     }
 
     @Test
@@ -31,13 +30,12 @@ internal class VOTHStateTest {
                 previousReigns = mutableListOf(previousReign)
             )
 
-        assertThat(state.getReignsFor(USER, NOW)).isEqualTo(
-            Stats(
-                USER,
-                previousReign,
-                VOTHReign(USER, Duration.ofMinutes(15), 25)
-            )
+        state.getReignsFor(USER, NOW) shouldBe Stats(
+            USER,
+            previousReign,
+            VOTHReign(USER, Duration.ofMinutes(15), 25)
         )
+
     }
 
     @Test
@@ -64,21 +62,19 @@ internal class VOTHStateTest {
                     .toMutableList()
             )
 
-        assertThat(state.top3(NOW)).isEqualTo(
-            listOf(
-                Stats(
-                    user1,
-                    *previousReignForUser1.toTypedArray(),
-                    VOTHReign(user1, Duration.ofMinutes(15), 25)
-                ),
-                Stats(
-                    user2,
-                    *previousReignForUser2.toTypedArray()
-                ),
-                Stats(
-                    user3,
-                    *previousReignForUser3.toTypedArray()
-                )
+        state.top3(NOW) shouldBe listOf(
+            Stats(
+                user1,
+                *previousReignForUser1.toTypedArray(),
+                VOTHReign(user1, Duration.ofMinutes(15), 25)
+            ),
+            Stats(
+                user2,
+                *previousReignForUser2.toTypedArray()
+            ),
+            Stats(
+                user3,
+                *previousReignForUser3.toTypedArray()
             )
         )
     }
@@ -96,9 +92,7 @@ internal class VOTHStateTest {
 
         state.pause(NOW)
 
-        assertThat(state.currentVip).isEqualTo(
-            VOTHWinner("user", null, currentReignCost, listOf(Duration.ofMinutes(15)))
-        )
+        state.currentVip shouldBe VOTHWinner("user", null, currentReignCost, listOf(Duration.ofMinutes(15)))
     }
 
     @Test
@@ -115,14 +109,12 @@ internal class VOTHStateTest {
         state.pause(NOW)
         state.unpause(NOW.plusMinutes(5))
 
-        assertThat(state.currentVip).isEqualTo(
-            VOTHWinner(
-                "user",
-                NOW.plusMinutes(5),
-                currentReignCost,
-                listOf(
-                    Duration.ofMinutes(15)
-                )
+        state.currentVip shouldBe VOTHWinner(
+            "user",
+            NOW.plusMinutes(5),
+            currentReignCost,
+            listOf(
+                Duration.ofMinutes(15)
             )
         )
     }
@@ -143,15 +135,13 @@ internal class VOTHStateTest {
         state.pause(NOW.plusMinutes(65))
         state.unpause(NOW.plusMinutes(245))
 
-        assertThat(state.currentVip).isEqualTo(
-            VOTHWinner(
-                "user",
-                NOW.plusMinutes(245),
-                currentReignCost,
-                listOf(
-                    Duration.ofMinutes(15),
-                    Duration.ofMinutes(60)
-                )
+        state.currentVip shouldBe VOTHWinner(
+            "user",
+            NOW.plusMinutes(245),
+            currentReignCost,
+            listOf(
+                Duration.ofMinutes(15),
+                Duration.ofMinutes(60)
             )
         )
     }
@@ -173,7 +163,7 @@ internal class VOTHStateTest {
                 )
             )
 
-        assertThat(state.lastReigns(NOW)).containsExactly(
+        state.lastReigns(NOW).shouldContainExactly(
             VOTHReign(USER, Duration.ofMinutes(15), 25),
             previousReign3,
             previousReign2,

@@ -3,8 +3,8 @@ package fr.delphes.twitch.api.getStream
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
@@ -35,21 +35,19 @@ internal class GetStreamTest {
 
         val model = Serializer.decodeFromString<StreamPayload>(payloadStr)
 
-        assertThat(model).isEqualTo(
-            StreamPayload(
-                StreamInfos(
-                    "40321373372",
-                    "576689294",
-                    "delphestest",
-                    "509670",
-                    "live",
-                    "test bbb",
-                    0,
-                    LocalDateTime.of(2020, 12, 12, 8, 7, 42),
-                    "en",
-                    "https://static-cdn.jtvnw.net/previews-ttv/live_user_delphestest-{width}x{height}.jpg",
-                    emptyList()
-                )
+        model shouldBe StreamPayload(
+            StreamInfos(
+                "40321373372",
+                "576689294",
+                "delphestest",
+                "509670",
+                "live",
+                "test bbb",
+                0,
+                LocalDateTime.of(2020, 12, 12, 8, 7, 42),
+                "en",
+                "https://static-cdn.jtvnw.net/previews-ttv/live_user_delphestest-{width}x{height}.jpg",
+                emptyList()
             )
         )
     }

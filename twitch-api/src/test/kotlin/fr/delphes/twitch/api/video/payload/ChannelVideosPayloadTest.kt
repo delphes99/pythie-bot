@@ -1,8 +1,8 @@
 package fr.delphes.twitch.api.video.payload
 
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class ChannelVideosPayloadTest {
@@ -87,14 +87,12 @@ internal class ChannelVideosPayloadTest {
         """.trimIndent()
 
         val videos = Serializer.decodeFromString<ChannelVideosPayload>(payload)
-        assertThat(videos).isEqualTo(
-            ChannelVideosPayload(
-                listOf(
-                    ChannelVideoPayload(
-                        "Last minutes of stream",
-                        "World of Warcraft",
-                        "https://www.twitch.tv/towelliee/v/102381501"
-                    )
+        videos shouldBe ChannelVideosPayload(
+            listOf(
+                ChannelVideoPayload(
+                    "Last minutes of stream",
+                    "World of Warcraft",
+                    "https://www.twitch.tv/towelliee/v/102381501"
                 )
             )
         )

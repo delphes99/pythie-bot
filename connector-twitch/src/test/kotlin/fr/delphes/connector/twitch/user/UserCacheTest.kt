@@ -3,8 +3,8 @@ package fr.delphes.connector.twitch.user
 import fr.delphes.connector.twitch.TestClock
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.api.user.payload.BroadcasterType
+import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.LocalDateTime
@@ -30,7 +30,7 @@ internal class UserCacheTest {
             emptyCache.getUser(USER)
         }
 
-        assertThat(userInfos).isEqualTo(UserInfos(USER_NAME, NOW, BroadcasterType.AFFILIATE, 50, CATEGORIES))
+        userInfos shouldBe UserInfos(USER_NAME, NOW, BroadcasterType.AFFILIATE, 50, CATEGORIES)
     }
 
     @Test
@@ -46,7 +46,7 @@ internal class UserCacheTest {
             cache.getUser(USER)
         }
 
-        assertThat(userInfos).isEqualTo(UserInfos(USER_NAME, CACHED_TIME, BroadcasterType.AFFILIATE, 50, CATEGORIES))
+        userInfos shouldBe UserInfos(USER_NAME, CACHED_TIME, BroadcasterType.AFFILIATE, 50, CATEGORIES)
     }
 
     @Test
@@ -62,6 +62,6 @@ internal class UserCacheTest {
             cache.getUser(USER)
         }
 
-        assertThat(userInfos).isEqualTo(UserInfos(USER_NAME, NOW, BroadcasterType.AFFILIATE, 50, CATEGORIES))
+        userInfos shouldBe UserInfos(USER_NAME, NOW, BroadcasterType.AFFILIATE, 50, CATEGORIES)
     }
 }

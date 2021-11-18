@@ -6,10 +6,12 @@ import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.Clock
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -45,7 +47,7 @@ internal class SimpleCommandHandlerTest {
         )
         val event = CommandAsked(channel, command, User("user"))
 
-        assertThat(simpleCommand.handle(event, bot)).containsExactlyInAnyOrder(
+        simpleCommand.handle(event, bot).shouldContainExactly(
             SendMessage("response", channel)
         )
     }
@@ -65,10 +67,10 @@ internal class SimpleCommandHandlerTest {
         val event = CommandAsked(channel, command, User("user"))
 
         `given now`(now)
-        assertThat(simpleCommand.handle(event, bot)).isNotEmpty
+        simpleCommand.handle(event, bot).shouldNotBeEmpty()
 
         `given now`(now.plusMinutes(5))
-        assertThat(simpleCommand.handle(event, bot)).isEmpty()
+        simpleCommand.handle(event, bot).shouldBeEmpty()
     }
 
     @Test
@@ -86,9 +88,9 @@ internal class SimpleCommandHandlerTest {
         val event = CommandAsked(channel, command, User("user"))
 
         `given now`(now)
-        assertThat(simpleCommand.handle(event, bot)).isNotEmpty
+        simpleCommand.handle(event, bot).shouldNotBeEmpty()
 
         `given now`(now.plusMinutes(15))
-        assertThat(simpleCommand.handle(event, bot)).isNotEmpty
+        simpleCommand.handle(event, bot).shouldNotBeEmpty()
     }
 }

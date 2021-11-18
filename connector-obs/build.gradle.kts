@@ -1,14 +1,14 @@
 plugins {
     id("fr.delphes.kotlin-conventions")
-    kotlin("jvm") version "1.5.21"
-    kotlin("plugin.serialization") version "1.5.21"
+    id(libs.plugins.kotlin.jvm.get().pluginId)
+    id(libs.plugins.kotlin.serialization.get().pluginId)
 }
 
 dependencies {
     implementation(project(":utils"))
     implementation(project(":bot-core"))
     implementation(project(":obs-client"))
-    implementation("io.ktor:ktor-server-core:1.6.0")
+    implementation(libs.ktor.server.core)
 }
 
 description = "connector-obs"
