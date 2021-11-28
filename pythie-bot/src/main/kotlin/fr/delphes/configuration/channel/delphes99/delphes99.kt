@@ -57,6 +57,8 @@ val channel = TwitchChannel("delphes99")
 val matrixFilter = SourceFilter("webcam", "matrix")
 val blackAndWhiteFilter = SourceFilter("main_capture", "black_and_white")
 
+val discordInvitationLink = "https://discord.com/invite/SAdBhbu"
+
 @InternalSerializationApi
 val delphes99Features = listOf(
     VOTH(
@@ -127,7 +129,7 @@ val delphes99Features = listOf(
         cooldown = Duration.ofSeconds(10),
         responses = {
             listOf(
-                SendMessage("https://discord.com/invite/SAdBhbu", channel)
+                SendMessage(discordInvitationLink, channel)
             )
         }
     ),
@@ -358,7 +360,7 @@ val delphes99Features = listOf(
     NewGuildMember { newGuildMember ->
         listOf(
             SendMessage(
-                "${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même !",
+                "${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même ➡ $discordInvitationLink !",
                 channel
             )
         )

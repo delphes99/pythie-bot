@@ -1,19 +1,19 @@
 package fr.delphes.bot.connector.state
 
-import fr.delphes.utils.Repository
-
-data class Connecting<CONFIGURATION>(
+data class Connecting<CONFIGURATION, RUNTIME>(
     override val configuration: CONFIGURATION
-) : ConnectorState<CONFIGURATION> {
-    override suspend fun handle(transition: ConnectorTransition<out CONFIGURATION>, repository: Repository<CONFIGURATION>): ConnectorState<CONFIGURATION> {
-        return when(transition) {
+) : ConnectorState<CONFIGURATION, RUNTIME> {
+    override suspend fun handle(transition: ConnectorTransition<out CONFIGURATION, RUNTIME>): ConnectorState<CONFIGURATION, RUNTIME> {
+        return when (transition) {
             is Configure -> configureIfNewConfiguration(transition.configuration)
             is ConnectionRequested -> this
             is ConnectionSuccessful -> if (configuration == transition.configuration) {
-                Connected(configuration)
+                Connected(configuration, transition.runtime)
             } else {
                 InError(configuration, "connected with different configuration")
             }
+            is DisconnectionRequested -> Configured(configuration)
+            is DisconnectionSuccessful -> TODO()
             is ErrorOccurred -> InError(configuration, errorMessageFor(transition))
         }
     }

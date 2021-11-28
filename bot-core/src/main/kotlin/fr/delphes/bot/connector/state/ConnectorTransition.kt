@@ -1,18 +1,25 @@
 package fr.delphes.bot.connector.state
 
-sealed interface ConnectorTransition<CONFIGURATION>
+sealed interface ConnectorTransition<CONFIGURATION, RUNTIME>
 
-class Configure<CONFIGURATION>(
+class Configure<CONFIGURATION, RUNTIME>(
     val configuration: CONFIGURATION
-) : ConnectorTransition<CONFIGURATION>
+) : ConnectorTransition<CONFIGURATION, RUNTIME>
 
-class ConnectionRequested<CONFIGURATION> : ConnectorTransition<CONFIGURATION>
+class ConnectionRequested<CONFIGURATION, RUNTIME> : ConnectorTransition<CONFIGURATION, RUNTIME>
 
-class ConnectionSuccessful<CONFIGURATION>(
+class ConnectionSuccessful<CONFIGURATION, RUNTIME>(
     val configuration: CONFIGURATION,
-) : ConnectorTransition<CONFIGURATION>
+    val runtime: RUNTIME
+) : ConnectorTransition<CONFIGURATION, RUNTIME>
 
-class ErrorOccurred<CONFIGURATION>(
+class DisconnectionRequested<CONFIGURATION, RUNTIME> : ConnectorTransition<CONFIGURATION, RUNTIME>
+
+class DisconnectionSuccessful<CONFIGURATION, RUNTIME>(
+    val configuration: CONFIGURATION
+) : ConnectorTransition<CONFIGURATION, RUNTIME>
+
+class ErrorOccurred<CONFIGURATION, RUNTIME>(
     val configuration: CONFIGURATION,
     val error: String
-) : ConnectorTransition<CONFIGURATION>
+) : ConnectorTransition<CONFIGURATION, RUNTIME>

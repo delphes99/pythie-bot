@@ -1,7 +1,15 @@
 package fr.delphes.connector.discord.endpoint
 
+import fr.delphes.bot.connector.state.Configured
+import fr.delphes.bot.connector.state.Connected
+import fr.delphes.bot.connector.state.Connecting
+import fr.delphes.bot.connector.state.ConnectorState
+import fr.delphes.bot.connector.state.Disconnecting
+import fr.delphes.bot.connector.state.InError
+import fr.delphes.bot.connector.state.NotConfigured
+import fr.delphes.connector.discord.DiscordConfiguration
 import fr.delphes.connector.discord.DiscordConnector
-import fr.delphes.connector.discord.DiscordState
+import fr.delphes.connector.discord.DiscordRunTime
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -15,7 +23,7 @@ import kotlinx.serialization.Serializable
 fun Application.DiscordModule(discord: DiscordConnector) {
     routing {
         get("/status/discord") {
-            this.context.respond(discord.state.toStatus())
+            this.context.respond(discord.stateMachine.state.toStatus())
         }
         post("/discord/configuration") {
             val configuration = this.call.receive<DiscordConfigurationRequest>()
@@ -24,18 +32,33 @@ fun Application.DiscordModule(discord: DiscordConnector) {
 
             this.context.respond(HttpStatusCode.OK)
         }
+        get("/discord/toto") {
+            this.context.respond(discord.stateMachine.state.javaClass.toString())
+        }
+        get("/discord/connect") {
+            discord.connect()
+            println("connect")
+            this.context.respond(HttpStatusCode.OK)
+        }
+        get("/discord/disconnect") {
+            discord.disconnect()
+            println("disconnect")
+            this.context.respond(HttpStatusCode.OK)
+        }
     }
 }
 
 @Serializable
 private data class DiscordConfigurationRequest(val oAuthToken: String)
 
-private fun DiscordState.toStatus(): DiscordStatus {
+private fun ConnectorState<DiscordConfiguration, DiscordRunTime>.toStatus(): DiscordStatus {
     val status = when (this) {
-        DiscordState.Unconfigured -> DiscordStatusEnum.unconfigured
-        is DiscordState.Configured -> DiscordStatusEnum.configured
-        is DiscordState.Error -> DiscordStatusEnum.error
-        is DiscordState.Connected -> DiscordStatusEnum.connected
+        is Configured -> DiscordStatusEnum.configured
+        is Connected -> DiscordStatusEnum.connected
+        is Connecting -> DiscordStatusEnum.connected //TODO
+        is Disconnecting -> DiscordStatusEnum.unconfigured //TODO
+        is InError -> DiscordStatusEnum.error
+        is NotConfigured -> DiscordStatusEnum.unconfigured
     }
     return DiscordStatus(status)
 }

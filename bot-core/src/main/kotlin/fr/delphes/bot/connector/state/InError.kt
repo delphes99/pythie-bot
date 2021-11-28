@@ -1,24 +1,27 @@
 package fr.delphes.bot.connector.state
 
-import fr.delphes.utils.Repository
-
-data class InError<CONFIGURATION>(
+data class InError<CONFIGURATION, RUNTIME>(
     override val configuration: CONFIGURATION,
     private val error: String
-) : ConnectorState<CONFIGURATION> {
+) : ConnectorState<CONFIGURATION, RUNTIME> {
     override suspend fun handle(
-        transition: ConnectorTransition<out CONFIGURATION>,
-        repository: Repository<CONFIGURATION>
-    ): ConnectorState<CONFIGURATION> {
-        return when(transition) {
+        transition: ConnectorTransition<out CONFIGURATION, RUNTIME>
+    ): ConnectorState<CONFIGURATION, RUNTIME> {
+        return when (transition) {
             is Configure -> configureIfNewConfiguration(transition.configuration)
             is ConnectionRequested -> Connecting(configuration)
-            is ConnectionSuccessful -> if(configuration == transition.configuration) {
-                Connected(configuration)
+            is ConnectionSuccessful -> if (configuration == transition.configuration) {
+                Connected(configuration, transition.runtime)
             } else {
                 InError(configuration, "connected with different configuration")
             }
-            is ErrorOccurred -> if(configuration == transition.configuration) {
+            is DisconnectionRequested -> this
+            is DisconnectionSuccessful -> if (configuration == transition.configuration) {
+                Configured(configuration)
+            } else {
+                InError(configuration, "disconnection received for another configuration")
+            }
+            is ErrorOccurred -> if (configuration == transition.configuration) {
                 InError(configuration, transition.error)
             } else {
                 InError(configuration, "error for another configuration")

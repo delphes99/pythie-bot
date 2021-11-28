@@ -1,25 +1,22 @@
 package fr.delphes.bot.connector.state
 
-import fr.delphes.utils.Repository
-
-sealed interface ConnectorState<CONFIGURATION> {
+sealed interface ConnectorState<CONFIGURATION, RUNTIME> {
     val configuration: CONFIGURATION?
 
     suspend fun handle(
-        transition: ConnectorTransition<out CONFIGURATION>,
-        repository: Repository<CONFIGURATION>
-    ): ConnectorState<CONFIGURATION>
+        transition: ConnectorTransition<out CONFIGURATION, RUNTIME>
+    ): ConnectorState<CONFIGURATION, RUNTIME>
 }
 
-internal fun <T> ConnectorState<T>.configureIfNewConfiguration(newConfiguration: T): ConnectorState<T> {
-    return if(newConfiguration == this.configuration) {
+internal fun <CONFIGURATION, RUNTIME> ConnectorState<CONFIGURATION, RUNTIME>.configureIfNewConfiguration(newConfiguration: CONFIGURATION): ConnectorState<CONFIGURATION, RUNTIME> {
+    return if (newConfiguration == this.configuration) {
         this
     } else {
         Configured(newConfiguration)
     }
 }
 
-internal fun <T> ConnectorState<T>.errorMessageFor(error: ErrorOccurred<out T>) =
+internal fun <CONFIGURATION, RUNTIME> ConnectorState<CONFIGURATION, RUNTIME>.errorMessageFor(error: ErrorOccurred<out CONFIGURATION, RUNTIME>) =
     if (this.configuration == error.configuration) {
         error.error
     } else {

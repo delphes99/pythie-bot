@@ -1,7 +1,8 @@
 package fr.delphes.connector.discord.outgoingEvent
 
+import dev.kord.common.entity.Snowflake
+import dev.kord.rest.builder.message.create.embed
 import fr.delphes.connector.discord.DiscordConnector
-import net.dv8tion.jda.api.EmbedBuilder
 
 data class DiscordEmbeddedMessage(
     val title: String?,
@@ -35,22 +36,24 @@ data class DiscordEmbeddedMessage(
 
     override suspend fun executeOnDiscord(client: DiscordConnector) {
         client.connected {
-            val channel = this@connected.client.getTextChannelById(channel)!!
-
-            val builder = EmbedBuilder()
-            builder.setTitle(title)
-            builder.setImage(imageUrl)
-            builder.setDescription(url)
-            builder.setAuthor(
-                authorName,
-                authorUrl,
-                authorIconUrl
-            )
-            fields.forEach { field ->
-                builder.addField(field.first, field.second, true)
+            this.client.rest.channel.createMessage(Snowflake(channel)) {
+                embed {
+                    title = this@DiscordEmbeddedMessage.title
+                    image = this@DiscordEmbeddedMessage.imageUrl
+                    description = this@DiscordEmbeddedMessage.url
+                    author {
+                        name = this@DiscordEmbeddedMessage.authorName
+                        url = this@DiscordEmbeddedMessage.authorUrl
+                        icon = this@DiscordEmbeddedMessage.authorIconUrl
+                    }
+                    this@DiscordEmbeddedMessage.fields.forEach { field ->
+                        field {
+                            name = field.first
+                            value = field.second
+                        }
+                    }
+                }
             }
-
-            channel.sendMessage(builder.build()).complete()
         }
     }
 }

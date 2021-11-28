@@ -8,7 +8,7 @@ dependencies {
     implementation(project(":utils"))
     implementation(project(":bot-core"))
     implementation(libs.ktor.server.core)
-    implementation(libs.jda)
+    implementation(libs.kord)
 }
 
 description = "connector-discord"

@@ -1,12 +1,10 @@
 package fr.delphes.bot.connector.state
 
 import fr.delphes.bot.connector.ConfigurationStub
-import fr.delphes.utils.RepositoryWithInit
+import fr.delphes.bot.connector.ConnectorRuntimeForTest
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.mockk.coVerify
-import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -14,11 +12,9 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
 internal class NotConfiguredTest {
-    private val repository = mockk<RepositoryWithInit<ConfigurationStub>>(relaxed = true)
-
     @Test
     internal fun `should have no configuration`() {
-        NotConfigured<ConfigurationStub>().configuration.shouldBeNull()
+        buildNotConfigured().configuration.shouldBeNull()
     }
 
     @Test
@@ -26,41 +22,32 @@ internal class NotConfiguredTest {
         val newConfiguration = ConfigurationStub("newValue")
 
         val newState = runBlocking {
-            NotConfigured<ConfigurationStub>().handle(Configure(newConfiguration), repository)
+            buildNotConfigured().handle(Configure(newConfiguration))
         }
 
         newState shouldBe Configured(newConfiguration)
     }
 
-    @Test
-    internal fun `when the connector is configured should save new configuration`() {
-        val newConfiguration = ConfigurationStub("newValue")
-
-        runBlocking {
-            NotConfigured<ConfigurationStub>().handle(Configure(newConfiguration), repository)
-        }
-
-        coVerify(exactly = 1) { repository.save(newConfiguration) }
-    }
-
     @ParameterizedTest(name = "when {1} is received should return current state")
     @MethodSource("unsupportedTransitions")
     internal fun `when unsupported transitions are received should return current state`(
-        transition: ConnectorTransition<ConfigurationStub>,
+        transition: ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest>,
         name: String
     ) {
-        val oldState = NotConfigured<ConfigurationStub>()
+        val oldState = buildNotConfigured()
         val newState = runBlocking {
-            oldState.handle(transition, repository)
+            oldState.handle(transition)
         }
 
         newState shouldBe oldState
     }
 
+    private fun buildNotConfigured() = NotConfigured<ConfigurationStub, ConnectorRuntimeForTest>()
+
     @Test
     internal fun equals() {
-        NotConfigured<String>() shouldBe NotConfigured()
-        NotConfigured<String>() shouldNotBe "String"
+        NotConfigured<String, ConnectorRuntimeForTest>() shouldBe NotConfigured()
+        NotConfigured<String, ConnectorRuntimeForTest>() shouldNotBe "String"
     }
 
     companion object {
@@ -68,9 +55,11 @@ internal class NotConfiguredTest {
 
         @JvmStatic
         fun unsupportedTransitions() = listOf(
-            Arguments.of(ConnectionRequested<ConfigurationStub>(), "Connect"),
-            Arguments.of(ConnectionSuccessful(someConfiguration), "Connected"),
-            Arguments.of(ErrorOccurred(someConfiguration, "error"), "Error"),
+            Arguments.of(ConnectionRequested<ConfigurationStub, ConnectorRuntimeForTest>(), "Connect"),
+            Arguments.of(DisconnectionRequested<ConfigurationStub, ConnectorRuntimeForTest>(), "Disconnect"),
+            Arguments.of(DisconnectionSuccessful<ConfigurationStub, ConnectorRuntimeForTest>(someConfiguration), "Disconnected"),
+            Arguments.of(ConnectionSuccessful(someConfiguration, ConnectorRuntimeForTest), "Connected"),
+            Arguments.of(ErrorOccurred<ConfigurationStub, ConnectorRuntimeForTest>(someConfiguration, "error"), "Error"),
         )
     }
 }

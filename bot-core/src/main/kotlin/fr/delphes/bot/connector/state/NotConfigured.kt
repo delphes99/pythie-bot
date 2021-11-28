@@ -1,20 +1,15 @@
 package fr.delphes.bot.connector.state
 
-import fr.delphes.utils.Repository
-
-class NotConfigured<CONFIGURATION> : ConnectorState<CONFIGURATION> {
+class NotConfigured<CONFIGURATION, RUNTIME> : ConnectorState<CONFIGURATION, RUNTIME> {
     override suspend fun handle(
-        transition: ConnectorTransition<out CONFIGURATION>,
-        repository: Repository<CONFIGURATION>
-    ): ConnectorState<CONFIGURATION> {
+        transition: ConnectorTransition<out CONFIGURATION, RUNTIME>
+    ): ConnectorState<CONFIGURATION, RUNTIME> {
         return when (transition) {
-            is Configure -> {
-                repository.save(transition.configuration)
-
-                Configured(transition.configuration)
-            }
+            is Configure -> Configured(transition.configuration)
             is ConnectionRequested,
+            is DisconnectionRequested,
             is ConnectionSuccessful,
+            is DisconnectionSuccessful,
             is ErrorOccurred -> this
         }
     }
@@ -31,6 +26,4 @@ class NotConfigured<CONFIGURATION> : ConnectorState<CONFIGURATION> {
     }
 
     override val configuration: CONFIGURATION? = null
-
-
 }
