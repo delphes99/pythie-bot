@@ -1,8 +1,14 @@
 package fr.delphes.connector.obs.endpoints
 
+import fr.delphes.bot.connector.state.Configured
+import fr.delphes.bot.connector.state.Connected
+import fr.delphes.bot.connector.state.Connecting
+import fr.delphes.bot.connector.state.ConnectorState
+import fr.delphes.bot.connector.state.Disconnecting
+import fr.delphes.bot.connector.state.InError
+import fr.delphes.bot.connector.state.NotConfigured
 import fr.delphes.connector.obs.ObsConfiguration
 import fr.delphes.connector.obs.ObsConnector
-import fr.delphes.connector.obs.ObsState
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -18,7 +24,7 @@ import kotlinx.serialization.Serializable
 fun Application.ObsModule(connector: ObsConnector) {
     routing {
         get("/obs/status") {
-            this.context.respond(connector.state.toStatus())
+            this.context.respond(connector.stateMachine.state.toStatus())
         }
         post("/obs/configuration") {
             val configuration = this.call.receive<DiscordConfigurationRequest>()
@@ -44,12 +50,14 @@ private data class DiscordConfigurationRequest(
 )
 
 @InternalSerializationApi
-private fun ObsState.toStatus(): ObsStatus {
+private fun ConnectorState<*, *>.toStatus(): ObsStatus {
     val status = when (this) {
-        ObsState.Unconfigured -> ObsStatusEnum.unconfigured
-        is ObsState.Configured -> ObsStatusEnum.configured
-        is ObsState.Error -> ObsStatusEnum.error
-        is ObsState.Connected -> ObsStatusEnum.connected
+        is Configured -> ObsStatusEnum.configured
+        is Connected -> ObsStatusEnum.connected
+        is Connecting -> ObsStatusEnum.connected //TODO
+        is Disconnecting -> ObsStatusEnum.configured //TODO
+        is InError -> ObsStatusEnum.error
+        is NotConfigured -> ObsStatusEnum.unconfigured
     }
     return ObsStatus(status)
 }

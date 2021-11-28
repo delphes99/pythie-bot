@@ -18,7 +18,6 @@ import fr.delphes.utils.serialization.Serializer
 import fr.delphes.utils.toBase64
 import fr.delphes.utils.toSha256
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.websocket.ClientWebSocketSession
@@ -27,6 +26,9 @@ import io.ktor.client.features.websocket.ws
 import io.ktor.http.HttpMethod
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.isActive
@@ -36,18 +38,17 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.serializer
 import mu.KotlinLogging
-import kotlin.coroutines.coroutineContext
 import kotlin.reflect.KClass
 
-@InternalSerializationApi
 class ObsClient(
     private val configuration: Configuration,
     private val listeners: ObsListener
 ) {
     private val typeForMessage = mutableMapOf<String, KClass<*>>()
     private val requestsToSend = Channel<Request>()
+    private val scope = CoroutineScope(Dispatchers.Default)
 
-    private val httpClient = HttpClient(CIO) {
+    private val httpClient = HttpClient {
         install(JsonFeature) {
             serializer = KotlinxSerializer(Serializer)
         }
@@ -56,14 +57,16 @@ class ObsClient(
         }
     }
 
-    suspend fun listen() {
-        try {
-            while (coroutineContext.isActive) {
-                connect()
-                LOGGER.info { "Restart connection" }
+    fun listen() {
+        scope.launch {
+            try {
+                while (coroutineContext.isActive) {
+                    connect()
+                    LOGGER.info { "Restart connection" }
+                }
+            } catch (e: Exception) {
+                listeners.onError(e)
             }
-        } catch (e: Exception) {
-            listeners.onError(e)
         }
     }
 
@@ -83,6 +86,10 @@ class ObsClient(
 
             receiveFrames()
         }
+    }
+
+    fun disconnect() {
+        scope.coroutineContext.cancel()
     }
 
     private suspend fun ClientWebSocketSession.authenticate() {
@@ -114,6 +121,7 @@ class ObsClient(
         LOGGER.info { "End listen" }
     }
 
+    @OptIn(InternalSerializationApi::class)
     private suspend fun ClientWebSocketSession.handle(frame: Frame): Reconnect {
         when (frame) {
             is Frame.Text -> {
@@ -171,6 +179,7 @@ class ObsClient(
         }
     }
 
+    @OptIn(InternalSerializationApi::class)
     private fun parseResponse(text: String): Response {
         val messageId = Serializer.decodeFromString<ReceivedMessage>(text).messageId
 

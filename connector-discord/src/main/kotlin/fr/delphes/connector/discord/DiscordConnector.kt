@@ -42,16 +42,12 @@ class DiscordConnector(
                 println(this.member.memberData)
                 bot.handleIncomingEvent(NewGuildMember(this.member.displayName))
             }
-            client.on<MessageCreateEvent> {
-                println("new message ${this.member?.username}")
-            }
 
-            val loginJob = scope.launch {
+            scope.launch {
                 client.login {
                     @OptIn(PrivilegedIntent::class)
                     intents = Intents.nonPrivileged + Intent.GuildMembers
                 }
-                println("disconnected discord")
             }
             ConnectionSuccessful(
                 configuration,
@@ -76,10 +72,6 @@ class DiscordConnector(
         stateMachine.handle(ConnectionRequested())
     }
 
-    override suspend fun disconnect() {
-        stateMachine.handle(DisconnectionRequested())
-    }
-
     override suspend fun execute(event: OutgoingEvent) {
         if (event is DiscordOutgoingEvent) {
             event.executeOnDiscord(this)
@@ -98,9 +90,5 @@ class DiscordConnector(
         if (currentState is Connected) {
             currentState.runtime.doStuff()
         }
-    }
-
-    suspend fun configure(oAuthToken: String) {
-        configure(DiscordConfiguration(oAuthToken))
     }
 }

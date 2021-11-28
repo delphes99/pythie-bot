@@ -27,7 +27,7 @@ fun Application.DiscordModule(discord: DiscordConnector) {
         }
         post("/discord/configuration") {
             val configuration = this.call.receive<DiscordConfigurationRequest>()
-            discord.configure(configuration.oAuthToken)
+            discord.configure(DiscordConfiguration(configuration.oAuthToken))
             discord.connect()
 
             this.context.respond(HttpStatusCode.OK)
@@ -37,12 +37,10 @@ fun Application.DiscordModule(discord: DiscordConnector) {
         }
         get("/discord/connect") {
             discord.connect()
-            println("connect")
             this.context.respond(HttpStatusCode.OK)
         }
         get("/discord/disconnect") {
             discord.disconnect()
-            println("disconnect")
             this.context.respond(HttpStatusCode.OK)
         }
     }
@@ -56,7 +54,7 @@ private fun ConnectorState<DiscordConfiguration, DiscordRunTime>.toStatus(): Dis
         is Configured -> DiscordStatusEnum.configured
         is Connected -> DiscordStatusEnum.connected
         is Connecting -> DiscordStatusEnum.connected //TODO
-        is Disconnecting -> DiscordStatusEnum.unconfigured //TODO
+        is Disconnecting -> DiscordStatusEnum.configured //TODO
         is InError -> DiscordStatusEnum.error
         is NotConfigured -> DiscordStatusEnum.unconfigured
     }
