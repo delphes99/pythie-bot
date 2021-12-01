@@ -60,8 +60,6 @@ class DiscordConnector(
         }
     )
 
-    override val states = emptyList<Store<*>>()
-
     init {
         runBlocking {
             stateMachine.load()

@@ -13,7 +13,7 @@ import fr.delphes.twitch.irc.IrcChannelMessage
 class ChannelMessageMapper(
     private val channel: TwitchChannel,
     private val bot: ClientBot,
-    private val getBotAccountProvider: BotAccountProvider = bot.connector.technicalState
+    private val getBotAccountProvider: BotAccountProvider = bot.connector
 ) : TwitchIncomingEventMapper<IrcChannelMessage> {
     override suspend fun handle(
         twitchEvent: IrcChannelMessage

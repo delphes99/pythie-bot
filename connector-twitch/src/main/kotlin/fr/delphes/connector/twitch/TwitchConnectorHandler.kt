@@ -15,16 +15,12 @@ import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.connector.twitch.incomingEvent.VIPListReceived
-import fr.delphes.connector.twitch.state.action.MessageReceivedAction
-import fr.delphes.connector.twitch.state.action.StreamChangeAction
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.utils.exhaustive
-import fr.delphes.utils.store.ActionDispatcher
 
 //TODO State + Reducer
 class TwitchConnectorHandler(
     private val connector: TwitchConnector,
-    private val actionDispatcher: ActionDispatcher = connector.bot
 ) {
     suspend fun handle(event: TwitchIncomingEvent) {
         connector.whenRunning {
@@ -36,7 +32,7 @@ class TwitchConnectorHandler(
                 is CommandAsked -> Nothing
                 is IncomingRaid -> Nothing
                 is MessageReceived -> {
-                    actionDispatcher.applyAction(MessageReceivedAction(event.channel, event.user, event.text))
+                    clientBot.channelOf(event.channel)?.state?.addMessage(UserMessage(event.user, event.text))
                 }
                 is NewFollow -> {
                     clientBot.channelOf(event.channel)?.state?.newFollow(event.follower)
@@ -45,9 +41,7 @@ class TwitchConnectorHandler(
                     clientBot.channelOf(event.channel)?.state?.newSub(event.sub)
                 }
                 is RewardRedemption -> Nothing
-                is StreamChanged -> {
-                    actionDispatcher.applyAction(StreamChangeAction(event.channel, event.changes))
-                }
+                is StreamChanged -> Nothing
                 is StreamOffline -> {
                     clientBot.channelOf(event.channel)?.state?.changeCurrentStream(null)
                 }

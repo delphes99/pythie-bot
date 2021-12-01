@@ -7,8 +7,6 @@ import io.ktor.application.Application
 interface Connector {
     val configFilepath: String
 
-    val states: List<Store<*>>
-
     fun internalEndpoints(application: Application)
 
     fun publicEndpoints(application: Application)

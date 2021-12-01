@@ -11,7 +11,6 @@ import com.kennycason.kumo.palette.ColorPalette
 import fr.delphes.bot.state.StreamStatistics
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.connector.twitch.TwitchConnector
-import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -31,7 +30,7 @@ fun EndCreditsModule(
 ): Application.() -> Unit {
     return {
         routing {
-            twitchConnector.configuration.listenedChannels.forEach { channelConfiguration ->
+            twitchConnector.state.configuration?.listenedChannels?.forEach { channelConfiguration ->
                 get("/${channelConfiguration.channel.normalizeName}/endcredits") {
                     twitchConnector.whenRunning(
                         whenRunning = {

@@ -19,7 +19,6 @@ import fr.delphes.connector.obs.outgoingEvent.ObsOutgoingEvent
 import fr.delphes.obs.Configuration
 import fr.delphes.obs.ObsClient
 import fr.delphes.obs.ObsListener
-import fr.delphes.utils.store.Store
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.InternalSerializationApi
@@ -67,8 +66,6 @@ class ObsConnector(
     )
 
     private fun ObsConfiguration.toObsConfiguration() = Configuration(host, port, password)
-
-    override val states = emptyList<Store<*>>()
 
     init {
         runBlocking {

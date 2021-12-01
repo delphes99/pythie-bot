@@ -20,6 +20,7 @@ import kotlinx.coroutines.runBlocking
 import java.time.Duration
 
 class ClientBot(
+    private val configuration: TwitchConfiguration,
     internal val connector: TwitchConnector,
     private val publicUrl: String,
     val configFilepath: String,
@@ -27,12 +28,12 @@ class ClientBot(
     val bot: Bot,
     private val credentialsManager: CredentialsManager,
 ) {
-    val channels = mutableListOf<Channel>()
+    private val channels = mutableListOf<Channel>()
 
     //TODO random secret
     private val webhookSecret = "secretWithMoreThan10caracters"
 
-    val twitchApi = AppTwitchClient.build(connector.configuration.clientId, credentialsManager)
+    val twitchApi = AppTwitchClient.build(configuration.clientId, credentialsManager)
     val userCache = UserCache(
         expirationDuration = Duration.ofMinutes(120),
         clock = SystemClock,
@@ -59,7 +60,7 @@ class ClientBot(
     }
 
     fun connect() {
-        ircClient = IrcClient.builder(connector.configuration.botIdentity?.channel!!, credentialsManager).build()
+        ircClient = IrcClient.builder(configuration.botIdentity?.channel!!, credentialsManager).build()
         ircClient.connect()
 
         channels.forEach { channel ->
@@ -78,7 +79,7 @@ class ClientBot(
         }
 
         return ChannelTwitchClient.builder(
-            connector.configuration.clientId,
+            configuration.clientId,
             credentialsManager,
             user,
             publicUrl,

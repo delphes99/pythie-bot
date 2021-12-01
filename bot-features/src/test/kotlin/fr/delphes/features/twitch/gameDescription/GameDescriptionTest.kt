@@ -3,7 +3,7 @@ package fr.delphes.features.twitch.gameDescription
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchConnector
-import fr.delphes.connector.twitch.TwitchState
+import fr.delphes.connector.twitch.TwitchRuntime
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
@@ -68,9 +68,9 @@ internal class GameDescriptionTest {
     }
 
     private fun `current game is`(game: Game) {
-        val slot = slot<suspend TwitchState.AppConnected.() -> List<OutgoingEvent>>()
+        val slot = slot<suspend TwitchRuntime.() -> List<OutgoingEvent>>()
 
-        val appConnected = mockk<TwitchState.AppConnected>()
+        val appConnected = mockk<TwitchRuntime>()
         coEvery {
             connector.whenRunning(
                 whenRunning = capture(slot),

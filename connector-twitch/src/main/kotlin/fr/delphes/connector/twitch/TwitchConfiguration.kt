@@ -13,6 +13,7 @@ data class TwitchConfiguration(
     private val channelsCredentials: List<ConfigurationTwitchAccount> = emptyList(),
     val appToken: AuthToken? = null
 ) {
+    val botAccount get() = botAccountName?.let(::TwitchChannel)
     val botIdentity get() = channelsCredentials.firstOrNull { account -> account.userName == botAccountName }
 
     val listenedChannels get() = run {

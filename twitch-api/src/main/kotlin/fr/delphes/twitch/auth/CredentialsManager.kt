@@ -8,7 +8,6 @@ class CredentialsManager(
     private val clientId: String,
     private val clientSecret: String,
     private val authTokenRepository: AuthTokenRepository,
-
 ) {
     private val lock = Mutex()
     private val authApi: AuthApi = AuthClient()

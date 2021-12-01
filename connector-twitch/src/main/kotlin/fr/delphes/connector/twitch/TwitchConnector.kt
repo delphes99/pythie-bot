@@ -2,23 +2,25 @@ package fr.delphes.connector.twitch
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorStateMachine
+import fr.delphes.bot.connector.ConnectorWithStateMachine
+import fr.delphes.bot.connector.state.Configure
+import fr.delphes.bot.connector.state.Connected
+import fr.delphes.bot.connector.state.ConnectionRequested
+import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
-import fr.delphes.connector.twitch.state.TwitchConnectorState
-import fr.delphes.connector.twitch.state.TwitchTechnicalConnectorState
-import fr.delphes.connector.twitch.state.twitchReducers
+import fr.delphes.connector.twitch.state.BotAccountProvider
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
-import fr.delphes.connector.twitch.webservice.StateTwitchKtorModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
-import fr.delphes.utils.store.Store
+import fr.delphes.twitch.auth.CredentialsManager
 import io.ktor.application.Application
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -27,34 +29,65 @@ class TwitchConnector(
     val bot: Bot,
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
-) : Connector, AuthTokenRepository {
-    val technicalState = TwitchTechnicalConnectorState(this)
-    val state = Store(TwitchConnectorState(), twitchReducers)
-
-    override val states = listOf(state)
-
+) : Connector, ConnectorWithStateMachine<TwitchConfiguration, TwitchRuntime>, AuthTokenRepository, BotAccountProvider {
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
-    //TODO move to TwitchConnectorState
-    var configuration = runBlocking { repository.load() }
-
-    internal val credentialsManager = CredentialsManager(
-        configuration.clientId,
-        configuration.clientSecret,
-        this
-    )
 
     private val twitchHelixApi = TwitchHelixClient()
-    private val stateMachine = TwitchStateMachine(this)
+    override val stateMachine = ConnectorStateMachine(
+        repository = repository,
+        doConnection = { configuration ->
+            val credentialsManager = CredentialsManager(
+                configuration.clientId,
+                configuration.clientSecret,
+                this@TwitchConnector
+            )
+
+            val clientBot = ClientBot(
+                configuration,
+                this@TwitchConnector,
+                this@TwitchConnector.bot.publicUrl,
+                this@TwitchConnector.bot.configFilepath,
+                this@TwitchConnector.bot.features,
+                this@TwitchConnector.bot,
+                credentialsManager
+            )
+
+            configuration.listenedChannels.forEach { configuredAccount ->
+                val legacyChannelConfiguration = channels
+                    .firstOrNull { channel -> channel.channel == configuredAccount.channel }
+
+                clientBot.register(
+                    Channel(
+                        configuredAccount.channel,
+                        legacyChannelConfiguration,
+                        credentialsManager,
+                        clientBot,
+                        this@TwitchConnector
+                    )
+                )
+            }
+
+            clientBot.connect()
+
+            clientBot.resetWebhook()
+
+            ConnectionSuccessful(
+                configuration,
+                TwitchRuntime(
+                    configuration,
+                    clientBot
+                )
+            )
+        },
+        doDisconnect = { _, runtime ->
+            TODO()
+        }
+    )
     private val internalHandler = TwitchConnectorHandler(this)
 
     init {
         runBlocking {
-            stateMachine.on(
-                TwitchStateEvent.Configure(
-                    repository.load(),
-                    this@TwitchConnector
-                )
-            )
+            stateMachine.load()
         }
     }
 
@@ -67,17 +100,14 @@ class TwitchConnector(
     override fun internalEndpoints(application: Application) {
         application.ConfigurationModule(this)
         application.RewardKtorModule(this)
-        application.StateTwitchKtorModule(this)
     }
 
     override fun publicEndpoints(application: Application) {
         application.WebhookModule(this)
     }
 
-    val botAccount get() = configuration.botAccountName?.let(::TwitchChannel)
-
     override suspend fun connect() {
-        this.stateMachine.on(TwitchStateEvent.Connect(bot))
+        this.stateMachine.handle(ConnectionRequested())
     }
 
     override suspend fun execute(event: OutgoingEvent) {
@@ -94,24 +124,26 @@ class TwitchConnector(
     }
 
     suspend fun configureAppCredential(clientId: String, clientSecret: String) {
-        updateConfiguration(configuration.setAppCredential(clientId, clientSecret))
+        updateConfiguration(currentConfiguration().setAppCredential(clientId, clientSecret))
     }
 
     suspend fun newBotAccountConfiguration(newBotAuth: AuthToken) {
         val account = newBotAuth.toConfigurationTwitchAccount()
 
-        updateConfiguration(configuration.setBotAccount(account))
+        updateConfiguration(currentConfiguration().setBotAccount(account))
     }
 
     suspend fun addChannelConfiguration(channelAuth: AuthToken) {
         val account = channelAuth.toConfigurationTwitchAccount()
 
-        updateConfiguration(configuration.addChannel(account))
+        updateConfiguration(currentConfiguration().addChannel(account))
     }
 
     suspend fun removeChannel(channelName: String) {
-        updateConfiguration(configuration.removeChannel(channelName))
+        updateConfiguration(currentConfiguration().removeChannel(channelName))
     }
+
+    private fun currentConfiguration() = stateMachine.state.configuration ?: TwitchConfiguration.empty
 
     private suspend fun AuthToken.toConfigurationTwitchAccount(): ConfigurationTwitchAccount {
         val userInfos = twitchHelixApi.getUserInfosOf(this)
@@ -120,19 +152,26 @@ class TwitchConnector(
     }
 
     private suspend fun updateConfiguration(newConfiguration: TwitchConfiguration) {
-        repository.save(newConfiguration)
-        configuration = newConfiguration
+        stateMachine.handle(Configure(newConfiguration))
     }
 
     suspend fun <T> whenRunning(
-        whenRunning: suspend TwitchState.AppConnected.() -> T,
+        whenRunning: suspend TwitchRuntime.() -> T,
         whenNotRunning: suspend () -> T,
     ): T {
-        return stateMachine.whenRunning(whenRunning, whenNotRunning)
+        val currentState = stateMachine.state
+        return if (currentState is Connected) {
+            currentState.runtime.whenRunning()
+        } else {
+            whenNotRunning()
+        }
     }
 
-    suspend fun whenRunning(function: suspend TwitchState.AppConnected.() -> Unit) {
-        stateMachine.whenRunning(function)
+    suspend fun whenRunning(doStuff: suspend TwitchRuntime.() -> Unit) {
+        val currentState = stateMachine.state
+        if (currentState is Connected) {
+            currentState.runtime.doStuff()
+        }
     }
 
     companion object {
@@ -140,23 +179,26 @@ class TwitchConnector(
     }
 
     override fun getAppToken(): AuthToken? {
-        return configuration.appToken
+        return currentConfiguration().appToken
     }
 
     override suspend fun newAppToken(token: AuthToken) {
-        updateConfiguration(configuration.newAppToken(token))
+        updateConfiguration(currentConfiguration().newAppToken(token))
     }
 
     override fun getChannelToken(channel: TwitchChannel): AuthToken? {
-        return configuration.getChannelConfiguration(channel)?.authToken
+        return currentConfiguration().getChannelConfiguration(channel)?.authToken
     }
 
     override suspend fun newChannelToken(channel: TwitchChannel, newToken: AuthToken) {
-        updateConfiguration(configuration.newChannelToken(channel, newToken))
+        updateConfiguration(currentConfiguration().newChannelToken(channel, newToken))
     }
 
     internal suspend fun handleIncomingEvent(event: TwitchIncomingEvent) {
         internalHandler.handle(event)
         bot.handleIncomingEvent(event)
     }
+
+    override val botAccount: TwitchChannel?
+        get() = currentConfiguration().botAccount
 }
