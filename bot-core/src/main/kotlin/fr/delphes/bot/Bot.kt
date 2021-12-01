@@ -27,8 +27,8 @@ class Bot(
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
     private val featureSerializationModule: SerializersModule,
 ) {
-    private val _connectors = mutableListOf<Connector>()
-    val connectors get(): List<Connector> = _connectors
+    private val _connectors = mutableListOf<Connector<*, *>>()
+    val connectors get(): List<Connector<*, *>> = _connectors
 
     internal val overlayRepository =
         OverlayRepository("${configFilepath}${File.separator}overlays${File.separator}overlays.json")
@@ -64,7 +64,7 @@ class Bot(
         }
     }
 
-    fun init(vararg connectorsToAdd: Connector) {
+    fun init(vararg connectorsToAdd: Connector<*, *>) {
         _connectors.addAll(connectorsToAdd)
 
         WebServer(
@@ -79,7 +79,7 @@ class Bot(
         }
     }
 
-    inline fun <reified T : Connector> connector(): T? {
+    inline fun <reified T : Connector<*, *>> connector(): T? {
         return connectors.filterIsInstance<T>().firstOrNull()
     }
 }

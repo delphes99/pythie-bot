@@ -3,9 +3,7 @@ package fr.delphes.connector.obs
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorStateMachine
-import fr.delphes.bot.connector.ConnectorWithStateMachine
 import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.state.ConnectionRequested
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.connector.state.DisconnectionSuccessful
 import fr.delphes.bot.connector.state.ErrorOccurred
@@ -28,7 +26,7 @@ import mu.KotlinLogging
 class ObsConnector(
     val bot: Bot,
     override val configFilepath: String,
-) : Connector, ConnectorWithStateMachine<ObsConfiguration, ObsRunTime> {
+) : Connector<ObsConfiguration, ObsRunTime> {
     private val repository = ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")
     override val stateMachine = ConnectorStateMachine(
         repository = repository,
@@ -71,10 +69,6 @@ class ObsConnector(
         runBlocking {
             stateMachine.load()
         }
-    }
-
-    override suspend fun connect() {
-        stateMachine.handle(ConnectionRequested())
     }
 
     override suspend fun execute(event: OutgoingEvent) {

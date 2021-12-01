@@ -3,10 +3,7 @@ package fr.delphes.connector.twitch
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorStateMachine
-import fr.delphes.bot.connector.ConnectorWithStateMachine
-import fr.delphes.bot.connector.state.Configure
 import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.state.ConnectionRequested
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
@@ -29,7 +26,7 @@ class TwitchConnector(
     val bot: Bot,
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
-) : Connector, ConnectorWithStateMachine<TwitchConfiguration, TwitchRuntime>, AuthTokenRepository, BotAccountProvider {
+) : Connector<TwitchConfiguration, TwitchRuntime>, AuthTokenRepository, BotAccountProvider {
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
 
     private val twitchHelixApi = TwitchHelixClient()
@@ -79,7 +76,7 @@ class TwitchConnector(
                 )
             )
         },
-        doDisconnect = { _, runtime ->
+        doDisconnect = { _, _ ->
             TODO()
         }
     )
@@ -106,10 +103,6 @@ class TwitchConnector(
         application.WebhookModule(this)
     }
 
-    override suspend fun connect() {
-        this.stateMachine.handle(ConnectionRequested())
-    }
-
     override suspend fun execute(event: OutgoingEvent) {
         if (event is TwitchOutgoingEvent) {
             whenRunning {
@@ -124,23 +117,23 @@ class TwitchConnector(
     }
 
     suspend fun configureAppCredential(clientId: String, clientSecret: String) {
-        updateConfiguration(currentConfiguration().setAppCredential(clientId, clientSecret))
+        configure(currentConfiguration().setAppCredential(clientId, clientSecret))
     }
 
     suspend fun newBotAccountConfiguration(newBotAuth: AuthToken) {
         val account = newBotAuth.toConfigurationTwitchAccount()
 
-        updateConfiguration(currentConfiguration().setBotAccount(account))
+        configure(currentConfiguration().setBotAccount(account))
     }
 
     suspend fun addChannelConfiguration(channelAuth: AuthToken) {
         val account = channelAuth.toConfigurationTwitchAccount()
 
-        updateConfiguration(currentConfiguration().addChannel(account))
+        configure(currentConfiguration().addChannel(account))
     }
 
     suspend fun removeChannel(channelName: String) {
-        updateConfiguration(currentConfiguration().removeChannel(channelName))
+        configure(currentConfiguration().removeChannel(channelName))
     }
 
     private fun currentConfiguration() = stateMachine.state.configuration ?: TwitchConfiguration.empty
@@ -149,10 +142,6 @@ class TwitchConnector(
         val userInfos = twitchHelixApi.getUserInfosOf(this)
 
         return ConfigurationTwitchAccount(this, userInfos.preferred_username.lowercase())
-    }
-
-    private suspend fun updateConfiguration(newConfiguration: TwitchConfiguration) {
-        stateMachine.handle(Configure(newConfiguration))
     }
 
     suspend fun <T> whenRunning(
@@ -183,7 +172,7 @@ class TwitchConnector(
     }
 
     override suspend fun newAppToken(token: AuthToken) {
-        updateConfiguration(currentConfiguration().newAppToken(token))
+        configure(currentConfiguration().newAppToken(token))
     }
 
     override fun getChannelToken(channel: TwitchChannel): AuthToken? {
@@ -191,7 +180,7 @@ class TwitchConnector(
     }
 
     override suspend fun newChannelToken(channel: TwitchChannel, newToken: AuthToken) {
-        updateConfiguration(currentConfiguration().newChannelToken(channel, newToken))
+        configure(currentConfiguration().newChannelToken(channel, newToken))
     }
 
     internal suspend fun handleIncomingEvent(event: TwitchIncomingEvent) {
