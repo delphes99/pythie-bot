@@ -1,5 +1,5 @@
-import { OverlayElement } from "@/overlay/OverlayElement.ts";
-import Resolution from "@/overlay/Resolution.ts";
+import { OverlayElement } from "@/overlay/OverlayElement";
+import Resolution from "@/overlay/Resolution";
 
 export default class Overlay {
   id: string;

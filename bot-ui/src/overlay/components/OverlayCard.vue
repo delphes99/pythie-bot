@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import Card from "@/common/components/common/Card.vue";
-import Overlay from "@/overlay/Overlay.ts";
+import Overlay from "@/overlay/Overlay";
 import { defineComponent, PropType } from "vue";
 
 export default defineComponent({

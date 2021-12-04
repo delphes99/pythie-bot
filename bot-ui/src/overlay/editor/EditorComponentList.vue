@@ -14,7 +14,7 @@
   </div>
 </template>
 <script lang="ts">
-import { OverlayElement } from "@/overlay/OverlayElement.ts";
+import { OverlayElement } from "@/overlay/OverlayElement";
 import { defineComponent, PropType } from "vue";
 
 export default defineComponent({

@@ -1,6 +1,6 @@
-import { notEmpty } from "@/common/utils.ts";
-import Overlay from "@/overlay/Overlay.ts";
-import { fromJson } from "@/overlay/OverlayElement.ts";
+import { notEmpty } from "@/common/utils";
+import Overlay from "@/overlay/Overlay";
+import { fromJson } from "@/overlay/OverlayElement";
 import axios from "axios";
 
 export default class OverlayRepository {

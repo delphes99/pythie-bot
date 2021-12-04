@@ -37,10 +37,10 @@ import CardPanel from "@/common/components/common/CardPanel.vue";
 import Modal from "@/common/components/common/Modal.vue";
 import Panel from "@/common/components/common/Panel.vue";
 import OverlayCard from "@/overlay/components/OverlayCard.vue";
-import Overlay from "@/overlay/Overlay.ts";
-import OverlayRepository from "@/overlay/OverlayRepository.ts";
-import Resolution from "@/overlay/Resolution.ts";
-import router from "@/router.ts";
+import Overlay from "@/overlay/Overlay";
+import OverlayRepository from "@/overlay/OverlayRepository";
+import Resolution from "@/overlay/Resolution";
+import router from "@/router";
 import { v4 as uuidv4 } from "uuid";
 import { inject, ref } from "vue";
 

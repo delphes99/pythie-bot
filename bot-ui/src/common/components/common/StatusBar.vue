@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts">
-import { ConnectorEnum } from "@/common/components/common/connectorEnum.ts";
-import { ConnectorStatusEnum } from "@/common/components/common/connectorStatus.ts";
+import { ConnectorEnum } from "@/common/components/common/connectorEnum";
+import { ConnectorStatusEnum } from "@/common/components/common/connectorStatus";
 import ConnectorStatus from "@/common/components/common/ConnectorStatus.vue";
 import { defineComponent, inject, ref } from "vue";
 

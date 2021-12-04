@@ -1,4 +1,4 @@
-import TextComponent from "@/overlay/editor/textComponent.ts";
+import TextComponent from "@/overlay/editor/textComponent";
 
 export interface OverlayElement {
   id: string;

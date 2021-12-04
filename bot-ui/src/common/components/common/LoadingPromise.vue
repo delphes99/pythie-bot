@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { LoadPromise } from "@/common/composition/UseLoadingPromise.ts";
+import { LoadPromise } from "@/common/composition/UseLoadingPromise";
 import { defineComponent, PropType } from "vue";
 
 export default defineComponent({

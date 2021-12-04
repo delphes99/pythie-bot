@@ -25,8 +25,8 @@ import Modal from "@/common/components/common/Modal.vue";
 import FeatureDefaultCard from "@/features/components/FeatureDefaultCard.vue";
 import FeatureTwitchCommandCard from "@/twitch/feature/component/FeatureTwitchCommandCard.vue";
 import FeatureTwitchCommandEdit from "@/twitch/feature/component/FeatureTwitchCommandEdit.vue";
-import Feature from "@/twitch/feature/type/Feature.ts";
-import { FeatureType } from "@/twitch/feature/type/FeatureTypeEnum.ts";
+import Feature from "@/twitch/feature/type/Feature";
+import { FeatureType } from "@/twitch/feature/type/FeatureTypeEnum";
 import { defineComponent, PropType, ref } from "vue";
 
 function componentToCard(feature: Feature) {

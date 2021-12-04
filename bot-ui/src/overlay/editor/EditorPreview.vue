@@ -7,9 +7,9 @@
   ></div>
 </template>
 <script lang="ts">
-import TextComponent, { fromObject } from "@/overlay/editor/textComponent.ts";
-import Overlay from "@/overlay/Overlay.ts";
-import { OverlayElement } from "@/overlay/OverlayElement.ts";
+import TextComponent, { fromObject } from "@/overlay/editor/textComponent";
+import Overlay from "@/overlay/Overlay";
+import { OverlayElement } from "@/overlay/OverlayElement";
 import interact from "interactjs";
 import { v4 as uuidv4 } from "uuid";
 import { defineComponent, onMounted, PropType, watch } from "vue";

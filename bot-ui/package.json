@@ -9,15 +9,15 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "bot-sdk": "./../bot-sdk/build/js",
     "core-js": "^3.9.0",
+    "element-plus": "^1.2.0-beta.5",
     "interactjs": "^1.10.11",
     "mitt": "^2.1.0",
     "uuid": "^8.3.2",
-    "vue": "^3.0.5",
-    "vue-class-component": "^8.0.0-0",
+    "vue": "^3.2.23",
     "vue-i18n": "^9.1.6",
-    "vue-router": "^4.0.4",
-    "bot-sdk": "./../bot-sdk/build/js"
+    "vue-router": "^4.0.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss7-compat": "^2.0.3",
@@ -39,6 +39,6 @@
     "postcss": "^7.0.35",
     "prettier": "^1.19.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.3",
-    "typescript": "^3.9.9"
+    "typescript": "^4.5.2"
   }
 }

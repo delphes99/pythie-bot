@@ -28,14 +28,14 @@
 
 <script lang="ts">
 import LoadingPromise from "@/common/components/common/LoadingPromise.vue";
-import { useLoadingPromise } from "@/common/composition/UseLoadingPromise.ts";
+import { useLoadingPromise } from "@/common/composition/UseLoadingPromise";
 import EditorAddComponent from "@/overlay/editor/EditorAddComponent.vue";
 import EditorComponentList from "@/overlay/editor/EditorComponentList.vue";
 import EditorPreview from "@/overlay/editor/EditorPreview.vue";
 import EditorProps from "@/overlay/editor/EditorProps.vue";
-import TextComponent, { fromObject } from "@/overlay/editor/textComponent.ts";
-import { OverlayElement } from "@/overlay/OverlayElement.js";
-import OverlayRepository from "@/overlay/OverlayRepository.ts";
+import TextComponent, { fromObject } from "@/overlay/editor/textComponent";
+import { OverlayElement } from "@/overlay/OverlayElement";
+import OverlayRepository from "@/overlay/OverlayRepository";
 import { computed, defineComponent, inject, ref, watch } from "vue";
 
 export default defineComponent({

@@ -8,7 +8,11 @@
   },
   "common": {
     "save": "Save",
-    "edit": "Edit"
+    "edit": "Edit",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "success": "Success",
+    "error": "Error"
   },
   "settings": {
     "title": "Settings",

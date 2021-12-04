@@ -2,13 +2,17 @@
   "home": "Accueil",
   "features": "Module",
   "overlay": "Overlay",
-  "about": "A propos",
+  "about": "À propos",
   "feature": {
     "name": "Nom"
   },
   "common": {
     "save": "Sauvegarder",
-    "edit": "Editer"
+    "edit": "Éditer",
+    "connect": "Connexion",
+    "disconnect": "Déconnexion",
+    "success": "Succès",
+    "error": "Erreur"
   },
   "settings": {
     "title": "Paramètres",

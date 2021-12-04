@@ -3,7 +3,7 @@
   <div>Command : {{ feature.trigger }}</div>
 </template>
 <script type="ts">
-import TwitchCommand from "@/twitch/feature/type/TwitchCommand.ts"
+import TwitchCommand from "@/twitch/feature/type/TwitchCommand"
 import {defineComponent} from "vue";
 
 export default defineComponent({

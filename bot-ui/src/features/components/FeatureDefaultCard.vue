@@ -4,7 +4,7 @@
 </template>
 
 <script type="ts">
-import Feature from "@/twitch/feature/type/Feature.ts";
+import Feature from "@/twitch/feature/type/Feature";
 
 export default {
   name: 'feature-default-card',

@@ -82,4 +82,7 @@ class Bot(
     inline fun <reified T : Connector<*, *>> connector(): T? {
         return connectors.filterIsInstance<T>().firstOrNull()
     }
+
+    fun findConnector(name: String?): Connector<*, *>? = connectors
+        .firstOrNull { connector -> connector.connectorName == name }
 }

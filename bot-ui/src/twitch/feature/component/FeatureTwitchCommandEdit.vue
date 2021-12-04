@@ -30,7 +30,7 @@
   <button v-on:click="save" class="primary-button">Save</button>
 </template>
 <script type="ts">
-import TwitchCommand from "@/twitch/feature/type/TwitchCommand.ts"
+import TwitchCommand from "@/twitch/feature/type/TwitchCommand"
 import {defineComponent, ref} from "vue";
 
 export default defineComponent({

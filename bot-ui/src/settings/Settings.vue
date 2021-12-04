@@ -11,7 +11,7 @@
   </select>
 </template>
 <script lang="ts">
-import { LocalStorageItem } from "@/common/LocalStorageItem.ts";
+import { LocalStorageItem } from "@/common/LocalStorageItem";
 import { defineComponent, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 

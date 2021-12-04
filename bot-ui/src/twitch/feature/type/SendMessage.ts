@@ -1,6 +1,6 @@
-import OutgoingEvent from "@/twitch/feature/type/OutgoingEvent.ts";
+import OutgoingEvent from "@/twitch/feature/type/OutgoingEvent.js";
 
 export interface SendMessage extends OutgoingEvent {
-  channel: String;
-  text: String;
+  channel: string;
+  text: string;
 }
