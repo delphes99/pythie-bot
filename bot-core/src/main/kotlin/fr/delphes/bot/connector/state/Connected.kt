@@ -5,7 +5,7 @@ data class Connected<CONFIGURATION, RUNTIME>(
     val runtime: RUNTIME
 ) : ConnectorState<CONFIGURATION, RUNTIME> {
     override suspend fun handle(transition: ConnectorTransition<out CONFIGURATION, RUNTIME>): ConnectorState<CONFIGURATION, RUNTIME> {
-        return when(transition) {
+        return when (transition) {
             is Configure -> configureIfNewConfiguration(transition.configuration)
             is ConnectionRequested -> this
             is ConnectionSuccessful -> if (configuration == transition.configuration) {
@@ -14,12 +14,14 @@ data class Connected<CONFIGURATION, RUNTIME>(
                 InError(configuration, "connected with different configuration")
             }
             is DisconnectionRequested -> Disconnecting(configuration, runtime)
-            is DisconnectionSuccessful -> if(configuration == transition.configuration) {
+            is DisconnectionSuccessful -> if (configuration == transition.configuration) {
                 Configured(configuration)
             } else {
                 InError(configuration, "disconnection received for another configuration")
             }
-            is ErrorOccurred -> InError(configuration, errorMessageFor(transition))
+            is ErrorOccurred -> {
+                InError(configuration, errorMessageFor(transition))
+            }
         }
     }
 }

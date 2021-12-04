@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class ConnectorStateMachine<CONFIGURATION, RUNTIME>(
     private val repository: Repository<CONFIGURATION>,
-    private val doConnection: suspend CoroutineScope.(CONFIGURATION) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
+    private val doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
     private val doDisconnect: suspend CoroutineScope.(CONFIGURATION, RUNTIME) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
     var state: ConnectorState<CONFIGURATION, RUNTIME> = NotConfigured()
 ) {
@@ -48,7 +48,7 @@ class ConnectorStateMachine<CONFIGURATION, RUNTIME>(
         val configuration = newState.configuration
 
         launchEffect(configuration) {
-            doConnection(configuration)
+            doConnection(configuration, this@ConnectorStateMachine::handle)
         }
     }
 

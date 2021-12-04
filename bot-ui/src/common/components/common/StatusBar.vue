@@ -9,21 +9,49 @@
       <div
         class="flex flex-row-reverse items-center space-x-reverse space-x-3 h-16 px-5"
       >
-        <obs-status></obs-status>
-        <twitch-status></twitch-status>
-        <discord-status></discord-status>
+        <connector-status
+          v-for="status in statuses"
+          :key="status.name"
+          :connector="status.name"
+          :status="status.status"
+        ></connector-status>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import DiscordStatus from "@/discord/components/DiscordStatus.vue";
-import ObsStatus from "@/obs/components/ObsStatus.vue";
-import TwitchStatus from "@/twitch/components/TwitchStatus.vue";
+import { ConnectorEnum } from "@/common/components/common/connectorEnum.ts";
+import { ConnectorStatusEnum } from "@/common/components/common/connectorStatus.ts";
+import ConnectorStatus from "@/common/components/common/ConnectorStatus.vue";
+import { defineComponent, inject, ref } from "vue";
 
-export default {
+interface Status {
+  name: ConnectorEnum;
+  status: ConnectorStatusEnum;
+}
+
+export default defineComponent({
   name: `StatusBar`,
-  components: { ObsStatus, TwitchStatus, DiscordStatus }
-};
+  components: { ConnectorStatus },
+
+  setup() {
+    const backendUrl = inject("backendUrl");
+    const statuses = ref<Status[]>();
+
+    async function getStatus() {
+      const response = await fetch(`${backendUrl}/connectors/status`);
+      statuses.value = await response.json();
+    }
+
+    setInterval(() => {
+      getStatus();
+    }, 2000);
+
+    return {
+      statuses,
+      ConnectorEnum
+    };
+  }
+});
 </script>

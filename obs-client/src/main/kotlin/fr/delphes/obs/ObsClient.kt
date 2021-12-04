@@ -65,7 +65,8 @@ class ObsClient(
                     LOGGER.info { "Restart connection" }
                 }
             } catch (e: Exception) {
-                listeners.onError(e)
+                LOGGER.error(e) { "OBS Error" }
+                listeners.onError(e.message ?: "OBS Error")
             }
         }
     }
@@ -142,7 +143,12 @@ class ObsClient(
                                     }
                                     Unit
                                 }
-                                is AuthenticateResponse -> handleError(payload)
+                                is AuthenticateResponse -> {
+                                    if (payload.status == ResponseStatus.error) {
+                                        listeners.onError("OBS authentication failed : ${payload.error}")
+                                    }
+                                    handleError(payload)
+                                }
                                 is SetSceneItemPropertiesResponse -> handleError(payload)
                                 is SetSourceFilterVisibilityResponse -> handleError(payload)
                             }.exhaustive()

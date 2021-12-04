@@ -26,12 +26,13 @@ class DiscordConnector(
     val bot: Bot,
     override val configFilepath: String
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
+    override val connectorName = "discord"
     private val repository = DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    override val stateMachine = ConnectorStateMachine(
+    override val stateMachine = ConnectorStateMachine<DiscordConfiguration, DiscordRunTime>(
         repository = repository,
-        doConnection = { configuration ->
+        doConnection = { configuration, _ ->
             val client = Kord(configuration.oAuthToken)
             client.on<MemberJoinEvent> {
                 println(this.member.memberData)

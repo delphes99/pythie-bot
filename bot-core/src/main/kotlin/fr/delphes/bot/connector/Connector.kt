@@ -8,6 +8,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.ktor.application.Application
 
 interface Connector<CONFIGURATION, RUNTIME> {
+    val connectorName: String
     val stateMachine: ConnectorStateMachine<CONFIGURATION, RUNTIME>
     val state: ConnectorState<CONFIGURATION, RUNTIME> get() = stateMachine.state
 

@@ -27,10 +27,11 @@ class ObsConnector(
     val bot: Bot,
     override val configFilepath: String,
 ) : Connector<ObsConfiguration, ObsRunTime> {
+    override val connectorName = "obs"
     private val repository = ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")
-    override val stateMachine = ConnectorStateMachine(
+    override val stateMachine = ConnectorStateMachine<ObsConfiguration, ObsRunTime>(
         repository = repository,
-        doConnection = { configuration ->
+        doConnection = { configuration, dispatchTransition ->
             try {
                 //TODO move listener build
                 val listeners = ObsListener(
@@ -46,8 +47,9 @@ class ObsConnector(
                         }
                         bot.handleIncomingEvent(event)
                     },
-                    onError = { exception ->
-                        LOGGER.error { "Obs client error : ${exception.message}" }
+                    onError = { message ->
+                        LOGGER.error { "Obs client error : $message" }
+                        dispatchTransition(ErrorOccurred(configuration, message))
                     }
                 )
                 val client = ObsClient(configuration.toObsConfiguration(), listeners)

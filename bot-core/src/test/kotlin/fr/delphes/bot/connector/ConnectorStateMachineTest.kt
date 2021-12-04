@@ -7,7 +7,6 @@ import fr.delphes.bot.connector.state.ConnectionRequested
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.connector.state.ConnectorState
 import fr.delphes.bot.connector.state.ConnectorTransition
-import fr.delphes.bot.connector.state.Disconnecting
 import fr.delphes.bot.connector.state.DisconnectionSuccessful
 import fr.delphes.bot.connector.state.ErrorOccurred
 import fr.delphes.bot.connector.state.InError
@@ -32,7 +31,7 @@ internal class ConnectorStateMachineTest {
 
     private fun buildStateMachine(
         initialState: ConnectorState<ConfigurationStub, ConnectorRuntimeForTest> = NotConfigured(),
-        doConnection: suspend CoroutineScope.(ConfigurationStub) -> ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest> = {
+        doConnection: suspend CoroutineScope.(ConfigurationStub, suspend (ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest>) -> Unit) -> ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest> = { _, _ ->
             ConnectionSuccessful(CONFIGURATION, ConnectorRuntimeForTest)
         },
         doDisconnection: suspend CoroutineScope.(ConfigurationStub, ConnectorRuntimeForTest) -> ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest> = { configuration, _ ->
@@ -80,7 +79,7 @@ internal class ConnectorStateMachineTest {
     @Test
     internal fun `state after connection request is connecting`() {
         val stateMachine = buildStateMachine(
-            doConnection = {
+            doConnection = { _, _ ->
                 delay(1)
                 ConnectionSuccessful(CONFIGURATION, ConnectorRuntimeForTest)
             },
@@ -97,7 +96,7 @@ internal class ConnectorStateMachineTest {
     @Test
     internal fun `state after connection successful is connected`() {
         val stateMachine = buildStateMachine(
-            doConnection = {
+            doConnection = { _, _ ->
                 delay(1)
                 ConnectionSuccessful(CONFIGURATION, ConnectorRuntimeForTest)
             },
@@ -115,7 +114,7 @@ internal class ConnectorStateMachineTest {
     @Test
     internal fun `state after error has occurred is in error`() {
         val stateMachine = buildStateMachine(
-            doConnection = {
+            doConnection = { _, _ ->
                 delay(1)
                 ErrorOccurred(CONFIGURATION, "some error")
             },
@@ -133,7 +132,7 @@ internal class ConnectorStateMachineTest {
     @Test
     internal fun `state after an exception is in error`() {
         val stateMachine = buildStateMachine(
-            doConnection = {
+            doConnection = { _, _ ->
                 delay(1)
                 withContext(Dispatchers.Default + SupervisorJob()) {
                     throw Exception("some error")

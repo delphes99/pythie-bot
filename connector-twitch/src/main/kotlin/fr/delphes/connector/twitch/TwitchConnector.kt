@@ -27,12 +27,13 @@ class TwitchConnector(
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
 ) : Connector<TwitchConfiguration, TwitchRuntime>, AuthTokenRepository, BotAccountProvider {
+    override val connectorName = "twitch"
     private val repository = TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
 
     private val twitchHelixApi = TwitchHelixClient()
-    override val stateMachine = ConnectorStateMachine(
+    override val stateMachine = ConnectorStateMachine<TwitchConfiguration, TwitchRuntime>(
         repository = repository,
-        doConnection = { configuration ->
+        doConnection = { configuration, _ ->
             val credentialsManager = CredentialsManager(
                 configuration.clientId,
                 configuration.clientSecret,
