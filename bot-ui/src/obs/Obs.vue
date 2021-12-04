@@ -50,15 +50,24 @@ export default {
         .post(`${backendUrl}/obs/configuration`, payload, {
           headers: { "Content-Type": "application/json" }
         })
-        .then(function(response) {
+        .then(function() {
           //TODO better modal
           alert("OK");
         })
-        .catch(function(error) {
+        .catch(function() {
           //TODO better modal
           alert("KO");
         });
     };
+
+    const refreshCurrentConfiguration = async () => {
+      const response = await axios.get(`${backendUrl}/obs/configuration`);
+
+      host.value = response.data.host;
+      port.value = response.data.port;
+    };
+
+    refreshCurrentConfiguration();
 
     return {
       host,

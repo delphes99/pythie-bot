@@ -1,6 +1,9 @@
 package fr.delphes.bot.connector.state
 
-data class InError<CONFIGURATION, RUNTIME>(
+import fr.delphes.bot.connector.ConnectorConfiguration
+import fr.delphes.bot.connector.ConnectorRuntime
+
+data class InError<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRuntime>(
     override val configuration: CONFIGURATION,
     private val error: String
 ) : ConnectorState<CONFIGURATION, RUNTIME> {

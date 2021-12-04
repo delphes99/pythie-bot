@@ -7,7 +7,6 @@ import fr.delphes.bot.connector.state.ConnectionRequested
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.connector.state.ConnectorState
 import fr.delphes.bot.connector.state.ConnectorTransition
-import fr.delphes.bot.connector.state.DisconnectionSuccessful
 import fr.delphes.bot.connector.state.ErrorOccurred
 import fr.delphes.bot.connector.state.InError
 import fr.delphes.bot.connector.state.NotConfigured

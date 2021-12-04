@@ -1,6 +1,9 @@
 package fr.delphes.bot.connector.state
 
-data class Disconnecting<CONFIGURATION, RUNTIME>(
+import fr.delphes.bot.connector.ConnectorConfiguration
+import fr.delphes.bot.connector.ConnectorRuntime
+
+data class Disconnecting<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRuntime>(
     override val configuration: CONFIGURATION,
     val runtime: RUNTIME
 ) : ConnectorState<CONFIGURATION, RUNTIME> {

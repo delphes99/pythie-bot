@@ -5,6 +5,7 @@
       src="@/common/assets/refresh.svg"
       style="height: 20px"
       v-on:click="refreshCurrentConfiguration"
+      alt="Refresh configuration"
     />
     <h2 class="text-xl font-medium text-black">App credential</h2>
     <div class="px-2 grid grid-cols-2 space-y-1">
@@ -101,9 +102,9 @@
 </template>
 
 <script lang="ts">
-import { inject, ref } from "vue";
-import axios from "axios";
 import Panel from "@/common/components/common/Panel.vue";
+import axios from "axios";
+import { inject, ref } from "vue";
 
 export default {
   name: `TwitchConfiguration`,
@@ -131,7 +132,7 @@ export default {
         clientId: clientId.value,
         clientSecret: clientSecret.value
       };
-      const response = await axios.post(
+      await axios.post(
         `${backendUrl}/twitch/configuration/appCredential`,
         payload,
         {

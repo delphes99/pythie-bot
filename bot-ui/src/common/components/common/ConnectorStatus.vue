@@ -76,7 +76,7 @@ export default defineComponent({
   name: `ConnectorStatus`,
   props: {
     connector: {
-      type: Object as () => ConnectorEnum,
+      type: String as () => ConnectorEnum,
       required: true
     },
     status: {

@@ -1,6 +1,9 @@
 package fr.delphes.bot.connector.state
 
-class NotConfigured<CONFIGURATION, RUNTIME> : ConnectorState<CONFIGURATION, RUNTIME> {
+import fr.delphes.bot.connector.ConnectorConfiguration
+import fr.delphes.bot.connector.ConnectorRuntime
+
+class NotConfigured<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRuntime> : ConnectorState<CONFIGURATION, RUNTIME> {
     override suspend fun handle(
         transition: ConnectorTransition<out CONFIGURATION, RUNTIME>
     ): ConnectorState<CONFIGURATION, RUNTIME> {
