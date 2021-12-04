@@ -1,5 +1,6 @@
 package fr.delphes.connector.twitch
 
+import fr.delphes.bot.connector.ConnectorConfiguration
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.auth.AuthToken
 import kotlinx.serialization.Serializable
@@ -12,7 +13,7 @@ data class TwitchConfiguration(
     val channelsName: Set<String> = emptySet(),
     private val channelsCredentials: List<ConfigurationTwitchAccount> = emptyList(),
     val appToken: AuthToken? = null
-) {
+): ConnectorConfiguration {
     val botAccount get() = botAccountName?.let(::TwitchChannel)
     val botIdentity get() = channelsCredentials.firstOrNull { account -> account.userName == botAccountName }
 

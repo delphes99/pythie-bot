@@ -16,6 +16,7 @@ import fr.delphes.utils.RepositoryWithInit
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,15 +34,11 @@ internal class ConnectorStateMachineTest {
         initialState: ConnectorState<ConfigurationStub, ConnectorRuntimeForTest> = NotConfigured(),
         doConnection: suspend CoroutineScope.(ConfigurationStub, suspend (ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest>) -> Unit) -> ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest> = { _, _ ->
             ConnectionSuccessful(CONFIGURATION, ConnectorRuntimeForTest)
-        },
-        doDisconnection: suspend CoroutineScope.(ConfigurationStub, ConnectorRuntimeForTest) -> ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest> = { configuration, _ ->
-            DisconnectionSuccessful(configuration)
         }
     ) =
         ConnectorStateMachine(
             repository = repository,
             doConnection = doConnection,
-            doDisconnect = doDisconnection,
             state = initialState
         )
 
@@ -146,6 +143,21 @@ internal class ConnectorStateMachineTest {
 
             delay(50)
             stateMachine.state shouldBe InError(CONFIGURATION, "Error has occurred : some error")
+        }
+    }
+
+    @Test
+    internal fun `change state when connected will kill the runtime`() {
+        val runtime = mockk<ConnectorRuntimeForTest>(relaxed = true)
+
+        val stateMachine = buildStateMachine(
+            initialState = Connected(CONFIGURATION, runtime),
+        )
+
+        runBlocking {
+            stateMachine.handle(ErrorOccurred(CONFIGURATION, "error"))
+
+            coVerify(exactly = 1) { runtime.kill() }
         }
     }
 

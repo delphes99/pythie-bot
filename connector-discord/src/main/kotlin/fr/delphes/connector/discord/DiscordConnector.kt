@@ -11,7 +11,6 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
-import fr.delphes.bot.connector.state.DisconnectionSuccessful
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.endpoint.DiscordModule
 import fr.delphes.connector.discord.incomingEvent.NewGuildMember
@@ -49,10 +48,6 @@ class DiscordConnector(
                 configuration,
                 DiscordRunTime(client)
             )
-        },
-        doDisconnect = { configuration, runtime ->
-            runtime.client.logout()
-            DisconnectionSuccessful(configuration)
         }
     )
 

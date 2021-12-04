@@ -5,7 +5,6 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
-import fr.delphes.bot.connector.state.DisconnectionSuccessful
 import fr.delphes.bot.connector.state.ErrorOccurred
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.business.SourceFilter
@@ -59,10 +58,6 @@ class ObsConnector(
                 ErrorOccurred(configuration, "Connection error : ${e.message}")
             }
         },
-        doDisconnect = { configuration, runtime ->
-            runtime.client.disconnect()
-            DisconnectionSuccessful(configuration)
-        }
     )
 
     private fun ObsConfiguration.toObsConfiguration() = Configuration(host, port, password)
@@ -74,7 +69,7 @@ class ObsConnector(
     }
 
     override suspend fun execute(event: OutgoingEvent) {
-        if(event is ObsOutgoingEvent) {
+        if (event is ObsOutgoingEvent) {
             event.executeOnObs(this)
         }
     }

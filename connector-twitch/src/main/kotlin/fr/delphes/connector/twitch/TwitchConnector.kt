@@ -76,9 +76,6 @@ class TwitchConnector(
                     clientBot
                 )
             )
-        },
-        doDisconnect = { _, _ ->
-            TODO()
         }
     )
     private val internalHandler = TwitchConnectorHandler(this)
