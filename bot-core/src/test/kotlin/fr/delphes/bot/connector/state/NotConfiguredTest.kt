@@ -46,8 +46,8 @@ internal class NotConfiguredTest {
 
     @Test
     internal fun equals() {
-        NotConfigured<String, ConnectorRuntimeForTest>() shouldBe NotConfigured()
-        NotConfigured<String, ConnectorRuntimeForTest>() shouldNotBe "String"
+        NotConfigured<ConfigurationStub, ConnectorRuntimeForTest>() shouldBe NotConfigured()
+        NotConfigured<ConfigurationStub, ConnectorRuntimeForTest>() shouldNotBe "String"
     }
 
     companion object {

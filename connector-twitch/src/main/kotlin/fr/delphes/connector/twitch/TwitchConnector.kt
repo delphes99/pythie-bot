@@ -8,7 +8,10 @@ import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
+import fr.delphes.connector.twitch.outgoingEvent.TwitchApiOutgoingEvent
+import fr.delphes.connector.twitch.outgoingEvent.TwitchChatOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
+import fr.delphes.connector.twitch.outgoingEvent.TwitchOwnerChatOutgoingEvent
 import fr.delphes.connector.twitch.state.BotAccountProvider
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
@@ -104,9 +107,20 @@ class TwitchConnector(
     override suspend fun execute(event: OutgoingEvent) {
         if (event is TwitchOutgoingEvent) {
             whenRunning {
-                val channel = clientBot.channelOf(event.channel)!!
                 try {
-                    event.executeOnTwitch(clientBot.ircClient, channel.ircClient, channel.twitchApi, channel)
+                    when(event) {
+                        is TwitchApiOutgoingEvent -> {
+                            val channel = clientBot.channelOf(event.channel)!!
+                            event.executeOnTwitch(channel.twitchApi)
+                        }
+                        is TwitchChatOutgoingEvent -> {
+                            event.executeOnTwitch(clientBot.ircClient)
+                        }
+                        is TwitchOwnerChatOutgoingEvent -> {
+                            val channel = clientBot.channelOf(event.channel)!!
+                            event.executeOnTwitch(channel.ircClient)
+                        }
+                    }
                 } catch (e: Exception) {
                     LOGGER.error(e) { "Error while handling event ${e.message}" }
                 }
