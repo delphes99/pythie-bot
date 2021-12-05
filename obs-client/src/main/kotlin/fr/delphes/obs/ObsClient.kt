@@ -26,6 +26,7 @@ import io.ktor.client.features.websocket.ws
 import io.ktor.http.HttpMethod
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -64,6 +65,8 @@ class ObsClient(
                     connect()
                     LOGGER.info { "Restart connection" }
                 }
+            } catch (e: CancellationException) {
+                LOGGER.info(e) { "Listen cancelled" }
             } catch (e: Exception) {
                 LOGGER.error(e) { "OBS Error" }
                 listeners.onError(e.message ?: "OBS Error")
@@ -120,6 +123,7 @@ class ObsClient(
             }
         } while (isActive && reconnect != Reconnect.RECONNECT)
         LOGGER.info { "End listen" }
+        listeners.onExit()
     }
 
     @OptIn(InternalSerializationApi::class)

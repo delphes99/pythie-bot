@@ -7,4 +7,5 @@ class ObsListener(
     val onSwitchScene: suspend (SwitchScenes) -> Unit = {},
     val onSourceFilterVisibilityChanged: suspend (SourceFilterVisibilityChanged) -> Unit = {},
     val onError: suspend (message: String) -> Unit = {},
+    val onExit: suspend () -> Unit = {},
 )

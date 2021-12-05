@@ -5,6 +5,7 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
+import fr.delphes.bot.connector.state.DisconnectionRequested
 import fr.delphes.bot.connector.state.ErrorOccurred
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.business.SourceFilter
@@ -49,6 +50,9 @@ class ObsConnector(
                     onError = { message ->
                         LOGGER.error { "Obs client error : $message" }
                         dispatchTransition(ErrorOccurred(configuration, message))
+                    },
+                    onExit = {
+                        dispatchTransition(DisconnectionRequested())
                     }
                 )
                 val client = ObsClient(configuration.toObsConfiguration(), listeners)
