@@ -20,7 +20,7 @@ data class InError<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRunt
             }
             is DisconnectionRequested -> this
             is DisconnectionSuccessful -> if (configuration == transition.configuration) {
-                Configured(configuration)
+                Disconnected(configuration)
             } else {
                 InError(configuration, "disconnection received for another configuration")
             }

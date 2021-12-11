@@ -25,7 +25,7 @@ import mu.KotlinLogging
 internal fun Application.ConfigurationModule(connector: TwitchConnector) {
     routing {
         get("/twitch/configuration") {
-            val configuration = connector.state.configuration
+            val configuration = connector.configuration
             this.call.respond(
                 ConfigurationOverview(
                     configuration?.clientId ?: "",
@@ -45,7 +45,7 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
             val code = this.call.parameters["code"]
             val state = this.call.parameters["state"]
 
-            val configuration = connector.state.configuration ?: error("should have twitch configuration")
+            val configuration = connector.configuration ?: error("should have twitch configuration")
             when (state) {
                 "botConfiguration" -> {
                     LOGGER.info { "Bot account credential update" }

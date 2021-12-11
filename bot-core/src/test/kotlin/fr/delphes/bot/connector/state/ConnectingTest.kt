@@ -13,7 +13,7 @@ internal class ConnectingTest {
             CURRENT_CONFIGURATION.toConnecting().handle(Configure(NEW_CONFIGURATION))
         }
 
-        newState shouldBe Configured(NEW_CONFIGURATION)
+        newState shouldBe Disconnected(NEW_CONFIGURATION)
     }
 
     @Test
@@ -40,7 +40,7 @@ internal class ConnectingTest {
             CURRENT_CONFIGURATION.toConnecting().handle(DisconnectionRequested())
         }
 
-        newState shouldBe Configured(CURRENT_CONFIGURATION)
+        newState shouldBe Disconnected(CURRENT_CONFIGURATION)
     }
 
     @Test

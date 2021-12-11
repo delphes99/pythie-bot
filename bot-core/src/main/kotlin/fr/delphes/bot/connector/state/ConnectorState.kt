@@ -15,7 +15,7 @@ internal fun <CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRuntime> 
     return if (newConfiguration == this.configuration) {
         this
     } else {
-        Configured(newConfiguration)
+        Disconnected(newConfiguration)
     }
 }
 

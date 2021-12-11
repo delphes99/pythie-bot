@@ -15,7 +15,7 @@ data class Connecting<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorR
             } else {
                 InError(configuration, "connected with different configuration")
             }
-            is DisconnectionRequested -> Configured(configuration)
+            is DisconnectionRequested -> Disconnected(configuration)
             is DisconnectionSuccessful -> TODO()
             is ErrorOccurred -> InError(configuration, errorMessageFor(transition))
         }

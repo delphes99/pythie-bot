@@ -7,8 +7,9 @@ import dev.kord.gateway.Intent
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
 import fr.delphes.bot.Bot
+import fr.delphes.bot.connector.ConfigurationManager
 import fr.delphes.bot.connector.Connector
-import fr.delphes.bot.connector.ConnectorStateMachine
+import fr.delphes.bot.connector.initStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -19,42 +20,34 @@ import io.ktor.application.Application
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class DiscordConnector(
     val bot: Bot,
     override val configFilepath: String
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
     override val connectorName = "discord"
-    private val repository = DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
+    override val configurationManager = ConfigurationManager(
+        DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
+    )
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    override val stateMachine = ConnectorStateMachine<DiscordConfiguration, DiscordRunTime>(
-        repository = repository,
-        doConnection = { configuration, _ ->
-            val client = Kord(configuration.oAuthToken)
-            client.on<MemberJoinEvent> {
-                println(this.member.memberData)
-                bot.handleIncomingEvent(NewGuildMember(this.member.displayName))
-            }
-
-            scope.launch {
-                client.login {
-                    @OptIn(PrivilegedIntent::class)
-                    intents = Intents.nonPrivileged + Intent.GuildMembers
-                }
-            }
-            ConnectionSuccessful(
-                configuration,
-                DiscordRunTime(client)
-            )
+    override val connectorStateManager = initStateMachine { configuration, _ ->
+        val client = Kord(configuration.oAuthToken)
+        client.on<MemberJoinEvent> {
+            println(this.member.memberData)
+            bot.handleIncomingEvent(NewGuildMember(this.member.displayName))
         }
-    )
 
-    init {
-        runBlocking {
-            stateMachine.load()
+        scope.launch {
+            client.login {
+                @OptIn(PrivilegedIntent::class)
+                intents = Intents.nonPrivileged + Intent.GuildMembers
+            }
         }
+        ConnectionSuccessful(
+            configuration,
+            DiscordRunTime(client)
+        )
     }
 
     override suspend fun execute(event: OutgoingEvent) {
@@ -71,7 +64,7 @@ class DiscordConnector(
     }
 
     suspend fun connected(doStuff: suspend DiscordRunTime.() -> Unit) {
-        val currentState = stateMachine.state
+        val currentState = connectorStateManager.state
         if (currentState is Connected) {
             currentState.runtime.doStuff()
         }

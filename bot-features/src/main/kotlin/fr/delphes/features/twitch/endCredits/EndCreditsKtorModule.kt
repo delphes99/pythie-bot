@@ -30,7 +30,7 @@ fun EndCreditsModule(
 ): Application.() -> Unit {
     return {
         routing {
-            twitchConnector.state.configuration?.listenedChannels?.forEach { channelConfiguration ->
+            twitchConnector.configuration?.listenedChannels?.forEach { channelConfiguration ->
                 get("/${channelConfiguration.channel.normalizeName}/endcredits") {
                     twitchConnector.whenRunning(
                         whenRunning = {

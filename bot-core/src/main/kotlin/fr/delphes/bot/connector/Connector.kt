@@ -1,27 +1,30 @@
 package fr.delphes.bot.connector
 
-import fr.delphes.bot.connector.state.Configure
-import fr.delphes.bot.connector.state.ConnectionRequested
-import fr.delphes.bot.connector.state.ConnectorState
-import fr.delphes.bot.connector.state.DisconnectionRequested
+import fr.delphes.bot.connector.state.ConnectorTransition
+import fr.delphes.bot.connector.state.Disconnected
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.ktor.application.Application
+import kotlinx.coroutines.CoroutineScope
 
-interface Connector<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRuntime> {
+interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> {
     val connectorName: String
-    val stateMachine: ConnectorStateMachine<CONFIGURATION, RUNTIME>
-    val state: ConnectorState<CONFIGURATION, RUNTIME> get() = stateMachine.state
+    val configurationManager: ConfigurationManager<CONFIGURATION>
+    val connectorStateManager: ConnectorStateManager<CONFIGURATION>
+
+    val configuration: CONFIGURATION? get() = configurationManager.configuration
+    val status: ConnectorStatus get() = connectorStateManager.status
 
     suspend fun connect() {
-        stateMachine.handle(ConnectionRequested())
+        connectorStateManager.handle(ConnectorCommand.CONNECTION_REQUESTED, configurationManager)
     }
 
     suspend fun disconnect() {
-        stateMachine.handle(DisconnectionRequested())
+        connectorStateManager.handle(ConnectorCommand.DISCONNECTION_REQUESTED, configurationManager)
     }
 
     suspend fun configure(configuration: CONFIGURATION) {
-        stateMachine.handle(Configure(configuration))
+        configurationManager.configure(configuration)
+        connectorStateManager.handle(ConnectorCommand.DISCONNECTION_REQUESTED, configurationManager)
     }
 
     val configFilepath: String
@@ -31,4 +34,13 @@ interface Connector<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRun
     fun publicEndpoints(application: Application)
 
     suspend fun execute(event: OutgoingEvent)
+}
+
+fun <CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> Connector<CONFIGURATION, RUNTIME>.initStateMachine(
+    doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
+): StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME> {
+    return StandAloneConnectorStateMachine(
+        doConnection = doConnection,
+        state = Disconnected(configurationManager.configuration)
+    )
 }

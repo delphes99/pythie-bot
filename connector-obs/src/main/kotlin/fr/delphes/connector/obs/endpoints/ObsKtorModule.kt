@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 fun Application.ObsModule(connector: ObsConnector) {
     routing {
         get("/obs/configuration") {
-            val configuration = connector.state.configuration
+            val configuration = connector.configuration
             this.call.respond(
                 ConfigurationOverview(
                     configuration?.host,

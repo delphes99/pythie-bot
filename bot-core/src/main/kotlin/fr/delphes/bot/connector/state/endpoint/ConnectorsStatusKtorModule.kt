@@ -2,13 +2,7 @@ package fr.delphes.bot.connector.state.endpoint
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
-import fr.delphes.bot.connector.state.Configured
-import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.state.Connecting
-import fr.delphes.bot.connector.state.ConnectorState
-import fr.delphes.bot.connector.state.Disconnecting
-import fr.delphes.bot.connector.state.InError
-import fr.delphes.bot.connector.state.NotConfigured
+import fr.delphes.bot.connector.ConnectorStatus
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -17,12 +11,13 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import fr.delphes.bot.connector.state.endpoint.ConnectorStatus as ConnectorStatusOutput
 
 fun Application.ConnectorsModule(bot: Bot) {
     routing {
         get("/connectors/status") {
             this.context.respond(
-                bot.connectors.map { ConnectorStatus(it.connectorName, it.state.toStatus()) }
+                bot.connectors.map { ConnectorStatusOutput(it.connectorName, it.status.toStatus()) }
             )
         }
         actionsOnConnector(
@@ -54,13 +49,13 @@ typealias ActionOnConnector = suspend Connector<*, *>.() -> Unit
 
 private infix fun String.activate(action: ActionOnConnector) = Pair(this, action)
 
-private fun ConnectorState<*, *>.toStatus(): ConnectorStatusEnum {
+private fun ConnectorStatus.toStatus(): ConnectorStatusEnum {
     return when (this) {
-        is Configured -> ConnectorStatusEnum.configured
-        is Connected -> ConnectorStatusEnum.connected
-        is Connecting -> ConnectorStatusEnum.connecting
-        is Disconnecting -> ConnectorStatusEnum.disconnecting
-        is InError -> ConnectorStatusEnum.inError
-        is NotConfigured -> ConnectorStatusEnum.unconfigured
+        ConnectorStatus.Configured -> ConnectorStatusEnum.configured
+        ConnectorStatus.Connected -> ConnectorStatusEnum.connected
+        ConnectorStatus.Connecting -> ConnectorStatusEnum.connecting
+        ConnectorStatus.Disconnecting -> ConnectorStatusEnum.disconnecting
+        ConnectorStatus.InError -> ConnectorStatusEnum.inError
+        ConnectorStatus.NotConfigured -> ConnectorStatusEnum.unconfigured
     }
 }

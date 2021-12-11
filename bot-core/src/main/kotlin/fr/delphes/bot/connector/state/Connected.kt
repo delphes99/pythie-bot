@@ -18,7 +18,7 @@ data class Connected<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRu
             }
             is DisconnectionRequested -> Disconnecting(configuration, runtime)
             is DisconnectionSuccessful -> if (configuration == transition.configuration) {
-                Configured(configuration)
+                Disconnected(configuration)
             } else {
                 InError(configuration, "disconnection received for another configuration")
             }

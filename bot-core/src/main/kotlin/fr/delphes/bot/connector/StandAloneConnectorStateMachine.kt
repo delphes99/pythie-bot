@@ -1,51 +1,65 @@
 package fr.delphes.bot.connector
 
-import fr.delphes.bot.connector.state.Configured
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.Connecting
+import fr.delphes.bot.connector.state.ConnectionRequested
 import fr.delphes.bot.connector.state.ConnectorState
 import fr.delphes.bot.connector.state.ConnectorTransition
+import fr.delphes.bot.connector.state.Disconnected
 import fr.delphes.bot.connector.state.Disconnecting
+import fr.delphes.bot.connector.state.DisconnectionRequested
 import fr.delphes.bot.connector.state.DisconnectionSuccessful
 import fr.delphes.bot.connector.state.ErrorOccurred
 import fr.delphes.bot.connector.state.InError
-import fr.delphes.bot.connector.state.NotConfigured
-import fr.delphes.utils.Repository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class ConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime>(
-    private val repository: Repository<CONFIGURATION>,
+class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime>(
     private val doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
-    var state: ConnectorState<CONFIGURATION, RUNTIME> = NotConfigured()
-) {
+    var state: ConnectorState<CONFIGURATION, RUNTIME> = Disconnected()
+) : ConnectorStateManager<CONFIGURATION> {
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+    override val status: ConnectorStatus
+        get() = when(state) {
+            is Connected -> ConnectorStatus.Connected
+            is Connecting -> ConnectorStatus.Connecting
+            is Disconnected -> ConnectorStatus.Configured //TODO
+            is Disconnecting -> ConnectorStatus.Disconnecting
+            is InError -> ConnectorStatus.InError
+        }
+
+    override suspend fun handle(command: ConnectorCommand, configurationManager: ConfigurationManager<CONFIGURATION>) {
+        handle(toTransition(command))
+    }
+
+    private fun toTransition(command: ConnectorCommand): ConnectorTransition<CONFIGURATION, RUNTIME> = when (command) {
+        ConnectorCommand.CONNECTION_REQUESTED -> ConnectionRequested()
+        ConnectorCommand.DISCONNECTION_REQUESTED -> DisconnectionRequested()
+    }
 
     suspend fun handle(transition: ConnectorTransition<out CONFIGURATION, RUNTIME>) {
         val oldState = state
         val newState = oldState.handle(transition)
 
-        if(oldState is Connected && newState != oldState) {
+        if (oldState is Connected && newState != oldState) {
             oldState.runtime.kill()
         }
 
         state = newState
 
         when (newState) {
-            is Configured -> {
-                repository.save(newState.configuration)
-            }
             is Connecting -> {
                 connect(newState)
             }
             is Disconnecting -> {
                 disconnect(newState)
             }
+            is Disconnected,
             is Connected,
-            is InError,
-            is NotConfigured -> {
+            is InError-> {
                 //Nothing
             }
         }
@@ -55,7 +69,7 @@ class ConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RUNTIME : Co
         val configuration = newState.configuration
 
         launchEffect(configuration) {
-            doConnection(configuration, this@ConnectorStateMachine::handle)
+            doConnection(configuration, this@StandAloneConnectorStateMachine::handle)
         }
     }
 
@@ -81,9 +95,5 @@ class ConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RUNTIME : Co
                 }
             )
         }
-    }
-
-    suspend fun load() {
-        state = repository.load()?.let { Configured(it) } ?: NotConfigured()
     }
 }

@@ -21,17 +21,6 @@ fun Application.DiscordModule(discord: DiscordConnector) {
 
             this.context.respond(HttpStatusCode.OK)
         }
-        get("/discord/toto") {
-            this.context.respond(discord.stateMachine.state.javaClass.toString())
-        }
-        get("/discord/connect") {
-            discord.connect()
-            this.context.respond(HttpStatusCode.OK)
-        }
-        get("/discord/disconnect") {
-            discord.disconnect()
-            this.context.respond(HttpStatusCode.OK)
-        }
     }
 }
 

@@ -6,14 +6,14 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
-internal class ConfiguredTest {
+internal class DisconnectedTest {
     @Test
     internal fun `when the connector is configured should have configured state`() {
         val newState = runBlocking {
             CURRENT_CONFIGURATION.toConfigured().handle(Configure(NEW_CONFIGURATION))
         }
 
-        newState shouldBe Configured(NEW_CONFIGURATION)
+        newState shouldBe Disconnected(NEW_CONFIGURATION)
     }
 
     @Test
@@ -49,7 +49,7 @@ internal class ConfiguredTest {
             CURRENT_CONFIGURATION.toConfigured().handle(DisconnectionRequested())
         }
 
-        newState shouldBe Configured(CURRENT_CONFIGURATION)
+        newState shouldBe Disconnected(CURRENT_CONFIGURATION)
     }
 
     @Test
@@ -58,7 +58,7 @@ internal class ConfiguredTest {
             CURRENT_CONFIGURATION.toConfigured().handle(DisconnectionSuccessful(CURRENT_CONFIGURATION))
         }
 
-        newState shouldBe Configured(CURRENT_CONFIGURATION)
+        newState shouldBe Disconnected(CURRENT_CONFIGURATION)
     }
 
     @Test
@@ -87,7 +87,7 @@ internal class ConfiguredTest {
         newState shouldBe InError(CURRENT_CONFIGURATION, "error for another configuration")
     }
 
-    private fun ConfigurationStub.toConfigured(): Configured<ConfigurationStub, ConnectorRuntimeForTest> = Configured(this)
+    private fun ConfigurationStub.toConfigured(): Disconnected<ConfigurationStub, ConnectorRuntimeForTest> = Disconnected(this)
 
     companion object {
         val CURRENT_CONFIGURATION = ConfigurationStub("currentValue")

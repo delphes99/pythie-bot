@@ -13,7 +13,7 @@ internal class InErrorTest {
             CURRENT_CONFIGURATION.toInErrorWith("old error").handle(Configure(NEW_CONFIGURATION))
         }
 
-        newState shouldBe Configured(NEW_CONFIGURATION)
+        newState shouldBe Disconnected(NEW_CONFIGURATION)
     }
 
     @Test
@@ -67,7 +67,7 @@ internal class InErrorTest {
             CURRENT_CONFIGURATION.toInErrorWith("old error").handle(DisconnectionSuccessful(CURRENT_CONFIGURATION))
         }
 
-        newState shouldBe Configured(CURRENT_CONFIGURATION)
+        newState shouldBe Disconnected(CURRENT_CONFIGURATION)
     }
 
     @Test
