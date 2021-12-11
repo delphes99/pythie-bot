@@ -36,21 +36,14 @@ class StreamerHighlightFeature(
 
     inner class MessageReceivedHandler : TwitchEventHandler<MessageReceived>(channel) {
         override suspend fun handleIfGoodChannel(event: MessageReceived, bot: Bot): List<OutgoingEvent> {
-            return bot.connector<TwitchConnector>()!!.whenRunning(
-                whenRunning = {
-                    val user = event.user
-                    val userInfos = this.clientBot.userCache.getUser(user)
-                    if (userInfos.isStreamer() && !user.isHighlighted() && event.channel.toUser() != user) {
-                        highlight(user)
-                        response(event, userInfos)
-                    } else {
-                        emptyList()
-                    }
-                },
-                whenNotRunning = {
-                    emptyList()
-                }
-            )
+            val user = event.user
+            val userInfos = bot.connector<TwitchConnector>()!!.getUser(user)
+            return if (userInfos != null && userInfos.isStreamer() && !user.isHighlighted() && event.channel.toUser() != user) {
+                highlight(user)
+                response(event, userInfos)
+            } else {
+                emptyList()
+            }
         }
 
         private fun User.isHighlighted() =

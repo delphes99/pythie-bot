@@ -15,16 +15,22 @@ import fr.delphes.connector.twitch.outgoingEvent.TwitchChatOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOwnerChatOutgoingEvent
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
+import fr.delphes.connector.twitch.user.UserInfos
+import fr.delphes.utils.cache.InMemoryCache
+import fr.delphes.connector.twitch.user.getUserInfos
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.TwitchHelixClient
+import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.CredentialsManager
+import fr.delphes.utils.time.SystemClock
 import io.ktor.application.Application
 import mu.KotlinLogging
+import java.time.Duration
 
 class TwitchConnector(
     val bot: Bot,
@@ -162,6 +168,23 @@ class TwitchConnector(
         val userInfos = twitchHelixApi.getUserInfosOf(this)
 
         return ConfigurationTwitchAccount(this, userInfos.preferred_username.lowercase())
+    }
+
+    private val userCache = InMemoryCache<User, UserInfos>(
+        expirationDuration = Duration.ofMinutes(120),
+        clock = SystemClock,
+        retrieve = { user ->
+            val currentState = connectorStateManager.state
+            if (currentState is Connected) {
+                getUserInfos(user, currentState.runtime.clientBot.twitchApi)
+            } else {
+                null
+            }
+        }
+    )
+
+    suspend fun getUser(user: User) : UserInfos? {
+        return userCache.getValue(user)
     }
 
     suspend fun <T> whenRunning(

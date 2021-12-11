@@ -1,6 +1,5 @@
-package fr.delphes.connector.twitch
+package fr.delphes.utils.time
 
-import fr.delphes.utils.time.Clock
 import java.time.LocalDateTime
 
 //TODO move to shared package (duplicate code)

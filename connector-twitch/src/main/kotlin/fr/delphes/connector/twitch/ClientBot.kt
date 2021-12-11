@@ -1,8 +1,6 @@
 package fr.delphes.connector.twitch
 
 import fr.delphes.bot.Bot
-import fr.delphes.connector.twitch.user.UserCache
-import fr.delphes.connector.twitch.user.getUserInfos
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.TwitchChannel
@@ -10,12 +8,10 @@ import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
-import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.time.Duration
 
 class ClientBot(
     private val configuration: TwitchConfiguration,
@@ -31,11 +27,6 @@ class ClientBot(
     private val webhookSecret = "secretWithMoreThan10caracters"
 
     val twitchApi = AppTwitchClient.build(configuration.clientId, credentialsManager)
-    val userCache = UserCache(
-        expirationDuration = Duration.ofMinutes(120),
-        clock = SystemClock,
-        retrieveUser =  { user, now -> getUserInfos(user, twitchApi, now) }
-    )
 
     lateinit var ircClient: IrcClient
 
