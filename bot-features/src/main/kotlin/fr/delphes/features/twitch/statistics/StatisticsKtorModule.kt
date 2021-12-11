@@ -18,13 +18,11 @@ fun StatisticsModule(
     return {
         routing {
             get("/${channel.normalizeName}/stats") {
-                connector.whenRunning(
-                    whenRunning = {
-                        val channelImpl = this.clientBot.channelOf(channel)!!
-                        val statistics = channelImpl.statistics
-                        val streamStatistics = channelImpl.streamStatistics
-                        call.respondText(
-                            """
+                val stats = connector.statistics.of(channel)
+                val statistics = stats.statistics
+                val streamStatistics = stats.streamStatistics
+                call.respondText(
+                    """
                         <h2>Current stream stats</h2>
                         <table>
                             <tr><td>Number of chatters</td><td>${streamStatistics?.numberOfChatters ?: ""}</td></tr>
@@ -40,12 +38,7 @@ fun StatisticsModule(
                             <tr><td>Number of sub</td><td>${statistics.numberOfSub}</td></tr>
                         </table>
                     """.trimIndent(),
-                            ContentType.parse("text/html")
-                        )
-                    },
-                    whenNotRunning = {
-                        call.respond(HttpStatusCode.NoContent)
-                    }
+                    ContentType.parse("text/html")
                 )
             }
         }

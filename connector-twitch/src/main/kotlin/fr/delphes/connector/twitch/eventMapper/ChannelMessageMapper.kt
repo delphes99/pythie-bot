@@ -1,11 +1,10 @@
 package fr.delphes.connector.twitch.eventMapper
 
-import fr.delphes.bot.state.UserMessage
 import fr.delphes.connector.twitch.ClientBot
+import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
-import fr.delphes.connector.twitch.state.BotAccountProvider
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.irc.IrcChannelMessage
@@ -13,7 +12,7 @@ import fr.delphes.twitch.irc.IrcChannelMessage
 class ChannelMessageMapper(
     private val channel: TwitchChannel,
     private val bot: ClientBot,
-    private val getBotAccountProvider: BotAccountProvider = bot.connector
+    private val connector: TwitchConnector = bot.connector
 ) : TwitchIncomingEventMapper<IrcChannelMessage> {
     override suspend fun handle(
         twitchEvent: IrcChannelMessage
@@ -29,14 +28,7 @@ class ChannelMessageMapper(
                     command != null -> {
                         CommandAsked(channel, command, user)
                     }
-                    TwitchChannel(user.name) != getBotAccountProvider.botAccount -> {
-                        //TODO DELETE
-                        bot.channelOf(twitchEvent.channel.toTwitchChannel())?.state?.addMessage(
-                            UserMessage(
-                                user,
-                                message
-                            )
-                        )
+                    TwitchChannel(user.name) != connector.botAccount -> {
                         MessageReceived(channel, twitchEvent)
                     }
                     else -> {

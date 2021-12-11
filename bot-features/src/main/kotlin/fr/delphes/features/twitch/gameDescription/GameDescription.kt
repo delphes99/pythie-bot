@@ -37,18 +37,11 @@ class GameDescription(
     private fun buildCommandHandler() = CommandHandler(channel, command) { _, twitchConnector ->  this.displayInfoFor(twitchConnector) }
     override val commands: Iterable<Command> = listOf(command)
 
-    private suspend fun displayInfoFor(
+    private fun displayInfoFor(
         twitchConnector: TwitchConnector
     ): List<OutgoingEvent> {
-        return twitchConnector.whenRunning(
-            whenRunning = {
-                val description =
-                    clientBot.channelOf(channel)!!.currentStream?.game?.id?.let { game -> descriptions[game] }
-                description?.let { listOf(SendMessage(it, channel)) } ?: emptyList()
-            },
-            whenNotRunning = {
-                emptyList()
-            }
-        )
+        val description =
+            twitchConnector.statistics.of(channel).currentStream?.game?.id?.let { game -> descriptions[game] }
+        return description?.let { listOf(SendMessage(it, channel)) } ?: emptyList()
     }
 }

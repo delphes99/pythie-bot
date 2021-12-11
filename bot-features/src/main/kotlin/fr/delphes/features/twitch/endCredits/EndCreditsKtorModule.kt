@@ -32,44 +32,36 @@ fun EndCreditsModule(
         routing {
             twitchConnector.configuration?.listenedChannels?.forEach { channelConfiguration ->
                 get("/${channelConfiguration.channel.normalizeName}/endcredits") {
-                    twitchConnector.whenRunning(
-                        whenRunning = {
-                            val channel = this.clientBot.channelOf(channelConfiguration.channel)!!
-                            channel.streamStatistics?.let { statistics ->
-                                this@get.call.respondOutputStream(
-                                    contentType = ContentType.parse("image/png"),
-                                    status = HttpStatusCode.OK
-                                ) {
-                                    val wordFrequencies = statistics.wordFrequencies(NUMBER_OF_WORDS)
+                    twitchConnector.statistics.of(channelConfiguration.channel).streamStatistics?.let { statistics ->
+                        this@get.call.respondOutputStream(
+                            contentType = ContentType.parse("image/png"),
+                            status = HttpStatusCode.OK
+                        ) {
+                            val wordFrequencies = statistics.wordFrequencies(NUMBER_OF_WORDS)
 
-                                    //TODO retrieve file dimension
-                                    val dimension = Dimension(1920, 1080)
-                                    val wordCloud = WordCloud(dimension, CollisionMode.PIXEL_PERFECT)
-                                    wordCloud.setPadding(2)
-                                    wordCloud.setBackground(
-                                        PixelBoundryBackground(
-                                            javaClass.classLoader.getResourceAsStream(
-                                                "endcredits/endcredits.png"
-                                            )
-                                        )
+                            //TODO retrieve file dimension
+                            val dimension = Dimension(1920, 1080)
+                            val wordCloud = WordCloud(dimension, CollisionMode.PIXEL_PERFECT)
+                            wordCloud.setPadding(2)
+                            wordCloud.setBackground(
+                                PixelBoundryBackground(
+                                    javaClass.classLoader.getResourceAsStream(
+                                        "endcredits/endcredits.png"
                                     )
-                                    wordCloud.setColorPalette(
-                                        ColorPalette(
-                                            Color(0x4055F1),
-                                            Color(0x408DF1)
-                                        )
-                                    )
-                                    wordCloud.setKumoFont(KumoFont("LaserCutRegular", FontWeight.BOLD))
-                                    wordCloud.setFontScalar(LinearFontScalar(20, 40))
-                                    wordCloud.build(wordFrequencies)
-                                    wordCloud.writeToStreamAsPNG(this)
-                                }
-                            } ?: call.respond(HttpStatusCode.NoContent)
-                        },
-                        whenNotRunning = {
-                            call.respond(HttpStatusCode.NoContent)
+                                )
+                            )
+                            wordCloud.setColorPalette(
+                                ColorPalette(
+                                    Color(0x4055F1),
+                                    Color(0x408DF1)
+                                )
+                            )
+                            wordCloud.setKumoFont(KumoFont("LaserCutRegular", FontWeight.BOLD))
+                            wordCloud.setFontScalar(LinearFontScalar(20, 40))
+                            wordCloud.build(wordFrequencies)
+                            wordCloud.writeToStreamAsPNG(this)
                         }
-                    )
+                    } ?: call.respond(HttpStatusCode.NoContent)
                 }
             }
         }

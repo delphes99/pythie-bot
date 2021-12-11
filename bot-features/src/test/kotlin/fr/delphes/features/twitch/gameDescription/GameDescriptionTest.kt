@@ -1,9 +1,7 @@
 package fr.delphes.features.twitch.gameDescription
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchConnector
-import fr.delphes.connector.twitch.TwitchRuntime
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
@@ -14,11 +12,11 @@ import fr.delphes.twitch.api.games.WithGameId
 import fr.delphes.twitch.api.user.User
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
-import io.mockk.coEvery
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 internal class GameDescriptionTest {
@@ -34,52 +32,52 @@ internal class GameDescriptionTest {
         GAME("id");
     }
 
+    @AfterEach
+    internal fun tearDown() {
+        clearAllMocks()
+    }
+
     @Test
-    internal suspend fun `describe the current`() {
+    internal fun `describe the current`() {
         val feature = GameDescription(channel, "!tufekoi", GAME_ID to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
+        val outgoingEvents = runBlocking {
+            feature.handleIncomingEvent(commandAsked, bot)
+        }
 
         outgoingEvents.shouldContain(SendMessage("description", channel))
     }
 
     @Test
-    internal suspend fun `describe the current (with other gameId implementation)`() {
+    internal fun `describe the current (with other gameId implementation)`() {
         val feature = GameDescription(channel, "!tufekoi", GameEnum.GAME to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
+        val outgoingEvents = runBlocking {
+            feature.handleIncomingEvent(commandAsked, bot)
+        }
 
         outgoingEvents.shouldContain(SendMessage("description", channel))
     }
 
     @Test
-    internal suspend fun `do nothing when no description`() {
+    internal fun `do nothing when no description`() {
         val feature = GameDescription(channel, "!tufekoi", GAME_ID to "description")
         `current game is`(OTHER_GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
 
-        val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
+        val outgoingEvents = runBlocking {
+            feature.handleIncomingEvent(commandAsked, bot)
+        }
 
         outgoingEvents.shouldBeEmpty()
     }
 
     private fun `current game is`(game: Game) {
-        val slot = slot<suspend TwitchRuntime.() -> List<OutgoingEvent>>()
-
-        val appConnected = mockk<TwitchRuntime>()
-        coEvery {
-            connector.whenRunning(
-                whenRunning = capture(slot),
-                whenNotRunning = any()
-            )
-        } answers {
-            runBlocking { slot.captured(appConnected) }
-        }
-
-        every { appConnected.clientBot.channelOf(channel)?.currentStream?.game } returns game
+        every { bot.connectors } returns listOf(connector)
+        every { connector.statistics.of(channel).currentStream?.game } returns game
     }
 }

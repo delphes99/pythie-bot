@@ -1,9 +1,9 @@
 package fr.delphes.connector.twitch.eventMapper
 
-import fr.delphes.bot.state.ChannelState
+import fr.delphes.bot.state.ChannelStatistics
 import fr.delphes.connector.twitch.ClientBot
+import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived
-import fr.delphes.connector.twitch.state.BotAccountProvider
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcChannelMessage
@@ -18,25 +18,24 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class ChannelMessageMapperTest {
-    private val changeState = mockk<ChannelState>(relaxed = true)
+    private val statistics = mockk<ChannelStatistics>(relaxed = true)
     private val clientBot = mockk<ClientBot>()
-    private val accountProvider = mockk<BotAccountProvider>()
+    private val connector = mockk<TwitchConnector>()
     private val botName = "botAccount"
     private val userName = "user"
     private val message = "message"
     private val channelName = "channel"
     private val channel = TwitchChannel(channelName)
 
-    private val mapper = ChannelMessageMapper(channel, clientBot, accountProvider)
+    private val mapper = ChannelMessageMapper(channel, clientBot, connector)
 
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
 
         every { clientBot.commandsFor(channel) } returns emptyList()
-        //TODO delete
-        every { clientBot.channelOf(channel)?.state } returns changeState
-        every { accountProvider.botAccount } returns TwitchChannel(botName)
+        every { connector.statistics.of(channel) } returns statistics
+        every { connector.botAccount } returns TwitchChannel(botName)
     }
 
     @Test

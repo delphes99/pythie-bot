@@ -7,10 +7,10 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ChannelState(
+class ChannelStatistics(
     private val statisticsRepository: StatisticsRepository,
     currentStream: Stream? = null
-): ChannelChangeState {
+) : ChannelChangeState {
     val statistics = runBlocking {
         statisticsRepository.globalStatistics()
     }
@@ -28,6 +28,8 @@ class ChannelState(
     fun init(currentStream: Stream?) {
         this.currentStream = currentStream
     }
+
+    fun isOnline(): Boolean = currentStream != null
 
     override fun changeCurrentStream(newStream: Stream?) {
         this.currentStream = newStream

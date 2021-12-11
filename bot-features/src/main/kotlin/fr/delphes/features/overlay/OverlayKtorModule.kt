@@ -29,24 +29,17 @@ fun OverlayModule(
                     resources("overlay")
                 }
                 get("/${channelConfiguration.channel.normalizeName}/overlay/infos") {
-                    twitchConnector.whenRunning(
-                        whenRunning = {
-                            val channel = this.clientBot.channelOf(channelConfiguration.channel)!!
-                            val statistics = channel.statistics
-                            val overlayInfos = OverlayInfos(
-                                last_follows = statistics.lastFollows.take(3).map(User::name),
-                                last_subs = statistics.lastSubs.take(3).map(User::name),
-                                last_cheers = statistics.lastCheers.take(3)
-                                    .map { cheer -> OverlayCheers(cheer.user?.name, cheer.bits) },
-                                last_voths = lastVOTH(bot)
-                            )
+                    val statistics = twitchConnector.statistics.of(channelConfiguration.channel).statistics
 
-                            this@get.call.respond(overlayInfos)
-                        },
-                        whenNotRunning = {
-                            this@get.call.respond(HttpStatusCode.NoContent)
-                        }
+                    val overlayInfos = OverlayInfos(
+                        last_follows = statistics.lastFollows.take(3).map(User::name),
+                        last_subs = statistics.lastSubs.take(3).map(User::name),
+                        last_cheers = statistics.lastCheers.take(3)
+                            .map { cheer -> OverlayCheers(cheer.user?.name, cheer.bits) },
+                        last_voths = lastVOTH(bot)
                     )
+
+                    this@get.call.respond(overlayInfos)
                 }
             }
         }

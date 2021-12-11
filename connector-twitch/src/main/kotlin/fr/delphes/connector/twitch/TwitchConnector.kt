@@ -13,7 +13,7 @@ import fr.delphes.connector.twitch.outgoingEvent.TwitchApiOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchChatOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOwnerChatOutgoingEvent
-import fr.delphes.connector.twitch.state.BotAccountProvider
+import fr.delphes.connector.twitch.statistics.TwitchStatistics
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
@@ -29,12 +29,14 @@ class TwitchConnector(
     val bot: Bot,
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
-) : Connector<TwitchConfiguration, TwitchRuntime>, AuthTokenRepository, BotAccountProvider {
+) : Connector<TwitchConfiguration, TwitchRuntime>, AuthTokenRepository {
     override val connectorName = "twitch"
 
     override val configurationManager = ConfigurationManager(
         TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
     )
+
+    val statistics = TwitchStatistics(configFilepath)
 
     private val twitchHelixApi = TwitchHelixClient()
     override val connectorStateManager = initStateMachine { configuration, _ ->
@@ -101,7 +103,9 @@ class TwitchConnector(
 
     override suspend fun execute(event: OutgoingEvent) {
         if (event is TwitchOutgoingEvent) {
-            whenRunning {
+            val currentState = connectorStateManager.state
+            if (currentState is Connected) {
+                val clientBot = currentState.runtime.clientBot
                 try {
                     when (event) {
                         is TwitchApiOutgoingEvent -> {
@@ -143,7 +147,7 @@ class TwitchConnector(
         configure(currentConfiguration().removeChannel(channelName))
     }
 
-    private fun currentConfiguration() = connectorStateManager.state.configuration ?: TwitchConfiguration.empty
+    private fun currentConfiguration() = configurationManager.configuration ?: TwitchConfiguration.empty
 
     private suspend fun AuthToken.toConfigurationTwitchAccount(): ConfigurationTwitchAccount {
         val userInfos = twitchHelixApi.getUserInfosOf(this)
@@ -160,13 +164,6 @@ class TwitchConnector(
             currentState.runtime.whenRunning()
         } else {
             whenNotRunning()
-        }
-    }
-
-    suspend fun whenRunning(doStuff: suspend TwitchRuntime.() -> Unit) {
-        val currentState = connectorStateManager.state
-        if (currentState is Connected) {
-            currentState.runtime.doStuff()
         }
     }
 
@@ -195,6 +192,6 @@ class TwitchConnector(
         bot.handleIncomingEvent(event)
     }
 
-    override val botAccount: TwitchChannel?
+    val botAccount: TwitchChannel?
         get() = currentConfiguration().botAccount
 }

@@ -1,9 +1,5 @@
 package fr.delphes.connector.twitch
 
-import fr.delphes.bot.state.ChannelState
-import fr.delphes.bot.state.FileStatisticsRepository
-import fr.delphes.bot.state.Statistics
-import fr.delphes.bot.state.StreamStatistics
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.eventMapper.ChannelMessageMapper
 import fr.delphes.connector.twitch.eventMapper.ClipCreatedMapper
@@ -11,7 +7,6 @@ import fr.delphes.connector.twitch.eventMapper.IRCMessageMapper
 import fr.delphes.connector.twitch.eventMapper.TwitchIncomingEventMapper
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
@@ -23,14 +18,7 @@ class Channel(
     credentialsManager: CredentialsManager,
     val bot: ClientBot,
     val connector: TwitchConnector,
-    val state: ChannelState = ChannelState(FileStatisticsRepository("${bot.configFilepath}\\${channel.normalizeName}"))
 ) {
-    val currentStream: Stream? get() = state.currentStream
-    val statistics: Statistics get() = state.statistics
-    val streamStatistics: StreamStatistics? get() = state.streamStatistics
-
-    fun isOnline(): Boolean = currentStream != null
-
     //TODO move irc client to twitch API
     val ircClient = IrcClient.builder(channel, credentialsManager)
         .withOnMessage { message ->
@@ -68,7 +56,8 @@ class Channel(
 
 
         runBlocking {
-            state.init(twitchApi.getStream())
+            //TODO move into connector ?
+            connector.statistics.of(channel).init(twitchApi.getStream())
 
             //TODO Synchronize reward
         }

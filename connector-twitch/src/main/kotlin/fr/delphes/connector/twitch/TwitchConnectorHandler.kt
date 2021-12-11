@@ -23,43 +23,41 @@ class TwitchConnectorHandler(
     private val connector: TwitchConnector,
 ) {
     suspend fun handle(event: TwitchIncomingEvent) {
-        connector.whenRunning {
-            when (event) {
-                is BitCheered -> {
-                    clientBot.channelOf(event.channel)?.state?.newCheer(event.cheerer, event.bitsUsed)
-                }
-                is ClipCreated -> Nothing
-                is CommandAsked -> Nothing
-                is IncomingRaid -> Nothing
-                is MessageReceived -> {
-                    clientBot.channelOf(event.channel)?.state?.addMessage(UserMessage(event.user, event.text))
-                }
-                is NewFollow -> {
-                    clientBot.channelOf(event.channel)?.state?.newFollow(event.follower)
-                }
-                is NewSub -> {
-                    clientBot.channelOf(event.channel)?.state?.newSub(event.sub)
-                }
-                is RewardRedemption -> Nothing
-                is StreamChanged -> Nothing
-                is StreamOffline -> {
-                    clientBot.channelOf(event.channel)?.state?.changeCurrentStream(null)
-                }
-                is StreamOnline -> {
-                    clientBot.channelOf(event.channel)?.state?.changeCurrentStream(
-                        Stream(
-                            event.id,
-                            event.title,
-                            event.start,
-                            event.game,
-                            event.thumbnailUrl
-                        )
+        when (event) {
+            is BitCheered -> {
+                connector.statistics.of(event.channel).newCheer(event.cheerer, event.bitsUsed)
+            }
+            is ClipCreated -> Nothing
+            is CommandAsked -> Nothing
+            is IncomingRaid -> Nothing
+            is MessageReceived -> {
+                connector.statistics.of(event.channel).addMessage(UserMessage(event.user, event.text))
+            }
+            is NewFollow -> {
+                connector.statistics.of(event.channel).newFollow(event.follower)
+            }
+            is NewSub -> {
+                connector.statistics.of(event.channel).newSub(event.sub)
+            }
+            is RewardRedemption -> Nothing
+            is StreamChanged -> Nothing
+            is StreamOffline -> {
+                connector.statistics.of(event.channel).changeCurrentStream(null)
+            }
+            is StreamOnline -> {
+                connector.statistics.of(event.channel).changeCurrentStream(
+                    Stream(
+                        event.id,
+                        event.title,
+                        event.start,
+                        event.game,
+                        event.thumbnailUrl
                     )
-                }
-                is VIPListReceived -> Nothing
-                is NewPoll -> Nothing
-            }.exhaustive()
-        }
+                )
+            }
+            is VIPListReceived -> Nothing
+            is NewPoll -> Nothing
+        }.exhaustive()
     }
 }
 

@@ -17,9 +17,10 @@ class StreamOnlineMapper(
     override suspend fun handle(
         twitchEvent: StreamOnlineEventPayload
     ): List<TwitchIncomingEvent> {
+        val twitchChannel = TwitchChannel(twitchEvent.broadcaster_user_name)
+        val statistics = connector.statistics.of(twitchChannel)
         return connector.whenRunning(
             whenRunning = {
-                val twitchChannel = TwitchChannel(twitchEvent.broadcaster_user_name)
                 val channel = clientBot.channelOf(twitchChannel)
 
                 //TODO better retrieve
@@ -27,7 +28,7 @@ class StreamOnlineMapper(
                     channel?.twitchApi?.getStream()
                 }
 
-                if (stream == null || channel?.isOnline() == true) {
+                if (stream == null || statistics.isOnline()) {
                     return@whenRunning emptyList()
                 }
 
