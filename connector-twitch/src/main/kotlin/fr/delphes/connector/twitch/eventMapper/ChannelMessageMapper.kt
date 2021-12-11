@@ -11,8 +11,7 @@ import fr.delphes.twitch.irc.IrcChannelMessage
 
 class ChannelMessageMapper(
     private val channel: TwitchChannel,
-    private val bot: ClientBot,
-    private val connector: TwitchConnector = bot.connector
+    private val connector: TwitchConnector
 ) : TwitchIncomingEventMapper<IrcChannelMessage> {
     override suspend fun handle(
         twitchEvent: IrcChannelMessage
@@ -21,7 +20,7 @@ class ChannelMessageMapper(
         val message = twitchEvent.message
 
         return if (twitchEvent.isFor(channel)) {
-            val command = bot.commandsFor(channel).find { it.triggerMessage == message }
+            val command = connector.commandsFor(channel).find { it.triggerMessage == message }
 
             listOfNotNull(
                 when {

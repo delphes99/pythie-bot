@@ -27,16 +27,9 @@ class CommandList(
         channel,
         command
     ) { _, twitchConnector ->
-        twitchConnector.whenRunning(
-            whenRunning = {
-                val commands = clientBot.commandsFor(this@CommandList.channel).map(Command::triggerMessage)
+        val commands = twitchConnector.commandsFor(this@CommandList.channel).map(Command::triggerMessage)
 
-                displayCommands(commands)
-            },
-            whenNotRunning = {
-                emptyList()
-            }
-        )
+        displayCommands(commands)
     }
 
     override val commands: Iterable<Command> = listOf(command)

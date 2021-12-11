@@ -1,10 +1,8 @@
 package fr.delphes.connector.twitch
 
 import fr.delphes.bot.Bot
-import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.user.UserCache
 import fr.delphes.connector.twitch.user.getUserInfos
-import fr.delphes.feature.Feature
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.TwitchChannel
@@ -24,7 +22,6 @@ class ClientBot(
     internal val connector: TwitchConnector,
     private val publicUrl: String,
     val configFilepath: String,
-    private val features: List<Feature<*>>,
     val bot: Bot,
     private val credentialsManager: CredentialsManager,
 ) {
@@ -48,15 +45,6 @@ class ClientBot(
 
     fun channelOf(channel: TwitchChannel): Channel? {
         return channels.firstOrNull { it.channel == channel }
-    }
-
-    fun commandsFor(channel: TwitchChannel): List<Command> {
-        return features
-            .filterIsInstance<TwitchFeature>()
-            .filter { feature -> feature.channel == channel }
-            .flatMap(TwitchFeature::commands)
-
-        //TODO editable command
     }
 
     fun connect() {

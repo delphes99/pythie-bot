@@ -28,7 +28,7 @@ class Channel(
         }
         .withOnChannelMessage { message ->
             runBlocking {
-                ChannelMessageMapper(channel, bot).handleTwitchEvent(message)
+                ChannelMessageMapper(channel, connector).handleTwitchEvent(message)
             }
         }
         .build()

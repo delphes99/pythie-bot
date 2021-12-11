@@ -1,7 +1,6 @@
 package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.bot.state.ChannelStatistics
-import fr.delphes.connector.twitch.ClientBot
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived
 import fr.delphes.twitch.TwitchChannel
@@ -19,7 +18,6 @@ import org.junit.jupiter.api.Test
 
 internal class ChannelMessageMapperTest {
     private val statistics = mockk<ChannelStatistics>(relaxed = true)
-    private val clientBot = mockk<ClientBot>()
     private val connector = mockk<TwitchConnector>()
     private val botName = "botAccount"
     private val userName = "user"
@@ -27,13 +25,13 @@ internal class ChannelMessageMapperTest {
     private val channelName = "channel"
     private val channel = TwitchChannel(channelName)
 
-    private val mapper = ChannelMessageMapper(channel, clientBot, connector)
+    private val mapper = ChannelMessageMapper(channel, connector)
 
     @BeforeEach
     internal fun setUp() {
         clearAllMocks()
 
-        every { clientBot.commandsFor(channel) } returns emptyList()
+        every { connector.commandsFor(channel) } returns emptyList()
         every { connector.statistics.of(channel) } returns statistics
         every { connector.botAccount } returns TwitchChannel(botName)
     }

@@ -8,6 +8,7 @@ import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchApiOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchChatOutgoingEvent
@@ -51,7 +52,6 @@ class TwitchConnector(
             this@TwitchConnector,
             this@TwitchConnector.bot.publicUrl,
             this@TwitchConnector.bot.configFilepath,
-            this@TwitchConnector.bot.features,
             this@TwitchConnector.bot,
             credentialsManager
         )
@@ -125,6 +125,15 @@ class TwitchConnector(
                 }
             }
         }
+    }
+
+    fun commandsFor(channel: TwitchChannel): List<Command> {
+        return bot.features
+            .filterIsInstance<TwitchFeature>()
+            .filter { feature -> feature.channel == channel }
+            .flatMap(TwitchFeature::commands)
+
+        //TODO editable command
     }
 
     suspend fun configureAppCredential(clientId: String, clientSecret: String) {
