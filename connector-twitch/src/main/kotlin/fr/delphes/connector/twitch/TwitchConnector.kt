@@ -3,20 +3,11 @@ package fr.delphes.connector.twitch
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.ConfigurationManager
 import fr.delphes.bot.connector.Connector
-import fr.delphes.bot.connector.initStateMachine
-import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.state.ConnectionSuccessful
-import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
-import fr.delphes.connector.twitch.outgoingEvent.TwitchApiOutgoingEvent
-import fr.delphes.connector.twitch.outgoingEvent.TwitchChatOutgoingEvent
-import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
-import fr.delphes.connector.twitch.outgoingEvent.TwitchOwnerChatOutgoingEvent
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
 import fr.delphes.connector.twitch.user.UserInfos
-import fr.delphes.utils.cache.InMemoryCache
 import fr.delphes.connector.twitch.user.getUserInfos
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
@@ -26,10 +17,9 @@ import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
-import fr.delphes.twitch.auth.CredentialsManager
+import fr.delphes.utils.cache.InMemoryCache
 import fr.delphes.utils.time.SystemClock
 import io.ktor.application.Application
-import mu.KotlinLogging
 import java.time.Duration
 
 class TwitchConnector(
@@ -46,49 +36,8 @@ class TwitchConnector(
     val statistics = TwitchStatistics(configFilepath)
 
     private val twitchHelixApi = TwitchHelixClient()
-    override val connectorStateManager = initStateMachine { configuration, _ ->
-        val credentialsManager = CredentialsManager(
-            configuration.clientId,
-            configuration.clientSecret,
-            this@TwitchConnector
-        )
 
-        val clientBot = ClientBot(
-            configuration,
-            this@TwitchConnector,
-            this@TwitchConnector.bot.publicUrl,
-            this@TwitchConnector.bot.configFilepath,
-            this@TwitchConnector.bot,
-            credentialsManager
-        )
-
-        configuration.listenedChannels.forEach { configuredAccount ->
-            val legacyChannelConfiguration = channels
-                .firstOrNull { channel -> channel.channel == configuredAccount.channel }
-
-            clientBot.register(
-                Channel(
-                    configuredAccount.channel,
-                    legacyChannelConfiguration,
-                    credentialsManager,
-                    clientBot,
-                    this@TwitchConnector
-                )
-            )
-        }
-
-        clientBot.connect()
-
-        clientBot.resetWebhook()
-
-        ConnectionSuccessful(
-            configuration,
-            TwitchRuntime(
-                configuration,
-                clientBot
-            )
-        )
-    }
+    override val connectorStateManager = TwitchStateManager(this)
 
     private val internalHandler = TwitchConnectorHandler(this)
 
@@ -105,32 +54,6 @@ class TwitchConnector(
 
     override fun publicEndpoints(application: Application) {
         application.WebhookModule(this)
-    }
-
-    override suspend fun execute(event: OutgoingEvent) {
-        if (event is TwitchOutgoingEvent) {
-            val currentState = connectorStateManager.state
-            if (currentState is Connected) {
-                val clientBot = currentState.runtime.clientBot
-                try {
-                    when (event) {
-                        is TwitchApiOutgoingEvent -> {
-                            val channel = clientBot.channelOf(event.channel)!!
-                            event.executeOnTwitch(channel.twitchApi)
-                        }
-                        is TwitchChatOutgoingEvent -> {
-                            event.executeOnTwitch(clientBot.ircClient)
-                        }
-                        is TwitchOwnerChatOutgoingEvent -> {
-                            val channel = clientBot.channelOf(event.channel)!!
-                            event.executeOnTwitch(channel.ircClient)
-                        }
-                    }
-                } catch (e: Exception) {
-                    LOGGER.error(e) { "Error while handling event ${e.message}" }
-                }
-            }
-        }
     }
 
     fun commandsFor(channel: TwitchChannel): List<Command> {
@@ -174,33 +97,19 @@ class TwitchConnector(
         expirationDuration = Duration.ofMinutes(120),
         clock = SystemClock,
         retrieve = { user ->
-            val currentState = connectorStateManager.state
-            if (currentState is Connected) {
-                getUserInfos(user, currentState.runtime.clientBot.twitchApi)
-            } else {
-                null
-            }
+            connectorStateManager.whenRunning(
+                whenRunning = {
+                    getUserInfos(user, clientBot.twitchApi)
+                },
+                whenNotRunning = {
+                    null
+                }
+            )
         }
     )
 
-    suspend fun getUser(user: User) : UserInfos? {
+    suspend fun getUser(user: User): UserInfos? {
         return userCache.getValue(user)
-    }
-
-    suspend fun <T> whenRunning(
-        whenRunning: suspend TwitchRuntime.() -> T,
-        whenNotRunning: suspend () -> T,
-    ): T {
-        val currentState = connectorStateManager.state
-        return if (currentState is Connected) {
-            currentState.runtime.whenRunning()
-        } else {
-            whenNotRunning()
-        }
-    }
-
-    companion object {
-        private val LOGGER = KotlinLogging.logger {}
     }
 
     override fun getAppToken(): AuthToken? {

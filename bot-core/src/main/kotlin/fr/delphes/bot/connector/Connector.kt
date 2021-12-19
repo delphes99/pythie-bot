@@ -33,14 +33,19 @@ interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorR
 
     fun publicEndpoints(application: Application)
 
-    suspend fun execute(event: OutgoingEvent)
+    suspend fun execute(event: OutgoingEvent) {
+        connectorStateManager.execute(event)
+    }
 }
 
-fun <CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> Connector<CONFIGURATION, RUNTIME>.initStateMachine(
+fun <CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> initStateMachine(
     doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
+    executeEvent: suspend StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME>.(event: OutgoingEvent) -> Unit,
+    configurationManager: ConfigurationManager<CONFIGURATION>,
 ): StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME> {
     return StandAloneConnectorStateMachine(
         doConnection = doConnection,
+        executeEvent = executeEvent,
         state = Disconnected(configurationManager.configuration)
     )
 }

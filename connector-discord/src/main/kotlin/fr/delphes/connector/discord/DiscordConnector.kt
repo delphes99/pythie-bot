@@ -12,7 +12,6 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.initStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
-import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.endpoint.DiscordModule
 import fr.delphes.connector.discord.incomingEvent.NewGuildMember
 import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent
@@ -31,30 +30,32 @@ class DiscordConnector(
     )
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    override val connectorStateManager = initStateMachine { configuration, _ ->
-        val client = Kord(configuration.oAuthToken)
-        client.on<MemberJoinEvent> {
-            println(this.member.memberData)
-            bot.handleIncomingEvent(NewGuildMember(this.member.displayName))
-        }
-
-        scope.launch {
-            client.login {
-                @OptIn(PrivilegedIntent::class)
-                intents = Intents.nonPrivileged + Intent.GuildMembers
+    override val connectorStateManager = initStateMachine<DiscordConfiguration, DiscordRunTime>(
+        doConnection = { configuration, _ ->
+            val client = Kord(configuration.oAuthToken)
+            client.on<MemberJoinEvent> {
+                println(this.member.memberData)
+                bot.handleIncomingEvent(NewGuildMember(this.member.displayName))
             }
-        }
-        ConnectionSuccessful(
-            configuration,
-            DiscordRunTime(client)
-        )
-    }
 
-    override suspend fun execute(event: OutgoingEvent) {
-        if (event is DiscordOutgoingEvent) {
-            event.executeOnDiscord(this)
-        }
-    }
+            scope.launch {
+                client.login {
+                    @OptIn(PrivilegedIntent::class)
+                    intents = Intents.nonPrivileged + Intent.GuildMembers
+                }
+            }
+            ConnectionSuccessful(
+                configuration,
+                DiscordRunTime(client)
+            )
+        },
+        executeEvent = { event ->
+            if (event is DiscordOutgoingEvent) {
+                event.executeOnDiscord(this@DiscordConnector)
+            }
+        },
+        configurationManager = configurationManager,
+    )
 
     override fun internalEndpoints(application: Application) {
         return application.DiscordModule(this)

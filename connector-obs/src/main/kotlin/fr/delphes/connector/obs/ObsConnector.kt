@@ -8,7 +8,6 @@ import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.bot.connector.state.DisconnectionRequested
 import fr.delphes.bot.connector.state.ErrorOccurred
-import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.business.SourceFilter
 import fr.delphes.connector.obs.endpoints.ObsModule
 import fr.delphes.connector.obs.incomingEvent.SceneChanged
@@ -33,45 +32,47 @@ class ObsConnector(
         ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")
     )
 
-    override val connectorStateManager = initStateMachine { configuration, dispatchTransition ->
-        try {
-            //TODO move listener build
-            val listeners = ObsListener(
-                onSwitchScene = {
-                    bot.handleIncomingEvent(SceneChanged(it.sceneName))
-                },
-                onSourceFilterVisibilityChanged = {
-                    val filter = SourceFilter(it.sourceName, it.filterName)
-                    val event = if (it.filterEnabled) {
-                        SourceFilterActivated(filter)
-                    } else {
-                        SourceFilterDeactivated(filter)
+    override val connectorStateManager = initStateMachine<ObsConfiguration, ObsRunTime>(
+        doConnection = { configuration, dispatchTransition ->
+            try {
+                //TODO move listener build
+                val listeners = ObsListener(
+                    onSwitchScene = {
+                        bot.handleIncomingEvent(SceneChanged(it.sceneName))
+                    },
+                    onSourceFilterVisibilityChanged = {
+                        val filter = SourceFilter(it.sourceName, it.filterName)
+                        val event = if (it.filterEnabled) {
+                            SourceFilterActivated(filter)
+                        } else {
+                            SourceFilterDeactivated(filter)
+                        }
+                        bot.handleIncomingEvent(event)
+                    },
+                    onError = { message ->
+                        LOGGER.error { "Obs client error : $message" }
+                        dispatchTransition(ErrorOccurred(configuration, message))
+                    },
+                    onExit = {
+                        dispatchTransition(DisconnectionRequested())
                     }
-                    bot.handleIncomingEvent(event)
-                },
-                onError = { message ->
-                    LOGGER.error { "Obs client error : $message" }
-                    dispatchTransition(ErrorOccurred(configuration, message))
-                },
-                onExit = {
-                    dispatchTransition(DisconnectionRequested())
-                }
-            )
-            val client = ObsClient(configuration.toObsConfiguration(), listeners)
-            client.listen()
-            ConnectionSuccessful(configuration, ObsRunTime(client))
-        } catch (e: Exception) {
-            ErrorOccurred(configuration, "Connection error : ${e.message}")
-        }
-    }
+                )
+                val client = ObsClient(configuration.toObsConfiguration(), listeners)
+                client.listen()
+                ConnectionSuccessful(configuration, ObsRunTime(client))
+            } catch (e: Exception) {
+                ErrorOccurred(configuration, "Connection error : ${e.message}")
+            }
+        },
+        executeEvent = { event ->
+            if (event is ObsOutgoingEvent) {
+                event.executeOnObs(this@ObsConnector)
+            }
+        },
+        configurationManager = configurationManager,
+    )
 
     private fun ObsConfiguration.toObsConfiguration() = Configuration(host, port, password)
-
-    override suspend fun execute(event: OutgoingEvent) {
-        if (event is ObsOutgoingEvent) {
-            event.executeOnObs(this)
-        }
-    }
 
     override fun internalEndpoints(application: Application) {
         application.ObsModule(this)
