@@ -37,7 +37,7 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
         post("/twitch/configuration/appCredential") {
             val request = this.call.receive<AppCredentialRequest>()
 
-            connector.configureAppCredential(request.clientId, request.clientSecret)
+            connector.configurationManager.configureAppCredential(request.clientId, request.clientSecret)
 
             this.context.respond(HttpStatusCode.OK)
         }
@@ -58,7 +58,7 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
                     connector.addChannelConfiguration(channelAuth)
                 }
                 else -> {
-                    LOGGER.error { "Unkown state value" }
+                    LOGGER.error { "Unknown state value" }
                 }
             }
 
@@ -67,7 +67,7 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
         delete("/twitch/configuration/channel/{channel}") {
             val channelName = this.context.parameters["channel"]
             val responseCode = if(channelName != null) {
-                connector.removeChannel(channelName)
+                connector.configurationManager.removeChannel(channelName)
                 HttpStatusCode.OK
             } else {
                 HttpStatusCode.BadRequest

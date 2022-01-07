@@ -1,7 +1,7 @@
 package fr.delphes.connector.obs
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.connector.ConfigurationManager
+import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.initStateMachine
 import fr.delphes.bot.connector.state.Connected
@@ -28,7 +28,7 @@ class ObsConnector(
 ) : Connector<ObsConfiguration, ObsRunTime> {
     override val connectorName = "obs"
 
-    override val configurationManager = ConfigurationManager(
+    override val configurationManager = SimpleConfigurationManager(
         ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")
     )
 

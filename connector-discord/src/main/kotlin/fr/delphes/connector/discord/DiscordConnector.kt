@@ -7,7 +7,7 @@ import dev.kord.gateway.Intent
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
 import fr.delphes.bot.Bot
-import fr.delphes.bot.connector.ConfigurationManager
+import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.initStateMachine
 import fr.delphes.bot.connector.state.Connected
@@ -25,7 +25,7 @@ class DiscordConnector(
     override val configFilepath: String
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
     override val connectorName = "discord"
-    override val configurationManager = ConfigurationManager(
+    override val configurationManager = SimpleConfigurationManager(
         DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     )
     private val scope = CoroutineScope(Dispatchers.Default)

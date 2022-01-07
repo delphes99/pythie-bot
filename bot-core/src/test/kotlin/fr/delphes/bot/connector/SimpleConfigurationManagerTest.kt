@@ -8,14 +8,14 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-internal class ConfigurationManagerTest {
+internal class SimpleConfigurationManagerTest {
     private val repository = mockk<RepositoryWithInit<ConfigurationStub>>()
 
     @Test
     internal fun `load configuration when construct`() {
         repository `will load` CONFIGURATION
 
-        val stateMachine = ConfigurationManager(repository)
+        val stateMachine = SimpleConfigurationManager(repository)
 
         stateMachine.configuration shouldBe CONFIGURATION
     }
@@ -24,7 +24,7 @@ internal class ConfigurationManagerTest {
     internal fun `load configuration when construct (no configuration stored)`() {
         repository `will load` null
 
-        val stateMachine = ConfigurationManager(repository)
+        val stateMachine = SimpleConfigurationManager(repository)
 
         stateMachine.configuration.shouldBeNull()
     }
