@@ -8,7 +8,6 @@ import fr.delphes.connector.twitch.outgoingEvent.TwitchApiOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchChatOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
 import fr.delphes.connector.twitch.outgoingEvent.TwitchOwnerChatOutgoingEvent
-import fr.delphes.twitch.auth.CredentialsManager
 import mu.KotlinLogging
 
 class TwitchStateManager(
@@ -16,11 +15,7 @@ class TwitchStateManager(
 ) : CompositeConnectorStateMachine<TwitchConfiguration> {
     private val legacyStateMachine = initStateMachine<TwitchConfiguration, TwitchRuntime>(
         doConnection = { configuration, _ ->
-            val credentialsManager = CredentialsManager(
-                configuration.clientId,
-                configuration.clientSecret,
-                connector
-            )
+            val credentialsManager = connector.configurationManager.buildCredentialsManager() ?: error("Connection with no configuration")
 
             val clientBot = ClientBot(
                 configuration,

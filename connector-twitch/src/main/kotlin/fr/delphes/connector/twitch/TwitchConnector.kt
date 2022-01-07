@@ -15,7 +15,6 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.auth.AuthToken
-import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.utils.cache.InMemoryCache
 import fr.delphes.utils.time.SystemClock
 import io.ktor.application.Application
@@ -25,7 +24,7 @@ class TwitchConnector(
     val bot: Bot,
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
-) : Connector<TwitchConfiguration, TwitchRuntime>, AuthTokenRepository {
+) : Connector<TwitchConfiguration, TwitchRuntime> {
     override val connectorName = "twitch"
 
     override val configurationManager = TwitchConfigurationManager(
@@ -101,22 +100,6 @@ class TwitchConnector(
 
     suspend fun getUser(user: User): UserInfos? {
         return userCache.getValue(user)
-    }
-
-    override fun getAppToken(): AuthToken? {
-        return currentConfiguration.appToken
-    }
-
-    override suspend fun newAppToken(token: AuthToken) {
-        configure(currentConfiguration.newAppToken(token))
-    }
-
-    override fun getChannelToken(channel: TwitchChannel): AuthToken? {
-        return currentConfiguration.getChannelConfiguration(channel)?.authToken
-    }
-
-    override suspend fun newChannelToken(channel: TwitchChannel, newToken: AuthToken) {
-        configure(currentConfiguration.newChannelToken(channel, newToken))
     }
 
     internal suspend fun handleIncomingEvent(event: TwitchIncomingEvent) {
