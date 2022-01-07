@@ -4,5 +4,6 @@ export enum ConnectorStatusEnum {
   inError = "inError",
   connected = "connected",
   connecting = "connecting",
-  disconnecting = "disconnecting"
+  disconnecting = "disconnecting",
+  mixed = "mixed"
 }

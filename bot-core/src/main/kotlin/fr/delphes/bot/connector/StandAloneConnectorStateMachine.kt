@@ -11,6 +11,9 @@ import fr.delphes.bot.connector.state.DisconnectionRequested
 import fr.delphes.bot.connector.state.DisconnectionSuccessful
 import fr.delphes.bot.connector.state.ErrorOccurred
 import fr.delphes.bot.connector.state.InError
+import fr.delphes.bot.connector.status.ConnectorConnectionName
+import fr.delphes.bot.connector.status.ConnectorConnectionStatus
+import fr.delphes.bot.connector.status.ConnectorStatus
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +21,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime>(
+    private val connectionName: ConnectorConnectionName,
     private val doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
     private val executeEvent: suspend StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME>.(event: OutgoingEvent) -> Unit,
     var state: ConnectorState<CONFIGURATION, RUNTIME> = Disconnected()
@@ -25,13 +29,18 @@ class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RU
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     override val status: ConnectorStatus
-        get() = when(state) {
-            is Connected -> ConnectorStatus.Connected
-            is Connecting -> ConnectorStatus.Connecting
-            is Disconnected -> ConnectorStatus.Configured //TODO
-            is Disconnecting -> ConnectorStatus.Disconnecting
-            is InError -> ConnectorStatus.InError
-        }
+        get() = ConnectorStatus(
+            mapOf(
+                connectionName to
+                        when (state) {
+                            is Connected -> ConnectorConnectionStatus.Connected
+                            is Connecting -> ConnectorConnectionStatus.Connecting
+                            is Disconnected -> ConnectorConnectionStatus.Configured //TODO
+                            is Disconnecting -> ConnectorConnectionStatus.Disconnecting
+                            is InError -> ConnectorConnectionStatus.InError
+                        }
+            )
+        )
 
     override suspend fun handle(command: ConnectorCommand, configurationManager: ConfigurationManager<CONFIGURATION>) {
         handle(toTransition(command))
@@ -61,7 +70,7 @@ class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RU
             }
             is Disconnected,
             is Connected,
-            is InError-> {
+            is InError -> {
                 //Nothing
             }
         }

@@ -2,6 +2,8 @@ package fr.delphes.bot.connector
 
 import fr.delphes.bot.connector.state.ConnectorTransition
 import fr.delphes.bot.connector.state.Disconnected
+import fr.delphes.bot.connector.status.ConnectorConnectionName
+import fr.delphes.bot.connector.status.ConnectorStatus
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.ktor.application.Application
 import kotlinx.coroutines.CoroutineScope
@@ -39,11 +41,13 @@ interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorR
 }
 
 fun <CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> initStateMachine(
+    connectionName: ConnectorConnectionName,
     doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
     executeEvent: suspend StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME>.(event: OutgoingEvent) -> Unit,
     configurationManager: ConfigurationManager<CONFIGURATION>,
 ): StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME> {
     return StandAloneConnectorStateMachine(
+        connectionName = connectionName,
         doConnection = doConnection,
         executeEvent = executeEvent,
         state = Disconnected(configurationManager.configuration)

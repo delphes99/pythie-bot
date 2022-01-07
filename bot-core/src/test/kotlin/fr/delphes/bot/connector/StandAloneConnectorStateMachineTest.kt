@@ -28,6 +28,7 @@ internal class StandAloneConnectorStateMachineTest {
         }
     ) =
         StandAloneConnectorStateMachine(
+            connectionName = "Test",
             doConnection = doConnection,
             state = initialState,
             executeEvent = {}

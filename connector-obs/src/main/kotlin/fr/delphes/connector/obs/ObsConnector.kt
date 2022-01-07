@@ -33,6 +33,7 @@ class ObsConnector(
     )
 
     override val connectorStateManager = initStateMachine<ObsConfiguration, ObsRunTime>(
+        connectionName = "Websocket",
         doConnection = { configuration, dispatchTransition ->
             try {
                 //TODO move listener build

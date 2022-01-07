@@ -1,10 +1,11 @@
-package fr.delphes.bot.connector
+package fr.delphes.bot.connector.status
 
-enum class ConnectorStatus {
+enum class ConnectorConnectionStatus {
     Configured,
     Connected,
     Connecting,
     Disconnecting,
     InError,
     NotConfigured,
+    Mixed
 }

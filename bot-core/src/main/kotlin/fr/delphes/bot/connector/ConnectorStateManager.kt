@@ -1,5 +1,6 @@
 package fr.delphes.bot.connector
 
+import fr.delphes.bot.connector.status.ConnectorStatus
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 
 interface ConnectorStateManager<CONFIGURATION : ConnectorConfiguration> {

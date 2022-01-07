@@ -59,6 +59,10 @@ class IrcClient(
         client.sendMessage(channel.ircName, text)
     }
 
+    fun disconnect() {
+        client.shutdown()
+    }
+
     companion object {
         private val LOGGER = KotlinLogging.logger {}
 

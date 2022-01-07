@@ -103,6 +103,8 @@ function toStatusColor(status: ConnectorStatusEnum): StatusColor {
     case ConnectorStatusEnum.connecting:
       return StatusColor.yellow;
     case ConnectorStatusEnum.disconnecting:
+      return StatusColor.yellow;
+    case ConnectorStatusEnum.mixed:
       return StatusColor.orange;
     default:
       return StatusColor.transparent;

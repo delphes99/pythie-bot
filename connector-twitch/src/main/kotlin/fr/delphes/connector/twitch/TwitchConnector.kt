@@ -24,7 +24,7 @@ class TwitchConnector(
     val bot: Bot,
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
-) : Connector<TwitchConfiguration, TwitchRuntime> {
+) : Connector<TwitchConfiguration, TwitchLegacyRuntime> {
     override val connectorName = "twitch"
 
     override val configurationManager = TwitchConfigurationManager(

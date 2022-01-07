@@ -6,5 +6,6 @@ enum class ConnectorStatusEnum {
     inError,
     connected,
     connecting,
-    disconnecting
+    disconnecting,
+    mixed
 }

@@ -31,6 +31,7 @@ class DiscordConnector(
     private val scope = CoroutineScope(Dispatchers.Default)
 
     override val connectorStateManager = initStateMachine<DiscordConfiguration, DiscordRunTime>(
+        connectionName = "Kord",
         doConnection = { configuration, _ ->
             val client = Kord(configuration.oAuthToken)
             client.on<MemberJoinEvent> {
