@@ -12,10 +12,24 @@
     "connect": "Connect",
     "disconnect": "Disconnect",
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "noData": "No data"
   },
   "settings": {
     "title": "Settings",
     "language": "Language"
+  },
+  "connector": {
+    "connectionName": "Connection",
+    "connectionStatus": "Status",
+    "status": {
+      "unconfigured": "Unconfigured",
+      "configured":"Configured",
+      "inError": "Error",
+      "connected":"Connected",
+      "connecting": "Connecting",
+      "disconnecting":"Disconnecting",
+      "mixed": "Mixed"
+    }
   }
 }

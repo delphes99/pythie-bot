@@ -1,4 +1,7 @@
 <template>
+  <panel title="Status">
+    <DetailedConnectorStatus :connector="connector" />
+  </panel>
   <panel title="Obs configuration">
     <div class="grid grid-cols-2 gap-4 p-4">
       <label for="obs-ws-host">Obs-websocket Host</label>
@@ -27,14 +30,19 @@
 </template>
 
 <script lang="ts">
-import { inject, ref } from "vue";
-import axios from "axios";
+import { ConnectorEnum } from "@/common/components/common/connectorEnum";
+import DetailedConnectorStatus from "@/common/components/common/DetailedConnectorStatus.vue";
 import Panel from "@/common/components/common/Panel.vue";
+import axios from "axios";
+import { ElNotification } from "element-plus";
+import { inject, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 export default {
   name: `ObsConfiguration`,
-  components: { Panel },
+  components: { Panel, DetailedConnectorStatus },
   setup() {
+    const { t } = useI18n();
     const backendUrl = inject("backendUrl");
     const host = ref("");
     const port = ref("");
@@ -50,13 +58,17 @@ export default {
         .post(`${backendUrl}/obs/configuration`, payload, {
           headers: { "Content-Type": "application/json" }
         })
-        .then(function() {
-          //TODO better modal
-          alert("OK");
+        .then(() => {
+          ElNotification({
+            title: t("common.success"),
+            type: "success"
+          });
         })
-        .catch(function() {
-          //TODO better modal
-          alert("KO");
+        .catch(() => {
+          ElNotification({
+            title: t("common.error"),
+            type: "error"
+          });
         });
     };
 
@@ -73,7 +85,8 @@ export default {
       host,
       port,
       password,
-      saveConfiguration
+      saveConfiguration,
+      connector: ConnectorEnum.OBS
     };
   }
 };

@@ -1,4 +1,7 @@
 <template>
+  <panel title="Status">
+    <DetailedConnectorStatus :connector="connector" />
+  </panel>
   <panel title="Twitch bot configuration">
     <img
       class="inline-block align-middle"
@@ -102,14 +105,19 @@
 </template>
 
 <script lang="ts">
+import { ConnectorEnum } from "@/common/components/common/connectorEnum";
+import DetailedConnectorStatus from "@/common/components/common/DetailedConnectorStatus.vue";
 import Panel from "@/common/components/common/Panel.vue";
 import axios from "axios";
+import { ElNotification } from "element-plus";
 import { inject, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 export default {
   name: `TwitchConfiguration`,
-  components: { Panel },
+  components: { DetailedConnectorStatus, Panel },
   setup() {
+    const { t } = useI18n();
     const backendUrl = inject("backendUrl");
 
     const clientId = ref("");
@@ -140,8 +148,10 @@ export default {
         }
       );
 
-      //TODO better modal
-      alert("OK");
+      ElNotification({
+        title: t("common.success"),
+        type: "success"
+      });
     };
 
     const deleteChannel = async (channel: string) => {
@@ -181,7 +191,8 @@ export default {
       deleteChannel,
       buildBotIdentityUrl,
       buildAddChannelUrl,
-      refreshCurrentConfiguration
+      refreshCurrentConfiguration,
+      connector: ConnectorEnum.TWITCH
     };
   }
 };
