@@ -16,6 +16,8 @@ import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.CreatePoll
 import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
+import fr.delphes.connector.twitch.outgoingEvent.PromoteModerator
+import fr.delphes.connector.twitch.outgoingEvent.RemoveModerator
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.obs.SceneChanged
@@ -296,6 +298,28 @@ val delphes99Features = listOf(
         "!helloDiscord",
         responses = {
             listOf(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
+        }
+    ),
+    Command(
+        channel,
+        "!mod",
+        responses = {
+            if(it.by.normalizeName == "vivalinux") {
+                listOf(PromoteModerator(it.by, it.channel))
+            } else {
+                emptyList()
+            }
+        }
+    ),
+    Command(
+        channel,
+        "!unmod",
+        responses = {
+            if(it.by.normalizeName == "vivalinux") {
+                listOf(RemoveModerator(it.by, it.channel))
+            } else {
+                emptyList()
+            }
         }
     ),
     Command(
