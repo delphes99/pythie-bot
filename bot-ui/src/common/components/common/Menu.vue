@@ -1,7 +1,7 @@
 <template>
   <nav
     class="h-full flex flex-col primary-color text-black overflow-hidden"
-    :class="expand ? 'w-52' : 'w-12'"
+    :class="expand ? 'w-52' : widthClass"
     :onmouseenter="mouseIn"
     :onmouseleave="mouseOut"
   >
@@ -29,10 +29,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "Menu",
+  props: {
+    widthClass: String
+  },
   setup() {
     const expand = ref(false);
 
