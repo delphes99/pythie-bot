@@ -17,7 +17,16 @@
   },
   "settings": {
     "title": "Settings",
-    "language": "Language"
+    "language": {
+      "label": "Language",
+      "en": "English",
+      "fr": "French"
+    },
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark"
+    }
   },
   "connector": {
     "connectionName": "Connection",

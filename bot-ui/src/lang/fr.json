@@ -17,18 +17,27 @@
   },
   "settings": {
     "title": "Paramètres",
-    "language": "Langue"
+    "language": {
+      "label": "Langue",
+      "en": "Anglais",
+      "fr": "Français"
+    },
+    "theme": {
+      "label": "Thème",
+      "light": "Clair",
+      "dark": "Sombre"
+    }
   },
   "connector": {
     "connectionName": "Connexion",
     "connectionStatus": "Status",
     "status": {
       "unconfigured": "Non configuré",
-      "configured":"Configuré",
+      "configured": "Configuré",
       "inError": "Erreur",
-      "connected":"Connecté",
+      "connected": "Connecté",
       "connecting": "Connexion en cours",
-      "disconnecting":"Déconnexion en cours",
+      "disconnecting": "Déconnexion en cours",
       "mixed": "Mixte"
     }
   }
