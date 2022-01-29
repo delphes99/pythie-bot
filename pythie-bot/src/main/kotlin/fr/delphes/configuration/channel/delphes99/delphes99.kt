@@ -12,6 +12,7 @@ import fr.delphes.connector.obs.outgoingEvent.ActivateFilter
 import fr.delphes.connector.obs.outgoingEvent.ChangeItemPosition
 import fr.delphes.connector.obs.outgoingEvent.ChangeItemVisibility
 import fr.delphes.connector.obs.outgoingEvent.DeactivateFilter
+import fr.delphes.connector.obs.outgoingEvent.RefreshSource
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.CreatePoll
@@ -237,6 +238,7 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST2
     ) {
         listOf(
+            SendMessage("-> test dev 2", channel),
             ChangeItemPosition("webcam", 1028.0, 784.0),
         )
     },
@@ -245,6 +247,7 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST3
     ) {
         listOf(
+            SendMessage("-> test dev 3", channel),
             ChangeItemPosition("webcam", nextDouble(0.0, (1920.0 - 486.0)), nextDouble(0.0, (1080.0 - 273.0))),
         )
     },
@@ -466,7 +469,8 @@ val delphes99Features = listOf(
     },
     BotStarted {
         listOf(
-            Pause(Duration.ofSeconds(10)), //Waiting for connectors connections
+            Pause(Duration.ofSeconds(5)), //Waiting for connectors connections
+            RefreshSource("in_game", "Overlay"),
             SendMessage("Ready to go", channel)
         )
     }
