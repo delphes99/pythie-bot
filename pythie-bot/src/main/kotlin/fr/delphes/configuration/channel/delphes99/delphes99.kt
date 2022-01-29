@@ -19,6 +19,7 @@ import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.PromoteModerator
 import fr.delphes.connector.twitch.outgoingEvent.RemoveModerator
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
+import fr.delphes.features.core.botStarted.BotStarted
 import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.obs.SceneChanged
 import fr.delphes.features.obs.SourceFilterActivated
@@ -463,6 +464,12 @@ val delphes99Features = listOf(
             emptyList()
         }
     },
+    BotStarted {
+        listOf(
+            Pause(Duration.ofSeconds(10)), //Waiting for connectors connections
+            SendMessage("Ready to go", channel)
+        )
+    }
 )
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(

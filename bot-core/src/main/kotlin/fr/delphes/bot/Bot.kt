@@ -1,6 +1,7 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.CoreOutgoingEvent
@@ -76,6 +77,8 @@ class Bot(
         // After initial state
         runBlocking {
             _connectors.map { connector -> async { connector.connect() } }.awaitAll()
+
+            handleIncomingEvent(BotStarted)
         }
     }
 
