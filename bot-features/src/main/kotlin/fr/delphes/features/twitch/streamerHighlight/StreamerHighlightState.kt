@@ -11,13 +11,16 @@ import java.time.LocalDateTime
 
 @Serializable
 data class StreamerHighlightState(
-    val streamerHighlighted: MutableMap<String, LocalDateTime> = mutableMapOf(),
+    val streamerHighlighted: Map<String, LocalDateTime> = mapOf(),
 ) : State {
     fun isAlreadyHighlighted(user: User, isExpired: (LocalDateTime) -> Boolean): Boolean {
         return streamerHighlighted[user.normalizeName]?.let(isExpired) ?: false
     }
 
-    fun highlight(user: User, highlightDate: LocalDateTime) {
-        streamerHighlighted[user.normalizeName] = highlightDate
+    fun highlight(user: User, highlightDate: LocalDateTime): StreamerHighlightState {
+        val newState = this.streamerHighlighted + (user.normalizeName to highlightDate)
+        return StreamerHighlightState(
+            newState
+        )
     }
 }

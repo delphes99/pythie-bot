@@ -7,25 +7,27 @@ import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived
+import fr.delphes.connector.twitch.outgoingEvent.ShoutOut
 import fr.delphes.connector.twitch.user.UserInfos
-import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.NonEditableFeature
-import fr.delphes.feature.StateRepository
+import fr.delphes.feature.StateManagerWithRepository
+import fr.delphes.feature.WithStateManager
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
-import kotlinx.coroutines.runBlocking
 import java.time.Duration
 
 class StreamerHighlightFeature(
     override val channel: TwitchChannel,
     private val highlightExpiration: Duration,
-    private val response: (MessageReceived, UserInfos) -> List<OutgoingEvent>,
-    override val stateRepository: StateRepository<StreamerHighlightState>,
-    override val state: StreamerHighlightState = runBlocking { stateRepository.load() },
-    private val clock: Clock = SystemClock,
-) : NonEditableFeature<StreamerHighlightDescription>, TwitchFeature, HavePersistantState<StreamerHighlightState> {
+    private val activeStreamer: Duration,
+    private val shoutOut: (MessageReceived, UserInfos) -> ShoutOut?,
+    stateManagerWithRepository: StateManagerWithRepository<StreamerHighlightState>,
+    private val clock: Clock = SystemClock
+) : NonEditableFeature<StreamerHighlightDescription>,
+    TwitchFeature,
+    WithStateManager<StreamerHighlightState> by stateManagerWithRepository {
     override fun description() = StreamerHighlightDescription(channel.name)
 
     override val eventHandlers = run {
@@ -38,9 +40,15 @@ class StreamerHighlightFeature(
         override suspend fun handleIfGoodChannel(event: MessageReceived, bot: Bot): List<OutgoingEvent> {
             val user = event.user
             val userInfos = bot.connector<TwitchConnector>()!!.getUser(user)
-            return if (userInfos != null && userInfos.isStreamer() && !user.isHighlighted() && event.channel.toUser() != user) {
+
+            return if (userInfos != null
+                && userInfos.isStreamer()
+                && userInfos.hasStreamedSince(clock.now().minus(activeStreamer))
+                && !user.isHighlighted()
+                && event.channel.toUser() != user
+            ) {
                 highlight(user)
-                response(event, userInfos)
+                listOfNotNull(shoutOut(event, userInfos))
             } else {
                 emptyList()
             }
@@ -53,7 +61,6 @@ class StreamerHighlightFeature(
     }
 
     private suspend fun highlight(user: User) {
-        state.highlight(user, clock.now())
-        save()
+        newState(state.highlight(user, clock.now()))
     }
 }

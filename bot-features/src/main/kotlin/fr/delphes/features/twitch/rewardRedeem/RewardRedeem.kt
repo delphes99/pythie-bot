@@ -14,7 +14,7 @@ import fr.delphes.twitch.api.reward.WithRewardConfiguration
 class RewardRedeem(
     override val channel: TwitchChannel,
     private val rewardConfiguration: WithRewardConfiguration,
-    private val rewardRedeemResponse: (RewardRedemption, TwitchConnector) -> List<OutgoingEvent>
+    private val rewardRedeemResponse: (RewardRedemption) -> List<OutgoingEvent>
 ) : NonEditableFeature<RewardRedeemDescription>, TwitchFeature {
     override fun description() = RewardRedeemDescription(channel.name)
 
@@ -27,7 +27,7 @@ class RewardRedeem(
     inner class RewardRedemptionHandler : TwitchEventHandler<RewardRedemption>(channel) {
         override suspend fun handleIfGoodChannel(event: RewardRedemption, bot: Bot): List<OutgoingEvent> {
             return if(rewardConfiguration.rewardConfiguration.match(event.reward)) {
-                rewardRedeemResponse(event, bot.connector()!!)
+                rewardRedeemResponse(event)
             } else {
                 emptyList()
             }

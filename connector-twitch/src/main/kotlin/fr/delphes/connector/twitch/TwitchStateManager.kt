@@ -106,7 +106,7 @@ class TwitchStateManager(
                     try {
                         when (event) {
                             is TwitchChatOutgoingEvent -> {
-                                event.executeOnTwitch(currentState.runtime.ircClient)
+                                event.executeOnTwitch(currentState.runtime.ircClient, connector)
                             }
                         }
                     } catch (e: Exception) {
