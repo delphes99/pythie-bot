@@ -3,6 +3,7 @@ package fr.delphes.features
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.feature.FeatureDescription
+import fr.delphes.features.core.botStarted.BotStartedDescription
 import fr.delphes.features.discord.NewGuildMemberDescription
 import fr.delphes.features.obs.SceneChangedDescription
 import fr.delphes.features.obs.SourceFilterActivatedDescription
@@ -61,6 +62,7 @@ object FeatureConfiguration {
         registerFeatureConfiguration<SceneChangedDescription>()
         registerFeatureConfiguration<SourceFilterActivatedDescription>()
         registerFeatureConfiguration<SourceFilterDeactivatedDescription>()
+        registerFeatureConfiguration<BotStartedDescription>()
 
         registerOutgoingMessageBuilder<SendMessageBuilder>()
     }
