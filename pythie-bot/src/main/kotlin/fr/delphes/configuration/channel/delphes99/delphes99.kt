@@ -428,15 +428,12 @@ val delphes99Features = listOf(
                 "A:\\pythiebot\\feature\\streamer_highlight.json"
             )
         ),
+        excludedUserNames = listOf("streamlabs"),
         shoutOut = { messageReceived, user ->
-            if (user.name == "streamlabs") {
-                null
-            } else {
-                ShoutOut(
-                    User(user.name),
-                    channel
-                ) { "\uD83D\uDCFA ${it.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}." }
-            }
+            ShoutOut(
+                User(user.name),
+                channel
+            ) { "\uD83D\uDCFA ${it.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}." }
         }
     ),
     IncomingRaid(channel) { incomingRaid ->

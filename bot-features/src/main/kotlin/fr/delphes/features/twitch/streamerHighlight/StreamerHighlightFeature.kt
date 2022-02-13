@@ -22,6 +22,7 @@ class StreamerHighlightFeature(
     override val channel: TwitchChannel,
     private val highlightExpiration: Duration,
     private val activeStreamer: Duration,
+    excludedUserNames: List<String>,
     private val shoutOut: (MessageReceived, UserInfos) -> ShoutOut?,
     stateManagerWithRepository: StateManagerWithRepository<StreamerHighlightState>,
     private val clock: Clock = SystemClock
@@ -36,16 +37,21 @@ class StreamerHighlightFeature(
         handlers
     }
 
+    private val normalizedExcludedUserNames = excludedUserNames.map(String::lowercase) + channel.normalizeName
+
     inner class MessageReceivedHandler : TwitchEventHandler<MessageReceived>(channel) {
         override suspend fun handleIfGoodChannel(event: MessageReceived, bot: Bot): List<OutgoingEvent> {
             val user = event.user
+            if(normalizedExcludedUserNames.contains(user.normalizeName)) {
+                return emptyList()
+            }
+
             val userInfos = bot.connector<TwitchConnector>()!!.getUser(user)
 
             return if (userInfos != null
                 && userInfos.isStreamer()
                 && userInfos.hasStreamedSince(clock.now().minus(activeStreamer))
                 && !user.isHighlighted()
-                && event.channel.toUser() != user
             ) {
                 highlight(user)
                 listOfNotNull(shoutOut(event, userInfos))
