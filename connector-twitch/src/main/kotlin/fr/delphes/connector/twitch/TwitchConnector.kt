@@ -83,13 +83,13 @@ class TwitchConnector(
         return ConfigurationTwitchAccount(this, userInfos.preferred_username.lowercase())
     }
 
-    private val userCache = InMemoryCache<User, UserInfos>(
+    private val userCache = InMemoryCache<String, UserInfos>(
         expirationDuration = Duration.ofMinutes(120),
         clock = SystemClock,
         retrieve = { user ->
             connectorStateManager.whenRunning(
                 whenRunning = {
-                    getUserInfos(user, clientBot.twitchApi)
+                    getUserInfos(User(user), clientBot.twitchApi)
                 },
                 whenNotRunning = {
                     null
@@ -99,7 +99,7 @@ class TwitchConnector(
     )
 
     suspend fun getUser(user: User): UserInfos? {
-        return userCache.getValue(user)
+        return userCache.getValue(user.normalizeName)
     }
 
     internal suspend fun handleIncomingEvent(event: TwitchIncomingEvent) {

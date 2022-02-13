@@ -66,6 +66,8 @@ val blackAndWhiteFilter = SourceFilter("main_capture", "black_and_white")
 
 const val discordInvitationLink = "https://discord.com/invite/SAdBhbu"
 
+val moderators = listOf("delphes99", "vivalinux")
+
 @InternalSerializationApi
 val delphes99Features = listOf(
     VOTH(
@@ -313,7 +315,7 @@ val delphes99Features = listOf(
         channel,
         "!mod",
         responses = {
-            if (it.by.normalizeName == "vivalinux") {
+            if (moderators.contains(it.by.normalizeName)) {
                 listOf(PromoteModerator(it.by, it.channel))
             } else {
                 emptyList()
@@ -324,7 +326,7 @@ val delphes99Features = listOf(
         channel,
         "!unmod",
         responses = {
-            if (it.by.normalizeName == "vivalinux") {
+            if (moderators.contains(it.by.normalizeName)) {
                 listOf(RemoveModerator(it.by, it.channel))
             } else {
                 emptyList()
@@ -433,7 +435,25 @@ val delphes99Features = listOf(
             ShoutOut(
                 User(user.name),
                 channel
-            ) { "\uD83D\uDCFA ${it.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}." }
+            ) { userInfos -> "\uD83D\uDCFA ${userInfos.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}." }
+        }
+    ),
+    Command(
+        channel,
+        "!so",
+        responses = { commandAsked ->
+            listOfNotNull(
+                if (moderators.contains(commandAsked.by.normalizeName)) {
+                    commandAsked.parameters.firstOrNull()?.let { promotedUser ->
+                        ShoutOut(
+                            User(promotedUser),
+                            channel
+                        ) { userInfos -> "\uD83D\uDCFA ${userInfos.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir $promotedUser : https://www.twitch.tv/${promotedUser.lowercase()}." }
+                    }
+                } else {
+                    null
+                }
+            )
         }
     ),
     IncomingRaid(channel) { incomingRaid ->

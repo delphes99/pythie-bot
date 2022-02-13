@@ -20,12 +20,17 @@ class ChannelMessageMapper(
         val message = twitchEvent.message
 
         return if (twitchEvent.isFor(channel)) {
-            val command = connector.commandsFor(channel).find { it.triggerMessage == message }
+            val command = connector.commandsFor(channel).find { it.triggerMessage == message || message.startsWith("${it.triggerMessage} ") }
 
             listOfNotNull(
                 when {
                     command != null -> {
-                        CommandAsked(channel, command, user)
+                        val parameters = if (message.startsWith("${command.triggerMessage} ")) {
+                            message.split(" ").drop(1)
+                        } else {
+                            emptyList()
+                        }
+                        CommandAsked(channel, command, user, parameters)
                     }
                     TwitchChannel(user.name) != connector.botAccount -> {
                         MessageReceived(channel, twitchEvent)

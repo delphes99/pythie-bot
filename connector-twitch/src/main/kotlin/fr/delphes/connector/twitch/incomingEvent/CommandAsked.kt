@@ -7,5 +7,6 @@ import fr.delphes.twitch.api.user.User
 data class CommandAsked(
     override val channel: TwitchChannel,
     val command: Command,
-    val by: User
+    val by: User,
+    val parameters: List<String> = emptyList(),
 ) : TwitchIncomingEvent

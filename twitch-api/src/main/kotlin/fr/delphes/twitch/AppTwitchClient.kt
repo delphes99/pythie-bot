@@ -33,7 +33,7 @@ class AppTwitchClient(
 
     override suspend fun getUserByName(user: User): TwitchUser? {
         return coroutineScope {
-            twitchAppHelixApi.getUser(user.name)?.let { user ->
+            twitchAppHelixApi.getUser(user.normalizeName)?.let { user ->
                 TwitchUser(
                     user.id,
                     user.login,
