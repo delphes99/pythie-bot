@@ -1,7 +1,8 @@
 package fr.delphes.twitch
 
 import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
-import fr.delphes.twitch.api.video.payload.ChannelVideoPayload
+import fr.delphes.twitch.api.video.payload.ChannelVideoType
+import fr.delphes.twitch.api.video.payload.ChannelVideosPayload
 import fr.delphes.twitch.eventSub.EventSubSubscribe
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
@@ -16,5 +17,5 @@ interface AppHelixApi {
 
     suspend fun getUser(userName: String): GetUsersDataPayload?
 
-    suspend fun getVideosOf(userId: String, limit: Int): List<ChannelVideoPayload>
+    suspend fun getVideosOf(userId: String, type: ChannelVideoType = ChannelVideoType.all): ChannelVideosPayload
 }

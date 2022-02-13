@@ -48,6 +48,7 @@ import fr.delphes.features.twitch.voth.VOTHConfiguration
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.prettyPrint
 import fr.delphes.utils.time.secondsOf
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.InternalSerializationApi
 import java.time.Duration
 import java.time.LocalDateTime
@@ -61,7 +62,7 @@ val channel = TwitchChannel("delphes99")
 val matrixFilter = SourceFilter("webcam", "matrix")
 val blackAndWhiteFilter = SourceFilter("main_capture", "black_and_white")
 
-val discordInvitationLink = "https://discord.com/invite/SAdBhbu"
+const val discordInvitationLink = "https://discord.com/invite/SAdBhbu"
 
 @InternalSerializationApi
 val delphes99Features = listOf(
@@ -226,9 +227,12 @@ val delphes99Features = listOf(
     RewardRedeem(
         channel,
         DelphesReward.DEV_TEST
-    ) {
+    ) { redemption, connector ->
+        val highlight = runBlocking {
+            connector.getUser(redemption.user)
+        }
         listOf(
-            SendMessage("-> test dev", channel),
+            SendMessage("highligt ${redemption.user.name}: ${highlight?.lastStreamTitle}", channel),
             Alert("test"),
             PlaySound(listOf("kill-1.mp3", "kill-2.mp3", "kill-3.mp3", "kill-4.mp3", "kill-5.mp3").random())
         )
@@ -236,7 +240,7 @@ val delphes99Features = listOf(
     RewardRedeem(
         channel,
         DelphesReward.DEV_TEST2
-    ) {
+    ) { _, _ ->
         listOf(
             SendMessage("-> test dev 2", channel),
             ChangeItemPosition("webcam", 1028.0, 784.0),
@@ -245,7 +249,7 @@ val delphes99Features = listOf(
     RewardRedeem(
         channel,
         DelphesReward.DEV_TEST3
-    ) {
+    ) { _, _ ->
         listOf(
             SendMessage("-> test dev 3", channel),
             ChangeItemPosition("webcam", nextDouble(0.0, (1920.0 - 486.0)), nextDouble(0.0, (1080.0 - 273.0))),
@@ -254,7 +258,7 @@ val delphes99Features = listOf(
     RewardRedeem(
         channel,
         DelphesReward.ENTER_THE_MATRIX
-    ) {
+    ) { _, _ ->
         listOf(
             ActivateFilter(matrixFilter),
         )
@@ -367,7 +371,7 @@ val delphes99Features = listOf(
     RewardRedeem(
         channel,
         DelphesReward.RIP,
-    ) {
+    ) { _, _ ->
         listOf(
             PlaySound("sad.mp3"),
             ActivateFilter(blackAndWhiteFilter),
@@ -424,9 +428,13 @@ val delphes99Features = listOf(
             if (user.name == "streamlabs") {
                 emptyList()
             } else {
+
+
+                val text =
+                    "\uD83D\uDCFA ${user.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}."
                 listOf(
                     SendMessage(
-                        "\uD83D\uDCFA Vous voulez voir du ${user.categories.joinToString(" ou ")}, n'hésitez pas à aller voir ${messageReceived.user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}",
+                        text,
                         channel
                     )
                 )

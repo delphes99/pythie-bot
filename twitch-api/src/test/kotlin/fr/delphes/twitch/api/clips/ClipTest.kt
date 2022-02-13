@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 
 internal class ClipTest {
     @Test
-    fun `deserialize GetStream with empty tags`() {
+    fun `deserialize`() {
         val payloadStr = """
             {
               "data": [
