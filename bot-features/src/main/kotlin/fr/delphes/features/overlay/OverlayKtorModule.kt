@@ -7,7 +7,6 @@ import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.prettyPrint
 import io.ktor.application.Application
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.resources
 import io.ktor.http.content.static
 import io.ktor.response.respond
@@ -49,7 +48,7 @@ fun OverlayModule(
 //TODO voth inject informations
 private fun lastVOTH(bot: Bot): List<OverlayVoth> {
     return bot
-        .features
+        .legacyfeatures
         .filterIsInstance<VOTH>()
         .firstOrNull()
         .let { vothFeature ->

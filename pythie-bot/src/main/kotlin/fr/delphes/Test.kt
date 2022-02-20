@@ -1,7 +1,8 @@
 package fr.delphes
 
-import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.features.FeatureConfiguration
+import fr.delphes.features.twitch.NewTwitchCommand
+import fr.delphes.twitch.TwitchChannel
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -13,7 +14,7 @@ fun main() {
         serializersModule = FeatureConfiguration.serializersModule
     }
 
-    val builder = SendMessageBuilder("coucou %user%", "delphes99")
+    val builder = listOf< fr.delphes.feature.featureNew.FeatureConfiguration>(NewTwitchCommand("testTwitchFeature", TwitchChannel("delphes99"), "", ""))
 
     println(json.encodeToString(builder))
 }

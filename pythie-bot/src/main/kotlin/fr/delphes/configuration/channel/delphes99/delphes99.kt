@@ -66,7 +66,7 @@ val blackAndWhiteFilter = SourceFilter("main_capture", "black_and_white")
 
 const val discordInvitationLink = "https://discord.com/invite/SAdBhbu"
 
-val moderators = listOf("delphes99", "vivalinux")
+val moderators = listOf("delphes99", "vivalinux", "gnu_coding_cafe")
 
 @InternalSerializationApi
 val delphes99Features = listOf(
@@ -231,11 +231,8 @@ val delphes99Features = listOf(
     RewardRedeem(
         channel,
         DelphesReward.DEV_TEST
-    ) { redemption ->
+    ) {
         listOf(
-            ShoutOut(redemption.user, channel) { userInfos ->
-                "\uD83D\uDCFA ${userInfos.lastStreamTitle?.let { title -> "« $title », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${redemption.user.name} : https://www.twitch.tv/${redemption.user.normalizeName}."
-            },
             Alert("test"),
             PlaySound(listOf("kill-1.mp3", "kill-2.mp3", "kill-3.mp3", "kill-4.mp3", "kill-5.mp3").random())
         )
@@ -462,6 +459,12 @@ val delphes99Features = listOf(
                 "\uD83E\uDDED ${incomingRaid.leader.name} explore twitch et fait escale ici avec ses ${incomingRaid.numberOfRaiders} acolytes.",
                 channel
             ),
+            ShoutOut(
+                incomingRaid.leader,
+                channel
+            ) { userInfos ->
+                "\uD83D\uDCFA ${userInfos.lastStreamTitle?.let { title -> "« $title », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${incomingRaid.leader.name} : https://www.twitch.tv/${incomingRaid.leader.normalizeName}."
+            },
             CreatePoll(
                 channel,
                 "Une présentation ?",

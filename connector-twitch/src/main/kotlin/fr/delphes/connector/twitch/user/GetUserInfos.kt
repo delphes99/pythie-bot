@@ -10,7 +10,7 @@ private val LOGGER = KotlinLogging.logger {}
 
 suspend fun getUserInfos(user: User, twitchApi: AppTwitchApi): UserInfos {
     return twitchApi.getUserByName(user)?.let { twitchUserInfos ->
-        val videos = twitchApi.getVideosOf(twitchUserInfos.id, ChannelVideoType.archive)
+        val videos = twitchApi.getVideosOf(twitchUserInfos.id, ChannelVideoType.all)
 
         val lastVideo = videos.maxByOrNull { video -> video.createdAt }
         UserInfos(

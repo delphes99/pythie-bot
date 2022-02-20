@@ -12,8 +12,10 @@ import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.features.FeatureConfiguration
+import fr.delphes.features.twitch.NewTwitchCommand
 import fr.delphes.features.twitch.command.EditableCommand
 import fr.delphes.features.twitch.command.EditableCommandConfiguration
+import fr.delphes.twitch.TwitchChannel
 import kotlinx.serialization.InternalSerializationApi
 import java.io.File
 
@@ -24,7 +26,7 @@ fun main() {
     Ngrok.launch(props.getProperty("ngrok.path"))
     val tunnel = Ngrok.createHttpTunnel(80, props.getProperty("ngrok.tunnel.name"))
 
-    val configFilepath = "A:${File.separator}pythiebot${File.separator}"
+    val configFilepath = "A:${File.separator}pythiebot"
     val bot = Bot(
         tunnel.publicUrl,
         configFilepath,
@@ -42,7 +44,8 @@ fun main() {
                 )
             )
         ),
-        FeatureConfiguration.serializersModule
+        FeatureConfiguration.serializersModule,
+        "${File.separator}feature${File.separator}features.json"
     )
 
     bot.init(

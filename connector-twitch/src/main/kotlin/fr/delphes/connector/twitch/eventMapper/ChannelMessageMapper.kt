@@ -1,6 +1,5 @@
 package fr.delphes.connector.twitch.eventMapper
 
-import fr.delphes.connector.twitch.ClientBot
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived

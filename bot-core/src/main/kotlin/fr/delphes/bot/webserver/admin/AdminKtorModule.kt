@@ -10,7 +10,7 @@ import io.ktor.routing.routing
 
 fun Application.AdminModule(bot: Bot) {
     routing {
-        bot.features
+        bot.legacyfeatures
             .filterIsInstance<HaveHttp>()
             .map { feature -> feature.module(bot) }
             .forEach { it() }

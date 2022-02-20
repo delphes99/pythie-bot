@@ -3,12 +3,14 @@ package fr.delphes.features
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.feature.FeatureDescription
+import fr.delphes.feature.featureNew.FeatureConfiguration
 import fr.delphes.features.core.botStarted.BotStartedDescription
 import fr.delphes.features.discord.NewGuildMemberDescription
 import fr.delphes.features.obs.SceneChangedDescription
 import fr.delphes.features.obs.SourceFilterActivatedDescription
 import fr.delphes.features.obs.SourceFilterDeactivatedDescription
 import fr.delphes.features.overlay.OverlayDescription
+import fr.delphes.features.twitch.NewTwitchCommand
 import fr.delphes.features.twitch.bitCheer.BitCheerDescription
 import fr.delphes.features.twitch.clipCreated.ClipCreatedDescription
 import fr.delphes.features.twitch.command.CommandDescription
@@ -37,43 +39,50 @@ object FeatureConfiguration {
     @InternalSerializationApi
     val serializersModule = SerializersModule {
         //Discord
-        registerFeatureConfiguration<NewGuildMemberDescription>()
+        registerLegacyFeatureConfiguration<NewGuildMemberDescription>()
         // Overlay
-        registerFeatureConfiguration<OverlayDescription>()
+        registerLegacyFeatureConfiguration<OverlayDescription>()
         //Twitch
-        registerFeatureConfiguration<BitCheerDescription>()
-        registerFeatureConfiguration<ClipCreatedDescription>()
-        registerFeatureConfiguration<CommandDescription>()
-        registerFeatureConfiguration<CommandListDescription>()
-        registerFeatureConfiguration<EndCreditsDescription>()
-        registerFeatureConfiguration<GameDescriptionDescription>()
-        registerFeatureConfiguration<GameRewardDescription>()
-        registerFeatureConfiguration<NewFollowDescription>()
-        registerFeatureConfiguration<NewSubDescription>()
-        registerFeatureConfiguration<RewardRedeemDescription>()
-        registerFeatureConfiguration<StatisticsDescription>()
-        registerFeatureConfiguration<StreamerHighlightDescription>()
-        registerFeatureConfiguration<StreamOfflineDescription>()
-        registerFeatureConfiguration<StreamOnlineDescription>()
-        registerFeatureConfiguration<StreamUpdateDescription>()
-        registerFeatureConfiguration<VOTHDescription>()
-        registerFeatureConfiguration<IncomingRaidDescription>()
-        registerFeatureConfiguration<EditableCommandConfiguration>()
-        registerFeatureConfiguration<SceneChangedDescription>()
-        registerFeatureConfiguration<SourceFilterActivatedDescription>()
-        registerFeatureConfiguration<SourceFilterDeactivatedDescription>()
-        registerFeatureConfiguration<BotStartedDescription>()
+        registerLegacyFeatureConfiguration<BitCheerDescription>()
+        registerLegacyFeatureConfiguration<ClipCreatedDescription>()
+        registerLegacyFeatureConfiguration<CommandDescription>()
+        registerLegacyFeatureConfiguration<CommandListDescription>()
+        registerLegacyFeatureConfiguration<EndCreditsDescription>()
+        registerLegacyFeatureConfiguration<GameDescriptionDescription>()
+        registerLegacyFeatureConfiguration<GameRewardDescription>()
+        registerLegacyFeatureConfiguration<NewFollowDescription>()
+        registerLegacyFeatureConfiguration<NewSubDescription>()
+        registerLegacyFeatureConfiguration<RewardRedeemDescription>()
+        registerLegacyFeatureConfiguration<StatisticsDescription>()
+        registerLegacyFeatureConfiguration<StreamerHighlightDescription>()
+        registerLegacyFeatureConfiguration<StreamOfflineDescription>()
+        registerLegacyFeatureConfiguration<StreamOnlineDescription>()
+        registerLegacyFeatureConfiguration<StreamUpdateDescription>()
+        registerLegacyFeatureConfiguration<VOTHDescription>()
+        registerLegacyFeatureConfiguration<IncomingRaidDescription>()
+        registerLegacyFeatureConfiguration<EditableCommandConfiguration>()
+        registerLegacyFeatureConfiguration<SceneChangedDescription>()
+        registerLegacyFeatureConfiguration<SourceFilterActivatedDescription>()
+        registerLegacyFeatureConfiguration<SourceFilterDeactivatedDescription>()
+        registerLegacyFeatureConfiguration<BotStartedDescription>()
 
         registerOutgoingMessageBuilder<SendMessageBuilder>()
+
+        registerFeatureConfiguration<NewTwitchCommand>()
     }
 
     @InternalSerializationApi
-    inline fun <reified T : FeatureDescription> SerializersModuleBuilder.registerFeatureConfiguration() {
+    inline fun <reified T : FeatureDescription> SerializersModuleBuilder.registerLegacyFeatureConfiguration() {
         polymorphic(FeatureDescription::class, T::class, T::class.serializer())
     }
 
     @InternalSerializationApi
     inline fun <reified T : OutgoingEventBuilder> SerializersModuleBuilder.registerOutgoingMessageBuilder() {
         polymorphic(OutgoingEventBuilder::class, T::class, T::class.serializer())
+    }
+
+    @InternalSerializationApi
+    inline fun <reified T : FeatureConfiguration> SerializersModuleBuilder.registerFeatureConfiguration() {
+        polymorphic(FeatureConfiguration::class, T::class, T::class.serializer())
     }
 }

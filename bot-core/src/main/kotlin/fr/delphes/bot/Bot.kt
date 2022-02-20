@@ -11,6 +11,8 @@ import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
+import fr.delphes.feature.featureNew.FeatureConfigurationRepository
+import fr.delphes.feature.featureNew.FeatureHandler
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -24,9 +26,10 @@ import java.io.File
 class Bot(
     val publicUrl: String,
     val configFilepath: String,
-    val features: List<NonEditableFeature<*>>,
+    val legacyfeatures: List<NonEditableFeature<*>>,
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
     private val featureSerializationModule: SerializersModule,
+    featureConfigurationsPath: String,
 ) {
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
@@ -44,10 +47,20 @@ class Bot(
         serializersModule = featureSerializationModule
     }
 
+    private val featureRepository = FeatureConfigurationRepository(
+        "${configFilepath}$featureConfigurationsPath",
+        serializer
+    )
+
+    val featureHandler = FeatureHandler().also { it.load(runBlocking { featureRepository.load() }) }
+
     suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
-        listOf(features, editableFeatures)
+        listOf(legacyfeatures, editableFeatures)
             .flatten()
             .flatMap { feature -> feature.handleIncomingEvent(incomingEvent, this) }
+            .forEach { event -> handleOutgoingEvent(event) }
+
+        featureHandler.handleIncomingEvent(incomingEvent)
             .forEach { event -> handleOutgoingEvent(event) }
     }
 
@@ -88,4 +101,8 @@ class Bot(
 
     fun findConnector(name: String?): Connector<*, *>? = connectors
         .firstOrNull { connector -> connector.connectorName == name }
+
+    suspend fun reloadFeature() {
+        featureHandler.load(featureRepository.load())
+    }
 }

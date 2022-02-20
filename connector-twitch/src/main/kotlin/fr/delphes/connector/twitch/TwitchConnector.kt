@@ -4,6 +4,8 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
+import fr.delphes.connector.twitch.feature.TwitchFeatureConfiguration
+import fr.delphes.connector.twitch.feature.WithCommand
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
 import fr.delphes.connector.twitch.user.UserInfos
@@ -55,10 +57,14 @@ class TwitchConnector(
     }
 
     fun commandsFor(channel: TwitchChannel): List<Command> {
-        return bot.features
+        return bot.legacyfeatures
             .filterIsInstance<TwitchFeature>()
             .filter { feature -> feature.channel == channel }
-            .flatMap(TwitchFeature::commands)
+            .flatMap(TwitchFeature::commands) + bot.featureHandler.configurations
+            .filterIsInstance<TwitchFeatureConfiguration>()
+            .filter { feature -> feature.channel == channel }
+            .filterIsInstance<WithCommand>()
+            .flatMap(WithCommand::commands)
 
         //TODO editable command
     }
