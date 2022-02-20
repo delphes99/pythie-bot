@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("twitch-send-message")
+@SerialName("twitch-outgoing-send-message")
 data class SendMessageBuilder(
     val text: String,
     val channel: String,
