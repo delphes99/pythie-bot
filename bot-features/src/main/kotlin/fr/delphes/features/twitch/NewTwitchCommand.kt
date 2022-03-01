@@ -43,6 +43,6 @@ class NewTwitchCommand(
         }
     }
 
-    override val commands: Set<Command> = setOf(command)
+    override val commands: Set<Command> get() = setOf(command)
 }
 

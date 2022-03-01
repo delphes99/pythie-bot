@@ -12,6 +12,7 @@
 
 <script>
 import Panel from "@/common/components/common/Panel";
+import { fromJson } from "@/features/configurations/Feature";
 import { inject, ref } from "vue";
 import FeatureCard from "@/features/components/FeatureCard";
 import CardPanel from "@/common/components/common/CardPanel";
@@ -23,9 +24,9 @@ export default {
     const features = ref([]);
 
     async function getFeatures() {
-      const response = await fetch(`${backendUrl}/features`);
+      const response = await fetch(`${backendUrl}/features/new`);
 
-      features.value = await response.json();
+      features.value = await response.json().then(data => data.map(fromJson));
     }
 
     getFeatures();

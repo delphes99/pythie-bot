@@ -71,7 +71,9 @@ function useCreateOverlay(repository: OverlayRepository) {
     //TODO better validation
     if (!addName.value || !addWidth.value || !addHeight.value) {
       alert("missing field");
+      return;
     }
+
     const overlay = new Overlay(
       uuidv4(),
       addName.value,

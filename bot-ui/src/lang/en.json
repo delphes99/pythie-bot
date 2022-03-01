@@ -13,7 +13,8 @@
     "disconnect": "Disconnect",
     "success": "Success",
     "error": "Error",
-    "noData": "No data"
+    "noData": "No data",
+    "emptyField": "Empty field"
   },
   "settings": {
     "title": "Settings",

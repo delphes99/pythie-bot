@@ -1,59 +1,56 @@
 <template>
-  <card :title="feature.type">
+  <card :title="feature.identifier">
     <template v-slot:icon v-if="icon">
       <img :src="icon" width="30" height="20" />
     </template>
-    <component :is="component" :feature="feature" />
+    <div>Type : {{ feature.type }}</div>
+    <div v-for="description in feature.description()" :key="description.key">
+      {{ description.key }} : {{ description.value }}
+    </div>
     <template v-slot:actions>
-      <button
-        v-if="feature.editable"
-        class="primary-button"
-        v-on:click="openSettings()"
-      >
+      <button class="primary-button" v-on:click="openSettings()">
         {{ $t("common.edit") }}
       </button>
     </template>
   </card>
-  <Modal v-model:is-open="isSettingOpened" :title="feature.id">
-    <component :is="componentEdit" :feature="feature"></component>
+  <Modal v-model:is-open="isSettingOpened" :title="feature.identifier">
+    <fieldset class="flex flex-col border border-black p-1">
+      <legend>Edit</legend>
+      <div v-for="item in editForm" :key="item.field">
+        <label :for="item.id">{{ item.field }}</label>
+        <input type="text" :id="item.id" v-model="item.value" />
+      </div>
+    </fieldset>
+    <button class="primary-button" @click="saveChanges">Save changes</button>
   </Modal>
 </template>
 
 <script lang="ts">
 import Card from "@/common/components/common/Card.vue";
 import Modal from "@/common/components/common/Modal.vue";
-import FeatureDefaultCard from "@/features/components/FeatureDefaultCard.vue";
-import FeatureTwitchCommandCard from "@/twitch/feature/component/FeatureTwitchCommandCard.vue";
-import FeatureTwitchCommandEdit from "@/twitch/feature/component/FeatureTwitchCommandEdit.vue";
-import Feature from "@/twitch/feature/type/Feature";
-import { FeatureType } from "@/twitch/feature/type/FeatureTypeEnum";
-import { defineComponent, PropType, ref } from "vue";
+import Feature from "@/features/configurations/feature";
+import axios from "axios";
+import { ElNotification } from "element-plus";
+import { defineComponent, inject, PropType, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
-function componentToCard(feature: Feature) {
-  switch (feature.type) {
-    case FeatureType.TWITCH_COMMAND_EDITABLE:
-      return FeatureTwitchCommandCard;
-    default:
-      return FeatureDefaultCard;
-  }
+interface FormItem {
+  id: string;
+  field: string;
+  value: string;
+  type: FormItemType;
 }
 
-function componentToEditPopup(feature: Feature) {
-  switch (feature.type) {
-    case FeatureType.TWITCH_COMMAND_EDITABLE:
-      return FeatureTwitchCommandEdit;
-    default:
-      return null;
-  }
+enum FormItemType {
+  String,
+  OutgoingEvents
 }
 
 export default defineComponent({
   name: "FeatureCard",
   components: {
     Card,
-    Modal,
-    FeatureDefaultCard,
-    FeatureTwitchCommandCard
+    Modal
   },
   props: {
     feature: {
@@ -62,24 +59,55 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const backendUrl = inject("backendUrl") as string;
+    const { t } = useI18n();
     const isSettingOpened = ref(false);
     const featureType = () => props.feature.type;
 
-    const component = componentToCard(props.feature);
-    const componentEdit = componentToEditPopup(props.feature);
-
     const openSettings = () => (isSettingOpened.value = true);
-    const icon = props.feature.editable
-      ? null
-      : require("@/common/assets/readonly.svg");
+
+    const editForm = ref<FormItem[]>(
+      props.feature.description().map(desc => {
+        return {
+          id: props.feature.identifier + "_" + desc.key,
+          field: desc.key,
+          value: desc.value,
+          type: FormItemType.String
+        };
+      })
+    );
+
+    async function saveChanges() {
+      if (editForm.value.some(item => item.value.trim() == "")) {
+        ElNotification({
+          title: t("common.emptyField"),
+          type: "error"
+        });
+        return;
+      }
+
+      const newFeature: any = props.feature;
+      editForm.value.forEach(item => {
+        newFeature[item.field] = item.value;
+      });
+
+      await axios.post(
+        `${backendUrl}/feature/edit`,
+        JSON.stringify(newFeature),
+        {
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+
+      console.log(JSON.stringify(newFeature));
+    }
 
     return {
       isSettingOpened,
       featureType,
       openSettings,
-      component,
-      componentEdit,
-      icon
+      editForm,
+      saveChanges
     };
   }
 });

@@ -11,6 +11,7 @@ import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
+import fr.delphes.feature.featureNew.FeatureConfiguration
 import fr.delphes.feature.featureNew.FeatureConfigurationRepository
 import fr.delphes.feature.featureNew.FeatureHandler
 import fr.delphes.utils.exhaustive
@@ -104,5 +105,18 @@ class Bot(
 
     suspend fun reloadFeature() {
         featureHandler.load(featureRepository.load())
+    }
+
+    suspend fun editFeature(newConfiguration: FeatureConfiguration) {
+        val actualConfigurations = featureRepository.load()
+        val newConfigurations = actualConfigurations.map { oldConfiguration ->
+            if(oldConfiguration.identifier == newConfiguration.identifier) {
+                newConfiguration
+            } else {
+                oldConfiguration
+            }
+        }
+        featureRepository.save(newConfigurations)
+        featureHandler.load(newConfigurations)
     }
 }

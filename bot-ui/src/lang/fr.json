@@ -13,7 +13,8 @@
     "disconnect": "Déconnexion",
     "success": "Succès",
     "error": "Erreur",
-    "noData": "Aucune donnée"
+    "noData": "Aucune donnée",
+    "emptyField": "Champs vide"
   },
   "settings": {
     "title": "Paramètres",
