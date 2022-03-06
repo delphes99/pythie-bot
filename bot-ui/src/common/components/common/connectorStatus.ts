@@ -5,5 +5,5 @@ export enum ConnectorStatusEnum {
   connected = "connected",
   connecting = "connecting",
   disconnecting = "disconnecting",
-  mixed = "mixed"
+  mixed = "mixed",
 }

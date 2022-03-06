@@ -1,160 +1,159 @@
 <template>
   <div
     id="preview"
-    :style="
-      `min-width: ${overlay.resolution.width}px; min-height: ${overlay.resolution.height}px;`
-    "
-  ></div>
+    :style="`min-width: ${overlay.resolution.width}px; min-height: ${overlay.resolution.height}px;`"
+  />
 </template>
 <script lang="ts">
-import TextComponent, { fromObject } from "@/overlay/editor/textComponent";
-import Overlay from "@/overlay/Overlay";
-import { OverlayElement } from "@/overlay/OverlayElement";
-import interact from "interactjs";
-import { v4 as uuidv4 } from "uuid";
-import { defineComponent, onMounted, PropType, watch } from "vue";
+import TextComponent, { fromObject } from "@/overlay/editor/textComponent"
+import Overlay from "@/overlay/Overlay"
+import { OverlayElement } from "@/overlay/OverlayElement"
+import interact from "interactjs"
+import { v4 as uuidv4 } from "uuid"
+import { defineComponent, onMounted, PropType, watch } from "vue"
 
 export default defineComponent({
-  name: "editorPreview",
+  name: "EditorPreview",
   props: {
     overlay: {
       type: Object as PropType<Overlay>,
-      required: true
+      required: true,
     },
     selection: {
-      type: Object as PropType<OverlayElement>
-    }
+      type: Object as PropType<OverlayElement>,
+      required: true,
+    },
   },
   emits: ["update:selection"],
   setup(props, { emit }) {
-    const components = new Map<string, HTMLDivElement>();
-    const positions = new Map<string, ElementPosition>();
+    const components = new Map<string, HTMLDivElement>()
+    const positions = new Map<string, ElementPosition>()
 
     const loadCanvas = () => {
       function getElement(element: OverlayElement): TextComponent {
-        return props.overlay.elements.find(
-          e => e.id === element.id
-        ) as TextComponent;
+        return props.overlay.elements.find((e) => e.id === element.id) as TextComponent
       }
 
       function renderElements(elements: OverlayElement[]) {
-        elements.forEach(element => {
-          const divElement = components.get(element.id);
+        elements.forEach((element) => {
+          const divElement = components.get(element.id)
           if (divElement && element instanceof TextComponent) {
-            divElement.innerText = element.text;
+            divElement.innerText = element.text
             if (element.id == props.selection?.id) {
-              divElement.classList.add("selected");
+              divElement.classList.add("selected")
             } else {
-              divElement.classList.remove("selected");
+              divElement.classList.remove("selected")
             }
 
-            divElement.style.transform = `translate(${element.left}px, ${element.top}px)`;
-            const elementPosition = positions.get(element.id);
+            divElement.style.transform = `translate(${element.left}px, ${element.top}px)`
+            const elementPosition = positions.get(element.id)
             if (elementPosition) {
-              elementPosition.x = element.left;
-              elementPosition.y = element.top;
+              elementPosition.x = element.left
+              elementPosition.y = element.top
             }
           } else {
             if (element instanceof TextComponent) {
-              const divElement = document.createElement("div");
-              const id = `el-${uuidv4()}`;
-              divElement.id = id;
-              divElement.classList.add("draggable");
-              divElement.style.position = `absolute`;
-              divElement.style.display = `inline-block`;
-              divElement.style.transform = `translate(${element.left}px, ${element.top}px)`;
-              divElement.innerHTML = element.text;
+              const divElement = document.createElement("div")
+              const id = `el-${uuidv4()}`
+              divElement.id = id
+              divElement.classList.add("draggable")
+              divElement.style.position = `absolute`
+              divElement.style.display = `inline-block`
+              divElement.style.transform = `translate(${element.left}px, ${element.top}px)`
+              divElement.innerHTML = element.text
 
-              const position = { x: element.left, y: element.top };
+              const position = { x: element.left, y: element.top }
 
               const updateSelection = () => {
                 const updatedElement = {
                   ...getElement(element),
                   left: position.x ?? 0,
-                  top: position.y ?? 0
-                };
-                emit("update:selection", fromObject(updatedElement));
-              };
+                  top: position.y ?? 0,
+                }
+                emit("update:selection", fromObject(updatedElement))
+              }
 
-              divElement.onclick = _ => {
-                updateSelection();
-              };
+              divElement.onclick = () => {
+                updateSelection()
+              }
 
               interact(`#${id}`).draggable({
                 modifiers: [
                   interact.modifiers.restrict({
                     restriction: "parent",
-                    endOnly: true
-                  })
+                    endOnly: true,
+                  }),
                 ],
                 listeners: {
                   start() {
-                    updateSelection();
+                    updateSelection()
                   },
                   move(event) {
-                    position.x += event.dx;
-                    position.y += event.dy;
+                    position.x += event.dx
+                    position.y += event.dy
 
-                    event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+                    event.target.style.transform = `translate(${position.x}px, ${position.y}px)`
                   },
                   end() {
-                    updateSelection();
-                  }
-                }
-              });
+                    updateSelection()
+                  },
+                },
+              })
 
-              positions.set(element.id, position);
-              components.set(element.id, divElement);
-              document.getElementById("preview")!.appendChild(divElement);
+              positions.set(element.id, position)
+              components.set(element.id, divElement)
+              document.getElementById("preview")?.appendChild(divElement)
             }
           }
-        });
+        })
       }
 
-      renderElements(props.overlay.elements);
+      renderElements(props.overlay.elements)
 
       watch(
         () => props.selection,
-        newValue => {
+        (newValue) => {
           if (newValue instanceof TextComponent) {
-            const canvasComponent = components.get(newValue.id);
+            const canvasComponent = components.get(newValue.id)
             if (canvasComponent) {
               for (const component of components.values()) {
-                component.classList.remove("selected");
+                component.classList.remove("selected")
               }
-              canvasComponent.classList.add("selected");
+              canvasComponent.classList.add("selected")
             } else {
-              console.error("Unknown selected object");
+              console.error("Unknown selected object")
             }
           }
-        }
-      );
+        },
+      )
 
       watch(
         () => props.overlay.elements,
-        newValue => {
-          renderElements(newValue);
-        }
-      );
-    };
+        (newValue) => {
+          renderElements(newValue)
+        },
+      )
+    }
 
-    onMounted(loadCanvas);
+    onMounted(loadCanvas)
 
-    return {};
-  }
-});
+    return {}
+  },
+})
 
 interface ElementPosition {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 </script>
 
 <style>
+/*noinspection CssUnusedSymbol*/
 .draggable.selected {
   @apply border-black;
 }
 
+/*noinspection CssUnusedSymbol*/
 .draggable {
   @apply border-dashed border border-gray-300 inline-block box-border;
   user-select: none;

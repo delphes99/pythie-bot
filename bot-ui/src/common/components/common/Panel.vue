@@ -6,16 +6,19 @@
       </h1>
     </div>
     <div>
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 export default {
-  name: "Panel",
+  name: "CommonPanel",
   props: {
-    title: String
-  }
-};
+    title: {
+      type: String,
+      required: true,
+    },
+  },
+}
 </script>

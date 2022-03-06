@@ -1,42 +1,42 @@
-import { notEmpty } from "@/common/utils";
-import Overlay from "@/overlay/Overlay";
-import { fromJson } from "@/overlay/OverlayElement";
-import axios from "axios";
+import { notEmpty } from "@/common/utils"
+import Overlay from "@/overlay/Overlay"
+import { fromJson } from "@/overlay/OverlayElement"
+import axios from "axios"
 
 export default class OverlayRepository {
-  backendUrl: string;
+  backendUrl: string
 
   constructor(backendUrl: string) {
-    this.backendUrl = backendUrl;
+    this.backendUrl = backendUrl
   }
 
   list(): Promise<Overlay[]> {
-    return axios.get(`${this.backendUrl}/api/overlays`).then(response => {
-      const data = response.data as Overlay[];
-      data.forEach(overlay => {
+    return axios.get(`${this.backendUrl}/api/overlays`).then((response) => {
+      const data = response.data as Overlay[]
+      data.forEach((overlay) => {
         overlay.elements = overlay.elements
-          .map(element => fromJson(element))
-          .filter(notEmpty);
-      });
-      return data;
-    });
+          .map((element) => fromJson(element))
+          .filter(notEmpty)
+      })
+      return data
+    })
   }
 
   async get(id: string): Promise<Overlay> {
-    return await this.list().then(all => all.find(o => o.id === id) as Overlay);
+    return await this.list().then((all) => all.find((o) => o.id === id) as Overlay)
   }
 
   async save(overlay: Overlay): Promise<boolean> {
     return await axios
       .post(`${this.backendUrl}/api/overlay`, overlay, {
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       })
-      .then(_ => true);
+      .then(() => true)
   }
 
   async deleteOverlay(overlay: Overlay): Promise<boolean> {
     return await axios
       .delete(`${this.backendUrl}/api/overlay/${overlay.id}`)
-      .then(_ => true);
+      .then(() => true)
   }
 }

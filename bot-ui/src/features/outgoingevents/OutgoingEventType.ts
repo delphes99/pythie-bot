@@ -1,5 +1,5 @@
 enum OutgoingEventType {
-  TwitchOutgoingSendMessage = "twitch-outgoing-send-message"
+  TwitchOutgoingSendMessage = "twitch-outgoing-send-message",
 }
 
-export default OutgoingEventType;
+export default OutgoingEventType

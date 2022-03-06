@@ -5,54 +5,87 @@
     :onmouseenter="mouseIn"
     :onmouseleave="mouseOut"
   >
-    <router-link class="router-link" to="/">
-      <img src="@/common/assets/home.svg" width="20" />
+    <router-link
+      class="router-link"
+      to="/"
+    >
+      <img
+        src="@/common/assets/home.svg"
+        width="20"
+      >
       {{ $t("home") }}
     </router-link>
-    <router-link class="router-link" to="/features">
-      <img src="@/common/assets/features.svg" width="20" />
+    <router-link
+      class="router-link"
+      to="/features"
+    >
+      <img
+        src="@/common/assets/features.svg"
+        width="20"
+      >
       {{ $t("features") }}
     </router-link>
-    <router-link class="router-link" to="/overlay">
-      <img src="@/common/assets/overlay.svg" width="20" />
+    <router-link
+      class="router-link"
+      to="/overlay"
+    >
+      <img
+        src="@/common/assets/overlay.svg"
+        width="20"
+      >
       {{ $t("overlay") }}
     </router-link>
-    <router-link class="router-link" to="/settings">
-      <img src="@/common/assets/settings.svg" width="20" />
+    <router-link
+      class="router-link"
+      to="/settings"
+    >
+      <img
+        src="@/common/assets/settings.svg"
+        width="20"
+      >
       {{ $t("settings.title") }}
     </router-link>
-    <router-link class="router-link" to="/about">
-      <img src="@/common/assets/about.svg" width="20" />
+    <router-link
+      class="router-link"
+      to="/about"
+    >
+      <img
+        src="@/common/assets/about.svg"
+        width="20"
+      >
       {{ $t("about") }}
     </router-link>
   </nav>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from "vue"
 
 export default defineComponent({
-  name: "Menu",
+  name: "GlobalMenu",
   props: {
-    widthClass: String
+    widthClass: {
+      type: String,
+      required: true,
+    },
   },
   setup() {
-    const expand = ref(false);
+    const expand = ref(false)
 
     const mouseIn = () => {
-      expand.value = true;
-    };
+      expand.value = true
+    }
     const mouseOut = () => {
-      expand.value = false;
-    };
+      expand.value = false
+    }
 
     return {
       expand,
       mouseIn,
-      mouseOut
-    };
-  }
-});
+      mouseOut,
+    }
+  },
+})
 </script>
 
 <style scoped>

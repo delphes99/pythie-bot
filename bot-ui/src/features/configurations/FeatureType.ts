@@ -1,5 +1,5 @@
 enum FeatureType {
-  TwitchIncomingCommand = "twitch-incoming-command"
+  TwitchIncomingCommand = "twitch-incoming-command",
 }
 
-export default FeatureType;
+export default FeatureType

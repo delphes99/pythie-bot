@@ -1,6 +1,9 @@
 <template>
   <div>
-    <button class="primary-button" v-on:click="$emit('addText')">
+    <button
+      class="primary-button"
+      @click="$emit('addText')"
+    >
       Add text
     </button>
   </div>
@@ -9,6 +12,6 @@
 <script lang="ts">
 export default {
   name: "EditorAddComponent",
-  emits: ["addText"]
-};
+  emits: ["addText"],
+}
 </script>

@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col bg-gray-200" v-if="components.length !== 0">
+  <div
+    v-if="components.length !== 0"
+    class="flex flex-col bg-gray-200"
+  >
     <h2>Items</h2>
     <ul>
       <li
@@ -14,31 +17,32 @@
   </div>
 </template>
 <script lang="ts">
-import { OverlayElement } from "@/overlay/OverlayElement";
-import { defineComponent, PropType } from "vue";
+import { OverlayElement } from "@/overlay/OverlayElement"
+import { defineComponent, PropType } from "vue"
 
 export default defineComponent({
-  name: "editorComponentList",
+  name: "EditorComponentList",
   props: {
     components: {
       type: Object as PropType<OverlayElement[]>,
-      required: true
+      required: true,
     },
     selection: {
-      type: Object as PropType<OverlayElement>
-    }
+      type: Object as PropType<OverlayElement>,
+      required: true,
+    },
   },
   emits: ["update:selection"],
   setup(props, { emit }) {
     const selectComponent = (selected: OverlayElement) => {
-      emit("update:selection", selected);
-    };
+      emit("update:selection", selected)
+    }
 
     return {
-      selectComponent
-    };
-  }
-});
+      selectComponent,
+    }
+  },
+})
 </script>
 
 <style scoped>
@@ -46,6 +50,7 @@ li {
   @apply m-2 bg-gray-200 p-1 shadow-md;
 }
 
+/*noinspection CssUnusedSymbol*/
 .selected {
   @apply bg-gray-400;
 }

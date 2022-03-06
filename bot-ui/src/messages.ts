@@ -4,13 +4,13 @@ export const messages = {
     features: "Features",
     overlay: "Overlay",
     settings: "Settings",
-    about: "About"
+    about: "About",
   },
   fr: {
     home: "Accueil",
     features: "Module",
     overlay: "Overlay",
     settings: "Paramètres",
-    about: "A propos"
-  }
-};
+    about: "A propos",
+  },
+}

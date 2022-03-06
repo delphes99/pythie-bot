@@ -23,28 +23,28 @@
   </el-radio-group>
 </template>
 <script lang="ts">
-import { LocalStorageItem } from "@/common/LocalStorageItem";
-import { defineComponent, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
+import { LocalStorageItem } from "@/common/LocalStorageItem"
+import { defineComponent, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
 
 export default defineComponent({
-  name: "Settings",
+  name: "AppSettings",
   setup() {
-    const { locale } = useI18n();
-    const lang = ref(locale.value);
-    const themes = ref(["dark", "light"]);
-    const currentTheme = ref("dark");
+    const { locale } = useI18n()
+    const lang = ref(locale.value)
+    const themes = ref(["dark", "light"])
+    const currentTheme = ref("dark")
 
-    watch(lang, newValue => {
-      locale.value = newValue;
-      localStorage.setItem(LocalStorageItem.LANGUAGE, newValue);
-    });
+    watch(lang, (newValue) => {
+      locale.value = newValue
+      localStorage.setItem(LocalStorageItem.LANGUAGE, newValue)
+    })
 
     return {
       lang,
       themes,
-      currentTheme
-    };
-  }
-});
+      currentTheme,
+    }
+  },
+})
 </script>

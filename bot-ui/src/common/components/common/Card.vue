@@ -2,14 +2,19 @@
   <div class="m-0 lg:w-1/4 md:w-1/3 w-1/2 p-2">
     <div class="border shadow-md p-3 h-full flex flex-col">
       <div class="flex flex-row flex-shrink space-x-2">
-        <slot name="icon"></slot>
-        <h1 v-if="title" class="text-xl font-bold">{{ title }}</h1>
+        <slot name="icon" />
+        <h1
+          v-if="title"
+          class="text-xl font-bold"
+        >
+          {{ title }}
+        </h1>
       </div>
       <div class="flex-grow flex-shrink-0">
-        <slot></slot>
+        <slot />
       </div>
       <div>
-        <slot name="actions"></slot>
+        <slot name="actions" />
       </div>
     </div>
   </div>
@@ -17,9 +22,12 @@
 
 <script lang="ts">
 export default {
-  name: "Card",
+  name: "CardItem",
   props: {
-    title: String
-  }
-};
+    title: {
+      type: String,
+      required: true,
+    },
+  },
+}
 </script>

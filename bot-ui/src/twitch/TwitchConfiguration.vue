@@ -1,36 +1,45 @@
 <template>
-  <panel title="Status">
+  <common-panel title="Status">
     <DetailedConnectorStatus :connector="connector" />
-  </panel>
-  <panel title="Twitch bot configuration">
+  </common-panel>
+  <common-panel title="Twitch bot configuration">
     <img
       class="inline-block align-middle"
       src="@/common/assets/refresh.svg"
       style="height: 20px"
-      v-on:click="refreshCurrentConfiguration"
       alt="Refresh configuration"
-    />
-    <h2 class="text-xl font-medium text-black">App credential</h2>
+      @click="refreshCurrentConfiguration"
+    >
+    <h2 class="text-xl font-medium text-black">
+      App credential
+    </h2>
     <div class="px-2 grid grid-cols-2 space-y-1">
       <label for="clientId">Client Id</label>
-      <input v-model="clientId" type="text" id="clientId" class="border-b-2" />
+      <input
+        id="clientId"
+        v-model="clientId"
+        type="text"
+        class="border-b-2"
+      >
       <label for="clientSecret">Client Secret</label>
       <input
+        id="clientSecret"
         v-model="clientSecret"
         type="password"
-        id="clientSecret"
         class="border-b-2"
-      />
+      >
     </div>
     <div>
       <button
-        v-on:click="saveAppCredential"
         class="primary-button focus:shadow-outline"
+        @click="saveAppCredential"
       >
         Save
       </button>
     </div>
-    <h2 class="text-xl font-medium text-black">Bot identity</h2>
+    <h2 class="text-xl font-medium text-black">
+      Bot identity
+    </h2>
     <div v-if="botAccount">
       <div>
         Bot account : <span class="font-bold">{{ botAccount }}</span>
@@ -50,8 +59,8 @@
         Connect bot account
       </a>
     </div>
-  </panel>
-  <panel title="Channels">
+  </common-panel>
+  <common-panel title="Channels">
     <div>
       <a
         :href="buildAddChannelUrl()"
@@ -90,8 +99,8 @@
               </td>
               <td class="py-4 px-6 border-b border-grey-light">
                 <button
-                  v-on:click="deleteChannel(channel)"
                   class="secondary-button focus:shadow-outline"
+                  @click="deleteChannel(channel)"
                 >
                   Delete
                 </button>
@@ -101,86 +110,77 @@
         </table>
       </div>
     </div>
-  </panel>
+  </common-panel>
 </template>
 
 <script lang="ts">
-import { ConnectorEnum } from "@/common/components/common/connectorEnum";
-import DetailedConnectorStatus from "@/common/components/common/DetailedConnectorStatus.vue";
-import Panel from "@/common/components/common/Panel.vue";
-import axios from "axios";
-import { ElNotification } from "element-plus";
-import { inject, ref } from "vue";
-import { useI18n } from "vue-i18n";
+import { ConnectorEnum } from "@/common/components/common/connectorEnum"
+import DetailedConnectorStatus from "@/common/components/common/DetailedConnectorStatus.vue"
+import CommonPanel from "@/common/components/common/Panel.vue"
+import axios from "axios"
+import { ElNotification } from "element-plus"
+import { inject, ref } from "vue"
+import { useI18n } from "vue-i18n"
 
 export default {
   name: `TwitchConfiguration`,
-  components: { DetailedConnectorStatus, Panel },
+  components: { DetailedConnectorStatus, CommonPanel },
   setup() {
-    const { t } = useI18n();
-    const backendUrl = inject("backendUrl");
+    const { t } = useI18n()
+    const backendUrl = inject("backendUrl")
 
-    const clientId = ref("");
-    const clientSecret = ref("");
-    const botAccount = ref("");
-    const channels = ref([]);
+    const clientId = ref("")
+    const clientSecret = ref("")
+    const botAccount = ref("")
+    const channels = ref([])
 
     const refreshCurrentConfiguration = async () => {
-      const response = await axios.get(`${backendUrl}/twitch/configuration`);
+      const response = await axios.get(`${backendUrl}/twitch/configuration`)
 
-      clientId.value = response.data.clientId;
-      botAccount.value = response.data.botUsername;
-      channels.value = response.data.channels;
-    };
+      clientId.value = response.data.clientId
+      botAccount.value = response.data.botUsername
+      channels.value = response.data.channels
+    }
 
-    refreshCurrentConfiguration();
+    refreshCurrentConfiguration()
 
     const saveAppCredential = async () => {
       const payload = {
         clientId: clientId.value,
-        clientSecret: clientSecret.value
-      };
-      await axios.post(
-        `${backendUrl}/twitch/configuration/appCredential`,
-        payload,
-        {
-          headers: { "Content-Type": "application/json" }
-        }
-      );
+        clientSecret: clientSecret.value,
+      }
+      await axios.post(`${backendUrl}/twitch/configuration/appCredential`, payload, {
+        headers: { "Content-Type": "application/json" },
+      })
 
       ElNotification({
         title: t("common.success"),
-        type: "success"
-      });
-    };
+        type: "success",
+      })
+    }
 
     const deleteChannel = async (channel: string) => {
-      await axios.delete(
-        `${backendUrl}/twitch/configuration/channel/` + channel
-      );
-      await refreshCurrentConfiguration();
-    };
+      await axios.delete(`${backendUrl}/twitch/configuration/channel/` + channel)
+      await refreshCurrentConfiguration()
+    }
 
     const buildGetAuthUrl = (state: string) => () => {
-      const twitchAuthUrl = "https://id.twitch.tv/oauth2/authorize";
-      const params = new URLSearchParams();
-      params.append("response_type", "code");
-      params.append("client_id", clientId.value);
-      params.append(
-        "redirect_uri",
-        `${backendUrl}/twitch/configuration/userCredential`
-      );
+      const twitchAuthUrl = "https://id.twitch.tv/oauth2/authorize"
+      const params = new URLSearchParams()
+      params.append("response_type", "code")
+      params.append("client_id", clientId.value)
+      params.append("redirect_uri", `${backendUrl}/twitch/configuration/userCredential`)
       params.append(
         "scope",
-        "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions channel:manage:polls channel:manage:predictions"
-      );
-      params.append("state", state);
+        "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions channel:manage:polls channel:manage:predictions",
+      )
+      params.append("state", state)
 
-      return twitchAuthUrl + "?" + params.toString();
-    };
+      return twitchAuthUrl + "?" + params.toString()
+    }
 
-    const buildBotIdentityUrl = buildGetAuthUrl("botConfiguration");
-    const buildAddChannelUrl = buildGetAuthUrl("addChannel");
+    const buildBotIdentityUrl = buildGetAuthUrl("botConfiguration")
+    const buildAddChannelUrl = buildGetAuthUrl("addChannel")
 
     return {
       clientId,
@@ -192,8 +192,8 @@ export default {
       buildBotIdentityUrl,
       buildAddChannelUrl,
       refreshCurrentConfiguration,
-      connector: ConnectorEnum.TWITCH
-    };
-  }
-};
+      connector: ConnectorEnum.TWITCH,
+    }
+  },
+}
 </script>

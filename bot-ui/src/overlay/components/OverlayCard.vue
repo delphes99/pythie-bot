@@ -1,13 +1,14 @@
 <template>
   <card :title="overlay.title">
     {{ overlay.resolution.width }} x {{ overlay.resolution.height }}
-    <template v-slot:actions>
+    <template #actions>
       <router-link :to="`/overlay/${overlay.id}`">
-        <a class="primary-button focus:shadow-outline">
-          Edit
-        </a>
+        <a class="primary-button focus:shadow-outline"> Edit </a>
       </router-link>
-      <button class="secondary-button" @click="$emit('deleted')">
+      <button
+        class="secondary-button"
+        @click="$emit('deleted')"
+      >
         Delete
       </button>
     </template>
@@ -15,21 +16,21 @@
 </template>
 
 <script lang="ts">
-import Card from "@/common/components/common/Card.vue";
-import Overlay from "@/overlay/Overlay";
-import { defineComponent, PropType } from "vue";
+import Card from "@/common/components/common/Card.vue"
+import Overlay from "@/overlay/Overlay"
+import {defineComponent, PropType} from "vue"
 
 export default defineComponent({
   name: "OverlayCard",
   components: {
-    Card
+    Card,
   },
-  emits: ["deleted"],
   props: {
     overlay: {
       type: Object as PropType<Overlay>,
-      required: true
-    }
-  }
-});
+      required: true,
+    },
+  },
+  emits: ["deleted"],
+})
 </script>

@@ -1,3 +1,3 @@
 export enum LocalStorageItem {
-  LANGUAGE = "language"
+  LANGUAGE = "language",
 }

@@ -6,15 +6,15 @@
     <div class="grid grid-cols-2 gap-4 p-4">
       <label for="discordOauth">Oauth bot token</label>
       <input
+        id="discordOauth"
         v-model="oAuthToken"
         type="password"
-        id="discordOauth"
         class="border-b-2"
-      />
+      >
       <div class="flex col-span-2 justify-items-center justify-center">
         <button
-          v-on:click="saveConfiguration"
           class="bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
+          @click="saveConfiguration"
         >
           Save
         </button>
@@ -24,47 +24,47 @@
 </template>
 
 <script lang="ts">
-import { ConnectorEnum } from "@/common/components/common/connectorEnum";
-import DetailedConnectorStatus from "@/common/components/common/DetailedConnectorStatus.vue";
-import Panel from "@/common/components/common/Panel.vue";
-import axios from "axios";
-import { ElNotification } from "element-plus";
-import { inject, ref } from "vue";
-import { useI18n } from "vue-i18n";
+import { ConnectorEnum } from "@/common/components/common/connectorEnum"
+import DetailedConnectorStatus from "@/common/components/common/DetailedConnectorStatus.vue"
+import Panel from "@/common/components/common/Panel.vue"
+import axios from "axios"
+import { ElNotification } from "element-plus"
+import { inject, ref } from "vue"
+import { useI18n } from "vue-i18n"
 
 export default {
   name: `DiscordConfiguration`,
   components: { Panel, DetailedConnectorStatus },
   setup() {
-    const { t } = useI18n();
-    const backendUrl = inject("backendUrl");
-    const oAuthToken = ref("");
+    const { t } = useI18n()
+    const backendUrl = inject("backendUrl")
+    const oAuthToken = ref("")
 
     const saveConfiguration = () => {
-      const payload = { oAuthToken: oAuthToken.value };
+      const payload = { oAuthToken: oAuthToken.value }
       axios
         .post(`${backendUrl}/discord/configuration`, payload, {
-          headers: { "Content-Type": "application/json" }
+          headers: { "Content-Type": "application/json" },
         })
         .then(() => {
           ElNotification({
             title: t("common.success"),
-            type: "success"
-          });
+            type: "success",
+          })
         })
         .catch(() => {
           ElNotification({
             title: t("common.error"),
-            type: "error"
-          });
-        });
-    };
+            type: "error",
+          })
+        })
+    }
 
     return {
       oAuthToken,
       saveConfiguration,
-      connector: ConnectorEnum.DISCORD
-    };
-  }
-};
+      connector: ConnectorEnum.DISCORD,
+    }
+  },
+}
 </script>
