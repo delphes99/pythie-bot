@@ -1,3 +1,4 @@
+import FeatureDescriptionType from "@/features/configurations/FeatureDescriptionType"
 import FeatureType from "@/features/configurations/FeatureType"
 import TwitchIncomingCommand from "@/features/configurations/TwitchIncomingCommand"
 import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
@@ -14,11 +15,21 @@ export default interface Feature {
 
 export class DescriptionItem {
   key: string
-  value: string
+  value: string | OutgoingEvent[]
+  type: FeatureDescriptionType
 
-  constructor(key: string, value: string) {
+  constructor(key: string, value: string | OutgoingEvent[], type: FeatureDescriptionType) {
     this.key = key
     this.value = value
+    this.type = type
+  }
+
+  static ofString(key: string, value: string) : DescriptionItem {
+    return new this(key, value, FeatureDescriptionType.String)
+  }
+
+  static ofOutgoingEvents(key: string, value: OutgoingEvent[]) : DescriptionItem {
+    return new this(key, value, FeatureDescriptionType.OutgoingEvents)
   }
 }
 

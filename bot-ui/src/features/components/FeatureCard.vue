@@ -12,10 +12,20 @@
     </template>
     <div>Type : {{ feature.type }}</div>
     <div
-      v-for="description in feature.description()"
-      :key="description.key"
+      v-for="description in editForm"
+      :key="description.id"
     >
-      {{ description.key }} : {{ description.value }}
+      <div v-if="description.type === FeatureDescriptionType.String">
+        {{ description.field }} : {{ description.value }}
+      </div>
+      <div v-if="description.type === FeatureDescriptionType.OutgoingEvents">
+        <div
+          v-for="event in description.outgoingEvents"
+          :key="event.id"
+        >
+          {{ event.type }}
+        </div>
+      </div>
     </div>
     <template #actions>
       <button
@@ -36,12 +46,27 @@
         v-for="item in editForm"
         :key="item.field"
       >
-        <label :for="item.id">{{ item.field }}</label>
-        <input
-          :id="item.id"
-          v-model="item.value"
-          type="text"
-        >
+        <div v-if="item.type === FeatureDescriptionType.String">
+          <label :for="item.id">{{ item.field }}</label>
+          <input
+            :id="item.id"
+            v-model="item.value"
+            type="text"
+          >
+        </div>
+        <div v-if="item.type === FeatureDescriptionType.OutgoingEvents">
+          <div
+            v-for="event in item.outgoingEvents"
+            :key="event.id"
+          >
+            <label :for="event.id">{{ item.field }} ( {{ event.id }} )</label>
+            <input
+              :id="event.id"
+              v-model="event.text"
+              type="text"
+            >
+          </div>
+        </div>
       </div>
     </fieldset>
     <button
@@ -53,88 +78,85 @@
   </modal>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Card from "@/common/components/common/Card.vue"
 import Modal from "@/common/components/common/CommonModal.vue"
 import Feature from "@/features/configurations/Feature"
+import FeatureDescriptionType from "@/features/configurations/FeatureDescriptionType"
+import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
+import TwitchOutgoingSendMessage from "@/features/outgoingevents/TwitchOutgoingSendMessage"
 import axios from "axios"
 import { ElNotification } from "element-plus"
-import { defineComponent, inject, PropType, ref } from "vue"
+import { inject, PropType, ref } from "vue"
 import { useI18n } from "vue-i18n"
 
 interface FormItem {
   id: string
   field: string
-  value: string
-  type: FormItemType
+  value: string | null
+  outgoingEvents: OutgoingEvent[] | null
+  type: FeatureDescriptionType
 }
 
-enum FormItemType {
-  String,
-  OutgoingEvents,
-}
-
-export default defineComponent({
-  name: "FeatureCard",
-  components: {
-    Card,
-    Modal,
+const props = defineProps({
+  feature: {
+    type: Object as PropType<Feature>,
+    required: true,
   },
-  props: {
-    feature: {
-      type: Object as PropType<Feature>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const backendUrl = inject("backendUrl") as string
-    const { t } = useI18n()
-    const isSettingOpened = ref(false)
-    const featureType = () => props.feature.type
+})
 
-    const openSettings = () => (isSettingOpened.value = true)
+const backendUrl = inject("backendUrl") as string
+const { t } = useI18n()
+const isSettingOpened = ref(false)
+const openSettings = () => (isSettingOpened.value = true)
 
-    const editForm = ref<FormItem[]>(
-      props.feature.description().map(desc => {
+const editForm = ref<FormItem[]>(
+  props.feature.description().map(desc => {
+    switch (desc.type) {
+      case FeatureDescriptionType.String:
         return {
           id: props.feature.identifier + "_" + desc.key,
           field: desc.key,
-          value: desc.value,
-          type: FormItemType.String,
+          value: desc.value as string,
+          outgoingEvents: null,
+          type: FeatureDescriptionType.String,
         }
-      }),
-    )
+      case FeatureDescriptionType.OutgoingEvents:
+        return {
+          id: props.feature.identifier + "_" + desc.key,
+          field: desc.key,
+          value: null,
+          outgoingEvents: desc.value as OutgoingEvent[],
+          type: FeatureDescriptionType.OutgoingEvents,
+        }
+    }
+  }),
+)
 
-    async function saveChanges() {
-      if (editForm.value.some(item => item.value.trim() == "")) {
-        ElNotification({
-          title: t("common.emptyField"),
-          type: "error",
-        })
-        return
-      }
+async function saveChanges() {
+  if (editForm.value.some(item => item.value?.trim() === "")) {
+    ElNotification({
+      title: t("common.emptyField"),
+      type: "error",
+    })
+    return
+  }
 
-      //TODO remove
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const newFeature: any = props.feature
-      editForm.value.forEach(item => {
+  //TODO remove //TODO mutate props
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const newFeature: any = props.feature
+  editForm.value.forEach(item => {
+    switch (item.type) {
+      case FeatureDescriptionType.String:
         newFeature[item.field] = item.value
-      })
-
-      await axios.post(`${backendUrl}/feature/edit`, JSON.stringify(newFeature), {
-        headers: { "Content-Type": "application/json" },
-      })
-
-      console.log(JSON.stringify(newFeature))
+        return
+      case FeatureDescriptionType.OutgoingEvents:
+        newFeature[item.field] = item.outgoingEvents!.map(o => new TwitchOutgoingSendMessage(o.text!, newFeature.channel))
     }
+  })
 
-    return {
-      isSettingOpened,
-      featureType,
-      openSettings,
-      editForm,
-      saveChanges,
-    }
-  },
-})
+  await axios.post(`${backendUrl}/feature/edit`, JSON.stringify(newFeature), {
+    headers: { "Content-Type": "application/json" },
+  })
+}
 </script>

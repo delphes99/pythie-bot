@@ -23,8 +23,9 @@ export default class TwitchIncomingCommand implements Feature {
 
   description(): DescriptionItem[] {
     return [
-      new DescriptionItem("channel", this.channel),
-      new DescriptionItem("trigger", this.trigger),
+      DescriptionItem.ofString("channel", this.channel),
+      DescriptionItem.ofString("trigger", this.trigger),
+      DescriptionItem.ofOutgoingEvents("response", this.response),
     ]
   }
 }
