@@ -11,8 +11,8 @@ import fr.delphes.features.obs.SceneChangedDescription
 import fr.delphes.features.obs.SourceFilterActivatedDescription
 import fr.delphes.features.obs.SourceFilterDeactivatedDescription
 import fr.delphes.features.overlay.OverlayDescription
-import fr.delphes.features.twitch.NewTwitchCommand
-import fr.delphes.features.twitch.NewTwitchCommandState
+import fr.delphes.features.twitch.command.NewTwitchCommand
+import fr.delphes.features.twitch.command.NewTwitchCommandState
 import fr.delphes.features.twitch.bitCheer.BitCheerDescription
 import fr.delphes.features.twitch.clipCreated.ClipCreatedDescription
 import fr.delphes.features.twitch.command.CommandDescription

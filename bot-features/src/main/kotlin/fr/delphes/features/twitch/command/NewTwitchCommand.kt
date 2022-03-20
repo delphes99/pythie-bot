@@ -1,19 +1,17 @@
 @file:UseSerializers(DurationSerializer::class, NullableLocalDateTimeSerializer::class)
 
-package fr.delphes.features.twitch
+package fr.delphes.features.twitch.command
 
-import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.feature.ChannelFilter
 import fr.delphes.connector.twitch.feature.TwitchFeatureConfiguration
 import fr.delphes.connector.twitch.feature.WithCommand
-import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.feature.featureNew.FeatureIdentifier
 import fr.delphes.feature.featureNew.FeatureRuntime
 import fr.delphes.feature.featureNew.FeatureState
-import fr.delphes.feature.featureNew.IncomingEventFilter
 import fr.delphes.feature.featureNew.IncomingEventFilters
+import fr.delphes.feature.featureNew.RuntimeResult
 import fr.delphes.feature.featureNew.SimpleFeatureRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.serialization.DurationSerializer
@@ -45,23 +43,15 @@ class NewTwitchCommand(
         return SimpleFeatureRuntime(
             IncomingEventFilters(
                 ChannelFilter(channel),
-                TriggerFilter(),
-                CooldownFilter()
+                TriggerFilter(command),
+                CooldownFilter(cooldown, clock)
             ),
             NewTwitchCommandState()
-        ) { _, _ -> NewTwitchCommandState(clock.now()) to response.map(OutgoingEventBuilder::build)
-        }
-    }
-
-    inner class TriggerFilter : IncomingEventFilter<NewTwitchCommandState> {
-        override fun isApplicable(event: IncomingEvent, state: NewTwitchCommandState): Boolean {
-            return event is CommandAsked && event.command == command
-        }
-    }
-
-    inner class CooldownFilter : IncomingEventFilter<NewTwitchCommandState> {
-        override fun isApplicable(event: IncomingEvent, state: NewTwitchCommandState): Boolean {
-            return cooldown?.let { state.lastCall?.plus(it) }?.isBefore(clock.now()) ?: true
+        ) { _, _ ->
+            RuntimeResult.NewState(
+                NewTwitchCommandState(clock.now()),
+                response.map(OutgoingEventBuilder::build)
+            )
         }
     }
 

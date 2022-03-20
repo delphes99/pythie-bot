@@ -6,24 +6,24 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 class SimpleFeatureRuntime<STATE : FeatureState>(
     private val filters: IncomingEventFilters<STATE> = IncomingEventFilters(),
     override var state: STATE,
-    private val responses: (STATE, IncomingEvent) -> Pair<STATE, List<OutgoingEvent>> = { oldState, _ -> oldState to emptyList() }
+    private val responses: (STATE, IncomingEvent) -> RuntimeResult<STATE> = { _, _ -> RuntimeResult.SameState() }
 ) : FilterIncomingEvent<STATE> by filters, FeatureRuntime<STATE> {
 
     override fun execute(incomingEvent: IncomingEvent): List<OutgoingEvent> {
-        val (newState, outgoingEvents) = execute(incomingEvent, state)
+        val result = execute(incomingEvent, state)
 
-        if (state != newState) {
-            state = newState
+        if (result is RuntimeResult.NewState) {
+            state = result.state
         }
 
-        return outgoingEvents
+        return result.outgoingEvents
     }
 
-    fun execute(incomingEvent: IncomingEvent, state: STATE): Pair<STATE, List<OutgoingEvent>> {
+    fun execute(incomingEvent: IncomingEvent, state: STATE): RuntimeResult<STATE> {
         return if (filters.isApplicable(incomingEvent, state)) {
             responses(state, incomingEvent)
         } else {
-            state to emptyList()
+            RuntimeResult.SameState()
         }
     }
 
@@ -35,7 +35,20 @@ class SimpleFeatureRuntime<STATE : FeatureState>(
             return SimpleFeatureRuntime(
                 filters,
                 NoState
-            ) { _, incomingEvent -> NoState to responses(incomingEvent) }
+            ) { _, incomingEvent -> RuntimeResult.SameState(responses(incomingEvent)) }
         }
     }
+}
+
+sealed class RuntimeResult<STATE : FeatureState>(
+    val outgoingEvents: List<OutgoingEvent>
+) {
+    class NewState<STATE : FeatureState>(
+        val state: STATE,
+        outgoingEvents: List<OutgoingEvent> = emptyList()
+    ) : RuntimeResult<STATE>(outgoingEvents)
+
+    class SameState<STATE : FeatureState>(
+        outgoingEvents: List<OutgoingEvent> = emptyList()
+    ) : RuntimeResult<STATE>(outgoingEvents)
 }
