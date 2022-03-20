@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 class FeatureConfigurationRepository(
     path: String,
     serializer: Json,
-) : FileRepository<List<FeatureConfiguration>>(
+) : FileRepository<List<FeatureConfiguration<out FeatureState>>>(
     path,
     serializer = { serializer.encodeToString(it) },
     deserializer = { serializer.decodeFromString(it) },

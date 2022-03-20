@@ -18,17 +18,21 @@ export class DescriptionItem {
   value: string | OutgoingEvent[]
   type: FeatureDescriptionType
 
-  constructor(key: string, value: string | OutgoingEvent[], type: FeatureDescriptionType) {
+  constructor(
+    key: string,
+    value: string | OutgoingEvent[],
+    type: FeatureDescriptionType,
+  ) {
     this.key = key
     this.value = value
     this.type = type
   }
 
-  static ofString(key: string, value: string) : DescriptionItem {
+  static ofString(key: string, value: string): DescriptionItem {
     return new this(key, value, FeatureDescriptionType.String)
   }
 
-  static ofOutgoingEvents(key: string, value: OutgoingEvent[]) : DescriptionItem {
+  static ofOutgoingEvents(key: string, value: OutgoingEvent[]): DescriptionItem {
     return new this(key, value, FeatureDescriptionType.OutgoingEvents)
   }
 }
@@ -49,6 +53,7 @@ export function fromJson(obj: any): Feature {
         obj.identifier,
         obj.channel,
         obj.trigger,
+        obj.cooldown,
         obj.response.map(mapOutgoingEvent),
       )
   }

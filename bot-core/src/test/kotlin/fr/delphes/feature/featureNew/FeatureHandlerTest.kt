@@ -26,7 +26,7 @@ internal class FeatureHandlerTest {
         internal fun `load a configuration`() {
             val featureHandler = FeatureHandler()
 
-            val runtime = FeatureRuntime()
+            val runtime = SimpleFeatureRuntime.noState()
             val configuration = FeatureConfigurationTest("id", runtime)
 
             featureHandler.load(listOf(configuration))
@@ -38,14 +38,14 @@ internal class FeatureHandlerTest {
         @Test
         internal fun `replace a configuration`() {
             val identifier = "id"
-            val oldRuntime = FeatureRuntime()
+            val oldRuntime = SimpleFeatureRuntime.noState()
             val configuration = FeatureConfigurationTest(
                 identifier,
                 oldRuntime
             )
             val featureHandler = FeatureHandler(configuration)
 
-            val newRuntime = FeatureRuntime()
+            val newRuntime = SimpleFeatureRuntime.noState()
             val newConfiguration = FeatureConfigurationTest(identifier, newRuntime)
 
             featureHandler.load(listOf(newConfiguration))
@@ -62,7 +62,7 @@ internal class FeatureHandlerTest {
             val incomingEvent = mockk<IncomingEvent>()
             val outgoingEvent = mockk<OutgoingEvent>()
 
-            val runtime = mockk<FeatureRuntime>()
+            val runtime = mockk<SimpleFeatureRuntime<NoState>>()
             every { runtime.execute(incomingEvent) } returns listOf(outgoingEvent)
 
             val featureHandler = FeatureHandler(
@@ -78,9 +78,9 @@ internal class FeatureHandlerTest {
 
 private class FeatureConfigurationTest(
     override val identifier: String,
-    private val runtimeToBuild: FeatureRuntime
-) : FeatureConfiguration {
-    override fun buildRuntime(): FeatureRuntime {
+    private val runtimeToBuild: SimpleFeatureRuntime<NoState>
+) : FeatureConfiguration<NoState> {
+    override fun buildRuntime(): SimpleFeatureRuntime<NoState> {
         return runtimeToBuild
     }
 }

@@ -11,9 +11,11 @@ import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
+import fr.delphes.feature.featureNew.Feature
 import fr.delphes.feature.featureNew.FeatureConfiguration
 import fr.delphes.feature.featureNew.FeatureConfigurationRepository
 import fr.delphes.feature.featureNew.FeatureHandler
+import fr.delphes.feature.featureNew.FeatureState
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -53,7 +55,9 @@ class Bot(
         serializer
     )
 
-    val featureHandler = FeatureHandler().also { it.load(runBlocking { featureRepository.load() }) }
+    val featureHandler = FeatureHandler().also {
+        it.load(runBlocking { featureRepository.load() })
+    }
 
     suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
         listOf(legacyfeatures, editableFeatures)
@@ -107,10 +111,10 @@ class Bot(
         featureHandler.load(featureRepository.load())
     }
 
-    suspend fun editFeature(newConfiguration: FeatureConfiguration) {
+    suspend fun editFeature(newConfiguration: FeatureConfiguration<out FeatureState>) {
         val actualConfigurations = featureRepository.load()
         val newConfigurations = actualConfigurations.map { oldConfiguration ->
-            if(oldConfiguration.identifier == newConfiguration.identifier) {
+            if (oldConfiguration.identifier == newConfiguration.identifier) {
                 newConfiguration
             } else {
                 oldConfiguration

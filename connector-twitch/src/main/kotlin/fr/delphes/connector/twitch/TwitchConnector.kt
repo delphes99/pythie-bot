@@ -13,6 +13,7 @@ import fr.delphes.connector.twitch.user.getUserInfos
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
+import fr.delphes.feature.featureNew.FeatureState
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.api.user.User
@@ -61,7 +62,7 @@ class TwitchConnector(
             .filterIsInstance<TwitchFeature>()
             .filter { feature -> feature.channel == channel }
             .flatMap(TwitchFeature::commands) + bot.featureHandler.configurations
-            .filterIsInstance<TwitchFeatureConfiguration>()
+            .filterIsInstance<TwitchFeatureConfiguration<out FeatureState>>()
             .filter { feature -> feature.channel == channel }
             .filterIsInstance<WithCommand>()
             .flatMap(WithCommand::commands)

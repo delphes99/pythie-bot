@@ -2,6 +2,7 @@ package fr.delphes.connector.twitch.feature
 
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
+import fr.delphes.feature.featureNew.NoState
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -14,21 +15,21 @@ internal class ChannelFilterTest {
     internal fun `match only twitch event`() {
         val genericEvent = mockk<IncomingEvent>()
 
-        ChannelFilter(CHANNEL).isApplicable(genericEvent).shouldBeFalse()
+        ChannelFilter<NoState>(CHANNEL).isApplicable(genericEvent, NoState).shouldBeFalse()
     }
 
     @Test
     internal fun `match channel`() {
         val event = buildIncomingEventFor(CHANNEL)
 
-        ChannelFilter(CHANNEL).isApplicable(event).shouldBeTrue()
+        ChannelFilter<NoState>(CHANNEL).isApplicable(event, NoState).shouldBeTrue()
     }
 
     @Test
     internal fun `don't match channel`() {
         val event = buildIncomingEventFor(OTHER_CHANNEL)
 
-        ChannelFilter(CHANNEL).isApplicable(event).shouldBeFalse()
+        ChannelFilter<NoState>(CHANNEL).isApplicable(event, NoState).shouldBeFalse()
     }
 
     private fun buildIncomingEventFor(channel: TwitchChannel): TwitchIncomingEvent {

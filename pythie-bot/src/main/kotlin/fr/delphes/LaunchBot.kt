@@ -11,11 +11,9 @@ import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
-import fr.delphes.features.FeatureConfiguration
-import fr.delphes.features.twitch.NewTwitchCommand
+import fr.delphes.features.FeatureSerializationConfiguration
 import fr.delphes.features.twitch.command.EditableCommand
 import fr.delphes.features.twitch.command.EditableCommandConfiguration
-import fr.delphes.twitch.TwitchChannel
 import kotlinx.serialization.InternalSerializationApi
 import java.io.File
 
@@ -44,7 +42,7 @@ fun main() {
                 )
             )
         ),
-        FeatureConfiguration.serializersModule,
+        FeatureSerializationConfiguration.serializersModule,
         "${File.separator}feature${File.separator}features.json"
     )
 

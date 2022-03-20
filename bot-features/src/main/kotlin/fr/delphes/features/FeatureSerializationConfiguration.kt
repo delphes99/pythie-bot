@@ -4,6 +4,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.feature.FeatureDescription
 import fr.delphes.feature.featureNew.FeatureConfiguration
+import fr.delphes.feature.featureNew.FeatureState
 import fr.delphes.features.core.botStarted.BotStartedDescription
 import fr.delphes.features.discord.NewGuildMemberDescription
 import fr.delphes.features.obs.SceneChangedDescription
@@ -11,6 +12,7 @@ import fr.delphes.features.obs.SourceFilterActivatedDescription
 import fr.delphes.features.obs.SourceFilterDeactivatedDescription
 import fr.delphes.features.overlay.OverlayDescription
 import fr.delphes.features.twitch.NewTwitchCommand
+import fr.delphes.features.twitch.NewTwitchCommandState
 import fr.delphes.features.twitch.bitCheer.BitCheerDescription
 import fr.delphes.features.twitch.clipCreated.ClipCreatedDescription
 import fr.delphes.features.twitch.command.CommandDescription
@@ -35,7 +37,7 @@ import kotlinx.serialization.modules.SerializersModuleBuilder
 import kotlinx.serialization.serializer
 
 //TODO split into connectors
-object FeatureConfiguration {
+object FeatureSerializationConfiguration {
     @InternalSerializationApi
     val serializersModule = SerializersModule {
         //Discord
@@ -69,6 +71,7 @@ object FeatureConfiguration {
         registerOutgoingMessageBuilder<SendMessageBuilder>()
 
         registerFeatureConfiguration<NewTwitchCommand>()
+        registerFeatureState<NewTwitchCommandState>()
     }
 
     @InternalSerializationApi
@@ -82,7 +85,12 @@ object FeatureConfiguration {
     }
 
     @InternalSerializationApi
-    inline fun <reified T : FeatureConfiguration> SerializersModuleBuilder.registerFeatureConfiguration() {
+    inline fun <reified T : FeatureConfiguration<out FeatureState>> SerializersModuleBuilder.registerFeatureConfiguration() {
         polymorphic(FeatureConfiguration::class, T::class, T::class.serializer())
+    }
+
+    @InternalSerializationApi
+    inline fun <reified T : FeatureState> SerializersModuleBuilder.registerFeatureState() {
+        polymorphic(FeatureState::class, T::class, T::class.serializer())
     }
 }

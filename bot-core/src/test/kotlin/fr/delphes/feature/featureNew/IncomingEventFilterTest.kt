@@ -11,7 +11,7 @@ internal class IncomingEventFilterTest {
         val incomingEvent = mockk<IncomingEvent>()
         val isApplicable = IncomingEventFilters(
             listOf(FILTER_OFF)
-        ).isApplicable(incomingEvent)
+        ).isApplicable(incomingEvent, NoState)
 
         isApplicable shouldBe false
     }
@@ -21,7 +21,7 @@ internal class IncomingEventFilterTest {
         val incomingEvent = mockk<IncomingEvent>()
         val isApplicable = IncomingEventFilters(
             listOf(FILTER_ON)
-        ).isApplicable(incomingEvent)
+        ).isApplicable(incomingEvent, NoState)
 
         isApplicable shouldBe true
     }
@@ -31,7 +31,7 @@ internal class IncomingEventFilterTest {
         val incomingEvent = mockk<IncomingEvent>()
         val isApplicable = IncomingEventFilters(
             listOf(FILTER_ON, FILTER_ON)
-        ).isApplicable(incomingEvent)
+        ).isApplicable(incomingEvent, NoState)
 
         isApplicable shouldBe true
     }
@@ -41,14 +41,14 @@ internal class IncomingEventFilterTest {
         val incomingEvent = mockk<IncomingEvent>()
         val isApplicable = IncomingEventFilters(
             listOf(FILTER_ON, FILTER_OFF, FILTER_ON)
-        ).isApplicable(incomingEvent)
+        ).isApplicable(incomingEvent, NoState)
 
         isApplicable shouldBe false
     }
 
     companion object {
-        val FILTER_OFF = IncomingEventFilter { false }
-        val FILTER_ON = IncomingEventFilter { true }
+        val FILTER_OFF = IncomingEventFilter<NoState> { _, _ -> false }
+        val FILTER_ON = IncomingEventFilter<NoState> { _, _ -> true }
     }
 }
 

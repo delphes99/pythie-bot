@@ -7,17 +7,20 @@ export default class TwitchIncomingCommand implements Feature {
   identifier: string
   channel: string
   trigger: string
+  cooldown: string
   response: OutgoingEvent[]
 
   constructor(
     identifier: string,
     channel: string,
     trigger: string,
+    cooldown: string,
     response: OutgoingEvent[],
   ) {
     this.identifier = identifier
     this.channel = channel
     this.trigger = trigger
+    this.cooldown = cooldown
     this.response = response
   }
 
