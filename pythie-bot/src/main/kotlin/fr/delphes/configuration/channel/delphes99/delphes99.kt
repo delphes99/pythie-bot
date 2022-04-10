@@ -75,6 +75,18 @@ private val highlightStateManager = StateManagerWithRepository(
     )
 )
 
+fun buildShoutOut(user: User): ShoutOut {
+    return ShoutOut(
+        User(user.name),
+        channel
+    ) { userInfos, channelInformation ->
+        val lastStream = userInfos.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""
+        val currentCategory = channelInformation?.game?.label?.let { " ($it) " } ?: ""
+
+        "\uD83D\uDCFA $lastStream $currentCategory N'hésitez pas à aller voir ${user.name} : https://www.twitch.tv/${user.name.lowercase()}."
+    }
+}
+
 @InternalSerializationApi
 val delphes99Features = listOf(
     VOTH(
@@ -431,11 +443,8 @@ val delphes99Features = listOf(
         activeStreamer = Duration.ofDays(30),
         stateManagerWithRepository = highlightStateManager,
         excludedUserNames = listOf("streamlabs"),
-        shoutOut = { messageReceived, user ->
-            ShoutOut(
-                User(user.name),
-                channel
-            ) { userInfos -> "\uD83D\uDCFA ${userInfos.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${user.name} : https://www.twitch.tv/${messageReceived.user.normalizeName}." }
+        shoutOut = { messageReceived, _ ->
+            buildShoutOut(messageReceived.user)
         }
     ),
     Command(
@@ -445,10 +454,7 @@ val delphes99Features = listOf(
             listOfNotNull(
                 if (moderators.contains(commandAsked.by.normalizeName)) {
                     commandAsked.parameters.firstOrNull()?.let { promotedUser ->
-                        ShoutOut(
-                            User(promotedUser),
-                            channel
-                        ) { userInfos -> "\uD83D\uDCFA ${userInfos.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir $promotedUser : https://www.twitch.tv/${promotedUser.lowercase()}." }
+                        buildShoutOut(User(promotedUser))
                     }
                 } else {
                     null
@@ -465,12 +471,7 @@ val delphes99Features = listOf(
                     "\uD83E\uDDED ${incomingRaid.leader.name} explore twitch et fait escale ici avec ses ${incomingRaid.numberOfRaiders} acolytes.",
                     channel
                 ),
-                ShoutOut(
-                    incomingRaid.leader,
-                    channel
-                ) { userInfos ->
-                    "\uD83D\uDCFA ${userInfos.lastStreamTitle?.let { title -> "« $title », ça vous intrigue ?" } ?: ""} N'hésitez pas à aller voir ${incomingRaid.leader.name} : https://www.twitch.tv/${incomingRaid.leader.normalizeName}."
-                },
+                buildShoutOut(incomingRaid.leader),
                 CreatePoll(
                     channel,
                     "Une présentation ?",

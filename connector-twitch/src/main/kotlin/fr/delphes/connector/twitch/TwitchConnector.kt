@@ -16,6 +16,7 @@ import fr.delphes.connector.twitch.webservice.WebhookModule
 import fr.delphes.feature.featureNew.FeatureState
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.TwitchHelixClient
+import fr.delphes.twitch.api.channel.ChannelInformation
 import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.utils.cache.InMemoryCache
@@ -105,8 +106,27 @@ class TwitchConnector(
         }
     )
 
+    private val channelInformationCache = InMemoryCache<User, ChannelInformation>(
+        expirationDuration = Duration.ofMinutes(5),
+        clock = SystemClock,
+        retrieve = { user ->
+            connectorStateManager.whenRunning(
+                whenRunning = {
+                    clientBot.twitchApi.getChannelInformation(user)
+                },
+                whenNotRunning = {
+                    null
+                }
+            )
+        }
+    )
+
     suspend fun getUser(user: User): UserInfos? {
         return userCache.getValue(user.normalizeName)
+    }
+
+    suspend fun getChannelInformation(user: User): ChannelInformation? {
+        return channelInformationCache.getValue(user)
     }
 
     internal suspend fun handleIncomingEvent(event: TwitchIncomingEvent) {

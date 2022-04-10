@@ -1,5 +1,8 @@
 package fr.delphes.twitch
 
+import fr.delphes.twitch.api.channel.payload.ChannelInformation
+import fr.delphes.twitch.api.channel.payload.ChannelInformationPayload
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.api.user.payload.GetUsersDataPayload
 import fr.delphes.twitch.api.user.payload.GetUsersPayload
 import fr.delphes.twitch.api.video.payload.ChannelVideoType
@@ -36,9 +39,25 @@ class AppHelixClient(
         )
     }
 
-    override suspend fun getUser(userName: String): GetUsersDataPayload? {
+    override suspend fun getUserByName(userName: String): GetUsersDataPayload? {
         val payload = "https://api.twitch.tv/helix/users".get<GetUsersPayload>(
             "login" to userName
+        )
+
+        return payload.data.firstOrNull()
+    }
+
+    override suspend fun getUserById(userId: UserId): GetUsersDataPayload? {
+        val payload = "https://api.twitch.tv/helix/users".get<GetUsersPayload>(
+            "id" to userId
+        )
+
+        return payload.data.firstOrNull()
+    }
+
+    override suspend fun getChannelInformation(userId: UserId): ChannelInformation? {
+        val payload = "https://api.twitch.tv/helix/channels".get<ChannelInformationPayload>(
+            "broadcaster_id" to userId.id
         )
 
         return payload.data.firstOrNull()
