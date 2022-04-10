@@ -1,40 +1,68 @@
 import FeatureDescriptionType from "@/features/configurations/FeatureDescriptionType"
 import FeatureType from "@/features/configurations/FeatureType"
-import TwitchIncomingCommand from "@/features/configurations/TwitchIncomingCommand"
 import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
 import OutgoingEventType from "@/features/outgoingevents/OutgoingEventType"
 import TwitchOutgoingSendMessage from "@/features/outgoingevents/TwitchOutgoingSendMessage"
 
-export default interface Feature {
-  type: FeatureType
+export default class Feature {
   identifier: string
-  response: OutgoingEvent[]
+  type: FeatureType
+  descriptionItems: DescriptionItem[]
 
-  description(): DescriptionItem[]
+  constructor(
+    identifier: string,
+    type: FeatureType,
+    descriptionItems: DescriptionItem[],
+  ) {
+    this.identifier = identifier
+    this.type = type
+    this.descriptionItems = descriptionItems
+  }
 }
 
 export class DescriptionItem {
-  key: string
+  name: string
   value: string | OutgoingEvent[]
   type: FeatureDescriptionType
 
   constructor(
-    key: string,
-    value: string | OutgoingEvent[],
+    name: string,
     type: FeatureDescriptionType,
+    value: string | OutgoingEvent[],
   ) {
-    this.key = key
+    this.name = name
     this.value = value
     this.type = type
   }
 
   static ofString(key: string, value: string): DescriptionItem {
-    return new this(key, value, FeatureDescriptionType.String)
+    return new this(key, FeatureDescriptionType.STRING, value)
   }
 
   static ofOutgoingEvents(key: string, value: OutgoingEvent[]): DescriptionItem {
-    return new this(key, value, FeatureDescriptionType.OutgoingEvents)
+    return new this(key, FeatureDescriptionType.OUTGOING_EVENTS, value)
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapDescriptionItem(obj: any): DescriptionItem {
+  let value: string | OutgoingEvent[]
+  switch (obj.type) {
+    case FeatureDescriptionType.STRING:
+      value = obj.currentValue as string
+      break
+    case FeatureDescriptionType.OUTGOING_EVENTS:
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      value = obj.currentValue.map((outgoingEvent) => mapOutgoingEvent(outgoingEvent))
+      break
+    default:
+      throw new Error(
+        `unknow description type : ${obj.type}`,
+      )
+  }
+
+  return new DescriptionItem(obj.name, obj.type, value)
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,14 +75,5 @@ function mapOutgoingEvent(obj: any): OutgoingEvent {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function fromJson(obj: any): Feature {
-  switch (obj.type as FeatureType) {
-    case FeatureType.TwitchIncomingCommand:
-      return new TwitchIncomingCommand(
-        obj.identifier,
-        obj.channel,
-        obj.trigger,
-        obj.cooldown,
-        obj.response.map(mapOutgoingEvent),
-      )
-  }
+  return new Feature(obj.identifier, obj.type, obj.items.map(mapDescriptionItem))
 }

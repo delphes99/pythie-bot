@@ -15,10 +15,10 @@
       v-for="description in editForm"
       :key="description.id"
     >
-      <div v-if="description.type === FeatureDescriptionType.String">
+      <div v-if="description.type === FeatureDescriptionType.STRING">
         {{ description.field }} : {{ description.value }}
       </div>
-      <div v-if="description.type === FeatureDescriptionType.OutgoingEvents">
+      <div v-if="description.type === FeatureDescriptionType.OUTGOING_EVENTS">
         <div
           v-for="event in description.outgoingEvents"
           :key="event.id"
@@ -46,7 +46,7 @@
         v-for="item in editForm"
         :key="item.field"
       >
-        <div v-if="item.type === FeatureDescriptionType.String">
+        <div v-if="item.type === FeatureDescriptionType.STRING">
           <label :for="item.id">{{ item.field }}</label>
           <input
             :id="item.id"
@@ -54,7 +54,7 @@
             type="text"
           >
         </div>
-        <div v-if="item.type === FeatureDescriptionType.OutgoingEvents">
+        <div v-if="item.type === FeatureDescriptionType.OUTGOING_EVENTS">
           <div
             v-for="event in item.outgoingEvents"
             :key="event.id"
@@ -111,23 +111,23 @@ const isSettingOpened = ref(false)
 const openSettings = () => (isSettingOpened.value = true)
 
 const editForm = ref<FormItem[]>(
-  props.feature.description().map(desc => {
+  props.feature.descriptionItems.map(desc => {
     switch (desc.type) {
-      case FeatureDescriptionType.String:
+      case FeatureDescriptionType.STRING:
         return {
-          id: props.feature.identifier + "_" + desc.key,
-          field: desc.key,
+          id: props.feature.identifier + "_" + desc.name,
+          field: desc.name,
           value: desc.value as string,
           outgoingEvents: null,
-          type: FeatureDescriptionType.String,
+          type: FeatureDescriptionType.STRING,
         }
-      case FeatureDescriptionType.OutgoingEvents:
+      case FeatureDescriptionType.OUTGOING_EVENTS:
         return {
-          id: props.feature.identifier + "_" + desc.key,
-          field: desc.key,
+          id: props.feature.identifier + "_" + desc.name,
+          field: desc.name,
           value: null,
           outgoingEvents: desc.value as OutgoingEvent[],
-          type: FeatureDescriptionType.OutgoingEvents,
+          type: FeatureDescriptionType.OUTGOING_EVENTS,
         }
     }
   }),
@@ -147,11 +147,11 @@ async function saveChanges() {
   const newFeature: any = props.feature
   editForm.value.forEach(item => {
     switch (item.type) {
-      case FeatureDescriptionType.String:
+      case FeatureDescriptionType.STRING:
         newFeature[item.field] = item.value
         return
-      case FeatureDescriptionType.OutgoingEvents:
-        newFeature[item.field] = item.outgoingEvents!.map(o => new TwitchOutgoingSendMessage(o.text!, newFeature.channel))
+      case FeatureDescriptionType.OUTGOING_EVENTS:
+        newFeature[item.field] = item.outgoingEvents?.map(o => new TwitchOutgoingSendMessage(o.text, newFeature.channel))
     }
   })
 

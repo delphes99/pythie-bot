@@ -7,6 +7,10 @@ import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.feature.ChannelFilter
 import fr.delphes.connector.twitch.feature.TwitchFeatureConfiguration
 import fr.delphes.connector.twitch.feature.WithCommand
+import fr.delphes.feature.featureNew.FeatureDescription
+import fr.delphes.feature.featureNew.FeatureDescriptionItem
+import fr.delphes.feature.featureNew.FeatureDescriptionItemType.OUTGOING_EVENTS
+import fr.delphes.feature.featureNew.FeatureDescriptionItemType.STRING
 import fr.delphes.feature.featureNew.FeatureIdentifier
 import fr.delphes.feature.featureNew.FeatureRuntime
 import fr.delphes.feature.featureNew.FeatureState
@@ -22,12 +26,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
+import kotlinx.serialization.json.Json
 import java.time.Duration
 import java.time.LocalDateTime
+private const val type = "twitch-incoming-command"
 
 //TODO delete old command
 @Serializable
-@SerialName("twitch-incoming-command")
+@SerialName(type)
 class NewTwitchCommand(
     override val identifier: FeatureIdentifier,
     override val channel: TwitchChannel,
@@ -56,6 +62,18 @@ class NewTwitchCommand(
     }
 
     override val commands: Set<Command> get() = setOf(command)
+
+    override fun description(serializer: Json): FeatureDescription {
+        return FeatureDescription(
+            identifier,
+            type,
+            listOf(
+                FeatureDescriptionItem.build(STRING, "channel", this.channel, serializer),
+                FeatureDescriptionItem.build(STRING, "trigger", this.trigger, serializer),
+                FeatureDescriptionItem.build(OUTGOING_EVENTS, "response", this.response, serializer),
+            )
+        )
+    }
 }
 
 @Serializable

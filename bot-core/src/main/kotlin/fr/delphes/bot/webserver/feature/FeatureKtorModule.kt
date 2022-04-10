@@ -25,6 +25,7 @@ fun Application.Features(bot: Bot) {
                     .features
                     .values
                     .map(Feature<out FeatureState>::configuration)
+                    .map { it.description(bot.serializer) }
             )
             this.call.respondText(json, ContentType.Application.Json)
         }

@@ -6,6 +6,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -82,5 +83,9 @@ private class FeatureConfigurationTest(
 ) : FeatureConfiguration<NoState> {
     override fun buildRuntime(): SimpleFeatureRuntime<NoState> {
         return runtimeToBuild
+    }
+
+    override fun description(serializer: Json): FeatureDescription {
+        error("no serializer for test")
     }
 }
