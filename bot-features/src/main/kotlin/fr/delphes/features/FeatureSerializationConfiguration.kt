@@ -31,15 +31,20 @@ import fr.delphes.features.twitch.streamOnline.StreamOnlineDescription
 import fr.delphes.features.twitch.streamUpdate.StreamUpdateDescription
 import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightDescription
 import fr.delphes.features.twitch.voth.VOTHDescription
+import fr.delphes.utils.serialization.DurationSerializer
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.SerializersModuleBuilder
 import kotlinx.serialization.serializer
+import java.time.Duration
 
 //TODO split into connectors
 object FeatureSerializationConfiguration {
     @InternalSerializationApi
     val serializersModule = SerializersModule {
+        //Default serializer for custom type
+        contextual(Duration::class, DurationSerializer)
+
         //Discord
         registerLegacyFeatureConfiguration<NewGuildMemberDescription>()
         // Overlay

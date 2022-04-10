@@ -1,4 +1,4 @@
-@file:UseSerializers(DurationSerializer::class, NullableLocalDateTimeSerializer::class)
+@file:UseSerializers(DurationSerializer::class)
 
 package fr.delphes.features.twitch.command
 
@@ -9,17 +9,16 @@ import fr.delphes.connector.twitch.feature.TwitchFeatureConfiguration
 import fr.delphes.connector.twitch.feature.WithCommand
 import fr.delphes.feature.featureNew.FeatureDescription
 import fr.delphes.feature.featureNew.FeatureDescriptionItem
+import fr.delphes.feature.featureNew.FeatureDescriptionItemType.DURATION
 import fr.delphes.feature.featureNew.FeatureDescriptionItemType.OUTGOING_EVENTS
 import fr.delphes.feature.featureNew.FeatureDescriptionItemType.STRING
 import fr.delphes.feature.featureNew.FeatureIdentifier
 import fr.delphes.feature.featureNew.FeatureRuntime
-import fr.delphes.feature.featureNew.FeatureState
 import fr.delphes.feature.featureNew.IncomingEventFilters
 import fr.delphes.feature.featureNew.RuntimeResult
 import fr.delphes.feature.featureNew.SimpleFeatureRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.serialization.DurationSerializer
-import fr.delphes.utils.serialization.NullableLocalDateTimeSerializer
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import kotlinx.serialization.SerialName
@@ -28,7 +27,7 @@ import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.json.Json
 import java.time.Duration
-import java.time.LocalDateTime
+
 private const val type = "twitch-incoming-command"
 
 //TODO delete old command
@@ -70,13 +69,10 @@ class NewTwitchCommand(
             listOf(
                 FeatureDescriptionItem.build(STRING, "channel", this.channel, serializer),
                 FeatureDescriptionItem.build(STRING, "trigger", this.trigger, serializer),
+                FeatureDescriptionItem.build(DURATION, "cooldown", this.cooldown, serializer),
                 FeatureDescriptionItem.build(OUTGOING_EVENTS, "response", this.response, serializer),
             )
         )
     }
 }
 
-@Serializable
-class NewTwitchCommandState(
-    val lastCall: LocalDateTime? = null
-) : FeatureState

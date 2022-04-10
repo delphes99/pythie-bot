@@ -20,9 +20,11 @@ export default class Feature {
   }
 }
 
+export type DescriptionItemType = string | OutgoingEvent[] | bigint
+
 export class DescriptionItem {
   name: string
-  value: string | OutgoingEvent[]
+  currentValue: DescriptionItemType
   type: FeatureDescriptionType
 
   constructor(
@@ -31,7 +33,7 @@ export class DescriptionItem {
     value: string | OutgoingEvent[],
   ) {
     this.name = name
-    this.value = value
+    this.currentValue = value
     this.type = type
   }
 
@@ -44,9 +46,12 @@ export class DescriptionItem {
   }
 }
 
+const durationSecondRegex = /PT(\d+)S/
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapDescriptionItem(obj: any): DescriptionItem {
   let value: string | OutgoingEvent[]
+
   switch (obj.type) {
     case FeatureDescriptionType.STRING:
       value = obj.currentValue as string
@@ -56,10 +61,13 @@ function mapDescriptionItem(obj: any): DescriptionItem {
       // @ts-ignore
       value = obj.currentValue.map((outgoingEvent) => mapOutgoingEvent(outgoingEvent))
       break
+    case FeatureDescriptionType.DURATION:
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      value = BigInt(obj.currentValue.match(durationSecondRegex)[1])
+      break
     default:
-      throw new Error(
-        `unknow description type : ${obj.type}`,
-      )
+      throw new Error(`unknow description type : ${obj.type}`)
   }
 
   return new DescriptionItem(obj.name, obj.type, value)

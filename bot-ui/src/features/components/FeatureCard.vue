@@ -18,6 +18,9 @@
       <div v-if="description.type === FeatureDescriptionType.STRING">
         {{ description.field }} : {{ description.value }}
       </div>
+      <div v-if="description.type === FeatureDescriptionType.DURATION">
+        {{ description.field }} : {{ description.number }} s
+      </div>
       <div v-if="description.type === FeatureDescriptionType.OUTGOING_EVENTS">
         <div
           v-for="event in description.outgoingEvents"
@@ -51,6 +54,14 @@
           <input
             :id="item.id"
             v-model="item.value"
+            type="text"
+          >
+        </div>
+        <div v-if="item.type === FeatureDescriptionType.DURATION">
+          <label :for="item.id">{{ item.field }} (s)</label>
+          <input
+            :id="item.id"
+            v-model="item.number"
             type="text"
           >
         </div>
@@ -94,6 +105,7 @@ interface FormItem {
   id: string
   field: string
   value: string | null
+  number: bigint | null
   outgoingEvents: OutgoingEvent[] | null
   type: FeatureDescriptionType
 }
@@ -111,13 +123,14 @@ const isSettingOpened = ref(false)
 const openSettings = () => (isSettingOpened.value = true)
 
 const editForm = ref<FormItem[]>(
-  props.feature.descriptionItems.map(desc => {
+  props.feature.descriptionItems.map((desc) => {
     switch (desc.type) {
       case FeatureDescriptionType.STRING:
         return {
           id: props.feature.identifier + "_" + desc.name,
           field: desc.name,
-          value: desc.value as string,
+          value: desc.currentValue as string,
+          number: null,
           outgoingEvents: null,
           type: FeatureDescriptionType.STRING,
         }
@@ -126,15 +139,25 @@ const editForm = ref<FormItem[]>(
           id: props.feature.identifier + "_" + desc.name,
           field: desc.name,
           value: null,
-          outgoingEvents: desc.value as OutgoingEvent[],
+          number: null,
+          outgoingEvents: desc.currentValue as OutgoingEvent[],
           type: FeatureDescriptionType.OUTGOING_EVENTS,
+        }
+      case FeatureDescriptionType.DURATION:
+        return {
+          id: props.feature.identifier + "_" + desc.name,
+          field: desc.name,
+          value: null,
+          number: desc.currentValue as bigint,
+          outgoingEvents: null,
+          type: FeatureDescriptionType.DURATION,
         }
     }
   }),
 )
 
 async function saveChanges() {
-  if (editForm.value.some(item => item.value?.trim() === "")) {
+  if (editForm.value.some((item) => item.value?.trim() === "")) {
     ElNotification({
       title: t("common.emptyField"),
       type: "error",
@@ -142,16 +165,28 @@ async function saveChanges() {
     return
   }
 
-  //TODO remove //TODO mutate props
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const newFeature: any = props.feature
-  editForm.value.forEach(item => {
+  const { identifier, type } = props.feature
+  const newFeature: any = { identifier, type }
+
+  function unknownDescriptionItemType(type: never) {
+    throw new Error(`unknow description item type ${type}`)
+  }
+
+  editForm.value.forEach((item) => {
     switch (item.type) {
       case FeatureDescriptionType.STRING:
         newFeature[item.field] = item.value
         return
       case FeatureDescriptionType.OUTGOING_EVENTS:
-        newFeature[item.field] = item.outgoingEvents?.map(o => new TwitchOutgoingSendMessage(o.text, newFeature.channel))
+        newFeature[item.field] = item.outgoingEvents?.map(
+          (o) => new TwitchOutgoingSendMessage(o.text, newFeature.channel),
+        )
+        return
+      case FeatureDescriptionType.DURATION:
+        newFeature[item.field] = `PT${item.number?.toString()}S`
+        return
+      default:
+        unknownDescriptionItemType(item.type)
     }
   })
 

@@ -1,5 +1,7 @@
 package fr.delphes.feature.featureNew
 
 enum class FeatureDescriptionItemType {
-    STRING, OUTGOING_EVENTS
+    STRING,
+    DURATION,
+    OUTGOING_EVENTS
 }
