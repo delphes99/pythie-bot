@@ -183,7 +183,7 @@
 		this.onmessage = function (event) {
 			const data = JSON.parse(event.data)
 			if(data.type === 'playSound') {
-				const audio = new Audio('http://localhost:8080/media/'+data.parameters.mediaName);
+				const audio = new Audio('http://localhost:8080/medias/content/'+data.parameters.mediaName);
 				audio.play();
 			} else {
 				vm.alert = data

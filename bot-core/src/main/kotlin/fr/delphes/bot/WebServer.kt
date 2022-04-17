@@ -5,7 +5,8 @@ import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.bot.webserver.alert.AlertModule
 import fr.delphes.bot.webserver.feature.Features
-import fr.delphes.bot.webserver.media.MediaModule
+import fr.delphes.bot.media.MediaModule
+import fr.delphes.bot.media.MediasService
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CORS
@@ -35,7 +36,7 @@ class WebServer(
             AdminModule(bot)
             AlertModule(bot)
             Features(bot)
-            MediaModule(bot)
+            MediaModule(MediasService(bot))
             Overlays(bot)
             ConnectorsModule(bot)
 
