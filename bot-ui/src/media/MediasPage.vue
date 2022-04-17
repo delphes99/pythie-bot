@@ -1,8 +1,33 @@
 <template>
-  <panel :title="$t('medias')">
+  <panel :title="$t('medias.add')">
+    <form>
+      <label for="file">{{ $t("medias.file") }}</label>
+      <input
+        id="file"
+        ref=""
+        type="file"
+        name="file"
+        @change="selectFile"
+      >
+      <label for="filename">{{ $t("medias.filename") }}</label>
+      <input
+        id="filename"
+        v-model="filename"
+        type="text"
+        name="filename"
+      >
+      <br>
+      <input
+        type="button"
+        value="{{$t('common.validate')}}"
+        @click="upload"
+      >
+    </form>
+  </panel>
+  <panel :title="$t('medias.list')">
     <table>
       <tr>
-        <th>file name</th>
+        <th>{{ $t("medias.filename") }}</th>
       </tr>
       <tr
         v-for="file in files"
@@ -28,7 +53,21 @@ const { t } = useI18n()
 const backendUrl = inject("backendUrl") as string
 
 const mediaService = new MediasService(backendUrl)
+
+const filename = ref<string>("")
+
 const files = ref<Media[]>([])
+const selectedFile = ref()
+const selectFile = (event: any) => {
+  let file = event.target.files[0]
+  selectedFile.value = file
+
+  filename.value = file.name
+}
+
+const upload = () => {
+  mediaService.upload(filename.value, selectedFile.value)
+}
 
 mediaService.list().then((medias) => (files.value = medias))
 </script>

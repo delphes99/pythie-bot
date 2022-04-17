@@ -29,7 +29,7 @@ fun Application.MediaModule(
 
             val parts = multipart.readAllParts()
 
-            val fileName = parts.filterIsInstance<PartData.FormItem>().firstOrNull { it.name == "name" }?.value
+            val fileName = parts.filterIsInstance<PartData.FormItem>().firstOrNull { it.name == "filename" }?.value
             if (fileName == null) {
                 this.context.respond(HttpStatusCode.BadRequest, "Missing filename")
                 return@post

@@ -2,7 +2,12 @@
   "home": "Accueil",
   "features": "Module",
   "overlay": "Overlay",
-  "medias": "Médias",
+  "medias": {
+    "add": "Ajouter un média",
+    "list": "Médias",
+    "file": "Fichier",
+    "filename": "Nom de fichier"
+  },
   "about": "À propos",
   "feature": {
     "name": "Nom"
@@ -10,6 +15,7 @@
   "common": {
     "save": "Sauvegarder",
     "edit": "Éditer",
+    "validate": "Valider",
     "connect": "Connexion",
     "disconnect": "Déconnexion",
     "success": "Succès",
