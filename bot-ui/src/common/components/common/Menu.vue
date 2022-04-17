@@ -37,6 +37,16 @@
     </router-link>
     <router-link
       class="router-link"
+      to="/medias"
+    >
+      <img
+        src="@/common/assets/medias.svg"
+        width="20"
+      >
+      {{ $t("medias") }}
+    </router-link>
+    <router-link
+      class="router-link"
       to="/settings"
     >
       <img

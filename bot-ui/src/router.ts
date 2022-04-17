@@ -12,6 +12,7 @@ import OverlayEditor from "@/overlay/editor/OverlayEditor.vue"
 import Home from "@/home/GlobalHome.vue"
 import TwitchRouter from "@/twitch/TwitchRouter.vue"
 import Settings from "@/settings/Settings.vue"
+import MediasPage from "@/media/MediasPage.vue"
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
 
 const routes: Array<RouteRecordRaw> = [
@@ -42,14 +43,19 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: "/about",
-    name: "About",
-    component: About,
-  },
-  {
     path: "/settings",
     name: "Settings",
     component: Settings,
+  },
+  {
+    path: "/medias",
+    name: "Medias",
+    component: MediasPage,
+  },
+  {
+    path: "/about",
+    name: "About",
+    component: About,
   },
   {
     path: "/discord",
