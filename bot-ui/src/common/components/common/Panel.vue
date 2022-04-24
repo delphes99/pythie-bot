@@ -5,7 +5,7 @@
         {{ title }}
       </h1>
     </div>
-    <div>
+    <div class="p-4">
       <slot />
     </div>
   </div>

@@ -25,24 +25,18 @@
     </form>
   </panel>
   <panel :title="$t('medias.list')">
-    <table>
-      <tr>
-        <th>{{ $t("medias.filename") }}</th>
-      </tr>
-      <tr
-        v-for="file in files"
-        :key="file.fileName"
-      >
-        <td>
-          {{ file.fileName }}
-        </td>
-      </tr>
-    </table>
+    <ui-table
+      :data="fileListData"
+      :empty-message="$t('medias.noFiles')"
+    />
   </panel>
 </template>
 
 <script setup lang="ts">
 import Panel from "@/common/components/common/Panel.vue"
+import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
+import { TableData } from "@/common/components/common/table/TableData"
+import UiTable from "@/common/components/common/table/UiTable.vue"
 import { Media } from "@/media/Media"
 import MediasService from "@/media/MediasService"
 import { inject, ref } from "vue"
@@ -56,7 +50,6 @@ const mediaService = new MediasService(backendUrl)
 
 const filename = ref<string>("")
 
-const files = ref<Media[]>([])
 const selectedFile = ref()
 const selectFile = (event: any) => {
   let file = event.target.files[0]
@@ -69,5 +62,14 @@ const upload = () => {
   mediaService.upload(filename.value, selectedFile.value)
 }
 
-mediaService.list().then((medias) => (files.value = medias))
+const fileListData = ref<TableData<Media> | null>(null)
+
+mediaService.list().then((medias) => {
+  fileListData.value = new TableData(
+      medias,
+      [
+        new ColumnDefinition<Media>(t("medias.filename"), (data: Media) => data.fileName),
+      ],
+  )
+})
 </script>
