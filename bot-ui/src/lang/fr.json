@@ -3,6 +3,7 @@
   "features": "Module",
   "overlay": "Overlay",
   "medias": {
+    "title": "Médias",
     "add": "Ajouter un média",
     "list": "Médias",
     "file": "Fichier",

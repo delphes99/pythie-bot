@@ -43,7 +43,7 @@
         src="@/common/assets/medias.svg"
         width="20"
       >
-      {{ $t("medias") }}
+      {{ $t("medias.title") }}
     </router-link>
     <router-link
       class="router-link"

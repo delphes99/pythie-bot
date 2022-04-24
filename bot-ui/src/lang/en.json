@@ -3,6 +3,7 @@
   "features": "Features",
   "overlay": "Overlay",
   "medias": {
+    "title": "Medias",
     "add": "Add media",
     "list": "Medias",
     "file": "File",

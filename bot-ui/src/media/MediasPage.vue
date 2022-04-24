@@ -19,7 +19,7 @@
       <br>
       <input
         type="button"
-        value="{{$t('common.validate')}}"
+        :value="$t('common.validate')"
         @click="upload"
       >
     </form>
