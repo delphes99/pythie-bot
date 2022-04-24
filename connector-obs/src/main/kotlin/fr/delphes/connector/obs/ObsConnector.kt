@@ -26,7 +26,7 @@ class ObsConnector(
     val bot: Bot,
     override val configFilepath: String,
 ) : Connector<ObsConfiguration, ObsRunTime> {
-    override val connectorName = "obs"
+    override val connectorName = "Obs"
 
     override val configurationManager = SimpleConfigurationManager(
         ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")

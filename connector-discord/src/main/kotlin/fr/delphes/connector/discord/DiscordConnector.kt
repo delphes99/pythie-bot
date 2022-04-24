@@ -24,7 +24,7 @@ class DiscordConnector(
     val bot: Bot,
     override val configFilepath: String
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
-    override val connectorName = "discord"
+    override val connectorName = "Discord"
     override val configurationManager = SimpleConfigurationManager(
         DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     )

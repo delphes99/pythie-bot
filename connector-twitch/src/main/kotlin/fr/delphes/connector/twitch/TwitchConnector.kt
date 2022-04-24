@@ -29,7 +29,7 @@ class TwitchConnector(
     override val configFilepath: String,
     val channels: List<ChannelConfiguration>
 ) : Connector<TwitchConfiguration, TwitchLegacyRuntime> {
-    override val connectorName = "twitch"
+    override val connectorName = "Twitch"
 
     override val configurationManager = TwitchConfigurationManager(
         TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")

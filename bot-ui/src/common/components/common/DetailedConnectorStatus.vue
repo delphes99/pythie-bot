@@ -1,22 +1,16 @@
 <template>
-  <el-table
-    :data="statuses"
-    :empty-text="$t('common.noData')"
-  >
-    <el-table-column
-      prop="name"
-      :label="$t('connector.connectionName')"
-    />
-    <el-table-column
-      prop="status"
-      :label="$t('connector.connectionStatus')"
-    />
-  </el-table>
+  <ui-table
+    :data="statusesTableData"
+    :empty-message="$t('common.noData')"
+  />
 </template>
 
 <script lang="ts">
 import { ConnectorEnum } from "@/common/components/common/connectorEnum"
 import { ConnectorStatusEnum } from "@/common/components/common/connectorStatus"
+import { ColumnDefinition } from "@/common/components/common/table/ColumnDefinition"
+import { TableData } from "@/common/components/common/table/TableData"
+import UiTable from "@/common/components/common/table/UiTable.vue"
 import { defineComponent, inject, ref } from "vue"
 import { useI18n } from "vue-i18n"
 
@@ -33,6 +27,7 @@ interface SubStatus {
 
 export default defineComponent({
   name: `DetailedConnectorStatus`,
+  components: { UiTable },
   props: {
     connector: {
       type: String as () => ConnectorEnum,
@@ -42,30 +37,46 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n()
     const backendUrl = inject("backendUrl") as string
-    const statuses = ref<SubStatus[]>()
+
+    const statusesTableData = ref<TableData<SubStatus> | null>(null)
 
     async function getStatus() {
       const response = await fetch(`${backendUrl}/connectors/status`)
       const allStatus: Status[] = await response.json()
       const connectorStatus = allStatus.filter((s) => s.name === props.connector)[0]
-      statuses.value = [
-        {
-          name: props.connector,
-          status: t("connector.status." + connectorStatus.status),
-        },
-        ...connectorStatus.subStatus.map((sub) => ({
-          name: sub.name,
-          status: t("connector.status." + sub.status),
-        })),
-      ]
+
+      statusesTableData.value = new TableData(
+        [
+          {
+            name: props.connector,
+            status: t("connector.status." + connectorStatus.status),
+          },
+          ...connectorStatus.subStatus.map((sub) => ({
+            name: sub.name,
+            status: t("connector.status." + sub.status),
+          })),
+        ],
+        [
+          new ColumnDefinition<SubStatus>(
+            t("connector.connectionName"),
+            (data: SubStatus) => data.name,
+          ),
+          new ColumnDefinition<SubStatus>(
+            t("connector.connectionStatus"),
+            (data: SubStatus) => data.status,
+          ),
+        ],
+      )
     }
+
+    getStatus()
 
     setInterval(() => {
       getStatus()
     }, 2000)
 
     return {
-      statuses,
+      statusesTableData,
     }
   },
 })
