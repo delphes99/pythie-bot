@@ -6,7 +6,7 @@ import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.feature.HaveHttp
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
-import io.ktor.application.Application
+import io.ktor.server.application.Application
 
 class Statistics(
     private val channel: TwitchChannel

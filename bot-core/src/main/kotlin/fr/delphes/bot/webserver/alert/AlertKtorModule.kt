@@ -3,28 +3,28 @@ package fr.delphes.bot.webserver.alert
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.utils.serialization.Serializer
-import io.ktor.application.Application
-import io.ktor.application.install
-import io.ktor.http.cio.websocket.CloseReason
-import io.ktor.http.cio.websocket.DefaultWebSocketSession
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.close
-import io.ktor.http.cio.websocket.readText
-import io.ktor.routing.routing
-import io.ktor.websocket.WebSockets
-import io.ktor.websocket.webSocket
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.routing.routing
+import io.ktor.server.websocket.WebSockets
+import io.ktor.server.websocket.webSocket
+import io.ktor.websocket.CloseReason
+import io.ktor.websocket.DefaultWebSocketSession
+import io.ktor.websocket.Frame
+import io.ktor.websocket.close
+import io.ktor.websocket.readText
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
-import java.util.*
-import kotlin.collections.LinkedHashSet
+import java.util.Collections
 
 fun Application.AlertModule(bot: Bot) {
+    install(WebSockets)
+
     routing {
-        install(WebSockets)
         val wsConnections = Collections.synchronizedSet(LinkedHashSet<DefaultWebSocketSession>())
 
-        launch {
+        this@AlertModule.launch {
             for (alert in bot.alerts) {
                 wsConnections
                     .map(DefaultWebSocketSession::outgoing)

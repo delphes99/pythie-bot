@@ -11,7 +11,7 @@ import fr.delphes.connector.twitch.incomingEvent.NewSub
 import fr.delphes.feature.HaveHttp
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
-import io.ktor.application.Application
+import io.ktor.server.application.Application
 
 class Overlay(private val channel: TwitchChannel) : NonEditableFeature<OverlayDescription>, HaveHttp {
     override fun description() = OverlayDescription()

@@ -5,7 +5,7 @@ import fr.delphes.bot.connector.state.Disconnected
 import fr.delphes.bot.connector.status.ConnectorConnectionName
 import fr.delphes.bot.connector.status.ConnectorStatus
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import io.ktor.application.Application
+import io.ktor.server.application.Application
 import kotlinx.coroutines.CoroutineScope
 
 interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> {

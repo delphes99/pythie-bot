@@ -1,20 +1,20 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.connector.state.endpoint.ConnectorsModule
+import fr.delphes.bot.media.MediaModule
+import fr.delphes.bot.media.MediasService
 import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.bot.webserver.alert.AlertModule
 import fr.delphes.bot.webserver.feature.Features
-import fr.delphes.bot.media.MediaModule
-import fr.delphes.bot.media.MediasService
-import io.ktor.application.Application
-import io.ktor.application.install
-import io.ktor.features.CORS
-import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpMethod
-import io.ktor.serialization.json
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.cors.CORS
 import kotlinx.serialization.json.Json
 
 class WebServer(
@@ -31,7 +31,7 @@ class WebServer(
             install(CORS) {
                 anyHost()
                 allowNonSimpleContentTypes = true
-                method(HttpMethod.Delete)
+                allowMethod(HttpMethod.Delete)
             }
             AdminModule(bot)
             AlertModule(bot)
@@ -47,9 +47,7 @@ class WebServer(
     private fun launchServer(port: Int, serializer: Json, modules: Application.() -> Unit) {
         embeddedServer(Netty, port) {
             install(ContentNegotiation) {
-                json(
-                    json = serializer
-                )
+                json(serializer)
             }
             modules()
         }.start(wait = false)

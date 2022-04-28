@@ -1,9 +1,10 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.util.http.httpClient
+import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.post
-import io.ktor.client.request.url
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -71,8 +72,8 @@ class Ngrok {
         internal suspend fun kill() {
             try {
                 LOGGER.debug { "Delete tunnels : $name" }
-                httpClient.delete<HttpResponse>("$API_URL/tunnels/$name")
-                httpClient.delete<HttpResponse>("$API_URL/tunnels/$name%20(http)")
+                httpClient.delete("$API_URL/tunnels/$name").body<HttpResponse>()
+                httpClient.delete("$API_URL/tunnels/$name%20(http)").body<HttpResponse>()
             } catch (e: Exception) {
                 LOGGER.error(e) { "Failed to delete tunnel : $name" }
             }
@@ -81,11 +82,10 @@ class Ngrok {
         private suspend fun create(): String {
             LOGGER.debug { "Create tunnel : $name" }
             try {
-                val response = httpClient.post<String> {
-                    url("$API_URL/tunnels")
+                val response = httpClient.post("$API_URL/tunnels") {
                     contentType(ContentType.Application.Json)
-                    body = CreateTunnelBody(port.toString(), "http", name)
-                }
+                    setBody(CreateTunnelBody(port.toString(), "http", name))
+                }.body<String>()
                 return EXTRACT_PUBLIC_URL.find(response)!!.groups[1]!!.value
             } catch (e: Exception) {
                 LOGGER.debug { "Failed creation of tunnel : $name" }

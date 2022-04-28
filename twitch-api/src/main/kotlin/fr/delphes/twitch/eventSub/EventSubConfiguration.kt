@@ -3,7 +3,7 @@ package fr.delphes.twitch.eventSub
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
-import io.ktor.application.ApplicationCall
+import io.ktor.server.application.ApplicationCall
 
 abstract class EventSubConfiguration<PAYLOAD, CONDITION : GenericCondition>(
     topic: EventSubTopic

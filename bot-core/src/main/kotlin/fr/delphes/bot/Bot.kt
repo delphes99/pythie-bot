@@ -11,7 +11,6 @@ import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
-import fr.delphes.feature.featureNew.Feature
 import fr.delphes.feature.featureNew.FeatureConfiguration
 import fr.delphes.feature.featureNew.FeatureConfigurationRepository
 import fr.delphes.feature.featureNew.FeatureHandler

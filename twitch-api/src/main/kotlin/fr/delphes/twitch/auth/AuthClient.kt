@@ -2,15 +2,16 @@ package fr.delphes.twitch.auth
 
 import fr.delphes.utils.serialization.Serializer
 import io.ktor.client.HttpClient
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.serialization.kotlinx.json.json
 
 class AuthClient : AuthApi {
     private val httpClient = HttpClient {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(Serializer)
+        install(ContentNegotiation) {
+            json(Serializer)
         }
     }
 
@@ -19,7 +20,7 @@ class AuthClient : AuthApi {
             parameters.forEach { parameter ->
                 parameter(parameter.first, parameter.second)
             }
-        }
+        }.body()
     }
 
     override suspend fun refreshToken(oldToken: AuthToken, clientId: String, clientSecret: String): AuthToken {

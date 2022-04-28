@@ -25,9 +25,9 @@ import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.GenericCondition
-import io.ktor.application.Application
-import io.ktor.routing.Routing
-import io.ktor.routing.routing
+import io.ktor.server.application.Application
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.routing
 
 fun Application.WebhookModule(connector: TwitchConnector) {
     routing {

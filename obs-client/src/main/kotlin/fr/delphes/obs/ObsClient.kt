@@ -18,14 +18,14 @@ import fr.delphes.utils.serialization.Serializer
 import fr.delphes.utils.toBase64
 import fr.delphes.utils.toSha256
 import io.ktor.client.HttpClient
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.websocket.ClientWebSocketSession
-import io.ktor.client.features.websocket.WebSockets
-import io.ktor.client.features.websocket.ws
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.websocket.ClientWebSocketSession
+import io.ktor.client.plugins.websocket.WebSockets
+import io.ktor.client.plugins.websocket.ws
 import io.ktor.http.HttpMethod
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.readText
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.websocket.Frame
+import io.ktor.websocket.readText
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,8 +50,8 @@ class ObsClient(
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val httpClient = HttpClient {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(Serializer)
+        install(ContentNegotiation) {
+            json(Serializer)
         }
         install(WebSockets) {
             maxFrameSize = Long.MAX_VALUE

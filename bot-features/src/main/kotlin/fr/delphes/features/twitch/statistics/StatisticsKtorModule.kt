@@ -2,14 +2,12 @@ package fr.delphes.features.twitch.statistics
 
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.twitch.TwitchChannel
-import io.ktor.application.Application
-import io.ktor.application.call
 import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.routing
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 
 fun StatisticsModule(
     channel: TwitchChannel,

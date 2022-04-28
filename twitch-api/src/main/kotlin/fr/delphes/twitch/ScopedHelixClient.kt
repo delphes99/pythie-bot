@@ -3,9 +3,9 @@ package fr.delphes.twitch
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.utils.serialization.Serializer
 import io.ktor.client.HttpClient
-import io.ktor.client.features.ClientRequestException
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.call.body
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -13,9 +13,12 @@ import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -28,8 +31,8 @@ abstract class ScopedHelixClient(
 ) {
     @PublishedApi
     internal val httpClient = HttpClient {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(Serializer)
+        install(ContentNegotiation) {
+            json(Serializer)
         }
     }
 
@@ -39,7 +42,7 @@ abstract class ScopedHelixClient(
         return authorizeCall { token ->
             httpClient.get(this) {
                 headersAndParameters(token, *parameters)
-            }
+            }.body()
         }
     }
 
@@ -51,8 +54,8 @@ abstract class ScopedHelixClient(
             httpClient.post(this) {
                 headersAndParameters(token, *parameters)
                 contentType(ContentType.Application.Json)
-                body = payload
-            }
+                setBody(payload)
+            }.body()
         }
     }
 
@@ -64,8 +67,8 @@ abstract class ScopedHelixClient(
             httpClient.patch(this) {
                 headersAndParameters(token, *parameters)
                 contentType(ContentType.Application.Json)
-                body = payload
-            }
+                setBody(payload)
+            }.body()
         }
     }
 
@@ -75,7 +78,7 @@ abstract class ScopedHelixClient(
         return authorizeCall() { token ->
             httpClient.delete(this) {
                 headersAndParameters(token, *parameters)
-            }
+            }.body()
         }
     }
 

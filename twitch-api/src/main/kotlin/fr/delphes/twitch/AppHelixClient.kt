@@ -12,6 +12,7 @@ import fr.delphes.twitch.eventSub.EventSubSubscribe
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscriptionPayload
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.statement.HttpResponse
@@ -69,7 +70,7 @@ class AppHelixClient(
                 header("Authorization", "Bearer ${token.access_token}")
                 header("Client-Id", clientId)
                 header("Accept", "application/vnd.twitchtv.v5+json")
-            }
+            }.body()
         }
     }
 }

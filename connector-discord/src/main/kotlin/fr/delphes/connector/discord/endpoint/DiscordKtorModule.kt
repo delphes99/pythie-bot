@@ -2,14 +2,13 @@ package fr.delphes.connector.discord.endpoint
 
 import fr.delphes.connector.discord.DiscordConfiguration
 import fr.delphes.connector.discord.DiscordConnector
-import io.ktor.application.Application
-import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.routing
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.post
+import io.ktor.server.routing.routing
 import kotlinx.serialization.Serializable
 
 fun Application.DiscordModule(discord: DiscordConnector) {

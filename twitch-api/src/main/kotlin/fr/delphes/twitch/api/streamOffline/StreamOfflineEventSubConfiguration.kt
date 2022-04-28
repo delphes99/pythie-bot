@@ -7,8 +7,8 @@ import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
-import io.ktor.application.ApplicationCall
-import io.ktor.request.receive
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.request.receive
 
 class StreamOfflineEventSubConfiguration :
     EventSubConfiguration<StreamOfflineEventPayload, StreamOfflineCondition>(

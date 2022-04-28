@@ -21,7 +21,7 @@ import fr.delphes.twitch.api.user.User
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.utils.cache.InMemoryCache
 import fr.delphes.utils.time.SystemClock
-import io.ktor.application.Application
+import io.ktor.server.application.Application
 import java.time.Duration
 
 class TwitchConnector(

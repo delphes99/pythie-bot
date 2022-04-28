@@ -5,13 +5,13 @@ import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.features.twitch.voth.VOTH
 import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.prettyPrint
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.http.content.resources
-import io.ktor.http.content.static
-import io.ktor.response.respond
-import io.ktor.routing.get
-import io.ktor.routing.routing
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.http.content.resources
+import io.ktor.server.http.content.static
+import io.ktor.server.response.respond
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import java.time.LocalDateTime
 
 //TODO move to core

@@ -1,8 +1,8 @@
 package fr.delphes.connector.obs
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.initStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
@@ -17,7 +17,7 @@ import fr.delphes.connector.obs.outgoingEvent.ObsOutgoingEvent
 import fr.delphes.obs.Configuration
 import fr.delphes.obs.ObsClient
 import fr.delphes.obs.ObsListener
-import io.ktor.application.Application
+import io.ktor.server.application.Application
 import kotlinx.serialization.InternalSerializationApi
 import mu.KotlinLogging
 

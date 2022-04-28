@@ -1,17 +1,17 @@
 package fr.delphes.bot.overlay
 
 import fr.delphes.bot.Bot
-import io.ktor.application.Application
-import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.resources
-import io.ktor.http.content.static
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.delete
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.routing
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.http.content.resources
+import io.ktor.server.http.content.static
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.routing
 
 fun Application.Overlays(bot: Bot) {
     val repository = bot.overlayRepository

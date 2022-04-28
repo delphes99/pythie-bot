@@ -7,15 +7,15 @@ import dev.kord.gateway.Intent
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
 import fr.delphes.bot.Bot
-import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.initStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.connector.discord.endpoint.DiscordModule
 import fr.delphes.connector.discord.incomingEvent.NewGuildMember
 import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent
-import io.ktor.application.Application
+import io.ktor.server.application.Application
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

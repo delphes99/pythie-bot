@@ -3,14 +3,14 @@ package fr.delphes.bot.connector.state.endpoint
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.status.toOutput
-import io.ktor.application.Application
-import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
-import io.ktor.response.respond
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.routing
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.routing
 
 fun Application.ConnectorsModule(bot: Bot) {
     routing {
