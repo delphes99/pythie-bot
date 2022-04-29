@@ -31,6 +31,7 @@ abstract class ScopedHelixClient(
 ) {
     @PublishedApi
     internal val httpClient = HttpClient {
+        expectSuccess = true
         install(ContentNegotiation) {
             json(Serializer)
         }
