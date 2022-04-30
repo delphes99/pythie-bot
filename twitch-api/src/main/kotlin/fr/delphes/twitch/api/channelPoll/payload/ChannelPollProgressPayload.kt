@@ -10,6 +10,9 @@ import java.time.LocalDateTime
 @Serializable
 data class ChannelPollProgressPayload(
     val id: String,
+    val broadcaster_user_id: String,
+    val broadcaster_user_login: String,
+    val broadcaster_user_name: String,
     val title: String,
     val choices: List<ChannelPollChoiceResult>,
     val bits_voting: ChannelPollPointsConfiguration,
