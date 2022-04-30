@@ -3,6 +3,7 @@ package fr.delphes.connector.twitch.webservice
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.eventMapper.ChannelBitsMapper
 import fr.delphes.connector.twitch.eventMapper.ChannelPollBeginMapper
+import fr.delphes.connector.twitch.eventMapper.ChannelPollEndMapper
 import fr.delphes.connector.twitch.eventMapper.ChannelPollProgressMapper
 import fr.delphes.connector.twitch.eventMapper.ChannelUpdateMapper
 import fr.delphes.connector.twitch.eventMapper.IncomingRaidMapper
@@ -17,6 +18,7 @@ import fr.delphes.twitch.api.channelCheer.ChannelCheerEventSubConfiguration
 import fr.delphes.twitch.api.channelFollow.ChannelFollowEventSubConfiguration
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.CustomRewardRedemptionEventSubConfiguration
 import fr.delphes.twitch.api.channelPoll.ChannelPollBeginEventSubConfiguration
+import fr.delphes.twitch.api.channelPoll.ChannelPollEndEventSubConfiguration
 import fr.delphes.twitch.api.channelPoll.ChannelPollProgressEventSubConfiguration
 import fr.delphes.twitch.api.channelRaid.ChannelRaidEventSubConfiguration
 import fr.delphes.twitch.api.channelSubscribe.ChannelSubscribeEventSubConfiguration
@@ -69,7 +71,9 @@ fun Application.WebhookModule(connector: TwitchConnector) {
                     EventSubTopic.CHANNEL_POLL_PROGRESS -> {
                         Configuration(ChannelPollProgressEventSubConfiguration(), ChannelPollProgressMapper())
                     }
-                    EventSubTopic.CHANNEL_POLL_END -> null //TODO
+                    EventSubTopic.CHANNEL_POLL_END -> {
+                        Configuration(ChannelPollEndEventSubConfiguration(), ChannelPollEndMapper())
+                    }
                     EventSubTopic.CHANNEL_PREDICTION_BEGIN -> null //TODO
                     EventSubTopic.CHANNEL_PREDICTION_PROGRESS -> null //TODO
                     EventSubTopic.CHANNEL_PREDICTION_LOCK -> null //TODO
