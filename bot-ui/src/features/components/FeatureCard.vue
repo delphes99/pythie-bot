@@ -39,7 +39,7 @@
       class="primary-button"
       @click="saveChanges"
     >
-      Save changes
+      {{ $t("common.save") }}
     </button>
   </modal>
 </template>

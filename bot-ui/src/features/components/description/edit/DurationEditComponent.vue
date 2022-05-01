@@ -2,7 +2,7 @@
   <label :for="model.id">{{ model.field }} (s)</label>
   <input
     :id="model.id"
-    v-model="model.number"
+    v-model="model.value"
     type="text"
   >
 </template>

@@ -20,6 +20,7 @@
     "save": "Sauvegarder",
     "edit": "Éditer",
     "validate": "Valider",
+    "add": "Ajouter",
     "delete": "Supprimer",
     "connect": "Connexion",
     "disconnect": "Déconnexion",
@@ -53,5 +54,8 @@
       "disconnecting": "Déconnexion en cours",
       "mixed": "Mixte"
     }
+  },
+  "outgoing-event" : {
+    "twitch-outgoing-send-message": "Twitch : Message chat"
   }
 }
