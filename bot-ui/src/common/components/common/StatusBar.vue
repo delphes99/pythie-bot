@@ -21,9 +21,9 @@
 </template>
 
 <script lang="ts">
-import { ConnectorEnum } from "@/common/components/common/connectorEnum"
-import { ConnectorStatusEnum } from "@/common/components/common/connectorStatus"
-import ConnectorStatus from "@/common/components/common/ConnectorStatus.vue"
+import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
+import { ConnectorStatusEnum } from "@/common/components/common/connector/ConnectorStatus"
+import ConnectorStatus from "@/common/components/common/connector/ConnectorStatus.vue"
 import { defineComponent, inject, ref } from "vue"
 
 interface Status {

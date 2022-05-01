@@ -17,7 +17,7 @@
           </button>
         </div>
       </ui-card>
-      <Modal
+      <ui-modal
         v-model:is-open="isCreateModalOpened"
         title="Create overlay"
       >
@@ -51,7 +51,7 @@
         >
           Add
         </button>
-      </Modal>
+      </ui-modal>
     </ui-card-panel>
   </ui-panel>
 </template>
@@ -59,7 +59,7 @@
 <script lang="ts">
 import UiCard from "@/common/components/common/card/UiCard.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
-import Modal from "@/common/components/common/CommonModal.vue"
+import UiModal from "@/common/components/common/modal/UiModal.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import OverlayCard from "@/overlay/components/OverlayCard.vue"
 import Overlay from "@/overlay/Overlay"
@@ -121,7 +121,7 @@ function useCreateOverlay(repository: OverlayRepository) {
 
 export default {
   name: `OverlaysList`,
-  components: { Modal, UiCard, OverlayCard, UiCardPanel, UiPanel },
+  components: { UiModal, UiCard, OverlayCard, UiCardPanel, UiPanel },
   setup() {
     const backendUrl = inject("backendUrl") as string
     const repository = new OverlayRepository(backendUrl)

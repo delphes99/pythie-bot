@@ -19,7 +19,7 @@
       </button>
     </template>
   </ui-card>
-  <modal
+  <ui-modal
     v-model:is-open="isSettingOpened"
     :title="feature.identifier"
   >
@@ -41,12 +41,12 @@
     >
       {{ $t("common.save") }}
     </button>
-  </modal>
+  </ui-modal>
 </template>
 
 <script setup lang="ts">
 import UiCard from "@/common/components/common/card/UiCard.vue"
-import Modal from "@/common/components/common/CommonModal.vue"
+import UiModal from "@/common/components/common/modal/UiModal.vue"
 import Feature from "@/features/configurations/Feature"
 import { FormItem } from "@/features/featureCard/description/FormItem"
 import { mapToFormItems } from "@/features/featureCard/description/formItemMapper"

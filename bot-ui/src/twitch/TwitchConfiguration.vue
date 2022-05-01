@@ -114,8 +114,8 @@
 </template>
 
 <script lang="ts">
-import { ConnectorEnum } from "@/common/components/common/connectorEnum"
-import DetailedConnectorStatus from "@/common/components/common/DetailedConnectorStatus.vue"
+import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
+import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import axios from "axios"
 import { ElNotification } from "element-plus"

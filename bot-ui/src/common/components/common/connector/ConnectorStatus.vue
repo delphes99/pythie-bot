@@ -32,26 +32,14 @@
 import discordImage from "@/common/assets/discord.png"
 import obsImage from "@/common/assets/obs.svg"
 import twitchImage from "@/common/assets/twitch.svg"
-import { ConnectorEnum } from "@/common/components/common/connectorEnum"
-import { ConnectorStatusEnum } from "@/common/components/common/connectorStatus"
+import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
+import { ConnectorStatusEnum } from "@/common/components/common/connector/ConnectorStatus"
+import { DropDownAction } from "@/common/components/common/connector/DropDownAction"
+import { StatusColor } from "@/common/components/common/connector/StatusColor"
 import axios from "axios"
 import { ElNotification } from "element-plus"
 import { computed, defineComponent, inject } from "vue"
 import { useI18n } from "vue-i18n"
-
-enum StatusColor {
-  transparent = "border-0",
-  grey = "border-8 border-grey-800",
-  red = "border-8 border-red-800",
-  green = "border-8 border-green-800",
-  orange = "border-8 border-orange-800",
-  yellow = "border-8 border-yellow-800",
-}
-
-interface DropDownAction {
-  label: string
-  url: string
-}
 
 function toActions(
   connector: ConnectorEnum,
@@ -95,27 +83,6 @@ function toImage(connector: ConnectorEnum) {
   }
 }
 
-function toStatusColor(status: ConnectorStatusEnum): StatusColor {
-  switch (status) {
-    case ConnectorStatusEnum.unconfigured:
-      return StatusColor.transparent
-    case ConnectorStatusEnum.configured:
-      return StatusColor.grey
-    case ConnectorStatusEnum.connected:
-      return StatusColor.green
-    case ConnectorStatusEnum.inError:
-      return StatusColor.red
-    case ConnectorStatusEnum.connecting:
-      return StatusColor.yellow
-    case ConnectorStatusEnum.disconnecting:
-      return StatusColor.yellow
-    case ConnectorStatusEnum.mixed:
-      return StatusColor.orange
-    default:
-      return StatusColor.transparent
-  }
-}
-
 function toLink(connector: ConnectorEnum): string {
   switch (connector) {
     case ConnectorEnum.TWITCH:
@@ -144,7 +111,7 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n()
     const backendUrl = inject("backendUrl") as string
-    const statusColor = computed(() => toStatusColor(props.status))
+    const statusColor = computed(() => StatusColor.of(props.status))
     const image = computed(() => toImage(props.connector))
     const link = computed(() => toLink(props.connector))
     const actions = computed(() =>
