@@ -1,7 +1,7 @@
 <template>
-  <panel title="Rewards">
-    <card-panel>
-      <card
+  <ui-panel title="Rewards">
+    <ui-card-panel>
+      <ui-card
         v-for="reward in rewards"
         :key="reward.title"
         :title="reward.title"
@@ -15,40 +15,31 @@
             Delete
           </button>
         </template>
-      </card>
-    </card-panel>
-  </panel>
+      </ui-card>
+    </ui-card-panel>
+  </ui-panel>
 </template>
 
-<script lang="ts">
-import Panel from "@/common/components/common/Panel.vue"
-import {defineComponent, inject, ref} from "vue"
-import Card from "@/common/components/common/Card.vue"
-import CardPanel from "@/common/components/common/CardPanel.vue"
+<script setup lang="ts">
+import UiCard from "@/common/components/common/card/UiCard.vue"
+import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import { inject, ref } from "vue"
 
-export default defineComponent({
-  name: "TwitchReward",
-  components: {CardPanel, Card, Panel},
-  props: {
-    channelName: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const backendUrl = inject("backendUrl")
-    const rewards = ref([])
-
-    async function getRewards() {
-      const response = await fetch(`${backendUrl}/twitch/${props.channelName}/rewards`)
-      rewards.value = await response.json()
-    }
-
-    getRewards()
-
-    return {
-      rewards,
-    }
+const props = defineProps({
+  channelName: {
+    type: String,
+    required: true,
   },
 })
+
+const backendUrl = inject("backendUrl")
+const rewards = ref([])
+
+async function getRewards() {
+  const response = await fetch(`${backendUrl}/twitch/${props.channelName}/rewards`)
+  rewards.value = await response.json()
+}
+
+getRewards()
 </script>

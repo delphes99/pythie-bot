@@ -1,10 +1,10 @@
 import About from "@/about/About.vue"
-import Obs from "@/obs/Obs.vue"
+import ObsConfiguration from "@/obs/ObsConfiguration.vue"
 import TwitchChannelConfiguration from "@/twitch/TwitchChannelConfiguration.vue"
 import TwitchConfiguration from "@/twitch/TwitchConfiguration.vue"
 import TwitchFeature from "@/twitch/feature/TwitchFeature.vue"
 import TwitchReward from "@/twitch/reward/TwitchReward.vue"
-import Discord from "@/discord/Discord.vue"
+import DiscordConfiguration from "@/discord/DiscordConfiguration.vue"
 import FeaturesList from "@/features/FeaturesList.vue"
 import OverlaysRouter from "@/overlay/OverlaysRouter.vue"
 import OverlaysList from "@/overlay/OverlaysList.vue"
@@ -60,12 +60,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/discord",
     name: "Discord",
-    component: Discord,
+    component: DiscordConfiguration,
   },
   {
     path: "/obs",
     name: "Obs",
-    component: Obs,
+    component: ObsConfiguration,
   },
   {
     path: "/twitch",

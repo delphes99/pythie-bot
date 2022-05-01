@@ -1,8 +1,8 @@
 <template>
-  <common-panel title="Status">
+  <ui-panel title="Status">
     <DetailedConnectorStatus :connector="connector" />
-  </common-panel>
-  <common-panel title="Twitch bot configuration">
+  </ui-panel>
+  <ui-panel title="Twitch bot configuration">
     <img
       class="inline-block align-middle"
       src="@/common/assets/refresh.svg"
@@ -59,8 +59,8 @@
         Connect bot account
       </a>
     </div>
-  </common-panel>
-  <common-panel title="Channels">
+  </ui-panel>
+  <ui-panel title="Channels">
     <div>
       <a
         :href="buildAddChannelUrl()"
@@ -110,13 +110,13 @@
         </table>
       </div>
     </div>
-  </common-panel>
+  </ui-panel>
 </template>
 
 <script lang="ts">
 import { ConnectorEnum } from "@/common/components/common/connectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/DetailedConnectorStatus.vue"
-import CommonPanel from "@/common/components/common/Panel.vue"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import axios from "axios"
 import { ElNotification } from "element-plus"
 import { inject, ref } from "vue"
@@ -124,7 +124,7 @@ import { useI18n } from "vue-i18n"
 
 export default {
   name: `TwitchConfiguration`,
-  components: { DetailedConnectorStatus, CommonPanel },
+  components: { DetailedConnectorStatus, UiPanel },
   setup() {
     const { t } = useI18n()
     const backendUrl = inject("backendUrl")

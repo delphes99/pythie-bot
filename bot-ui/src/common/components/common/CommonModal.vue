@@ -9,39 +9,30 @@
       class="w-3/4 min-h-1/3 opacity-100 default-background rounded shadow-lg"
       @click.stop
     >
-      <panel :title="title">
+      <ui-panel :title="title">
         <slot />
-      </panel>
+      </ui-panel>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-import Panel from "@/common/components/common/Panel.vue"
+<script setup lang="ts">
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 
-export default defineComponent({
-  name: "CommonModal",
-  components: { Panel },
-  props: {
-    isOpen: {
-      type: Boolean,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
+defineProps({
+  isOpen: {
+    type: Boolean,
+    required: true,
   },
-  emits: ["update:isOpen"],
-  setup(props, { emit }) {
-    const close = () => {
-      emit("update:isOpen", false)
-    }
-
-    return {
-      close,
-    }
+  title: {
+    type: String,
+    required: true,
   },
 })
+
+const emit = defineEmits(["update:isOpen"])
+
+const close = () => {
+  emit("update:isOpen", false)
+}
 </script>

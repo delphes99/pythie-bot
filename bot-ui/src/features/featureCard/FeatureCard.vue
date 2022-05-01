@@ -1,6 +1,6 @@
 <template>
-  <card :title="feature.identifier">
-    <div>Type : {{ $t('configuration.features.' + feature.type) }}</div>
+  <ui-card :title="feature.identifier">
+    <div>Type : {{ $t("configuration.features." + feature.type) }}</div>
     <div
       v-for="item in viewForm"
       :key="item.id"
@@ -18,7 +18,7 @@
         {{ $t("common.edit") }}
       </button>
     </template>
-  </card>
+  </ui-card>
   <modal
     v-model:is-open="isSettingOpened"
     :title="feature.identifier"
@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import Card from "@/common/components/common/Card.vue"
+import UiCard from "@/common/components/common/card/UiCard.vue"
 import Modal from "@/common/components/common/CommonModal.vue"
 import Feature from "@/features/configurations/Feature"
 import { FormItem } from "@/features/featureCard/description/FormItem"

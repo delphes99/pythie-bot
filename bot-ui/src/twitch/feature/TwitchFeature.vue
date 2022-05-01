@@ -1,19 +1,14 @@
 <template>
-  <panel title="Features" />
+  <ui-panel title="Features" />
 </template>
 
-<script lang="ts">
-import Panel from "@/common/components/common/Panel.vue"
-import { defineComponent } from "vue"
+<script setup lang="ts">
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 
-export default defineComponent({
-  name: "TwitchFeatures",
-  components: { Panel },
-  props: {
-    channelName: {
-      type: String,
-      required: true,
-    },
+defineProps({
+  channelName: {
+    type: String,
+    required: true,
   },
 })
 </script>

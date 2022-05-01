@@ -1,13 +1,13 @@
 <template>
-  <panel title="Features">
-    <card-panel>
+  <ui-panel title="Features">
+    <ui-card-panel>
       <overlay-card
         v-for="overlay in overlays"
         :key="overlay"
         :overlay="overlay"
         @deleted="deleteOverlay(overlay)"
       />
-      <card class="align-middle">
+      <ui-card class="align-middle">
         <div class="flex items-center justify-center h-full">
           <button
             class="primary-button"
@@ -16,7 +16,7 @@
             Add
           </button>
         </div>
-      </card>
+      </ui-card>
       <Modal
         v-model:is-open="isCreateModalOpened"
         title="Create overlay"
@@ -52,15 +52,15 @@
           Add
         </button>
       </Modal>
-    </card-panel>
-  </panel>
+    </ui-card-panel>
+  </ui-panel>
 </template>
 
 <script lang="ts">
-import Card from "@/common/components/common/Card.vue"
-import CardPanel from "@/common/components/common/CardPanel.vue"
+import UiCard from "@/common/components/common/card/UiCard.vue"
+import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
 import Modal from "@/common/components/common/CommonModal.vue"
-import Panel from "@/common/components/common/Panel.vue"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import OverlayCard from "@/overlay/components/OverlayCard.vue"
 import Overlay from "@/overlay/Overlay"
 import OverlayRepository from "@/overlay/OverlayRepository"
@@ -121,7 +121,7 @@ function useCreateOverlay(repository: OverlayRepository) {
 
 export default {
   name: `OverlaysList`,
-  components: { Modal, Card, OverlayCard, CardPanel, Panel },
+  components: { Modal, UiCard, OverlayCard, UiCardPanel, UiPanel },
   setup() {
     const backendUrl = inject("backendUrl") as string
     const repository = new OverlayRepository(backendUrl)

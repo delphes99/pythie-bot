@@ -1,5 +1,5 @@
 <template>
-  <card :title="overlay.title">
+  <ui-card :title="overlay.title">
     {{ overlay.resolution.width }} x {{ overlay.resolution.height }}
     <template #actions>
       <router-link :to="`/overlay/${overlay.id}`">
@@ -12,25 +12,20 @@
         Delete
       </button>
     </template>
-  </card>
+  </ui-card>
 </template>
 
-<script lang="ts">
-import Card from "@/common/components/common/Card.vue"
+<script setup lang="ts">
+import UiCard from "@/common/components/common/card/UiCard.vue"
 import Overlay from "@/overlay/Overlay"
-import {defineComponent, PropType} from "vue"
+import { PropType } from "vue"
 
-export default defineComponent({
-  name: "OverlayCard",
-  components: {
-    Card,
+defineProps({
+  overlay: {
+    type: Object as PropType<Overlay>,
+    required: true,
   },
-  props: {
-    overlay: {
-      type: Object as PropType<Overlay>,
-      required: true,
-    },
-  },
-  emits: ["deleted"],
 })
+
+defineEmits(["deleted"])
 </script>

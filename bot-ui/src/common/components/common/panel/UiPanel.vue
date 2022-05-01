@@ -11,14 +11,11 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "CommonPanel",
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
+<script setup lang="ts">
+defineProps({
+  title: {
+    type: String,
+    required: true,
   },
-}
+})
 </script>

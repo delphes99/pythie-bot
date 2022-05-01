@@ -1,5 +1,5 @@
 <template>
-  <panel :title="$t('medias.add')">
+  <ui-panel :title="$t('medias.add')">
     <form>
       <label for="file">{{ $t("medias.file") }}</label>
       <input
@@ -23,18 +23,18 @@
         @click="upload"
       >
     </form>
-  </panel>
-  <panel :title="$t('medias.list')">
+  </ui-panel>
+  <ui-panel :title="$t('medias.list')">
     <ui-table
       :data="fileListData"
       :empty-message="$t('medias.noFiles')"
     />
-  </panel>
+  </ui-panel>
 </template>
 
 <script setup lang="ts">
-import Panel from "@/common/components/common/Panel.vue"
-import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import { ColumnDefinition } from "@/common/components/common/table/ColumnDefinition"
 import { TableData } from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/UiTable.vue"
 import { Media } from "@/media/Media"
@@ -65,11 +65,8 @@ const upload = () => {
 const fileListData = ref<TableData<Media> | null>(null)
 
 mediaService.list().then((medias) => {
-  fileListData.value = new TableData(
-      medias,
-      [
-        new ColumnDefinition<Media>(t("medias.filename"), (data: Media) => data.fileName),
-      ],
-  )
+  fileListData.value = new TableData(medias, [
+    new ColumnDefinition<Media>(t("medias.filename"), (data: Media) => data.fileName),
+  ])
 })
 </script>

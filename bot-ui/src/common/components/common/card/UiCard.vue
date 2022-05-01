@@ -20,14 +20,11 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "CardItem",
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
+<script setup lang="ts">
+defineProps({
+  title: {
+    type: String,
+    default: null,
   },
-}
+})
 </script>

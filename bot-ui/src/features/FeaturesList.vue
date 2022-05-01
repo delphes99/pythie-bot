@@ -1,13 +1,13 @@
 <template>
-  <panel :title="$t('features.title')">
-    <card-panel>
+  <ui-panel :title="$t('features.title')">
+    <ui-card-panel>
       <feature-card
         v-for="feature in features"
         :key="feature"
         :feature="feature"
       />
 
-      <card :title="$t('features.addFeature')">
+      <ui-card :title="$t('features.addFeature')">
         <select v-model="featureToAdd">
           <option
             v-for="feature in availableFeatures"
@@ -22,15 +22,15 @@
         >
           {{ $t("common.add") }}
         </button>
-      </card>
-    </card-panel>
-  </panel>
+      </ui-card>
+    </ui-card-panel>
+  </ui-panel>
 </template>
 
 <script setup lang="ts">
-import Card from "@/common/components/common/Card.vue"
-import CardPanel from "@/common/components/common/CardPanel.vue"
-import Panel from "@/common/components/common/Panel.vue"
+import UiCard from "@/common/components/common/card/UiCard.vue"
+import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import { fromJson } from "@/features/configurations/Feature"
 import FeatureType from "@/features/configurations/FeatureType"
 import FeatureCard from "@/features/featureCard/FeatureCard.vue"
