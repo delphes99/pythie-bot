@@ -1,5 +1,5 @@
 <template>
-  <label :for="model.id">{{ model.field }} (s)</label>
+  <label :for="model.id">{{ model.field }}</label>
   <input
     :id="model.id"
     v-model="model.value"
@@ -7,16 +7,16 @@
   >
 </template>
 <script setup lang="ts">
-import { DurationFormItem } from "@/features/components/description/DurationFormItem"
-import {computed} from "vue"
-import { PropType } from "vue/dist/vue.js"
+import {StringFormItem} from "@/features/featureCard/description/StringFormItem"
+import {computed, PropType, ref, watch} from "vue"
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<DurationFormItem>,
+    type: Object as PropType<StringFormItem>,
     required: true,
   },
 })
+
 const emit = defineEmits(['update:modelValue'])
 
 const model = computed({
@@ -29,5 +29,3 @@ const model = computed({
   },
 })
 </script>
-
-<style scoped></style>

@@ -2,7 +2,7 @@
   edit {{ props.item.field }} : {{ props.item.value }}
 </template>
 <script setup lang="ts">
-import {StringFormItem} from "@/features/components/description/StringFormItem"
+import {StringFormItem} from "@/features/featureCard/description/StringFormItem"
 import {PropType} from "vue"
 
 const props = defineProps({

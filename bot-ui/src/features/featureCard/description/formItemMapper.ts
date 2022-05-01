@@ -1,8 +1,8 @@
-import {DurationFormItem} from "@/features/components/description/DurationFormItem"
-import {OutgoingEventsFormItem} from "@/features/components/description/OutgoingEventsFormItem"
-import {StringFormItem} from "@/features/components/description/StringFormItem"
 import Feature from "@/features/configurations/Feature"
 import FeatureDescriptionType from "@/features/configurations/FeatureDescriptionType"
+import { DurationFormItem } from "@/features/featureCard/description/DurationFormItem"
+import { OutgoingEventsFormItem } from "@/features/featureCard/description/OutgoingEventsFormItem"
+import { StringFormItem } from "@/features/featureCard/description/StringFormItem"
 import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
 
 export function mapToFormItems(feature: Feature) {

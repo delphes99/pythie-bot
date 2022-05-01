@@ -1,8 +1,8 @@
-import { FormItem } from "@/features/components/description/FormItem"
-import OutgoingEventsEditComponent from "@/features/components/description/edit/OutgoingEventsEditComponent.vue"
-import OutgoingEventsViewComponent from "@/features/components/description/view/OutgoingEventsViewComponent.vue"
+import { FormItem } from "@/features/featureCard/description/FormItem"
+import OutgoingEventsEditComponent from "@/features/featureCard/description/edit/OutgoingEventsEditComponent.vue"
+import OutgoingEventsViewComponent from "@/features/featureCard/description/view/OutgoingEventsViewComponent.vue"
 import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
-import TwitchOutgoingSendMessage from "@/features/outgoingevents/TwitchOutgoingSendMessage"
+import TwitchOutgoingSendMessage from "@/features/outgoingevents/twitch/twitch-outgoing-send-message/TwitchOutgoingSendMessage"
 
 export class OutgoingEventsFormItem extends FormItem {
   events: OutgoingEvent[]

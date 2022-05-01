@@ -2,7 +2,7 @@ import FeatureDescriptionType from "@/features/configurations/FeatureDescription
 import FeatureType from "@/features/configurations/FeatureType"
 import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
 import OutgoingEventType from "@/features/outgoingevents/OutgoingEventType"
-import TwitchOutgoingSendMessage from "@/features/outgoingevents/TwitchOutgoingSendMessage"
+import TwitchOutgoingSendMessage from "@/features/outgoingevents/twitch/twitch-outgoing-send-message/TwitchOutgoingSendMessage"
 
 export default class Feature {
   identifier: string

@@ -15,16 +15,16 @@
         class="border-b border-gray-200"
       >
         <td>
-          <label>{{ $t('outgoing-event.'+event.type) }}</label>
-          <label :for="'response-'+event.id">Response</label>
+          <label>{{ $t("outgoing-event." + event.type) }}</label>
+          <label :for="'response-' + event.id">Response</label>
           <input
-            :id="'response-'+event.id"
+            :id="'response-' + event.id"
             v-model="event.text"
             type="text"
           >
-          <label :for="'channel-'+event.id">Channel</label>
+          <label :for="'channel-' + event.id">Channel</label>
           <input
-            :id="'channel-'+event.id"
+            :id="'channel-' + event.id"
             v-model="event.channel"
             type="text"
           >
@@ -50,9 +50,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { OutgoingEventsFormItem } from "@/features/components/description/OutgoingEventsFormItem"
+import { OutgoingEventsFormItem } from "@/features/featureCard/description/OutgoingEventsFormItem"
 import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
-import TwitchOutgoingSendMessage from "@/features/outgoingevents/TwitchOutgoingSendMessage"
+import TwitchOutgoingSendMessage from "@/features/outgoingevents/twitch/twitch-outgoing-send-message/TwitchOutgoingSendMessage"
 import { computed, PropType } from "vue"
 
 const props = defineProps({

@@ -4,12 +4,16 @@
       v-for="event in props.item.events"
       :key="event.id"
     >
-      {{ event.type }}
+      <component
+        :is="selectViewComponentFor(event)"
+        :event="event"
+      />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { OutgoingEventsFormItem } from "@/features/components/description/OutgoingEventsFormItem"
+import { OutgoingEventsFormItem } from "@/features/featureCard/description/OutgoingEventsFormItem"
+import { selectViewComponentFor } from "@/features/outgoingevents/OutgoingEventSelection"
 import { PropType } from "vue"
 
 const props = defineProps({

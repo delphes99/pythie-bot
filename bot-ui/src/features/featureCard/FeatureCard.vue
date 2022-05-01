@@ -47,9 +47,9 @@
 <script setup lang="ts">
 import Card from "@/common/components/common/Card.vue"
 import Modal from "@/common/components/common/CommonModal.vue"
-import { FormItem } from "@/features/components/description/FormItem.js"
-import { mapToFormItems } from "@/features/components/description/formItemMapper"
 import Feature from "@/features/configurations/Feature"
+import { FormItem } from "@/features/featureCard/description/FormItem"
+import { mapToFormItems } from "@/features/featureCard/description/formItemMapper"
 import axios from "axios"
 import { ElNotification } from "element-plus"
 import { inject, PropType, ref } from "vue"
@@ -66,7 +66,7 @@ const backendUrl = inject("backendUrl") as string
 const { t } = useI18n()
 const isSettingOpened = ref(false)
 const openSettings = () => (isSettingOpened.value = true)
-const viewForm = mapToFormItems(props.feature)
+const viewForm: FormItem[] = mapToFormItems(props.feature)
 const editForm = ref<FormItem[]>(mapToFormItems(props.feature))
 
 async function saveChanges() {

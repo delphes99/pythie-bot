@@ -1,8 +1,6 @@
-<template>
-  {{ props.item.field }} : {{ props.item.number }} s
-</template>
+<template>{{ props.item.field }} : {{ props.item.number }} s</template>
 <script setup lang="ts">
-import { DurationFormItem } from "@/features/components/description/DurationFormItem.js"
+import { DurationFormItem } from "@/features/featureCard/description/DurationFormItem"
 import { PropType } from "vue/dist/vue.js"
 
 const props = defineProps({

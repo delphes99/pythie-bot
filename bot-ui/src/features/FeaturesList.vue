@@ -11,11 +11,11 @@
 </template>
 
 <script>
+import CardPanel from "@/common/components/common/CardPanel"
 import Panel from "@/common/components/common/Panel"
 import { fromJson } from "@/features/configurations/Feature"
+import FeatureCard from "@/features/featureCard/FeatureCard"
 import { inject, ref } from "vue"
-import FeatureCard from "@/features/components/FeatureCard"
-import CardPanel from "@/common/components/common/CardPanel"
 
 export default {
   name: "FeaturesList",
