@@ -31,16 +31,16 @@ import { Options } from "@/common/components/common/form/radio/Options"
 import { PropType } from "vue"
 
 defineProps({
+  modelValue: {
+    type: [Object, String] as PropType<unknown>,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
   },
   options: {
     type: Object as PropType<Options<unknown>>,
-    required: true,
-  },
-  modelValue: {
-    type: Object as PropType<unknown>,
     required: true,
   },
   title: {

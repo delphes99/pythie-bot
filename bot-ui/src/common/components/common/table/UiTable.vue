@@ -35,12 +35,10 @@
 </template>
 
 <script setup lang="ts">
-import { ColumnDefinition } from "@/common/components/common/table/ColumnDefinition.js"
+import { ColumnDefinition } from "@/common/components/common/table/ColumnDefinition"
 import { TableData } from "@/common/components/common/table/TableData"
-import { computed, PropType, ref } from "vue"
-import {useI18n} from "vue-i18n"
+import { computed, PropType} from "vue"
 
-const { t } = useI18n()
 const props = defineProps({
   emptyMessage: {
     type: String,

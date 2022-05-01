@@ -7,7 +7,7 @@
     :title="t('settings.language.label')"
   />
   <ui-radios
-    v-model="currentTheme"
+    v-model="currentTheme.theme"
     name="theme"
     :options="availableThemesOptions"
     :title="t('settings.theme.label')"
@@ -16,24 +16,28 @@
 <script setup lang="ts">
 import { Options } from "@/common/components/common/form/radio/Options"
 import UiRadios from "@/common/components/common/form/radio/UiRadios.vue"
+import { Themes } from "@/common/components/common/theme/Themes"
+import { useApplicationTheme } from "@/common/components/common/theme/UseApplicationTheme"
 import { LocalStorageItem } from "@/common/LocalStorageItem"
-import { ref, watch } from "vue"
+import { useStorage } from "@vueuse/core"
+import { watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 const { t, locale, availableLocales } = useI18n()
-const lang = ref(locale.value)
-const currentTheme = ref("dark")
+
+const currentTheme = useApplicationTheme()
+
+const lang = useStorage(LocalStorageItem.LANGUAGE, availableLocales[0])
 
 watch(lang, (newValue) => {
   locale.value = newValue
-  localStorage.setItem(LocalStorageItem.LANGUAGE, newValue)
 })
 
 const availableLocalesOptions = Options.for<string>(availableLocales, (lang) =>
   t("settings.language." + lang),
 )
 
-const availableThemesOptions = Options.for<string>(["dark", "light"], (theme) =>
+const availableThemesOptions = Options.for<string>(Object.values(Themes), (theme) =>
   t("settings.theme." + theme),
 )
 </script>
