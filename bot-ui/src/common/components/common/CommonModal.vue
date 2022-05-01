@@ -6,7 +6,7 @@
   >
     <div
       id="modal"
-      class="w-3/4 min-h-1/3 opacity-100 bg-white rounded shadow-lg"
+      class="w-3/4 min-h-1/3 opacity-100 default-background rounded shadow-lg"
       @click.stop
     >
       <panel :title="title">

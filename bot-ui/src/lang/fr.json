@@ -12,12 +12,15 @@
   },
   "about": "À propos",
   "feature": {
-    "name": "Nom"
+    "name": "Nom",
+    "outgoingEvents": "Evénements sortants",
+    "noOutgoingEvents": "Aucun événements sortants."
   },
   "common": {
     "save": "Sauvegarder",
     "edit": "Éditer",
     "validate": "Valider",
+    "delete": "Supprimer",
     "connect": "Connexion",
     "disconnect": "Déconnexion",
     "success": "Succès",

@@ -2,7 +2,7 @@
   <card :title="feature.identifier">
     <div>Type : {{ feature.type }}</div>
     <div
-      v-for="item in editForm"
+      v-for="item in viewForm"
       :key="item.id"
     >
       <component
@@ -66,7 +66,7 @@ const backendUrl = inject("backendUrl") as string
 const { t } = useI18n()
 const isSettingOpened = ref(false)
 const openSettings = () => (isSettingOpened.value = true)
-
+const viewForm = mapToFormItems(props.feature)
 const editForm = ref<FormItem[]>(mapToFormItems(props.feature))
 
 async function saveChanges() {

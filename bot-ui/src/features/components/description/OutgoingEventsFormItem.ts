@@ -5,9 +5,9 @@ import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
 import TwitchOutgoingSendMessage from "@/features/outgoingevents/TwitchOutgoingSendMessage"
 
 export class OutgoingEventsFormItem extends FormItem {
-  events: OutgoingEvent[] | null
+  events: OutgoingEvent[]
 
-  constructor(id: string, field: string, events: OutgoingEvent[] | null) {
+  constructor(id: string, field: string, events: OutgoingEvent[]) {
     super(id, field)
     this.events = events
   }
