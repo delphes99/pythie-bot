@@ -1,6 +1,9 @@
 {
   "home": "Accueil",
-  "features": "Module",
+  "features": {
+    "title": "Fonctionnalités",
+    "addFeature": "Ajouter une fonctionnalité"
+  },
   "overlay": "Overlay",
   "medias": {
     "title": "Médias",
@@ -55,7 +58,12 @@
       "mixed": "Mixte"
     }
   },
-  "outgoing-event" : {
-    "twitch-outgoing-send-message": "Twitch : Message chat"
+  "configuration": {
+    "features": {
+      "twitch-incoming-command": "Twitch : Commande"
+    },
+    "outgoingEvents": {
+      "twitch-outgoing-send-message": "Twitch : Chat message"
+    }
   }
 }

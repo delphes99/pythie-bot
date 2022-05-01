@@ -1,5 +1,5 @@
 <template>
-  {{ $t('outgoing-event.' + event.type) }}
+  {{ $t('configuration.outgoingEvents.' + event.type) }}
   Response : {{ event.text }}
   Channel : {{ event.channel }}
 </template>

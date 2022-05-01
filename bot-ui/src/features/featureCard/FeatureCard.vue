@@ -1,6 +1,6 @@
 <template>
   <card :title="feature.identifier">
-    <div>Type : {{ feature.type }}</div>
+    <div>Type : {{ $t('configuration.features.' + feature.type) }}</div>
     <div
       v-for="item in viewForm"
       :key="item.id"

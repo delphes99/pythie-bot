@@ -23,7 +23,7 @@
         src="@/common/assets/features.svg"
         width="20"
       >
-      {{ $t("features") }}
+      {{ $t("features.title") }}
     </router-link>
     <router-link
       class="router-link"

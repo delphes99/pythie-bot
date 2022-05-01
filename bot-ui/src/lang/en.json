@@ -1,6 +1,9 @@
 {
   "home": "Home",
-  "features": "Features",
+  "features": {
+    "title": "Features",
+    "addFeature": "Add feature"
+  },
   "overlay": "Overlay",
   "medias": {
     "title": "Medias",
@@ -47,14 +50,19 @@
     "connectionStatus": "Status",
     "status": {
       "unconfigured": "Unconfigured",
-      "configured":"Configured",
+      "configured": "Configured",
       "inError": "Error",
-      "connected":"Connected",
+      "connected": "Connected",
       "connecting": "Connecting",
-      "disconnecting":"Disconnecting",
+      "disconnecting": "Disconnecting",
       "mixed": "Mixed"
+    }
+  },
+  "configuration": {
+    "features": {
+      "twitch-incoming-command": "Twitch : Command"
     },
-    "outgoing-event" : {
+    "outgoingEvents": {
       "twitch-outgoing-send-message": "Twitch : Chat message"
     }
   }

@@ -15,7 +15,7 @@
         class="border-b border-gray-200"
       >
         <td>
-          <label>{{ $t("outgoing-event." + event.type) }}</label>
+          <label>{{ $t("configuration.outgoingEvents." + event.type) }}</label>
           <label :for="'response-' + event.id">Response</label>
           <input
             :id="'response-' + event.id"
