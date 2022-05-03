@@ -6,13 +6,15 @@ import { createPinia } from "pinia"
 import { createApp } from "vue"
 import { createI18n } from "vue-i18n"
 import App from "./App.vue"
-
 import "./common/assets/styles/index.css"
 import router from "./router"
 
+import en from "./lang/en.json"
+import fr from "./lang/fr.json"
+
 const messages = {
-  en: require("./lang/en.json"),
-  fr: require("./lang/fr.json"),
+  en: en,
+  fr: fr,
 }
 
 const storedLocale = useStorage(LocalStorageItem.LANGUAGE, "en").value

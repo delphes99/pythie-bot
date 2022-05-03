@@ -8,8 +8,7 @@
 </template>
 <script setup lang="ts">
 import { DurationFormItem } from "@/features/featureCard/description/DurationFormItem"
-import { computed } from "vue"
-import { PropType } from "vue/dist/vue.js"
+import { computed, PropType } from "vue"
 
 const props = defineProps({
   modelValue: {

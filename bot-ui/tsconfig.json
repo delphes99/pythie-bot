@@ -8,14 +8,13 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
     "strictNullChecks": true,
-    "types": [
-      "webpack-env"
-    ],
+    "types": ["vite/client"],
     "paths": {
       "@/*": [
         "src/*"

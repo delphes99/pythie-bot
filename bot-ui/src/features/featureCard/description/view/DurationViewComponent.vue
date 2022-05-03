@@ -1,7 +1,7 @@
 <template>{{ props.item.field }} : {{ props.item.value }} s</template>
 <script setup lang="ts">
 import { DurationFormItem } from "@/features/featureCard/description/DurationFormItem"
-import { PropType } from "vue/dist/vue.js"
+import { PropType } from "vue"
 
 const props = defineProps({
   item: {

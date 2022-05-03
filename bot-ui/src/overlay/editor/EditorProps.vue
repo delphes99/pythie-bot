@@ -41,7 +41,7 @@
 </template>
 <script lang="ts">
 import TextComponent, { fromObject } from "@/overlay/editor/textComponent"
-import { OverlayElement } from "@/overlay/OverlayElement.js"
+import { OverlayElement } from "@/overlay/OverlayElement"
 import { defineComponent, PropType, ref, watch } from "vue"
 
 export default defineComponent({

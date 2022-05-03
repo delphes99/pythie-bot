@@ -8,3 +8,4 @@
 *.iml
 /bot-ui/bot-sdk/
 .gradle/
+*/out/
