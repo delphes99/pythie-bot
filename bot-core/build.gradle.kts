@@ -7,7 +7,6 @@ plugins {
 dependencies {
     api(project(":utils"))
     implementation(project(":twitch-api"))
-    implementation("fr.delphes:bot-sdk")
     api(libs.ktor.server.core)
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)

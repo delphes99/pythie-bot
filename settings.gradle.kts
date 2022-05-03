@@ -22,10 +22,4 @@ include(":connector-discord")
 include(":obs-client")
 include(":twitch-api")
 
-include(":bot-api")
-includeBuild("bot-sdk") {
-    dependencySubstitution {
-        substitute(module("fr.delphes:bot-sdk")).using(project(":"))
-    }
-}
 include(":bot-ui")

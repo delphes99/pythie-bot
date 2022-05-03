@@ -13,6 +13,4 @@ val buildTaskUsingYarn = tasks.register<NpmTask>("buildNpm") {
     npmCommand.set(listOf("run", "build"))
 }
 
-tasks["nodeSetup"].dependsOn(gradle.includedBuild("bot-sdk").task(":assemble"))
-
 description = "bot-ui"
