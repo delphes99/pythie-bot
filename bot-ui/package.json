@@ -6,7 +6,9 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "lint": "eslint --fix ./src --ext .vue,.js,.ts"
+    "lint": "eslint --fix ./src --ext .vue,.js,.ts",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@vueuse/core": "^8.3.1",
@@ -22,6 +24,12 @@
     "vue-router": "^4.0.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.10",
+    "@storybook/addon-actions": "^6.4.22",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/vue3": "^6.4.22",
     "@tailwindcss/postcss7-compat": "^2.0.3",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
@@ -31,15 +39,18 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^9.1.0",
     "autoprefixer": "^9.8.6",
+    "babel-loader": "^8.2.5",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.0.3",
     "postcss": "^8.0.0",
     "prettier": "^2.4.1",
+    "storybook-tailwind-dark-mode": "^1.0.12",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.3",
     "typescript": "~4.5.5",
     "vite": "^2.9.7",
+    "vue-loader": "^16.8.3",
     "vue-tsc": "^0.34.11"
   }
 }
