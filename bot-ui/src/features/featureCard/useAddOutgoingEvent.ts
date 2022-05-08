@@ -1,33 +1,34 @@
 import { UiSelectOption } from "@/ds/form/select/UiSelectOption"
 import { TranslateFunction } from "@/lang/TranslateFunction"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
-export function useAddOutgoingEvent(backendUrl: string, t: TranslateFunction) {
-  async function getOutgoingEventsTypes(): Promise<string[]> {
+export function useAddOutgoingEvent(backendUrl: string, t: TranslateFunction, sync = false) {
+
+  const outgoingEventTypes = ref<string[] | null>(null)
+
+  async function getOutgoingEventsTypes() {
     const response = await fetch(`${backendUrl}/feature/outgoingEventTypes`)
 
-    return response.json()
+    response.json().then(types => outgoingEventTypes.value = types)
   }
+
   const outgoingEventTypeToAdd = ref<string | null>(null)
 
-  const availableOutgoingEventsTypeForSelect = ref<UiSelectOption<string>[] | null>(
-    null,
-  )
-
-  async function getAvailableOutgoingEventsTypeForSelect() {
-    return await getOutgoingEventsTypes().then(
-      (data) =>
-        (availableOutgoingEventsTypeForSelect.value = UiSelectOption.for(
-          data,
-          (value: string) => t("configuration.outgoingEvents." + value),
-        )),
+  const availableOutgoingEventsTypeForSelect = computed(() => {
+    return UiSelectOption.for(
+      outgoingEventTypes.value,
+      (value: string) => t("configuration.outgoingEvents." + value),
     )
+  })
+
+  if(sync) {
+    getOutgoingEventsTypes()
   }
 
   return {
+    outgoingEventTypes,
     getOutgoingEventsTypes,
     outgoingEventTypeToAdd,
     availableOutgoingEventsTypeForSelect,
-    getAvailableOutgoingEventsTypeForSelect,
   }
 }

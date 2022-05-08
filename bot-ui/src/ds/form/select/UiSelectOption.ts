@@ -13,7 +13,7 @@ export class UiSelectOption<T> {
     return this.toDisplay(this.option)
   }
 
-  static for<T>(values: T[], displayFunction: (value: T) => string): UiSelectOption<T>[] {
-    return values.map((value) => new UiSelectOption(value, displayFunction))
+  static for<T>(values: T[] | null, displayFunction: (value: T) => string): UiSelectOption<T>[] {
+    return (values || []).map((value) => new UiSelectOption(value, displayFunction))
   }
 }

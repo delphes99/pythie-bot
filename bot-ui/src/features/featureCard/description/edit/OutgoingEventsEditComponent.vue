@@ -95,13 +95,8 @@ const deleteEvent = (event: OutgoingEvent) => {
   )
 }
 
-const {
-  outgoingEventTypeToAdd,
-  availableOutgoingEventsTypeForSelect,
-  getAvailableOutgoingEventsTypeForSelect,
-} = useAddOutgoingEvent(backendUrl, t)
-
-getAvailableOutgoingEventsTypeForSelect()
+const { outgoingEventTypeToAdd, availableOutgoingEventsTypeForSelect } =
+  useAddOutgoingEvent(backendUrl, t, true)
 
 const addEvent = () => {
   const { id, field, events } = model.value
