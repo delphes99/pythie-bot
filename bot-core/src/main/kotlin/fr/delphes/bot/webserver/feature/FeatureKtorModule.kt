@@ -3,6 +3,7 @@ package fr.delphes.bot.webserver.feature
 import fr.delphes.bot.Bot
 import fr.delphes.feature.featureNew.Feature
 import fr.delphes.feature.featureNew.FeatureConfiguration
+import fr.delphes.feature.featureNew.FeatureCreation
 import fr.delphes.feature.featureNew.FeatureState
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -20,11 +21,7 @@ fun Application.Features(bot: Bot) {
     routing {
         get("/features/new") {
             val json = bot.serializer.encodeToString(
-                bot
-                    .featureHandler
-                    .features
-                    .values
-                    .map(Feature<out FeatureState>::configuration)
+                bot.loadFeatures()
                     .map { it.description(bot.serializer) }
             )
             this.call.respondText(json, ContentType.Application.Json)
@@ -55,6 +52,17 @@ fun Application.Features(bot: Bot) {
             val configuration = this.call.receive<FeatureConfiguration<out FeatureState>>()
             bot.editFeature(configuration)
             this.call.respond(HttpStatusCode.OK)
+        }
+        post("/feature/create") {
+            val configuration = this.call.receive<FeatureCreation>()
+            val featureCreated = bot.createFeature(configuration)
+            this.call.respond(
+                if (featureCreated) {
+                    HttpStatusCode.OK
+                } else {
+                    HttpStatusCode.InternalServerError
+                }
+            )
         }
     }
 }

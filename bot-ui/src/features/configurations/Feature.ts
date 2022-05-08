@@ -20,7 +20,7 @@ export default class Feature {
   }
 }
 
-export type DescriptionItemType = string | OutgoingEvent[] | bigint
+export type DescriptionItemType = string | OutgoingEvent[] | bigint | null
 
 export class DescriptionItem {
   name: string
@@ -30,7 +30,7 @@ export class DescriptionItem {
   constructor(
     name: string,
     type: FeatureDescriptionType,
-    value: string | OutgoingEvent[],
+    value: DescriptionItemType,
   ) {
     this.name = name
     this.currentValue = value
@@ -50,7 +50,7 @@ const durationSecondRegex = /PT(\d+)S/
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapDescriptionItem(obj: any): DescriptionItem {
-  let value: string | OutgoingEvent[]
+  let value: DescriptionItemType
 
   switch (obj.type) {
     case FeatureDescriptionType.STRING:
@@ -64,7 +64,7 @@ function mapDescriptionItem(obj: any): DescriptionItem {
     case FeatureDescriptionType.DURATION:
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      value = BigInt(obj.currentValue.match(durationSecondRegex)[1])
+      value = obj.currentValue && BigInt(obj.currentValue.match(durationSecondRegex)[1])
       break
     default:
       throw new Error(`unknow description type : ${obj.type}`)

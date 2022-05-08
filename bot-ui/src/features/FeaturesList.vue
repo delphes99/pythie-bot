@@ -8,20 +8,20 @@
       />
 
       <ui-card :title="$t('features.addFeature')">
-        <select v-model="featureToAdd">
-          <option
-            v-for="feature in availableFeatures"
-            :key="feature"
-          >
-            {{ $t("configuration.features." + feature) }}
-          </option>
-        </select>
-        <button
-          class="primary-button"
-          @click="newFeature()"
-        >
-          {{ $t("common.add") }}
-        </button>
+        <ui-textfield
+          v-model="featureToAddName"
+          label="feature.name"
+        />
+        <ui-select
+          v-model="featureToAdd"
+          :options="availableFeatureTypes"
+          label="feature.type"
+        />
+        <ui-button
+          :type="UiButtonType.Primary"
+          label="common.add"
+          @on-click="newFeature()"
+        />
       </ui-card>
     </ui-card-panel>
   </ui-panel>
@@ -31,10 +31,19 @@
 import UiCard from "@/common/components/common/card/UiCard.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiButton from "@/ds/button/UiButton.vue"
+import { UiButtonType } from "@/ds/button/UiButtonType"
+import UiSelect from "@/ds/form/select/UiSelect.vue"
+import { UiSelectOption } from "@/ds/form/select/UiSelectOption"
+import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import { fromJson } from "@/features/configurations/Feature"
 import FeatureType from "@/features/configurations/FeatureType"
 import FeatureCard from "@/features/featureCard/FeatureCard.vue"
+import { ElNotification } from "element-plus"
 import { inject, ref } from "vue"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 
 const backendUrl = inject("backendUrl")
 const features = ref([])
@@ -47,12 +56,49 @@ async function getFeatures() {
 
 getFeatures()
 
-const availableFeatures = Object.values(FeatureType)
+const availableFeatureTypes = UiSelectOption.for(
+  Object.values(FeatureType),
+  (value: FeatureType) => t("configuration.features." + value),
+)
 const featureToAdd = ref<FeatureType | null>(null)
+const featureToAddName = ref("")
 
-const newFeature = () => {
-  if (featureToAdd.value) {
-    console.log("New feature : " + featureToAdd.value)
+const newFeature = async () => {
+  if (featureToAdd.value && featureToAddName) {
+    const content = JSON.stringify({
+      name: featureToAddName.value,
+      type: featureToAdd.value,
+    })
+
+    return await fetch(`${backendUrl}/feature/create`, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: content,
+    })
+      //TODO factorize response handle
+      .then((response) => {
+        if (response.ok) {
+          ElNotification({
+            title: t("common.success"),
+            type: "success",
+          })
+          getFeatures()
+        } else {
+          ElNotification({
+            title: t("common.error"),
+            type: "error",
+          })
+        }
+      })
+      .catch(() => {
+        ElNotification({
+          title: t("common.error"),
+          type: "error",
+        })
+      })
   }
 }
 </script>

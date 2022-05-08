@@ -28,23 +28,25 @@ import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.json.Json
 import java.time.Duration
 
-private const val type = "twitch-incoming-command"
+const val type = "twitch-incoming-command"
 
 //TODO delete old command
 @Serializable
 @SerialName(type)
 class NewTwitchCommand(
     override val identifier: FeatureIdentifier,
-    override val channel: TwitchChannel,
-    private val trigger: String,
-    private val response: List<OutgoingEventBuilder>,
+    override val channel: TwitchChannel? = null,
+    private val trigger: String? = null,
+    private val response: List<OutgoingEventBuilder> = emptyList(),
     private val cooldown: Duration? = null,
     @Transient
     private val clock: Clock = SystemClock
 ) : TwitchFeatureConfiguration<NewTwitchCommandState>, WithCommand {
-    val command: Command get() = Command(trigger)
+    val command = trigger?.let { Command(trigger) }
 
-    override fun buildRuntime(): FeatureRuntime<NewTwitchCommandState> {
+    override fun buildRuntime(): FeatureRuntime<NewTwitchCommandState>? {
+        if(channel == null || command == null) return null
+
         return SimpleFeatureRuntime(
             IncomingEventFilters(
                 ChannelFilter(channel),
@@ -60,7 +62,7 @@ class NewTwitchCommand(
         }
     }
 
-    override val commands: Set<Command> get() = setOf(command)
+    override val commands: Set<Command> get() = command?.let { setOf(command) } ?: emptySet()
 
     override fun description(serializer: Json): FeatureDescription {
         return FeatureDescription(

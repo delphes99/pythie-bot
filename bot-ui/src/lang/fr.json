@@ -16,6 +16,7 @@
   "about": "À propos",
   "feature": {
     "name": "Nom",
+    "type": "Type",
     "outgoingEvents": "Evénements sortants",
     "noOutgoingEvents": "Aucun événements sortants."
   },

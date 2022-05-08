@@ -24,7 +24,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["onClick"])
+const emit = defineEmits(["on-click"])
 
 const classes = computed(() => {
   return {
@@ -34,6 +34,6 @@ const classes = computed(() => {
 })
 
 const onClick = () => {
-  emit("onClick")
+  emit("on-click")
 }
 </script>

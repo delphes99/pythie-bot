@@ -1,6 +1,7 @@
 package fr.delphes
 
 import fr.delphes.bot.Bot
+import fr.delphes.bot.BotFeatures
 import fr.delphes.bot.Ngrok
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99Features
@@ -14,6 +15,8 @@ import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.features.FeatureSerializationConfiguration
 import fr.delphes.features.twitch.command.EditableCommand
 import fr.delphes.features.twitch.command.EditableCommandConfiguration
+import fr.delphes.features.twitch.command.NewTwitchCommand
+import fr.delphes.features.twitch.command.type
 import kotlinx.serialization.InternalSerializationApi
 import java.io.File
 
@@ -43,7 +46,11 @@ fun main() {
             )
         ),
         FeatureSerializationConfiguration.serializersModule,
-        "${File.separator}feature${File.separator}features.json"
+        "${File.separator}feature${File.separator}features.json",
+        BotFeatures(
+            mapOf(
+                type to { id -> NewTwitchCommand(id) })
+        )
     )
 
     bot.init(

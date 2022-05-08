@@ -2,12 +2,15 @@ package fr.delphes.feature.featureNew
 
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.utils.filterValuesNotNull
 
 class FeatureHandler(
     private val _features: MutableMap<FeatureIdentifier, Feature<out FeatureState>> = mutableMapOf()
 ) {
     constructor(vararg configurations: FeatureConfiguration<out FeatureState>) : this(
         mutableMapOf(*configurations.map { it.identifier to it.toFeature() }.toTypedArray())
+            .filterValuesNotNull()
+            .toMutableMap()
     )
 
     val features: Map<FeatureIdentifier, Feature<out FeatureState>> get() = _features
@@ -18,7 +21,7 @@ class FeatureHandler(
     fun load(configurations: List<FeatureConfiguration<out FeatureState>>) {
         val newRuntimes = configurations.associate { configuration ->
             configuration.identifier to configuration.toFeature()
-        }
+        }.filterValuesNotNull()
 
         _features.putAll(newRuntimes)
     }

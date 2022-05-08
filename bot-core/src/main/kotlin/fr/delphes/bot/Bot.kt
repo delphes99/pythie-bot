@@ -13,6 +13,7 @@ import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.feature.featureNew.FeatureConfiguration
 import fr.delphes.feature.featureNew.FeatureConfigurationRepository
+import fr.delphes.feature.featureNew.FeatureCreation
 import fr.delphes.feature.featureNew.FeatureHandler
 import fr.delphes.feature.featureNew.FeatureState
 import fr.delphes.utils.exhaustive
@@ -32,6 +33,7 @@ class Bot(
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
     private val featureSerializationModule: SerializersModule,
     featureConfigurationsPath: String,
+    private val botFeatures: BotFeatures,
 ) {
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
@@ -121,5 +123,29 @@ class Bot(
         }
         featureRepository.save(newConfigurations)
         featureHandler.load(newConfigurations)
+    }
+
+    suspend fun loadFeatures(): List<FeatureConfiguration<out FeatureState>> {
+        return featureRepository.load()
+    }
+
+    //TODO better return type
+    suspend fun createFeature(configuration: FeatureCreation): Boolean {
+        val (id, type) = configuration
+
+        val currentFeatures = featureRepository.load()
+
+        val identifierAlreadyExist = currentFeatures.any { f -> f.identifier == id }
+        if(identifierAlreadyExist) {
+            return false
+        }
+
+        val newFeature = botFeatures.build(id, type)
+            ?.also { newFeature ->
+                featureRepository.save(currentFeatures + newFeature)
+                reloadFeature()
+            }
+
+        return newFeature != null
     }
 }
