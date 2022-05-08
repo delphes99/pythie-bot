@@ -49,7 +49,10 @@ fun main() {
         "${File.separator}feature${File.separator}features.json",
         BotFeatures(
             mapOf(
-                type to { id -> NewTwitchCommand(id) })
+                type to { id -> NewTwitchCommand(id) }),
+            mapOf(
+                SendMessageBuilder.type to SendMessageBuilder.description()
+            )
         )
     )
 

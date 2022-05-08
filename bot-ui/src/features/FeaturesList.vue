@@ -45,7 +45,7 @@ import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
 
-const backendUrl = inject("backendUrl")
+const backendUrl = inject("backendUrl") as string
 const features = ref([])
 
 async function getFeatures() {

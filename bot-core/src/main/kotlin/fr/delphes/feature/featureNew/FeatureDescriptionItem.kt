@@ -16,12 +16,12 @@ data class FeatureDescriptionItem(
             type: FeatureDescriptionItemType,
             name: String,
             currentValue: T,
-            json: Json
+            serializer: Json
         ): FeatureDescriptionItem {
             return FeatureDescriptionItem(
                 type,
                 name,
-                json.encodeToJsonElement(currentValue)
+                serializer.encodeToJsonElement(currentValue)
             )
         }
     }

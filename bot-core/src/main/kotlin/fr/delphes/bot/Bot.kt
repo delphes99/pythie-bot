@@ -33,7 +33,7 @@ class Bot(
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
     private val featureSerializationModule: SerializersModule,
     featureConfigurationsPath: String,
-    private val botFeatures: BotFeatures,
+    val botFeatures: BotFeatures,
 ) {
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors

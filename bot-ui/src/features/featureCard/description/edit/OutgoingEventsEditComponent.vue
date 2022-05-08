@@ -38,22 +38,34 @@
       </tr>
       <tr class="border-b border-gray-200">
         <td>
-          <input
-            type="button"
-            class="primary-button"
-            :value="$t('common.add')"
-            @click="addEvent()"
-          >
+          <ui-select
+            v-model="outgoingEventTypeToAdd"
+            :options="availableOutgoingEventsTypeForSelect"
+          />
+          <ui-button
+            label="common.add"
+            :type="UiButtonType.Primary"
+            @on-click="addEvent()"
+          />
         </td>
       </tr>
     </table>
   </div>
 </template>
 <script setup lang="ts">
+import UiButton from "@/ds/button/UiButton.vue"
+import UiButtonType from "@/ds/button/UiButtonType"
+import UiSelect from "@/ds/form/select/UiSelect.vue"
 import { OutgoingEventsFormItem } from "@/features/featureCard/description/OutgoingEventsFormItem"
+import { useAddOutgoingEvent } from "@/features/featureCard/useAddOutgoingEvent"
 import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"
 import TwitchOutgoingSendMessage from "@/features/outgoingevents/twitch/twitch-outgoing-send-message/TwitchOutgoingSendMessage"
-import { computed, PropType } from "vue"
+import { computed, inject, PropType } from "vue"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
+
+const backendUrl = inject("backendUrl") as string
 
 const props = defineProps({
   modelValue: {
@@ -82,6 +94,14 @@ const deleteEvent = (event: OutgoingEvent) => {
     events.filter((e) => e.id != event.id),
   )
 }
+
+const {
+  outgoingEventTypeToAdd,
+  availableOutgoingEventsTypeForSelect,
+  getAvailableOutgoingEventsTypeForSelect,
+} = useAddOutgoingEvent(backendUrl, t)
+
+getAvailableOutgoingEventsTypeForSelect()
 
 const addEvent = () => {
   const { id, field, events } = model.value

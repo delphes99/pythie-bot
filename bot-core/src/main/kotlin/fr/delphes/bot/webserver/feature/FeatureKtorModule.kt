@@ -64,5 +64,9 @@ fun Application.Features(bot: Bot) {
                 }
             )
         }
+        get("/feature/outgoingEventTypes") {
+            bot.botFeatures.getOutgoingEventsTypes();
+            this.call.respond(HttpStatusCode.OK, bot.botFeatures.getOutgoingEventsTypes())
+        }
     }
 }
