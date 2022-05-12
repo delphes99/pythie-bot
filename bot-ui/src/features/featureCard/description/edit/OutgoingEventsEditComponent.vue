@@ -21,15 +21,14 @@
             label="Response"
           />
           <ui-textfield
-            model="event.channel"
+            v-model="event.channel"
             label="Channel"
           />
-          <input
-            type="button"
-            class="warning-button"
-            :value="$t('common.delete')"
-            @click="deleteEvent(event)"
-          >
+          <ui-button
+            label="common.delete"
+            :type="UiButtonType.Warning"
+            @on-click="deleteEvent(event)"
+          />
         </td>
       </tr>
       <tr class="border-b border-gray-200">

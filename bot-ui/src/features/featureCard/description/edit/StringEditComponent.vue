@@ -1,6 +1,6 @@
 <template>
   <ui-textfield
-    model="model.value"
+    v-model="model.value"
     :label="model.field"
   />
 </template>
