@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { UiButtonType } from "@/ds/button/UiButtonType"
-import { computed, PropType } from "vue"
+import { computed } from "vue"
 
 const props = defineProps({
   label: {
@@ -28,8 +28,9 @@ const emit = defineEmits(["on-click"])
 
 const classes = computed(() => {
   return {
-    "primary-button" : props.type == UiButtonType.Primary,
-    "secondary-button" : props.type == UiButtonType.Secondary,
+    "primary-button": props.type == UiButtonType.Primary,
+    "secondary-button": props.type == UiButtonType.Secondary,
+    "warning-button": props.type == UiButtonType.Warning,
   }
 })
 

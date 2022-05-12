@@ -4,7 +4,16 @@
     "title": "Fonctionnalités",
     "addFeature": "Ajouter une fonctionnalité"
   },
-  "overlay": "Overlay",
+  "overlay": {
+    "title": "Overlay",
+    "name": "Nom",
+    "width": "Largeur",
+    "height": "Hauteur",
+    "createOverlay": "Créer un overlay",
+    "editor": {
+      "addText": "Ajouter un texte"
+    }
+  },
   "medias": {
     "title": "Médias",
     "add": "Ajouter un média",

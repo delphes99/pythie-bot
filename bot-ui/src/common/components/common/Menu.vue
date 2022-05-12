@@ -33,7 +33,7 @@
         src="@/common/assets/overlay.svg"
         width="20"
       >
-      {{ $t("overlay") }}
+      {{ $t("overlay.title") }}
     </router-link>
     <router-link
       class="router-link"

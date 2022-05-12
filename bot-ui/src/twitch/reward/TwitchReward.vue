@@ -8,12 +8,11 @@
       >
         {{ reward.cost }}
         <template #actions>
-          <button class="primary-button">
-            Edit
-          </button>
-          <button class="secondary-button">
-            Delete
-          </button>
+          <ui-button label="common.edit" />
+          <ui-button
+            :type="UiButtonType.Warning"
+            label="common.delete"
+          />
         </template>
       </ui-card>
     </ui-card-panel>
@@ -24,6 +23,8 @@
 import UiCard from "@/common/components/common/card/UiCard.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiButton from "@/ds/button/UiButton.vue"
+import UiButtonType from "@/ds/button/UiButtonType"
 import { inject, ref } from "vue"
 
 const props = defineProps({

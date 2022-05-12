@@ -3,21 +3,15 @@
     <DetailedConnectorStatus :connector="connector" />
   </ui-panel>
   <ui-panel title="Discord configuration">
-    <div class="grid grid-cols-2 gap-4 p-4">
-      <ui-textfield
-        v-model="oAuthToken"
-        label="discord.configuration.authToken"
-        password="true"
-      />
-      <div class="flex col-span-2 justify-items-center justify-center">
-        <button
-          class="bg-indigo-500 text-white rounded-md px-3 py-1 m-2 transition duration-500 ease select-none hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
-          @click="saveConfiguration"
-        >
-          Save
-        </button>
-      </div>
-    </div>
+    <ui-textfield
+      v-model="oAuthToken"
+      label="discord.configuration.authToken"
+      password="true"
+    />
+    <ui-button
+      label="common.save"
+      @on-click="saveConfiguration"
+    />
   </ui-panel>
 </template>
 
@@ -25,6 +19,7 @@
 import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiButton from "@/ds/button/UiButton.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import axios from "axios"
 import { ElNotification } from "element-plus"

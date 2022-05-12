@@ -11,12 +11,10 @@
       />
     </div>
     <template #actions>
-      <button
-        class="primary-button"
-        @click="openSettings()"
-      >
-        {{ $t("common.edit") }}
-      </button>
+      <ui-button
+        label="common.edit"
+        @on-click="openSettings"
+      />
     </template>
   </ui-card>
   <ui-modal
@@ -35,18 +33,17 @@
         />
       </div>
     </fieldset>
-    <button
-      class="primary-button"
-      @click="saveChanges"
-    >
-      {{ $t("common.save") }}
-    </button>
+    <ui-button
+      label="common.save"
+      @on-click="saveChanges"
+    />
   </ui-modal>
 </template>
 
 <script setup lang="ts">
 import UiCard from "@/common/components/common/card/UiCard.vue"
 import UiModal from "@/common/components/common/modal/UiModal.vue"
+import UiButton from "@/ds/button/UiButton.vue"
 import Feature from "@/features/configurations/Feature"
 import { FormItem } from "@/features/featureCard/description/FormItem"
 import { mapToFormItems } from "@/features/featureCard/description/formItemMapper"

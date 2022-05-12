@@ -22,14 +22,10 @@
       label="twitch.configuration.clientSecret"
       password="true"
     />
-    <div>
-      <button
-        class="primary-button focus:shadow-outline"
-        @click="saveAppCredential"
-      >
-        Save
-      </button>
-    </div>
+    <ui-button
+      label="common.save"
+      @on-click="saveAppCredential"
+    />
     <h2 class="text-xl font-medium text-black">
       Bot identity
     </h2>
@@ -91,12 +87,11 @@
                 </router-link>
               </td>
               <td class="py-4 px-6 border-b border-grey-light">
-                <button
-                  class="secondary-button focus:shadow-outline"
-                  @click="deleteChannel(channel)"
-                >
-                  Delete
-                </button>
+                <ui-button
+                  :type="UiButtonType.Warning"
+                  label="common.delete"
+                  @on-click="deleteChannel(channel)"
+                />
               </td>
             </tr>
           </tbody>
@@ -110,6 +105,8 @@
 import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiButton from "@/ds/button/UiButton.vue"
+import UiButtonType from "@/ds/button/UiButtonType"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import axios from "axios"
 import { ElNotification } from "element-plus"
@@ -118,7 +115,7 @@ import { useI18n } from "vue-i18n"
 
 export default {
   name: `TwitchConfiguration`,
-  components: { UiTextfield, DetailedConnectorStatus, UiPanel },
+  components: { UiButton, UiTextfield, DetailedConnectorStatus, UiPanel },
   setup() {
     const { t } = useI18n()
     const backendUrl = inject("backendUrl")
@@ -187,6 +184,7 @@ export default {
       buildAddChannelUrl,
       refreshCurrentConfiguration,
       connector: ConnectorEnum.TWITCH,
+      UiButtonType,
     }
   },
 }

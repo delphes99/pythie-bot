@@ -7,7 +7,7 @@ export default {
     onClick: { action: "onClick" },
     type: {
       control: { type: "select" },
-      options: ["primary", "secondary"],
+      options: ["primary", "secondary", "warning"],
     },
   },
 }
@@ -23,11 +23,17 @@ const Template = (args) => ({
 export const Primary = Template.bind({})
 Primary.args = {
   type: "primary",
-  label: "Button",
+  label: "Primary button",
 }
 
 export const Secondary = Template.bind({})
 Secondary.args = {
   type: "secondary",
-  label: "Button",
+  label: "Secondary Button",
+}
+
+export const Warning = Template.bind({})
+Warning.args = {
+  type: "warning",
+  label: "Warning",
 }

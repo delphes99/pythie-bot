@@ -15,11 +15,10 @@
         label="medias.filename"
       />
       <br>
-      <input
-        type="button"
-        :value="$t('common.validate')"
-        @click="upload"
-      >
+      <ui-button
+        label="common.validate"
+        @on-click="upload"
+      />
     </form>
   </ui-panel>
   <ui-panel :title="$t('medias.list')">
@@ -35,6 +34,7 @@ import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import { ColumnDefinition } from "@/common/components/common/table/ColumnDefinition"
 import { TableData } from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/UiTable.vue"
+import UiButton from "@/ds/button/UiButton.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import { Media } from "@/media/Media"
 import MediasService from "@/media/MediasService"

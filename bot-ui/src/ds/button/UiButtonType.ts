@@ -1,6 +1,7 @@
 export enum UiButtonType {
   Primary = "primary",
-  Secondary = "secondary"
+  Secondary = "secondary",
+  Warning = "warning"
 }
 
 export default UiButtonType

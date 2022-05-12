@@ -9,12 +9,10 @@
       />
       <ui-card class="align-middle">
         <div class="flex items-center justify-center h-full">
-          <button
-            class="primary-button"
-            @click="openCreate"
-          >
-            Add
-          </button>
+          <ui-button
+            label="overlay.createOverlay"
+            @on-click="openCreate"
+          />
         </div>
       </ui-card>
       <ui-modal
@@ -23,34 +21,26 @@
       >
         <fieldset class="flex flex-col border border-black p-1">
           <legend>Overlay</legend>
-          <label for="name">Name</label>
-          <input
-            id="name"
+          <ui-textfield
             v-model="addName"
-            type="text"
-          >
+            label="overlay.name"
+          />
           <fieldset class="flex flex-col border border-black p-1">
             <legend>Resolution</legend>
-            <label for="width">Width</label>
-            <input
-              id="width"
+            <ui-textfield
               v-model="addWidth"
-              type="text"
-            >
-            <label for="height">Height</label>
-            <input
-              id="height"
+              label="overlay.width"
+            />
+            <ui-textfield
               v-model="addHeight"
-              type="text"
-            >
+              label="overlay.height"
+            />
           </fieldset>
         </fieldset>
-        <button
-          class="primary-button"
-          @click="createOverlay"
-        >
-          Add
-        </button>
+        <ui-button
+          label="common.add"
+          @on-click="createOverlay"
+        />
       </ui-modal>
     </ui-card-panel>
   </ui-panel>
@@ -61,6 +51,8 @@ import UiCard from "@/common/components/common/card/UiCard.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
 import UiModal from "@/common/components/common/modal/UiModal.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiButton from "@/ds/button/UiButton.vue"
+import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import OverlayCard from "@/overlay/components/OverlayCard.vue"
 import Overlay from "@/overlay/Overlay"
 import OverlayRepository from "@/overlay/OverlayRepository"
@@ -121,7 +113,7 @@ function useCreateOverlay(repository: OverlayRepository) {
 
 export default {
   name: `OverlaysList`,
-  components: { UiModal, UiCard, OverlayCard, UiCardPanel, UiPanel },
+  components: { UiTextfield, UiButton, UiModal, UiCard, OverlayCard, UiCardPanel, UiPanel },
   setup() {
     const backendUrl = inject("backendUrl") as string
     const repository = new OverlayRepository(backendUrl)
