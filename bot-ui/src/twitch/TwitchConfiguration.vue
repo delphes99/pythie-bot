@@ -33,31 +33,23 @@
       <div>
         Bot account : <span class="font-bold">{{ botAccount }}</span>
       </div>
-      <a
-        :href="buildBotIdentityUrl()"
-        class="primary-button focus:shadow-outline"
-      >
-        Change bot account
-      </a>
+      <ui-button
+        label="twitch.configuration.changeBotAccount"
+        :link="buildBotIdentityUrl()"
+      />
     </div>
     <div v-else>
-      <a
-        :href="buildBotIdentityUrl()"
-        class="primary-button focus:shadow-outline"
-      >
-        Connect bot account
-      </a>
+      <ui-button
+        label="twitch.configuration.selectBotAccount"
+        :link="buildBotIdentityUrl()"
+      />
     </div>
   </ui-panel>
-  <ui-panel title="Channels">
-    <div>
-      <a
-        :href="buildAddChannelUrl()"
-        class="primary-button focus:shadow-outline"
-      >
-        Add channel
-      </a>
-    </div>
+  <ui-panel title="twitch.channels">
+    <ui-button
+      label="twitch.configuration.addChannel"
+      :link="buildAddChannelUrl()"
+    />
     <div class="w-11/12 mx-auto">
       <div class="bg-white shadow-md rounded my-6">
         <table class="text-left w-full border-collapse">

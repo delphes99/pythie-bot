@@ -84,9 +84,13 @@
     }
   },
   "twitch": {
+    "channels": "Channels",
     "configuration": {
       "clientId": "Client Id",
-      "clientSecret": "Client Secret"
+      "clientSecret": "Client Secret",
+      "changeBotAccount": "Change bot account",
+      "selectBotAccount": "Connect bot account",
+      "addChannel": "Add channel"
     }
   },
   "discord": {

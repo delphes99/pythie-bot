@@ -17,7 +17,7 @@ const Template = (args) => ({
   setup() {
     return { args }
   },
-  template: '<ui-button :type="args.type" :label="args.label" />',
+  template: '<ui-button :type="args.type" :label="args.label" :router-link="args.routerLink" :link="args.link" />',
 })
 
 export const Primary = Template.bind({})
@@ -36,4 +36,16 @@ export const Warning = Template.bind({})
 Warning.args = {
   type: "warning",
   label: "Warning",
+}
+
+export const Router_link = Template.bind({})
+Router_link.args = {
+  label: "Warning",
+  routerLink: "router-link",
+}
+
+export const Link = Template.bind({})
+Router_link.args = {
+  label: "Warning",
+  link: "router-link",
 }

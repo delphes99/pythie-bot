@@ -2,9 +2,10 @@
   <ui-card :title="overlay.title">
     {{ overlay.resolution.width }} x {{ overlay.resolution.height }}
     <template #actions>
-      <router-link :to="`/overlay/${overlay.id}`">
-        <a class="primary-button focus:shadow-outline"> Edit </a>
-      </router-link>
+      <ui-button
+        :router-link="`/overlay/${overlay.id}`"
+        label="common.edit"
+      />
       <ui-button
         :type="UiButtonType.Secondary"
         label="common.delete"
