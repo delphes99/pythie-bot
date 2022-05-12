@@ -1,5 +1,3 @@
-import { Option } from "@/common/components/common/form/radio/Option"
-
 export class UiSelectOption<T> {
   option: T;
   toDisplay: (value: T) => string;
@@ -15,5 +13,9 @@ export class UiSelectOption<T> {
 
   static for<T>(values: T[] | null, displayFunction: (value: T) => string): UiSelectOption<T>[] {
     return (values || []).map((value) => new UiSelectOption(value, displayFunction))
+  }
+
+  static forString(values: string[] | null): UiSelectOption<string>[] {
+    return (values || []).map((value) => new UiSelectOption(value, (value: string) => value))
   }
 }
