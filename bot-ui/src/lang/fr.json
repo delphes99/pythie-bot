@@ -70,12 +70,19 @@
   "obs": {
     "configuration": {
       "host": "Obs-websocket : Hôte",
-      "port": "Obs-websocket : Port"
+      "port": "Obs-websocket : Port",
+      "password": "Obs-websocket : Mot de passe (laisser vide si aucun mot de passe)"
     }
   },
   "twitch": {
     "configuration": {
-      "clientId": "Client Id"
+      "clientId": "Client Id",
+      "clientSecret": "Client Secret"
+    }
+  },
+  "discord": {
+    "configuration": {
+      "authToken": "Token OAuth"
     }
   }
 }

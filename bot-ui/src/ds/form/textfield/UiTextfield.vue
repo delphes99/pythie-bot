@@ -7,7 +7,7 @@
     :id="id"
     v-model="model"
     :name="name"
-    type="text"
+    :type="password ? 'password' : 'text'"
     class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 focus:outline-none focus:ring-2;"
   >
 </template>
@@ -32,6 +32,10 @@ const props = defineProps({
   name: {
     type: String,
     default: (props: { id: string }) => props.id,
+  },
+  password: {
+    type: Boolean,
+    default: false,
   },
 })
 

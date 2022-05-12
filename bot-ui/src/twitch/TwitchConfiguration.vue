@@ -17,13 +17,11 @@
       v-model="clientId"
       label="twitch.configuration.clientId"
     />
-    <label for="clientSecret">Client Secret</label>
-    <input
-      id="clientSecret"
+    <ui-textfield
       v-model="clientSecret"
-      type="password"
-      class="border-b-2"
-    >
+      label="twitch.configuration.clientSecret"
+      password="true"
+    />
     <div>
       <button
         class="primary-button focus:shadow-outline"

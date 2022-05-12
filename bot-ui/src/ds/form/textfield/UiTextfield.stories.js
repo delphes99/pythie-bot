@@ -13,7 +13,7 @@ const Template = (args) => ({
     }
   },
   template:
-    '<ui-textfield :label="args.label" v-model="args.modelValue" />',
+    '<ui-textfield v-bind:args v-model="args.modelValue" :password="args.password" />',
 })
 
 export const Empty = Template.bind({})
@@ -30,4 +30,12 @@ export const With_value = Template.bind({})
 With_value.args = {
   label: "Some label",
   modelValue: "some value",
+}
+
+
+export const Password = Template.bind({})
+Password.args = {
+  label: "Some label",
+  modelValue: "some value",
+  password: true,
 }
