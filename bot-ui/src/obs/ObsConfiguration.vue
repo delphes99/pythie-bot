@@ -4,20 +4,14 @@
   </ui-panel>
   <ui-panel title="Obs configuration">
     <div class="grid grid-cols-2 gap-4 p-4">
-      <label for="obs-ws-host">Obs-websocket Host</label>
-      <input
-        id="obs-ws-host"
+      <ui-textfield
         v-model="host"
-        type="text"
-        class="border-b-2"
-      >
-      <label for="obs-ws-host">Obs-websocket URL</label>
-      <input
-        id="obs-ws-port"
+        label="obs.configuration.host"
+      />
+      <ui-textfield
         v-model="port"
-        type="text"
-        class="border-b-2"
-      >
+        label="obs.configuration.port"
+      />
       <label for="obs-password">
         Obs-websocket password (leave empty if no password)
       </label>
@@ -43,6 +37,7 @@
 import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import axios from "axios"
 import { ElNotification } from "element-plus"
 import { inject, ref } from "vue"

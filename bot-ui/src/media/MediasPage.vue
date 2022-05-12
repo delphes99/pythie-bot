@@ -9,13 +9,11 @@
         name="file"
         @change="selectFile"
       >
-      <label for="filename">{{ $t("medias.filename") }}</label>
-      <input
+      <ui-textfield
         id="filename"
         v-model="filename"
-        type="text"
-        name="filename"
-      >
+        label="medias.filename"
+      />
       <br>
       <input
         type="button"
@@ -37,6 +35,7 @@ import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import { ColumnDefinition } from "@/common/components/common/table/ColumnDefinition"
 import { TableData } from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/UiTable.vue"
+import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import { Media } from "@/media/Media"
 import MediasService from "@/media/MediasService"
 import { inject, ref } from "vue"

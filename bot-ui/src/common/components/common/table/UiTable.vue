@@ -42,15 +42,11 @@ import { computed, PropType} from "vue"
 const props = defineProps({
   emptyMessage: {
     type: String,
-    nullable: true,
-    default() {
-      return null
-    },
+    default: null,
   },
   data: {
     type: Object as PropType<TableData<unknown>>,
-    required: true,
-    nullable: true,
+    default: null,
   },
 })
 

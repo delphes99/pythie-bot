@@ -19,7 +19,7 @@ const props = defineProps({
     required: true,
   },
   type: {
-    type: Object as PropType<UiButtonType>,
+    type: String as () => UiButtonType,
     default: UiButtonType.Primary,
   },
 })

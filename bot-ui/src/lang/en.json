@@ -66,5 +66,16 @@
     "outgoingEvents": {
       "twitch-outgoing-send-message": "Twitch : Chat message"
     }
+  },
+  "obs": {
+    "configuration": {
+      "host": "Obs-websocket : Host",
+      "port": "Obs-websocket : Port"
+    }
+  },
+  "twitch": {
+    "configuration": {
+      "clientId": "Client Id"
+    }
   }
 }

@@ -16,18 +16,14 @@
       >
         <td>
           <label>{{ $t("configuration.outgoingEvents." + event.type) }}</label>
-          <label :for="'response-' + event.id">Response</label>
-          <input
-            :id="'response-' + event.id"
+          <ui-textfield
             v-model="event.text"
-            type="text"
-          >
-          <label :for="'channel-' + event.id">Channel</label>
-          <input
-            :id="'channel-' + event.id"
-            v-model="event.channel"
-            type="text"
-          >
+            label="Response"
+          />
+          <ui-textfield
+            model="event.channel"
+            label="Channel"
+          />
           <input
             type="button"
             class="warning-button"
@@ -56,6 +52,7 @@
 import UiButton from "@/ds/button/UiButton.vue"
 import UiButtonType from "@/ds/button/UiButtonType"
 import UiSelect from "@/ds/form/select/UiSelect.vue"
+import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import { OutgoingEventsFormItem } from "@/features/featureCard/description/OutgoingEventsFormItem"
 import { useAddOutgoingEvent } from "@/features/featureCard/useAddOutgoingEvent"
 import OutgoingEvent from "@/features/outgoingevents/OutgoingEvent"

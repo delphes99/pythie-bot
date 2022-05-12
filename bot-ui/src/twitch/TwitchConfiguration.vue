@@ -13,22 +13,17 @@
     <h2 class="text-xl font-medium text-black">
       App credential
     </h2>
-    <div class="px-2 grid grid-cols-2 space-y-1">
-      <label for="clientId">Client Id</label>
-      <input
-        id="clientId"
-        v-model="clientId"
-        type="text"
-        class="border-b-2"
-      >
-      <label for="clientSecret">Client Secret</label>
-      <input
-        id="clientSecret"
-        v-model="clientSecret"
-        type="password"
-        class="border-b-2"
-      >
-    </div>
+    <ui-textfield
+      v-model="clientId"
+      label="twitch.configuration.clientId"
+    />
+    <label for="clientSecret">Client Secret</label>
+    <input
+      id="clientSecret"
+      v-model="clientSecret"
+      type="password"
+      class="border-b-2"
+    >
     <div>
       <button
         class="primary-button focus:shadow-outline"
@@ -117,6 +112,7 @@
 import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import axios from "axios"
 import { ElNotification } from "element-plus"
 import { inject, ref } from "vue"
@@ -124,7 +120,7 @@ import { useI18n } from "vue-i18n"
 
 export default {
   name: `TwitchConfiguration`,
-  components: { DetailedConnectorStatus, UiPanel },
+  components: { UiTextfield, DetailedConnectorStatus, UiPanel },
   setup() {
     const { t } = useI18n()
     const backendUrl = inject("backendUrl")

@@ -6,7 +6,9 @@
   <input
     :id="id"
     v-model="model"
+    :name="name"
     type="text"
+    class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 focus:outline-none focus:ring-2;"
   >
 </template>
 
@@ -14,9 +16,11 @@
 import { computed } from "vue"
 import { v4 as uuid } from "uuid"
 
-const id = uuid()
-
 const props = defineProps({
+  id: {
+    type: String,
+    default: uuid(),
+  },
   modelValue: {
     type: String,
     require: true,
@@ -24,6 +28,10 @@ const props = defineProps({
   label: {
     type: String,
     default: null,
+  },
+  name: {
+    type: String,
+    default: (props: { id: string }) => props.id,
   },
 })
 

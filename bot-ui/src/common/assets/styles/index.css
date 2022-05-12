@@ -19,9 +19,6 @@
     .default-background {
         @apply bg-white dark:bg-gray-700 text-black dark:text-white
     }
-    input {
-        @apply ml-5 py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 focus:outline-none focus:ring-2;
-    }
     label {
         @apply block text-gray-700 dark:text-gray-400 text-sm font-semibold mb-2
     }

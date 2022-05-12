@@ -1,12 +1,11 @@
 <template>
-  <label :for="model.id">{{ model.field }} (s)</label>
-  <input
-    :id="model.id"
+  <ui-textfield
     v-model="model.value"
-    type="text"
-  >
+    :label="model.field + ' (s)'"
+  />
 </template>
 <script setup lang="ts">
+import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import { DurationFormItem } from "@/features/featureCard/description/DurationFormItem"
 import { computed, PropType } from "vue"
 
