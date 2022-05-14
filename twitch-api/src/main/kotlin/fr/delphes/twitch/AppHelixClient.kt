@@ -30,7 +30,6 @@ class AppHelixClient(
     }
 
     override suspend fun subscribeEventSub(subscribe: EventSubSubscribe<out GenericCondition>) {
-        //TODO manage errors
         "https://api.twitch.tv/helix/eventsub/subscriptions".post<HttpResponse>(subscribe)
     }
 

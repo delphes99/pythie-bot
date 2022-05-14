@@ -27,7 +27,7 @@ class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
             //TODO manage duplicate event
             when {
                 payload.challenge != null -> {
-                    LOGGER.info { "Twitch webhook ${topic.webhookPathSuffix} for $channelName : Subscription ok" }
+                    LOGGER.info { "Twitch webhook ${topic.name} for $channelName : Subscription ok" }
                     this.challengeWebHook(payload.challenge)
                 }
                 payload.event != null -> {

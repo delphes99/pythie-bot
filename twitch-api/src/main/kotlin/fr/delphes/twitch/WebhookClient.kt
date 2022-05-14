@@ -3,6 +3,11 @@ package fr.delphes.twitch
 import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import mu.KotlinLogging
 
 class WebhookClient(
     private val publicUrl: String,
@@ -12,14 +17,28 @@ class WebhookClient(
     private val eventSubConfigurations: List<EventSubConfiguration<*, *>>
 ) : WebhookApi {
     override suspend fun registerWebhooks() {
-        eventSubConfigurations.forEach { configuration ->
-            val transport = SubscribeTransport(
-                "$publicUrl/${configuration.callback.webhookPath(user.name)}",
-                secret
-            )
-            val subscribePayload = configuration.subscribePayload(user.id, transport)
+        coroutineScope {
+            eventSubConfigurations.map { configuration ->
+                launch(Dispatchers.IO) {
+                    LOGGER.debug { "Register eventsub topic : ${configuration.topic.name}" }
 
-            appHelixApi.subscribeEventSub(subscribePayload)
+                    try {
+                        val transport = SubscribeTransport(
+                            "$publicUrl/${configuration.callback.webhookPath(user.name)}",
+                            secret
+                        )
+                        val subscribePayload = configuration.subscribePayload(user.id, transport)
+
+                        appHelixApi.subscribeEventSub(subscribePayload)
+                    } catch (e: Exception) {
+                        LOGGER.error(e) { "Error while subscribing to topic ${configuration.topic.name}" }
+                    }
+                }
+            }.joinAll()
         }
+    }
+
+    companion object {
+        private val LOGGER = KotlinLogging.logger {}
     }
 }

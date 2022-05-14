@@ -6,7 +6,7 @@ import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
 import io.ktor.server.application.ApplicationCall
 
 abstract class EventSubConfiguration<PAYLOAD, CONDITION : GenericCondition>(
-    topic: EventSubTopic
+    val topic: EventSubTopic
 ) {
     val callback = EventSubCallback(topic, ::parse)
 
