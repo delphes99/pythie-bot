@@ -4,17 +4,11 @@
 @tailwind utilities;
 
 @layer utilities {
-    .primary-color {
-        @apply bg-gray-600 text-white
+    .primary-background {
+        @apply bg-backgroundColor dark:bg-backgroundColorDark
     }
-    .primary-button {
-        @apply inline-block text-white border-0 rounded-md px-3 py-1 m-2 transition duration-500 select-none bg-indigo-500 hover:bg-indigo-600 focus:outline-none
-    }
-    .secondary-button {
-        @apply inline-block text-white border-0 rounded-md px-3 py-1 m-2 transition duration-500 select-none bg-red-500 hover:bg-red-800 focus:outline-none
-    }
-    .warning-button {
-        @apply inline-block text-white border-0 rounded-md px-3 py-1 m-2 transition duration-500 select-none bg-red-500 hover:bg-red-800 focus:outline-none
+    .menu-colors {
+        @apply bg-primaryColor text-white dark:bg-primaryColorDark
     }
     .default-background {
         @apply bg-white dark:bg-gray-700 text-black dark:text-white

@@ -2,7 +2,7 @@
   <template v-if="routerLink">
     <router-link :to="routerLink">
       <a
-        class="px-5 py-2.5 text-base rounded-lg focus:shadow-outline"
+        class="button-shape"
         :class="classes"
       >{{ $t(label) }}</a>
     </router-link>
@@ -10,9 +10,8 @@
   <template v-else-if="link">
     <a
       :href="link"
-      class="px-5 py-2.5 text-base rounded-lg focus:shadow-outline"
+      class="button-shape"
       :class="classes"
-      @click="onClick"
     >{{
       $t(label)
     }}</a>
@@ -20,8 +19,9 @@
   <template v-else>
     <button
       type="button"
-      class="px-5 py-2.5 text-base rounded-lg focus:shadow-outline"
+      class="button-shape"
       :class="classes"
+      @click="$emit('on-click')"
     >
       {{ $t(label) }}
     </button>
@@ -60,8 +60,22 @@ const classes = computed(() => {
     "warning-button": props.type == UiButtonType.Warning,
   }
 })
-
-const onClick = () => {
-  emit("on-click")
-}
 </script>
+
+<style scoped>
+.button-shape {
+  @apply m-2 px-3 py-1 text-base rounded-lg focus:ring inline-block text-white border-0 rounded-md transition duration-500 select-none focus:outline-none;
+}
+
+.primary-button {
+  @apply bg-indigo-500 hover:bg-indigo-600;
+}
+
+.secondary-button {
+  @apply bg-red-500 hover:bg-red-800;
+}
+
+.warning-button {
+  @apply bg-red-500 hover:bg-red-800;
+}
+</style>

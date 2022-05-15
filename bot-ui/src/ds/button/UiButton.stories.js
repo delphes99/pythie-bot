@@ -45,7 +45,7 @@ Router_link.args = {
 }
 
 export const Link = Template.bind({})
-Router_link.args = {
+Link.args = {
   label: "Warning",
   link: "router-link",
 }

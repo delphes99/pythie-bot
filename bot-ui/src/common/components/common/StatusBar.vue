@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen flex flex-row items-center justify-around primary-color z-50">
+  <div class="w-screen flex flex-row items-center justify-around menu-colors z-50">
     <div class="flex-grow">
       <h1 class="pl-2 text-2xl font-extrabold text-white">
         Pythie-bot
