@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import UiCard from "@/common/components/common/card/UiCard.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
-import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiPanel from "@/ds/panel/UiPanel.vue"
 import UiButton from "@/ds/button/UiButton.vue"
 import { UiButtonType } from "@/ds/button/UiButtonType"
 import UiSelect from "@/ds/form/select/UiSelect.vue"

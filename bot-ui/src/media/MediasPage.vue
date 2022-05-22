@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiPanel from "@/ds/panel/UiPanel.vue"
 import { ColumnDefinition } from "@/common/components/common/table/ColumnDefinition"
 import { TableData } from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/UiTable.vue"

@@ -96,7 +96,7 @@
 <script lang="ts">
 import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
-import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiPanel from "@/ds/panel/UiPanel.vue"
 import UiButton from "@/ds/button/UiButton.vue"
 import UiButtonType from "@/ds/button/UiButtonType"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"

@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import UiPanel from "@/ds/panel/UiPanel.vue"
 
 defineProps({
   isOpen: {
