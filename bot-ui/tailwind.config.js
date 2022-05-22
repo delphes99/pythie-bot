@@ -17,6 +17,12 @@ module.exports = {
         backgroundColor: '#FFFFFF',
         backgroundColorDark: defaultColors.gray["700"],
       },
+      maxHeight: {
+        'screen-4/5': '80vh',
+      },
+      maxWidth: {
+        'screen-4/5': '80vw',
+      },
     },
   },
   variants: {

@@ -1,41 +1,48 @@
 <template>
-  <ui-panel :title="$t('features.title')">
+  <ui-panel
+    :title="$t('features.title')"
+    :menu="[UiPanelMenuItem.of('common.add', openNewFeature)]"
+  >
     <ui-card-panel>
       <feature-card
         v-for="feature in features"
         :key="feature"
         :feature="feature"
       />
-
-      <ui-card :title="$t('features.addFeature')">
-        <ui-textfield
-          v-model="featureToAddName"
-          label="feature.name"
-        />
-        <ui-select
-          v-model="featureToAdd"
-          :options="availableFeatureTypes"
-          label="feature.type"
-        />
-        <ui-button
-          :type="UiButtonType.Primary"
-          label="common.add"
-          @on-click="newFeature()"
-        />
-      </ui-card>
     </ui-card-panel>
   </ui-panel>
+  <ui-modal
+    v-model:is-open="isNewFeatureOpened"
+    title="features.addFeature"
+  >
+    <ui-textfield
+      v-model="featureToAddName"
+      label="feature.name"
+    />
+    <ui-select
+      v-model="featureToAdd"
+      :options="availableFeatureTypes"
+      label="feature.type"
+    />
+    <ui-button
+      :type="UiButtonType.Primary"
+      label="common.add"
+      @on-click="newFeature()"
+    />
+  </ui-modal>
 </template>
 
 <script setup lang="ts">
-import UiCard from "@/ds/card/UiCard.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
-import UiPanel from "@/ds/panel/UiPanel.vue"
 import UiButton from "@/ds/button/UiButton.vue"
 import { UiButtonType } from "@/ds/button/UiButtonType"
 import UiSelect from "@/ds/form/select/UiSelect.vue"
 import { UiSelectOption } from "@/ds/form/select/UiSelectOption"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
+import UiModal from "@/ds/modal/UiModal.vue"
+import { useModal } from "@/ds/modal/useModal"
+import UiPanel from "@/ds/panel/UiPanel.vue"
+import { UiPanelMenuItem } from "@/ds/panel/UiPanelMenuItem"
 import { fromJson } from "@/features/configurations/Feature"
 import FeatureType from "@/features/configurations/FeatureType"
 import FeatureCard from "@/features/featureCard/FeatureCard.vue"
@@ -55,6 +62,12 @@ async function getFeatures() {
 }
 
 getFeatures()
+
+const {
+  isOpen: isNewFeatureOpened,
+  open: openNewFeature,
+  close: closeNewFeature,
+} = useModal()
 
 const availableFeatureTypes = UiSelectOption.for(
   Object.values(FeatureType),
@@ -86,6 +99,7 @@ const newFeature = async () => {
             type: "success",
           })
           getFeatures()
+          closeNewFeature()
         } else {
           ElNotification({
             title: t("common.error"),

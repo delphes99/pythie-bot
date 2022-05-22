@@ -6,11 +6,17 @@
   >
     <div
       id="modal"
-      class="w-3/4 min-h-1/3 opacity-100 default-background rounded shadow-lg"
+      class="max-w-screen-4/5 opacity-100 default-background rounded shadow-lg"
       @click.stop
     >
-      <ui-panel :title="title">
-        <slot />
+      <ui-panel
+        :title="title"
+      >
+        <template #withoutContainer>
+          <div class="overflow-auto max-h-screen-4/5 p-4">
+            <slot />
+          </div>
+        </template>
       </ui-panel>
     </div>
   </div>

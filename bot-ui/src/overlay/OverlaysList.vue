@@ -1,5 +1,8 @@
 <template>
-  <ui-panel title="Features">
+  <ui-panel
+    title="overlay.title"
+    :menu="[UiPanelMenuItem.of('common.add', openCreate)]"
+  >
     <ui-card-panel>
       <overlay-card
         v-for="overlay in overlays"
@@ -7,52 +10,45 @@
         :overlay="overlay"
         @deleted="deleteOverlay(overlay)"
       />
-      <ui-card class="align-middle">
-        <div class="flex items-center justify-center h-full">
-          <ui-button
-            label="overlay.createOverlay"
-            @on-click="openCreate"
-          />
-        </div>
-      </ui-card>
-      <ui-modal
-        v-model:is-open="isCreateModalOpened"
-        title="Create overlay"
-      >
-        <fieldset class="flex flex-col border border-black p-1">
-          <legend>Overlay</legend>
-          <ui-textfield
-            v-model="addName"
-            label="overlay.name"
-          />
-          <fieldset class="flex flex-col border border-black p-1">
-            <legend>Resolution</legend>
-            <ui-textfield
-              v-model="addWidth"
-              label="overlay.width"
-            />
-            <ui-textfield
-              v-model="addHeight"
-              label="overlay.height"
-            />
-          </fieldset>
-        </fieldset>
-        <ui-button
-          label="common.add"
-          @on-click="createOverlay"
-        />
-      </ui-modal>
     </ui-card-panel>
   </ui-panel>
+  <ui-modal
+    v-model:is-open="isCreateModalOpened"
+    title="Create overlay"
+  >
+    <fieldset class="flex flex-col border border-black p-1">
+      <legend>Overlay</legend>
+      <ui-textfield
+        v-model="addName"
+        label="overlay.name"
+      />
+      <fieldset class="flex flex-col border border-black p-1">
+        <legend>Resolution</legend>
+        <ui-textfield
+          v-model="addWidth"
+          label="overlay.width"
+        />
+        <ui-textfield
+          v-model="addHeight"
+          label="overlay.height"
+        />
+      </fieldset>
+    </fieldset>
+    <ui-button
+      label="common.add"
+      @on-click="createOverlay"
+    />
+  </ui-modal>
 </template>
 
-<script lang="ts">
-import UiCard from "@/ds/card/UiCard.vue"
+<script setup lang="ts">
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
-import UiModal from "@/common/components/common/modal/UiModal.vue"
-import UiPanel from "@/ds/panel/UiPanel.vue"
 import UiButton from "@/ds/button/UiButton.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
+import UiModal from "@/ds/modal/UiModal.vue"
+import { useModal } from "@/ds/modal/useModal"
+import UiPanel from "@/ds/panel/UiPanel.vue"
+import { UiPanelMenuItem } from "@/ds/panel/UiPanelMenuItem"
 import OverlayCard from "@/overlay/components/OverlayCard.vue"
 import Overlay from "@/overlay/Overlay"
 import OverlayRepository from "@/overlay/OverlayRepository"
@@ -74,15 +70,12 @@ function useOverlayList(repository: OverlayRepository) {
   }
 }
 
+const { isOpen: isCreateModalOpened, open: openCreate } = useModal()
+
 function useCreateOverlay(repository: OverlayRepository) {
-  const isCreateModalOpened = ref(false)
   const addName = ref("")
   const addWidth = ref(1920)
   const addHeight = ref(1080)
-
-  function openCreate() {
-    isCreateModalOpened.value = true
-  }
 
   async function createOverlay() {
     //TODO better validation
@@ -102,8 +95,6 @@ function useCreateOverlay(repository: OverlayRepository) {
   }
 
   return {
-    isCreateModalOpened,
-    openCreate,
     addName,
     addWidth,
     addHeight,
@@ -111,28 +102,19 @@ function useCreateOverlay(repository: OverlayRepository) {
   }
 }
 
-export default {
-  name: `OverlaysList`,
-  components: { UiTextfield, UiButton, UiModal, UiCard, OverlayCard, UiCardPanel, UiPanel },
-  setup() {
-    const backendUrl = inject("backendUrl") as string
-    const repository = new OverlayRepository(backendUrl)
+const backendUrl = inject("backendUrl") as string
+const repository = new OverlayRepository(backendUrl)
 
-    const { overlays, getOverlays: refresh } = useOverlayList(repository)
+const { overlays, getOverlays: refresh } = useOverlayList(repository)
 
-    refresh()
+refresh()
 
-    async function deleteOverlay(overlay: Overlay) {
-      await repository.deleteOverlay(overlay)
-      //TODO notification card
-      await refresh()
-    }
-
-    return {
-      overlays,
-      deleteOverlay,
-      ...useCreateOverlay(repository),
-    }
-  },
+async function deleteOverlay(overlay: Overlay) {
+  await repository.deleteOverlay(overlay)
+  //TODO notification card
+  await refresh()
 }
+
+const { addName, addWidth, addHeight, createOverlay } =
+  useCreateOverlay(repository)
 </script>

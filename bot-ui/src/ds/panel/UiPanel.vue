@@ -1,5 +1,5 @@
 <template>
-  <div class="border-primaryColor border-2 mb-2 p-0">
+  <div class="mb-2 p-0 border-primaryColor border-2">
     <div class="menu-colors p-2">
       <h1 class="inline text-2xl font-medium title-font">
         {{ $t(title) }}
@@ -11,13 +11,20 @@
           v-for="menuItem in menu"
           :key="menuItem.label"
         >
-          <ui-button :label="menuItem.label" />
+          <ui-button
+            :label="menuItem.label"
+            @on-click="menuItem.onClick()"
+          />
         </div>
       </div>
     </div>
-    <div class="p-4">
+    <div
+      v-if="$slots.default"
+      class="p-4"
+    >
       <slot />
     </div>
+    <slot name="withoutContainer" />
   </div>
 </template>
 
@@ -30,6 +37,10 @@ defineProps({
   title: {
     type: String,
     required: true,
+  },
+  class: {
+    type: String,
+    default: null,
   },
   menu: {
     type: Object as PropType<UiPanelMenuItem[]>,

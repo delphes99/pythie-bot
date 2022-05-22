@@ -41,9 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import UiCard from "@/ds/card/UiCard.vue"
-import UiModal from "@/common/components/common/modal/UiModal.vue"
 import UiButton from "@/ds/button/UiButton.vue"
+import UiCard from "@/ds/card/UiCard.vue"
+import UiModal from "@/ds/modal/UiModal.vue"
+import { useModal } from "@/ds/modal/useModal"
 import Feature from "@/features/configurations/Feature"
 import { FormItem } from "@/features/featureCard/description/FormItem"
 import { mapToFormItems } from "@/features/featureCard/description/formItemMapper"
@@ -61,8 +62,8 @@ const props = defineProps({
 
 const backendUrl = inject("backendUrl") as string
 const { t } = useI18n()
-const isSettingOpened = ref(false)
-const openSettings = () => (isSettingOpened.value = true)
+const { isOpen: isSettingOpened, open: openSettings } = useModal()
+
 const viewForm: FormItem[] = mapToFormItems(props.feature)
 const editForm = ref<FormItem[]>(mapToFormItems(props.feature))
 

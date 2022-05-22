@@ -16,4 +16,8 @@ export class UiPanelMenuItem {
   label: string
   type: UiButtonType
   onClick: () => void
+
+  static of(label: string, onClick: () => void): UiPanelMenuItem {
+    return new UiPanelMenuItem(label, UiButtonType.Primary, onClick)
+  }
 }
