@@ -6,9 +6,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primaryColor: '#4B5563',
-        primaryColorDark: '#4B5563',
-        backgroundColor: defaultColors.white,
+        primaryColor: '#1C658C',
+        primaryColorDark: '#1C658C',
+        primaryColorHover: '#0B2736',
+        primaryColorHoverDark: '#0B2736',
+        secondaryColor: '#398AB9',
+        secondaryColorDark: '#398AB9',
+        primaryTextColor: '#D8D2CB',
+        primaryTextColorDark: '#D8D2CB',
+        backgroundColor: '#FFFFFF',
         backgroundColorDark: defaultColors.gray["700"],
       },
     },

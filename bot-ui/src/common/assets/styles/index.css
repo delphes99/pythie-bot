@@ -4,14 +4,11 @@
 @tailwind utilities;
 
 @layer utilities {
-    .primary-background {
-        @apply bg-backgroundColor dark:bg-backgroundColorDark
-    }
     .menu-colors {
-        @apply bg-primaryColor text-white dark:bg-primaryColorDark
+        @apply bg-primaryColor dark:bg-primaryColorDark text-primaryTextColor dark:text-primaryTextColorDark
     }
     .default-background {
-        @apply bg-white dark:bg-gray-700 text-black dark:text-white
+        @apply bg-backgroundColor dark:bg-backgroundColorDark text-black dark:text-white
     }
     label {
         @apply block text-gray-700 dark:text-gray-400 text-sm font-semibold mb-2
