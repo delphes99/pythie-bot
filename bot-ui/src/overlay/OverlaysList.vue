@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import UiCard from "@/common/components/common/card/UiCard.vue"
+import UiCard from "@/ds/card/UiCard.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
 import UiModal from "@/common/components/common/modal/UiModal.vue"
 import UiPanel from "@/ds/panel/UiPanel.vue"

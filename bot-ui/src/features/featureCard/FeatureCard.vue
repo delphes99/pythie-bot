@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import UiCard from "@/common/components/common/card/UiCard.vue"
+import UiCard from "@/ds/card/UiCard.vue"
 import UiModal from "@/common/components/common/modal/UiModal.vue"
 import UiButton from "@/ds/button/UiButton.vue"
 import Feature from "@/features/configurations/Feature"
