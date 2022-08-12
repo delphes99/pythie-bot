@@ -72,6 +72,9 @@ class TwitchStateManager(
                                 val channel = clientBot.channelOf(event.channel)!!
                                 event.executeOnTwitch(channel.ircClient)
                             }
+                            else -> {
+                                // Nothing
+                            }
                         }
                     } catch (e: Exception) {
                         LOGGER.error(e) { "Error while handling event ${e.message}" }
@@ -107,6 +110,9 @@ class TwitchStateManager(
                         when (event) {
                             is TwitchChatOutgoingEvent -> {
                                 event.executeOnTwitch(currentState.runtime.ircClient, connector)
+                            }
+                            else -> {
+                                // Nothing
                             }
                         }
                     } catch (e: Exception) {

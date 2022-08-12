@@ -1,18 +1,18 @@
 [versions]
-kotlin-version = "1.6.21"
-node-gradle-version = "3.1.1"
-gradle-shadow-version = "7.1.0"
-ktor-version = "2.0.0"
-kord-version = "0.8.0-M13"
-kitteh-version = "7.3.0"
+kotlin-version = "1.7.10"
+node-gradle-version = "3.4.0"
+gradle-shadow-version = "7.1.2"
+ktor-version = "2.1.0"
+kord-version = "0.8.0-M15"
+kitteh-version = "7.4.0"
 kumo-version = "1.27"
 
 #test
-mockk-version = "1.12.1"
-bytebuddy-version = "1.11.3"
-kotest-version = "4.6.0"
-junit-core-version = "5.7.0"
-junit-kotlin-version = "1.5.10"
+mockk-version = "1.12.5"
+bytebuddy-version = "1.12.13"
+kotest-version = "5.4.2"
+junit-core-version = "5.9.0"
+junit-kotlin-version = "1.7.10"
 
 [libraries]
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
