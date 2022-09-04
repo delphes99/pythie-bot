@@ -24,7 +24,7 @@ export type DescriptionItemType = string | OutgoingEvent[] | bigint | null
 
 export class DescriptionItem {
   name: string
-  currentValue: DescriptionItemType
+  value: DescriptionItemType
   type: FeatureDescriptionType
 
   constructor(
@@ -33,7 +33,7 @@ export class DescriptionItem {
     value: DescriptionItemType,
   ) {
     this.name = name
-    this.currentValue = value
+    this.value = value
     this.type = type
   }
 
@@ -54,17 +54,17 @@ function mapDescriptionItem(obj: any): DescriptionItem {
 
   switch (obj.type) {
     case FeatureDescriptionType.STRING:
-      value = obj.currentValue as string
+      value = obj.value as string
       break
     case FeatureDescriptionType.OUTGOING_EVENTS:
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      value = obj.currentValue.map((outgoingEvent) => mapOutgoingEvent(outgoingEvent))
+      value = obj.value.map((outgoingEvent) => mapOutgoingEvent(outgoingEvent))
       break
     case FeatureDescriptionType.DURATION:
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      value = obj.currentValue && BigInt(obj.currentValue.match(durationSecondRegex)[1])
+      value = obj.value && BigInt(obj.value.match(durationSecondRegex)[1])
       break
     default:
       throw new Error(`unknow description type : ${obj.type}`)
@@ -76,6 +76,7 @@ function mapDescriptionItem(obj: any): DescriptionItem {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapOutgoingEvent(obj: any): OutgoingEvent {
   switch (obj.type as OutgoingEventType) {
+    //TODO generalize this
     case OutgoingEventType.TwitchOutgoingSendMessage:
       return new TwitchOutgoingSendMessage(obj.text, obj.channel)
   }
@@ -83,5 +84,6 @@ function mapOutgoingEvent(obj: any): OutgoingEvent {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function fromJson(obj: any): Feature {
-  return new Feature(obj.identifier, obj.type, obj.items.map(mapDescriptionItem))
+  const identifier = obj.items.filter((item: any) => item.name === "id")[0].value
+  return new Feature(identifier, obj.type, obj.items.filter((item: any) => item.name !== "id").map(mapDescriptionItem))
 }

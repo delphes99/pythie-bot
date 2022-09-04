@@ -3,6 +3,8 @@ package fr.delphes.connector.twitch.builder
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDescription
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
+import fr.delphes.descriptor.item.StringDescriptor
+import fr.delphes.descriptor.registry.DescriptorBuilder
 import fr.delphes.feature.featureNew.FeatureDescriptionItem
 import fr.delphes.feature.featureNew.FeatureDescriptionItemType
 import fr.delphes.twitch.TwitchChannel
@@ -33,4 +35,11 @@ data class SendMessageBuilder(
             )
         }
     }
+}
+
+val sendMessageMapper = DescriptorBuilder.withItem<SendMessageBuilder> { sendMessage, _ ->
+    listOf(
+        StringDescriptor("text", sendMessage.text),
+        StringDescriptor("channel", sendMessage.channel),
+    )
 }

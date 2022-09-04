@@ -1,7 +1,6 @@
-package fr.delphes.bot.webserver.feature
+package fr.delphes.feature
 
 import fr.delphes.bot.Bot
-import fr.delphes.feature.featureNew.Feature
 import fr.delphes.feature.featureNew.FeatureConfiguration
 import fr.delphes.feature.featureNew.FeatureCreation
 import fr.delphes.feature.featureNew.FeatureState
@@ -19,6 +18,11 @@ import kotlinx.serialization.encodeToString
 
 fun Application.Features(bot: Bot) {
     routing {
+        get("/features") {
+            val json = bot.serializer.encodeToString(
+                bot.featuresManager.getDescriptors())
+            this.call.respondText(json, ContentType.Application.Json)
+        }
         get("/features/new") {
             val json = bot.serializer.encodeToString(
                 bot.loadFeatures()
@@ -65,8 +69,7 @@ fun Application.Features(bot: Bot) {
             )
         }
         get("/feature/outgoingEventTypes") {
-            bot.botFeatures.getOutgoingEventsTypes();
-            this.call.respond(HttpStatusCode.OK, bot.botFeatures.getOutgoingEventsTypes())
+            this.call.respond(HttpStatusCode.OK, bot.outgoingEventRegistry.getRegisteredTypes())
         }
     }
 }

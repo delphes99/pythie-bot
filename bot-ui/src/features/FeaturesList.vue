@@ -56,7 +56,7 @@ const backendUrl = inject("backendUrl") as string
 const features = ref([])
 
 async function getFeatures() {
-  const response = await fetch(`${backendUrl}/features/new`)
+  const response = await fetch(`${backendUrl}/features`)
 
   features.value = await response.json().then((data) => data.map(fromJson))
 }

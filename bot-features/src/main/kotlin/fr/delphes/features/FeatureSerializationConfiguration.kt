@@ -2,6 +2,7 @@ package fr.delphes.features
 
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
+import fr.delphes.feature.ExperimentalFeatureConfiguration
 import fr.delphes.feature.FeatureDescription
 import fr.delphes.feature.featureNew.FeatureConfiguration
 import fr.delphes.feature.featureNew.FeatureState
@@ -17,6 +18,7 @@ import fr.delphes.features.twitch.bitCheer.BitCheerDescription
 import fr.delphes.features.twitch.clipCreated.ClipCreatedDescription
 import fr.delphes.features.twitch.command.CommandDescription
 import fr.delphes.features.twitch.command.EditableCommandConfiguration
+import fr.delphes.features.twitch.command.ExperimentalTwitchCommandConfiguration
 import fr.delphes.features.twitch.commandList.CommandListDescription
 import fr.delphes.features.twitch.endCredits.EndCreditsDescription
 import fr.delphes.features.twitch.gameDescription.GameDescriptionDescription
@@ -75,8 +77,10 @@ object FeatureSerializationConfiguration {
 
         registerOutgoingMessageBuilder<SendMessageBuilder>()
 
-        registerFeatureConfiguration<NewTwitchCommand>()
+        registerOldFeatureConfiguration<NewTwitchCommand>()
         registerFeatureState<NewTwitchCommandState>()
+
+        registerFeatureConfiguration<ExperimentalTwitchCommandConfiguration>()
     }
 
     @InternalSerializationApi
@@ -89,13 +93,19 @@ object FeatureSerializationConfiguration {
         polymorphic(OutgoingEventBuilder::class, T::class, T::class.serializer())
     }
 
+    //TODO remove
     @InternalSerializationApi
-    inline fun <reified T : FeatureConfiguration<out FeatureState>> SerializersModuleBuilder.registerFeatureConfiguration() {
+    inline fun <reified T : FeatureConfiguration<out FeatureState>> SerializersModuleBuilder.registerOldFeatureConfiguration() {
         polymorphic(FeatureConfiguration::class, T::class, T::class.serializer())
     }
 
     @InternalSerializationApi
     inline fun <reified T : FeatureState> SerializersModuleBuilder.registerFeatureState() {
         polymorphic(FeatureState::class, T::class, T::class.serializer())
+    }
+
+    @InternalSerializationApi
+    inline fun <reified T : ExperimentalFeatureConfiguration<*>> SerializersModuleBuilder.registerFeatureConfiguration() {
+        polymorphic(ExperimentalFeatureConfiguration::class, T::class, T::class.serializer())
     }
 }

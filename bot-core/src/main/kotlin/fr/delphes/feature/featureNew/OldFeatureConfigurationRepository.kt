@@ -5,7 +5,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class FeatureConfigurationRepository(
+//TODO remove when features is removed
+class OldFeatureConfigurationRepository(
     path: String,
     serializer: Json,
 ) : FileRepository<List<FeatureConfiguration<out FeatureState>>>(

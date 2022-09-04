@@ -12,10 +12,13 @@ import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
+import fr.delphes.connector.twitch.builder.sendMessageMapper
+import fr.delphes.descriptor.registry.DescriptorRegistry
 import fr.delphes.features.FeatureSerializationConfiguration
 import fr.delphes.features.twitch.command.EditableCommand
 import fr.delphes.features.twitch.command.EditableCommandConfiguration
 import fr.delphes.features.twitch.command.NewTwitchCommand
+import fr.delphes.features.twitch.command.twitchCommandMapper
 import fr.delphes.features.twitch.command.type
 import kotlinx.serialization.InternalSerializationApi
 import java.io.File
@@ -47,13 +50,18 @@ fun main() {
         ),
         FeatureSerializationConfiguration.serializersModule,
         "${File.separator}feature${File.separator}features.json",
+        //TODO remove when new features are implemented
         BotFeatures(
             mapOf(
                 type to { id -> NewTwitchCommand(id) }),
             mapOf(
                 SendMessageBuilder.type to SendMessageBuilder.description()
             )
-        )
+        ),
+        DescriptorRegistry.of(twitchCommandMapper),
+        DescriptorRegistry.of(
+            sendMessageMapper
+        ),
     )
 
     bot.init(

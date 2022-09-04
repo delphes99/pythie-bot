@@ -9,13 +9,17 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
+import fr.delphes.descriptor.registry.DescriptorRegistry
+import fr.delphes.descriptor.registry.MergeDescriptorRegistry
 import fr.delphes.feature.EditableFeature
+import fr.delphes.feature.FeatureConfigurationRepository
+import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.feature.featureNew.FeatureConfiguration
-import fr.delphes.feature.featureNew.FeatureConfigurationRepository
 import fr.delphes.feature.featureNew.FeatureCreation
 import fr.delphes.feature.featureNew.FeatureHandler
 import fr.delphes.feature.featureNew.FeatureState
+import fr.delphes.feature.featureNew.OldFeatureConfigurationRepository
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -34,6 +38,8 @@ class Bot(
     private val featureSerializationModule: SerializersModule,
     featureConfigurationsPath: String,
     val botFeatures: BotFeatures,
+    val featureRegistry: DescriptorRegistry,
+    val outgoingEventRegistry: DescriptorRegistry,
 ) {
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
@@ -51,13 +57,23 @@ class Bot(
         serializersModule = featureSerializationModule
     }
 
+    //TODO remove when all features are migrated
+    private val featureRepositoryOld = OldFeatureConfigurationRepository(
+        "${configFilepath}${File.separator}feature${File.separator}features - Copie.json",
+        serializer
+    )
+
     private val featureRepository = FeatureConfigurationRepository(
         "${configFilepath}$featureConfigurationsPath",
         serializer
     )
 
+    private val globalDescriptorRegistry = MergeDescriptorRegistry(featureRegistry, outgoingEventRegistry)
+
+    val featuresManager = FeaturesManager(featureRepository, featureRegistry, globalDescriptorRegistry)
+
     val featureHandler = FeatureHandler().also {
-        it.load(runBlocking { featureRepository.load() })
+        it.load(runBlocking { featureRepositoryOld.load() })
     }
 
     suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
@@ -109,11 +125,11 @@ class Bot(
         .firstOrNull { connector -> connector.connectorName == name }
 
     suspend fun reloadFeature() {
-        featureHandler.load(featureRepository.load())
+        featureHandler.load(featureRepositoryOld.load())
     }
 
     suspend fun editFeature(newConfiguration: FeatureConfiguration<out FeatureState>) {
-        val actualConfigurations = featureRepository.load()
+        val actualConfigurations = featureRepositoryOld.load()
         val newConfigurations = actualConfigurations.map { oldConfiguration ->
             if (oldConfiguration.identifier == newConfiguration.identifier) {
                 newConfiguration
@@ -121,19 +137,25 @@ class Bot(
                 oldConfiguration
             }
         }
-        featureRepository.save(newConfigurations)
+        featureRepositoryOld.save(newConfigurations)
         featureHandler.load(newConfigurations)
     }
 
     suspend fun loadFeatures(): List<FeatureConfiguration<out FeatureState>> {
-        return featureRepository.load()
+        return featureRepositoryOld.load()
+    }
+
+    suspend fun getAllFeaturesDescriptor() {
+
+
+        return;
     }
 
     //TODO better return type
     suspend fun createFeature(configuration: FeatureCreation): Boolean {
         val (id, type) = configuration
 
-        val currentFeatures = featureRepository.load()
+        val currentFeatures = featureRepositoryOld.load()
 
         val identifierAlreadyExist = currentFeatures.any { f -> f.identifier == id }
         if(identifierAlreadyExist) {
@@ -142,7 +164,7 @@ class Bot(
 
         val newFeature = botFeatures.build(id, type)
             ?.also { newFeature ->
-                featureRepository.save(currentFeatures + newFeature)
+                featureRepositoryOld.save(currentFeatures + newFeature)
                 reloadFeature()
             }
 

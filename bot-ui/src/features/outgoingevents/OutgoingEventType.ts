@@ -1,5 +1,5 @@
 enum OutgoingEventType {
-  TwitchOutgoingSendMessage = "twitch-outgoing-send-message",
+  TwitchOutgoingSendMessage = "fr-delphes-connector-twitch-builder-SendMessageBuilder",
 }
 
 export default OutgoingEventType

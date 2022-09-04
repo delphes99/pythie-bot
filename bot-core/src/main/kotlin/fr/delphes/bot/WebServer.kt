@@ -6,7 +6,7 @@ import fr.delphes.bot.media.MediasService
 import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.bot.webserver.alert.AlertModule
-import fr.delphes.bot.webserver.feature.Features
+import fr.delphes.feature.Features
 import io.ktor.http.HttpMethod
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application

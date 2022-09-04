@@ -70,10 +70,10 @@
   },
   "configuration": {
     "features": {
-      "twitch-incoming-command": "Twitch : Command"
+      "fr-delphes-features-twitch-command-ExperimentalTwitchCommandConfiguration": "Twitch : Command"
     },
     "outgoingEvents": {
-      "twitch-outgoing-send-message": "Twitch : Chat message"
+      "fr-delphes-connector-twitch-builder-SendMessageBuilder": "Twitch : Chat message"
     }
   },
   "obs": {

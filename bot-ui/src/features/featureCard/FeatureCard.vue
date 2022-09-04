@@ -76,8 +76,8 @@ async function saveChanges() {
     return
   }
 
-  const { identifier, type } = props.feature
-  const newFeature: any = { identifier, type }
+  const { type } = props.feature
+  const newFeature: any = { type }
 
   editForm.value.forEach((item) => {
     item.appendToResult(newFeature)
