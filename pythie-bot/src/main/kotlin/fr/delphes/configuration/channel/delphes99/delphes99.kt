@@ -61,6 +61,7 @@ import kotlin.random.Random.Default.nextDouble
  * Example for delphes99 channel : https://www.twitch.tv/delphes99
  */
 val channel = TwitchChannel("delphes99")
+
 val matrixFilter = SourceFilter("webcam", "matrix")
 val blackAndWhiteFilter = SourceFilter("main_capture", "black_and_white")
 
@@ -86,6 +87,10 @@ fun buildShoutOut(user: User): ShoutOut {
         "\uD83D\uDCFA $lastStream $currentCategory N'hésitez pas à aller voir ${user.name} : https://www.twitch.tv/${user.name.lowercase()}."
     }
 }
+
+//TODO item name > item id
+private const val RAIN_ITEM_ID = 3L
+private const val WEBCAM_ID = 8L
 
 @InternalSerializationApi
 val delphes99Features = listOf(
@@ -262,7 +267,7 @@ val delphes99Features = listOf(
     ) {
         listOf(
             SendMessage("-> test dev 2", channel),
-            ChangeItemPosition("webcam", 1028.0, 784.0),
+            ChangeItemPosition(WEBCAM_ID, 1425.0, 691.0, "in_game"),
         )
     },
     RewardRedeem(
@@ -271,7 +276,7 @@ val delphes99Features = listOf(
     ) {
         listOf(
             SendMessage("-> test dev 3", channel),
-            ChangeItemPosition("webcam", nextDouble(0.0, (1920.0 - 486.0)), nextDouble(0.0, (1080.0 - 273.0))),
+            ChangeItemPosition(WEBCAM_ID, nextDouble(0.0, (1920.0 - 486.0)), nextDouble(0.0, (1080.0 - 273.0)), "in_game"),
         )
     },
     RewardRedeem(
@@ -394,7 +399,7 @@ val delphes99Features = listOf(
         listOf(
             PlaySound("sad.mp3"),
             ActivateFilter(blackAndWhiteFilter),
-            ChangeItemVisibility("rain", true, "main_capture")
+            ChangeItemVisibility(RAIN_ITEM_ID, true, "main_capture")
         )
     },
     SourceFilterActivated { sourceFilterActivated ->
@@ -402,7 +407,7 @@ val delphes99Features = listOf(
             listOf(
                 Pause(Duration.ofMillis(9700)),
                 DeactivateFilter(blackAndWhiteFilter),
-                ChangeItemVisibility("rain", false, "main_capture")
+                ChangeItemVisibility(RAIN_ITEM_ID, false, "main_capture")
             )
         } else {
             emptyList()
@@ -502,9 +507,10 @@ val delphes99Features = listOf(
         }
     },
     BotStarted {
+        val overlayItemId = 4L
         listOf(
             Pause(Duration.ofSeconds(5)), //Waiting for connectors connections
-            RefreshSource("in_game", "Overlay"),
+            RefreshSource("in_game", overlayItemId),
             SendMessage("Ready to go", channel)
         )
     }

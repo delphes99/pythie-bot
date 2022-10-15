@@ -1,20 +1,17 @@
 package fr.delphes.obs
 
-import fr.delphes.obs.event.EventType
-import fr.delphes.obs.event.SourceFilterVisibilityChanged
-import fr.delphes.obs.event.SwitchScenes
-import fr.delphes.obs.request.Authenticate
-import fr.delphes.obs.request.AuthenticateResponse
-import fr.delphes.obs.request.GetAuthRequired
-import fr.delphes.obs.request.GetAuthRequiredResponse
-import fr.delphes.obs.request.ReceivedMessage
-import fr.delphes.obs.request.Request
-import fr.delphes.obs.request.Response
-import fr.delphes.obs.request.ResponseStatus
-import fr.delphes.obs.request.SetSceneItemPropertiesResponse
-import fr.delphes.obs.request.SetSourceFilterVisibilityResponse
-import fr.delphes.utils.exhaustive
-import fr.delphes.utils.serialization.Serializer
+import fr.delphes.obs.fromObs.EventPayload
+import fr.delphes.obs.fromObs.FromOBSMessagePayload
+import fr.delphes.obs.fromObs.Hello
+import fr.delphes.obs.fromObs.Identified
+import fr.delphes.obs.fromObs.RequestResponse
+import fr.delphes.obs.fromObs.event.CurrentProgramSceneChanged
+import fr.delphes.obs.fromObs.event.SourceFilterEnableStateChanged
+import fr.delphes.obs.message.Message
+import fr.delphes.obs.toObs.IdentifyPayload
+import fr.delphes.obs.toObs.RequestPayload
+import fr.delphes.obs.toObs.ToObsMessageType
+import fr.delphes.obs.toObs.request.RequestDataPayload
 import fr.delphes.utils.toBase64
 import fr.delphes.utils.toSha256
 import io.ktor.client.HttpClient
@@ -25,6 +22,7 @@ import io.ktor.client.plugins.websocket.ws
 import io.ktor.http.HttpMethod
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.websocket.Frame
+import io.ktor.websocket.readReason
 import io.ktor.websocket.readText
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -37,21 +35,23 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.serializer
+import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import kotlin.reflect.KClass
 
 class ObsClient(
     private val configuration: Configuration,
-    private val listeners: ObsListener
+    private val listeners: ObsListener,
+    private val serializer: Json
 ) {
     private val typeForMessage = mutableMapOf<String, KClass<*>>()
-    private val requestsToSend = Channel<Request>()
+    private val requestsToSend = Channel<RequestDataPayload>()
     private val scope = CoroutineScope(Dispatchers.Default)
+    private var connected = false
 
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
-            json(Serializer)
+            json(serializer)
         }
         install(WebSockets) {
             maxFrameSize = Long.MAX_VALUE
@@ -80,8 +80,6 @@ class ObsClient(
             host = configuration.host,
             port = configuration.port,
         ) {
-            authenticate()
-
             launch {
                 while (isActive) {
                     sendRequest(requestsToSend.receive())
@@ -96,17 +94,15 @@ class ObsClient(
         scope.coroutineContext.cancel()
     }
 
-    private suspend fun ClientWebSocketSession.authenticate() {
-        sendRequest(GetAuthRequired())
-    }
-
-    suspend fun sendRequest(request: Request) {
+    suspend fun sendRequest(request: RequestDataPayload) {
+        LOGGER.debug { "Sending ${request.requestType}" }
         requestsToSend.send(request)
     }
 
-    private suspend inline fun <reified T : Request> ClientWebSocketSession.sendRequest(request: T) {
-        typeForMessage[request.messageId] = request.responseType
-        send(Frame.Text(Serializer.encodeToString(request)))
+    private suspend fun ClientWebSocketSession.sendRequest(request: RequestDataPayload) {
+        val requestMessage = ToObsMessageType.buildMessageFrom(RequestPayload.toToObsMessagePayload(request, serializer), serializer)
+
+        send(requestMessage.toFrame())
     }
 
     private suspend fun ClientWebSocketSession.receiveFrames() {
@@ -116,6 +112,7 @@ class ObsClient(
             reconnect = try {
                 handle(incoming.receive())
             } catch (e: ClosedReceiveChannelException) {
+                connected = false
                 Reconnect.RECONNECT
             } catch (e: Exception) {
                 LOGGER.error(e) { "Error receiving frame" }
@@ -132,48 +129,51 @@ class ObsClient(
             is Frame.Text -> {
                 val text = frame.readText()
                 try {
-                    val receivedMessage = Serializer.decodeFromString<ReceivedMessage>(text)
-                    when {
-                        receivedMessage.isRequestResponse() -> {
-                            val payload = parseResponse(text)
-                            when (payload) {
-                                is GetAuthRequiredResponse -> {
-                                    if (payload.authRequired) {
-                                        LOGGER.debug { "OBS required credentials : try to authenticate" }
-                                        val secret = (configuration.password + payload.salt).toSha256().toBase64()
-                                        val authResponse = (secret + payload.challenge).toSha256().toBase64()
+                    when(val message = serializer.decodeFromString<FromOBSMessagePayload>(text)) {
+                        is Hello -> {
+                            LOGGER.debug { "Hello received" }
+                            val authenticationString =
+                                message.d.authentication?.let { configuration.password?.toAuthenticationString(it.salt, it.challenge) }
+                            val identifyMessage = ToObsMessageType.buildMessageFrom(IdentifyPayload(authenticationString), serializer)
 
-                                        sendRequest(Authenticate(authResponse))
-                                    }
-                                    Unit
-                                }
-                                is AuthenticateResponse -> {
-                                    if (payload.status == ResponseStatus.error) {
-                                        listeners.onError("OBS authentication failed : ${payload.error}")
-                                    }
-                                    handleError(payload)
-                                }
-                                is SetSceneItemPropertiesResponse -> handleError(payload)
-                                is SetSourceFilterVisibilityResponse -> handleError(payload)
-                            }.exhaustive()
+                            send(identifyMessage.toFrame())
                         }
-                        receivedMessage.event != null -> {
-                            EventType.deserialize(receivedMessage.event, text)?.let { event ->
-                                when (event) {
-                                    is SwitchScenes -> listeners.onSwitchScene(event)
-                                    is SourceFilterVisibilityChanged -> listeners.onSourceFilterVisibilityChanged(event)
-                                }.exhaustive()
+                        is Identified -> {
+                            LOGGER.info { "Identified" }
+                            connected = true
+                        }
+
+                        is EventPayload -> {
+                            LOGGER.debug { "Event received ${message.d.eventType} (Intent : ${message.d.eventIntent})" }
+                            when (val eventPayload = message.d.toEvent(serializer)) {
+                                is CurrentProgramSceneChanged -> {
+                                    listeners.onSwitchScene(eventPayload)
+                                }
+
+                                is SourceFilterEnableStateChanged -> {
+                                    listeners.onSourceFilterEnableStateChanged(eventPayload)
+                                }
+
+                                null -> {
+                                    LOGGER.warn { "Unknown message received ${message.d.eventType} (Intent : ${message.d.eventIntent})" }
+                                    LOGGER.debug { "Payload: $message" }
+                                }
                             }
-                            LOGGER.info { "Event received : ${receivedMessage.event}" }
                         }
-                        else -> {
-                            LOGGER.warn { "Unknown message received" }
+                        is RequestResponse -> {
+                            LOGGER.debug { "Request response received ${message.d.responseData}" }
                         }
                     }
                 } catch (e: Exception) {
-                    LOGGER.error(e) { "Error while parsing frame : $text" }
+                    LOGGER.error(e) { "error when handling message" }
+                    LOGGER.debug { "Payload: $text" }
                 }
             }
+
+            is Frame.Close -> {
+                LOGGER.error { "Obs closing connection : ${frame.readReason()}" }
+            }
+
             else -> {
                 LOGGER.info { "Unmanaged frame type ${frame.frameType.name}" }
             }
@@ -181,19 +181,11 @@ class ObsClient(
         return Reconnect.CONTINUE
     }
 
-    private inline fun <reified T : Response> handleError(payload: T) {
-        if (payload.status == ResponseStatus.error) {
-            LOGGER.error { "Request error [${T::class.simpleName}] : ${payload.error}" }
-        } else {
-            LOGGER.info { "connected" }
-        }
-    }
+    private fun Message.toFrame() = Frame.Text(serializer.encodeToString(this))
 
-    @OptIn(InternalSerializationApi::class)
-    private fun parseResponse(text: String): Response {
-        val messageId = Serializer.decodeFromString<ReceivedMessage>(text).messageId
-
-        return Serializer.decodeFromString(typeForMessage[messageId]!!.serializer(), text) as Response
+    private fun String.toAuthenticationString(salt: String?, challenge: String?): String {
+        val secret = (this + salt).toSha256().toBase64()
+        return (secret + challenge).toSha256().toBase64()
     }
 
     companion object {

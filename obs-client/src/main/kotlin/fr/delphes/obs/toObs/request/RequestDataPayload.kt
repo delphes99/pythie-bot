@@ -1,42 +1,14 @@
-package fr.delphes.obs.request
+package fr.delphes.obs.toObs.request
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import java.util.UUID
-import kotlin.reflect.KClass
 
 @Serializable
-sealed class Request {
-    abstract val messageId: String
+sealed class RequestDataPayload {
     abstract val requestType: String
-    abstract val responseType: KClass<*>
 }
 
-@Serializable
-class GetAuthRequired(
-    @SerialName("message-id")
-    override val messageId: String = UUID.randomUUID().toString(),
-) : Request() {
-    @SerialName("request-type")
-    override val requestType = "GetAuthRequired"
 
-    @Transient
-    override val responseType = GetAuthRequiredResponse::class
-}
-
-@Serializable
-data class Authenticate(
-    val auth: String,
-    @SerialName("message-id")
-    override val messageId: String = UUID.randomUUID().toString()
-) : Request() {
-    @SerialName("request-type")
-    override val requestType: String = "Authenticate"
-
-    @Transient
-    override val responseType = AuthenticateResponse::class
-}
+/*
 
 @Serializable
 data class SetSceneItemProperties(
@@ -47,7 +19,7 @@ data class SetSceneItemProperties(
     val visible: Boolean? = null,
     @SerialName("message-id")
     override val messageId: String = UUID.randomUUID().toString(),
-) : Request() {
+) : RequestDataPayload() {
     @SerialName("request-type")
     override val requestType: String = "SetSceneItemProperties"
 
@@ -68,10 +40,10 @@ data class SetSourceFilterVisibility(
     val filterEnabled: Boolean,
     @SerialName("message-id")
     override val messageId: String = UUID.randomUUID().toString(),
-) : Request() {
+) : RequestDataPayload() {
     @SerialName("request-type")
     override val requestType: String = "SetSourceFilterVisibility"
 
     @Transient
     override val responseType = SetSourceFilterVisibilityResponse::class
-}
+}*/

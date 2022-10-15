@@ -41,7 +41,7 @@ class ObsConnector(
                     onSwitchScene = {
                         bot.handleIncomingEvent(SceneChanged(it.sceneName))
                     },
-                    onSourceFilterVisibilityChanged = {
+                    onSourceFilterEnableStateChanged = {
                         val filter = SourceFilter(it.sourceName, it.filterName)
                         val event = if (it.filterEnabled) {
                             SourceFilterActivated(filter)
@@ -58,7 +58,7 @@ class ObsConnector(
                         dispatchTransition(DisconnectionRequested())
                     }
                 )
-                val client = ObsClient(configuration.toObsConfiguration(), listeners)
+                val client = ObsClient(configuration.toObsConfiguration(), listeners, bot.serializer)
                 client.listen()
                 ConnectionSuccessful(configuration, ObsRunTime(client))
             } catch (e: Exception) {

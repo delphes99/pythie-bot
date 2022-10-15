@@ -1,4 +1,4 @@
-package fr.delphes.obs.request
+package fr.delphes.obs.toObs
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

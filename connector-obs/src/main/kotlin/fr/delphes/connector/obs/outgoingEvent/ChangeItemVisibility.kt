@@ -1,22 +1,27 @@
 package fr.delphes.connector.obs.outgoingEvent
 
 import fr.delphes.connector.obs.ObsConnector
-import fr.delphes.obs.request.SetSceneItemProperties
+import fr.delphes.obs.toObs.request.GetSceneItemList
+import fr.delphes.obs.toObs.request.SetSceneItemEnabled
 import kotlinx.serialization.InternalSerializationApi
 
 @InternalSerializationApi
 data class ChangeItemVisibility(
-    val itemName: String,
+    //TODO item name > item id
+    val itemId: Long,
     val visible: Boolean,
-    val sceneName: String? = null,
+    val sceneName: String,
 ) : ObsOutgoingEvent {
     override suspend fun executeOnObs(connector: ObsConnector) {
         connector.connected {
             client.sendRequest(
-                SetSceneItemProperties(
-                    item = itemName,
+                GetSceneItemList(sceneName)
+            )
+            client.sendRequest(
+                SetSceneItemEnabled(
                     sceneName = sceneName,
-                    visible = visible
+                    sceneItemId = itemId,
+                    sceneItemEnabled = visible
                 )
             )
         }
