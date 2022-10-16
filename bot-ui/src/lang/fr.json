@@ -11,7 +11,18 @@
     "height": "Hauteur",
     "createOverlay": "Créer un overlay",
     "editor": {
-      "addText": "Ajouter un texte"
+      "addText": "Ajouter un texte",
+      "selected-item": {
+        "title": "Elément sélectionné",
+        "id": "Id",
+        "type": "Type"
+      },
+      "properties": "Propriétés",
+      "X": "X",
+      "Y": "Y",
+      "text-component": {
+        "text": "Texte"
+      }
     }
   },
   "medias": {
@@ -40,7 +51,8 @@
     "success": "Succès",
     "error": "Erreur",
     "noData": "Aucune donnée",
-    "emptyField": "Champs vide"
+    "emptyField": "Champs vide",
+    "back": "Retour"
   },
   "settings": {
     "title": "Paramètres",

@@ -11,7 +11,18 @@
     "height": "Height",
     "createOverlay": "Create overlay",
     "editor": {
-      "addText": "Add text"
+      "addText": "Add text",
+      "selected-item": {
+        "title": "Selected item",
+        "id": "Id",
+        "type": "Type"
+      },
+      "properties": "Properties",
+      "X": "X",
+      "Y": "Y",
+      "text-component": {
+        "text": "Text"
+      }
     }
   },
   "medias": {
@@ -40,7 +51,8 @@
     "success": "Success",
     "error": "Error",
     "noData": "No data",
-    "emptyField": "Empty field"
+    "emptyField": "Empty field",
+    "back": "Back"
   },
   "settings": {
     "title": "Settings",

@@ -1,26 +1,40 @@
 <template>
   <loading-promise :loading-promise="loadPromise">
-    <div class="flex flex-row flex-grow h-full">
-      <div class="w-60 flex flex-col">
-        <editor-add-component @add-text="addText" />
-        <editor-component-list
-          v-model:selection="selection"
-          :components="components"
-        />
+    <div class="flex flex-col h-full">
+      <div class="w-full flex-shrink-0 flex flex-row">
+        <h1 class="flex justify-center text-3xl font-bold p-2">
+          {{ overlay.title }}
+        </h1>
+        <div>
+          <ui-button
+            :type="UiButtonType.Secondary"
+            :router-link="`/overlay`"
+            label="common.back"
+          />
+        </div>
       </div>
       <div
-        class="mx-60 h-full flex flex-shrink-0 flex-grow items-center justify-center"
+        class="flex-shrink overflow-auto flex flex-row bg-gray-200"
       >
-        <editor-preview
-          v-model:selection="selection"
-          :overlay="overlay"
-        />
-      </div>
-      <div class="w-60">
-        <editor-props
-          v-model:selection="selection"
-          class="flex-grow"
-        />
+        <div class="flex-shrink-0 w-60 flex flex-col">
+          <editor-add-component @add-text="addText" />
+          <editor-component-list
+            v-model:selection="selection"
+            :components="components"
+          />
+        </div>
+        <div class="flex-shrink overflow-auto">
+          <editor-preview
+            v-model:selection="selection"
+            :overlay="overlay"
+          />
+        </div>
+        <div class="flex-shrink-0 w-60">
+          <editor-props
+            v-model:selection="selection"
+            class="flex-grow"
+          />
+        </div>
       </div>
     </div>
   </loading-promise>
@@ -37,6 +51,8 @@ import TextComponent from "@/overlay/editor/textComponent"
 import { OverlayElement } from "@/overlay/OverlayElement"
 import OverlayRepository from "@/overlay/OverlayRepository"
 import { computed, defineComponent, inject, ref, watch } from "vue"
+import UiButton from "@/ds/button/UiButton.vue"
+import UiButtonType from "@/ds/button/UiButtonType"
 
 export default defineComponent({
   name: `OverlayEditor`,
@@ -46,6 +62,7 @@ export default defineComponent({
     EditorComponentList,
     EditorPreview,
     EditorProps,
+    UiButton,
   },
   props: {
     overlayId: {
@@ -116,6 +133,7 @@ export default defineComponent({
       components,
       addText,
       selection,
+      UiButtonType,
     }
   },
 })

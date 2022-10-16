@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="components.length !== 0"
-    class="flex flex-col bg-gray-200"
+    class="flex flex-col border border-black"
   >
     <h2>Items</h2>
     <ul>

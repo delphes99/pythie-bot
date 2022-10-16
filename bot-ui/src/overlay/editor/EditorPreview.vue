@@ -1,7 +1,7 @@
 <template>
   <div
     id="preview"
-    :style="`min-width: ${overlay.resolution.width}px; min-height: ${overlay.resolution.height}px;`"
+    :style="`width: ${overlay.resolution.width}px; height: ${overlay.resolution.height}px; position: relative;`"
   />
 </template>
 <script lang="ts">
@@ -161,18 +161,18 @@ interface ElementPosition {
 
 #preview {
   background-image: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 20px,
-      #dddddd 1px,
-      #dddddd 21px
-    ),
-    repeating-linear-gradient(
-      to right,
-      #eeeeee,
-      #eeeeee 20px,
-      #dddddd 1px,
-      #dddddd 21px
-    );
+    to bottom,
+    transparent,
+    transparent 20px,
+    #dddddd 1px,
+    #dddddd 21px
+  ),
+  repeating-linear-gradient(
+    to right,
+    #eeeeee,
+    #eeeeee 20px,
+    #dddddd 1px,
+    #dddddd 21px
+  );
 }
 </style>

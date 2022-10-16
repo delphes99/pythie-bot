@@ -1,51 +1,45 @@
 <template>
-  <div>
-    <div
-      v-if="selection"
-      class="flex flex-col border border-black p-2"
-    >
-      <h2>Selected item</h2>
-      id : {{ selection.id }}
+  <div v-if="selection">
+    <div class="flex flex-col border border-black p-2">
+      <h2>{{ $t("overlay.editor.selected-item.title") }}</h2>
+      <div>{{ $t("overlay.editor.selected-item.id") }} : {{ selection.id }}</div>
+      <div>{{ $t("overlay.editor.selected-item.type") }} : {{ selection.type }}</div>
+    </div>
+    <div class="flex flex-col border border-black p-2">
+      <h2>{{ $t("overlay.editor.properties") }}</h2>
       <div>
-        <label for="text-attribute">Text : </label>
-        <input
-          id="text-attribute"
+        <ui-textfield
           v-model="selectedText"
-          class="input"
-          type="text"
+          label="overlay.editor.text-component.text"
           @change="updateComponent"
-        >
+        />
       </div>
       <div>
-        <label for="text-attribute">X : </label>
-        <input
-          id="x-attribute"
+        <ui-textfield
           v-model="selectedLeft"
-          class="input"
-          type="text"
+          label="overlay.editor.X"
           @change="updateComponent"
-        >
+        />
       </div>
       <div>
-        <label for="text-attribute">Y : </label>
-        <input
-          id="y-attribute"
+        <ui-textfield
           v-model="selectedTop"
-          class="input"
-          type="text"
+          label="overlay.editor.Y"
           @change="updateComponent"
-        >
+        />
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
+import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import TextComponent, { fromObject } from "@/overlay/editor/textComponent"
 import { OverlayElement } from "@/overlay/OverlayElement"
 import { defineComponent, PropType, ref, watch } from "vue"
 
 export default defineComponent({
   name: "EditorProps",
+  components: { UiTextfield },
   props: {
     selection: {
       type: Object as PropType<OverlayElement>,
