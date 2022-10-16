@@ -1,0 +1,11 @@
+{
+  "d": {
+    "requestId": "f4384303-5a4d-4891-b573-88ee011fd959",
+    "requestStatus": {
+      "code": 100,
+      "result": true
+    },
+    "requestType": "SetSceneItemEnabled"
+  },
+  "op": 7
+}

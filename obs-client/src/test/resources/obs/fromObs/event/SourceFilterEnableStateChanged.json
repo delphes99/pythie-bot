@@ -1,0 +1,12 @@
+{
+  "d": {
+    "eventData": {
+      "filterEnabled": false,
+      "filterName": "matrix",
+      "sourceName": "webcam"
+    },
+    "eventIntent": 32,
+    "eventType": "SourceFilterEnableStateChanged"
+  },
+  "op": 5
+}

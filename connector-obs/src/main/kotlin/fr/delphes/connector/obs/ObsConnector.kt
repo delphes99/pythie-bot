@@ -39,11 +39,11 @@ class ObsConnector(
                 //TODO move listener build
                 val listeners = ObsListener(
                     onSwitchScene = {
-                        bot.handleIncomingEvent(SceneChanged(it.sceneName))
+                        bot.handleIncomingEvent(SceneChanged(it.eventData.sceneName))
                     },
                     onSourceFilterEnableStateChanged = {
-                        val filter = SourceFilter(it.sourceName, it.filterName)
-                        val event = if (it.filterEnabled) {
+                        val filter = SourceFilter(it.eventData.sourceName, it.eventData.filterName)
+                        val event = if (it.eventData.filterEnabled) {
                             SourceFilterActivated(filter)
                         } else {
                             SourceFilterDeactivated(filter)

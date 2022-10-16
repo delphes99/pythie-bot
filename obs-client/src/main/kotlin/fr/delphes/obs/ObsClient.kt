@@ -6,6 +6,8 @@ import fr.delphes.obs.fromObs.Hello
 import fr.delphes.obs.fromObs.Identified
 import fr.delphes.obs.fromObs.RequestResponse
 import fr.delphes.obs.fromObs.event.CurrentProgramSceneChanged
+import fr.delphes.obs.fromObs.event.SceneItemEnableStateChanged
+import fr.delphes.obs.fromObs.event.SceneItemSelected
 import fr.delphes.obs.fromObs.event.SourceFilterEnableStateChanged
 import fr.delphes.obs.message.Message
 import fr.delphes.obs.toObs.IdentifyPayload
@@ -32,19 +34,16 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
-import kotlin.reflect.KClass
 
 class ObsClient(
     private val configuration: Configuration,
     private val listeners: ObsListener,
     private val serializer: Json
 ) {
-    private val typeForMessage = mutableMapOf<String, KClass<*>>()
     private val requestsToSend = Channel<RequestDataPayload>()
     private val scope = CoroutineScope(Dispatchers.Default)
     private var connected = false
@@ -123,29 +122,30 @@ class ObsClient(
         listeners.onExit()
     }
 
-    @OptIn(InternalSerializationApi::class)
     private suspend fun ClientWebSocketSession.handle(frame: Frame): Reconnect {
         when (frame) {
             is Frame.Text -> {
                 val text = frame.readText()
+                LOGGER.debug { "Message received : $text" }
                 try {
-                    when(val message = serializer.decodeFromString<FromOBSMessagePayload>(text)) {
+                    when (val message = serializer.decodeFromString<FromOBSMessagePayload>(text)) {
                         is Hello -> {
-                            LOGGER.debug { "Hello received" }
+                            LOGGER.debug { "└ Hello received" }
                             val authenticationString =
                                 message.d.authentication?.let { configuration.password?.toAuthenticationString(it.salt, it.challenge) }
                             val identifyMessage = ToObsMessageType.buildMessageFrom(IdentifyPayload(authenticationString), serializer)
 
                             send(identifyMessage.toFrame())
                         }
+
                         is Identified -> {
-                            LOGGER.info { "Identified" }
+                            LOGGER.info { "└ Identified" }
                             connected = true
                         }
 
                         is EventPayload -> {
-                            LOGGER.debug { "Event received ${message.d.eventType} (Intent : ${message.d.eventIntent})" }
-                            when (val eventPayload = message.d.toEvent(serializer)) {
+                            LOGGER.debug { "└ Event received ${message.d.eventType} (Intent : ${message.d.eventIntent})" }
+                            when (val eventPayload = message.d) {
                                 is CurrentProgramSceneChanged -> {
                                     listeners.onSwitchScene(eventPayload)
                                 }
@@ -154,19 +154,19 @@ class ObsClient(
                                     listeners.onSourceFilterEnableStateChanged(eventPayload)
                                 }
 
-                                null -> {
-                                    LOGGER.warn { "Unknown message received ${message.d.eventType} (Intent : ${message.d.eventIntent})" }
-                                    LOGGER.debug { "Payload: $message" }
+                                is SceneItemSelected,
+                                is SceneItemEnableStateChanged, -> {
+                                    //Nothing
                                 }
                             }
                         }
+
                         is RequestResponse -> {
-                            LOGGER.debug { "Request response received ${message.d.responseData}" }
+                            LOGGER.debug { "└ Request response received ${message.d.requestType}" }
                         }
                     }
                 } catch (e: Exception) {
-                    LOGGER.error(e) { "error when handling message" }
-                    LOGGER.debug { "Payload: $text" }
+                    LOGGER.error(e) { "└ error when handling message" }
                 }
             }
 

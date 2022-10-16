@@ -1,0 +1,10 @@
+{
+  "d": {
+    "eventData": {
+      "sceneName": "in_game"
+    },
+    "eventIntent": 4,
+    "eventType": "CurrentProgramSceneChanged"
+  },
+  "op": 5
+}

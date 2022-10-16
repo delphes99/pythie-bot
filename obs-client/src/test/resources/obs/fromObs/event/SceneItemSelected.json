@@ -1,0 +1,11 @@
+{
+  "d": {
+    "eventData": {
+      "sceneItemId": 4,
+      "sceneName": "in_game"
+    },
+    "eventIntent": 128,
+    "eventType": "SceneItemSelected"
+  },
+  "op": 5
+}

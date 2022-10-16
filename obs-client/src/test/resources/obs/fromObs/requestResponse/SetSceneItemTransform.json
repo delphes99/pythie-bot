@@ -1,0 +1,11 @@
+{
+  "d": {
+    "requestId": "e3502461-e03c-422c-9dc9-7c23690f3ed7",
+    "requestStatus": {
+      "code": 100,
+      "result": true
+    },
+    "requestType": "SetSceneItemTransform"
+  },
+  "op": 7
+}
