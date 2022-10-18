@@ -28,18 +28,38 @@
   </el-dropdown>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import discordImage from "@/common/assets/discord.png"
 import obsImage from "@/common/assets/obs.svg"
 import twitchImage from "@/common/assets/twitch.svg"
 import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
-import { ConnectorStatusEnum } from "@/common/components/common/connector/ConnectorStatus"
+import { ConnectorStatusEnum } from "@/common/components/common/connector/ConnectorStatusEnum"
 import { DropDownAction } from "@/common/components/common/connector/DropDownAction"
 import { StatusColor } from "@/common/components/common/connector/StatusColor"
 import axios from "axios"
 import { ElNotification } from "element-plus"
-import { computed, defineComponent, inject } from "vue"
+import { computed, inject } from "vue"
 import { useI18n } from "vue-i18n"
+
+const props = defineProps({
+  connector: {
+    type: String as () => ConnectorEnum,
+    required: true,
+  },
+  status: {
+    type: String as () => ConnectorStatusEnum,
+    required: true,
+  },
+})
+
+const { t } = useI18n()
+const backendUrl = inject("backendUrl") as string
+const statusColor = computed(() => StatusColor.of(props.status))
+const image = computed(() => toImage(props.connector))
+const link = computed(() => toLink(props.connector))
+const actions = computed(() =>
+  toActions(props.connector, props.status, backendUrl, t),
+)
 
 function toActions(
   connector: ConnectorEnum,
@@ -96,54 +116,22 @@ function toLink(connector: ConnectorEnum): string {
   }
 }
 
-export default defineComponent({
-  name: `ConnectorStatus`,
-  props: {
-    connector: {
-      type: String as () => ConnectorEnum,
-      required: true,
-    },
-    status: {
-      type: String as () => ConnectorStatusEnum,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { t } = useI18n()
-    const backendUrl = inject("backendUrl") as string
-    const statusColor = computed(() => StatusColor.of(props.status))
-    const image = computed(() => toImage(props.connector))
-    const link = computed(() => toLink(props.connector))
-    const actions = computed(() =>
-      toActions(props.connector, props.status, backendUrl, t),
-    )
-
-    const doAction = (action: DropDownAction) => {
-      axios
-        .post(action.url, null, {
-          headers: { "Content-Type": "application/json" },
-        })
-        .then(() => {
-          ElNotification({
-            title: t("common.success"),
-            type: "success",
-          })
-        })
-        .catch(() => {
-          ElNotification({
-            title: t("common.error"),
-            type: "error",
-          })
-        })
-    }
-
-    return {
-      statusColor,
-      image,
-      link,
-      actions,
-      doAction,
-    }
-  },
-})
+const doAction = (action: DropDownAction) => {
+  axios
+    .post(action.url, null, {
+      headers: { "Content-Type": "application/json" },
+    })
+    .then(() => {
+      ElNotification({
+        title: t("common.success"),
+        type: "success",
+      })
+    })
+    .catch(() => {
+      ElNotification({
+        title: t("common.error"),
+        type: "error",
+      })
+    })
+}
 </script>

@@ -20,38 +20,26 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
-import { ConnectorStatusEnum } from "@/common/components/common/connector/ConnectorStatus"
 import ConnectorStatus from "@/common/components/common/connector/ConnectorStatus.vue"
-import { defineComponent, inject, ref } from "vue"
+import { ConnectorStatusEnum } from "@/common/components/common/connector/ConnectorStatusEnum"
+import { inject, ref } from "vue"
 
 interface Status {
   name: ConnectorEnum
   status: ConnectorStatusEnum
 }
 
-export default defineComponent({
-  name: `StatusBar`,
-  components: { ConnectorStatus },
+const backendUrl = inject("backendUrl")
+const statuses = ref<Status[]>()
 
-  setup() {
-    const backendUrl = inject("backendUrl")
-    const statuses = ref<Status[]>()
+async function getStatus() {
+  const response = await fetch(`${backendUrl}/connectors/status`)
+  statuses.value = await response.json()
+}
 
-    async function getStatus() {
-      const response = await fetch(`${backendUrl}/connectors/status`)
-      statuses.value = await response.json()
-    }
-
-    setInterval(() => {
-      getStatus()
-    }, 2000)
-
-    return {
-      statuses,
-      ConnectorEnum,
-    }
-  },
-})
+setInterval(() => {
+  getStatus()
+}, 2000)
 </script>

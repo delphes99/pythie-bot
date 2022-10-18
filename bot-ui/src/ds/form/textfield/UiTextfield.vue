@@ -20,7 +20,7 @@ import { v4 as uuid } from "uuid"
 const props = defineProps({
   id: {
     type: String,
-    default: uuid(),
+    default: () => uuid(),
   },
   modelValue: {
     type: String,

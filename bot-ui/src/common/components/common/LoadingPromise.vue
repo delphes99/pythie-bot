@@ -5,23 +5,19 @@
   <slot v-else />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { LoadPromise } from "@/common/composition/UseLoadingPromise"
-import { defineComponent, PropType } from "vue"
+import { PropType, toRefs } from "vue"
 
-export default defineComponent({
-  name: "LoadingPromise",
-  props: {
-    loadingPromise: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      type: Object as PropType<LoadPromise<any>>,
-      required: true,
-    },
-  },
-  setup(props) {
-    return {
-      isLoading: props.loadingPromise.isLoading,
-    }
+const props = defineProps({
+  loadingPromise: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    type: Object as PropType<LoadPromise<any>>,
+    required: true,
   },
 })
+
+// loadingPromise attributes are reactive
+// eslint-disable-next-line vue/no-setup-props-destructure
+const isLoading = props.loadingPromise.isLoading
 </script>

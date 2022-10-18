@@ -31,58 +31,45 @@
     </div>
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import TextComponent, { fromObject } from "@/overlay/editor/textComponent"
 import { OverlayElement } from "@/overlay/OverlayElement"
-import { defineComponent, PropType, ref, watch } from "vue"
+import { PropType, ref, watch } from "vue"
 
-export default defineComponent({
-  name: "EditorProps",
-  components: { UiTextfield },
-  props: {
-    selection: {
-      type: Object as PropType<OverlayElement>,
-      required: true,
-    },
-  },
-  emits: ["update:selection"],
-  setup(props, { emit }) {
-    const components = ref<TextComponent[]>([])
-    const selectedLeft = ref()
-    const selectedTop = ref()
-    const selectedText = ref()
-
-    watch(
-      () => props.selection,
-      (newValue) => {
-        if (newValue instanceof TextComponent) {
-          selectedText.value = newValue.text
-          selectedTop.value = newValue.top
-          selectedLeft.value = newValue.left
-        }
-      },
-    )
-
-    const updateComponent = () => {
-      if (props.selection instanceof TextComponent) {
-        const updatedComponent = {
-          ...props.selection,
-          left: parseInt(selectedLeft?.value),
-          top: parseInt(selectedTop?.value),
-          text: selectedText.value,
-        }
-
-        emit("update:selection", fromObject(updatedComponent))
-      }
-    }
-    return {
-      selectedLeft,
-      selectedTop,
-      selectedText,
-      components,
-      updateComponent,
-    }
+const emit = defineEmits(["update:selection"])
+const props = defineProps({
+  selection: {
+    type: Object as PropType<OverlayElement>,
+    default: null,
   },
 })
+
+const selectedLeft = ref()
+const selectedTop = ref()
+const selectedText = ref()
+
+watch(
+  () => props.selection,
+  (newValue) => {
+    if (newValue instanceof TextComponent) {
+      selectedText.value = newValue.text
+      selectedTop.value = newValue.top
+      selectedLeft.value = newValue.left
+    }
+  },
+)
+
+const updateComponent = () => {
+  if (props.selection instanceof TextComponent) {
+    const updatedComponent = {
+      ...props.selection,
+      left: parseInt(selectedLeft?.value),
+      top: parseInt(selectedTop?.value),
+      text: selectedText.value,
+    }
+
+    emit("update:selection", fromObject(updatedComponent))
+  }
+}
 </script>

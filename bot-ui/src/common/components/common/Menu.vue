@@ -68,34 +68,25 @@
   </nav>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue"
+<script setup lang="ts">
+import { ref } from "vue"
 
-export default defineComponent({
-  name: "GlobalMenu",
-  props: {
-    widthClass: {
-      type: String,
-      required: true,
-    },
-  },
-  setup() {
-    const expand = ref(false)
-
-    const mouseIn = () => {
-      expand.value = true
-    }
-    const mouseOut = () => {
-      expand.value = false
-    }
-
-    return {
-      expand,
-      mouseIn,
-      mouseOut,
-    }
+defineProps({
+  widthClass: {
+    type: String,
+    required: true,
   },
 })
+
+const expand = ref(false)
+
+const mouseIn = () => {
+  expand.value = true
+}
+const mouseOut = () => {
+  expand.value = false
+}
+
 </script>
 
 <style scoped>

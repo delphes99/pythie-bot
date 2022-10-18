@@ -1,4 +1,4 @@
-import { ConnectorStatusEnum } from "@/common/components/common/connector/ConnectorStatus"
+import { ConnectorStatusEnum } from "@/common/components/common/connector/ConnectorStatusEnum"
 
 export enum StatusColor {
   transparent = "border-0",

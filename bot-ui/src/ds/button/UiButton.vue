@@ -51,7 +51,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["on-click"])
+defineEmits(["on-click"])
 
 const classes = computed(() => {
   return {

@@ -16,33 +16,27 @@
     </ul>
   </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { OverlayElement } from "@/overlay/OverlayElement"
-import { defineComponent, PropType } from "vue"
+import { PropType } from "vue"
 
-export default defineComponent({
-  name: "EditorComponentList",
-  props: {
-    components: {
-      type: Object as PropType<OverlayElement[]>,
-      required: true,
-    },
-    selection: {
-      type: Object as PropType<OverlayElement>,
-      required: true,
-    },
+const emits = defineEmits(["update:selection"])
+
+defineProps({
+  components: {
+    type: Object as PropType<OverlayElement[]>,
+    required: true,
   },
-  emits: ["update:selection"],
-  setup(props, { emit }) {
-    const selectComponent = (selected: OverlayElement) => {
-      emit("update:selection", selected)
-    }
-
-    return {
-      selectComponent,
-    }
+  selection: {
+    type: Object as PropType<OverlayElement>,
+    default: null,
   },
 })
+
+const selectComponent = (selected: OverlayElement) => {
+  emits("update:selection", selected)
+}
+
 </script>
 
 <style scoped>

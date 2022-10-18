@@ -21,16 +21,13 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: "TwitchChannelConfiguration",
-  props: {
-    channelName: {
-      type: String,
-      required: true,
-    },
+<script setup lang="ts">
+defineProps({
+  channelName: {
+    type: String,
+    required: true,
   },
-}
+})
 </script>
 
 <style lang="css" scoped>

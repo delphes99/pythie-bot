@@ -93,91 +93,72 @@
   </ui-panel>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { ConnectorEnum } from "@/common/components/common/connector/ConnectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
-import UiPanel from "@/ds/panel/UiPanel.vue"
 import UiButton from "@/ds/button/UiButton.vue"
 import UiButtonType from "@/ds/button/UiButtonType"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
+import UiPanel from "@/ds/panel/UiPanel.vue"
 import axios from "axios"
 import { ElNotification } from "element-plus"
 import { inject, ref } from "vue"
 import { useI18n } from "vue-i18n"
 
-export default {
-  name: `TwitchConfiguration`,
-  components: { UiButton, UiTextfield, DetailedConnectorStatus, UiPanel },
-  setup() {
-    const { t } = useI18n()
-    const backendUrl = inject("backendUrl")
+const { t } = useI18n()
+const backendUrl = inject("backendUrl")
 
-    const clientId = ref("")
-    const clientSecret = ref("")
-    const botAccount = ref("")
-    const channels = ref([])
+const clientId = ref("")
+const clientSecret = ref("")
+const botAccount = ref("")
+const channels = ref([])
 
-    const refreshCurrentConfiguration = async () => {
-      const response = await axios.get(`${backendUrl}/twitch/configuration`)
+const refreshCurrentConfiguration = async () => {
+  const response = await axios.get(`${backendUrl}/twitch/configuration`)
 
-      clientId.value = response.data.clientId
-      botAccount.value = response.data.botUsername
-      channels.value = response.data.channels
-    }
-
-    refreshCurrentConfiguration()
-
-    const saveAppCredential = async () => {
-      const payload = {
-        clientId: clientId.value,
-        clientSecret: clientSecret.value,
-      }
-      await axios.post(`${backendUrl}/twitch/configuration/appCredential`, payload, {
-        headers: { "Content-Type": "application/json" },
-      })
-
-      ElNotification({
-        title: t("common.success"),
-        type: "success",
-      })
-    }
-
-    const deleteChannel = async (channel: string) => {
-      await axios.delete(`${backendUrl}/twitch/configuration/channel/` + channel)
-      await refreshCurrentConfiguration()
-    }
-
-    const buildGetAuthUrl = (state: string) => () => {
-      const twitchAuthUrl = "https://id.twitch.tv/oauth2/authorize"
-      const params = new URLSearchParams()
-      params.append("response_type", "code")
-      params.append("client_id", clientId.value)
-      params.append("redirect_uri", `${backendUrl}/twitch/configuration/userCredential`)
-      params.append(
-        "scope",
-        "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions channel:manage:polls channel:manage:predictions",
-      )
-      params.append("state", state)
-
-      return twitchAuthUrl + "?" + params.toString()
-    }
-
-    const buildBotIdentityUrl = buildGetAuthUrl("botConfiguration")
-    const buildAddChannelUrl = buildGetAuthUrl("addChannel")
-
-    return {
-      clientId,
-      clientSecret,
-      botAccount,
-      channels,
-      saveAppCredential,
-      deleteChannel,
-      buildBotIdentityUrl,
-      buildAddChannelUrl,
-      refreshCurrentConfiguration,
-      connector: ConnectorEnum.TWITCH,
-      UiButtonType,
-    }
-  },
+  clientId.value = response.data.clientId
+  botAccount.value = response.data.botUsername
+  channels.value = response.data.channels
 }
+
+refreshCurrentConfiguration()
+
+const saveAppCredential = async () => {
+  const payload = {
+    clientId: clientId.value,
+    clientSecret: clientSecret.value,
+  }
+  await axios.post(`${backendUrl}/twitch/configuration/appCredential`, payload, {
+    headers: { "Content-Type": "application/json" },
+  })
+
+  ElNotification({
+    title: t("common.success"),
+    type: "success",
+  })
+}
+
+const deleteChannel = async (channel: string) => {
+  await axios.delete(`${backendUrl}/twitch/configuration/channel/` + channel)
+  await refreshCurrentConfiguration()
+}
+
+const buildGetAuthUrl = (state: string) => () => {
+  const twitchAuthUrl = "https://id.twitch.tv/oauth2/authorize"
+  const params = new URLSearchParams()
+  params.append("response_type", "code")
+  params.append("client_id", clientId.value)
+  params.append("redirect_uri", `${backendUrl}/twitch/configuration/userCredential`)
+  params.append(
+    "scope",
+    "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions channel:manage:polls channel:manage:predictions",
+  )
+  params.append("state", state)
+
+  return twitchAuthUrl + "?" + params.toString()
+}
+
+const buildBotIdentityUrl = buildGetAuthUrl("botConfiguration")
+const buildAddChannelUrl = buildGetAuthUrl("addChannel")
+const connector = ConnectorEnum.TWITCH
 </script>

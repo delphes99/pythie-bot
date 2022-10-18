@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { ConnectorEnum } from "@/common/components/common/connector/connectorEnum"
-import { ConnectorStatusEnum } from "@/common/components/common/connector/connectorStatus"
+import { ConnectorStatusEnum } from "@/common/components/common/connector/connectorStatusEnum"
 import { ColumnDefinition } from "@/common/components/common/table/ColumnDefinition"
 import { TableData } from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/UiTable.vue"
