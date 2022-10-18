@@ -6,8 +6,6 @@ import fr.delphes.obs.fromObs.Hello
 import fr.delphes.obs.fromObs.Identified
 import fr.delphes.obs.fromObs.RequestResponse
 import fr.delphes.obs.fromObs.event.CurrentProgramSceneChanged
-import fr.delphes.obs.fromObs.event.SceneItemEnableStateChanged
-import fr.delphes.obs.fromObs.event.SceneItemSelected
 import fr.delphes.obs.fromObs.event.SourceFilterEnableStateChanged
 import fr.delphes.obs.message.Message
 import fr.delphes.obs.toObs.IdentifyPayload
@@ -154,8 +152,7 @@ class ObsClient(
                                     listeners.onSourceFilterEnableStateChanged(eventPayload)
                                 }
 
-                                is SceneItemSelected,
-                                is SceneItemEnableStateChanged, -> {
+                                else -> {
                                     //Nothing
                                 }
                             }

@@ -12,8 +12,11 @@ internal class SetSceneItemTransformTest {
         val payload = "/obs/fromObs/requestResponse/SetSceneItemTransform.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe SetSceneItemTransform(
-            "e3502461-e03c-422c-9dc9-7c23690f3ed7",
-            RequestStatus(true, 100)
+            requestId = "e3502461-e03c-422c-9dc9-7c23690f3ed7",
+            requestStatus = RequestStatus(
+                result = true,
+                code = 100
+            )
         )
     }
 }

@@ -12,8 +12,11 @@ internal class SetSceneItemEnabledTest {
         val payload = "/obs/fromObs/requestResponse/SetSceneItemEnabled.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe SetSceneItemEnabled(
-            "f4384303-5a4d-4891-b573-88ee011fd959",
-            RequestStatus(true, 100)
+            requestId = "f4384303-5a4d-4891-b573-88ee011fd959",
+            requestStatus = RequestStatus(
+                result = true,
+                code = 100
+            )
         )
     }
 }

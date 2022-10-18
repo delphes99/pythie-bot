@@ -1,0 +1,18 @@
+{
+  "d": {
+    "eventData": {
+      "inputAudioTracks": {
+        "1": true,
+        "2": true,
+        "3": false,
+        "4": true,
+        "5": true,
+        "6": false
+      },
+      "inputName": "Audio du Bureau"
+    },
+    "eventIntent": 8,
+    "eventType": "InputAudioTracksChanged"
+  },
+  "op": 5
+}

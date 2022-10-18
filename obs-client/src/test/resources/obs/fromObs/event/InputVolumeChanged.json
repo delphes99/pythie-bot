@@ -1,0 +1,12 @@
+{
+  "d": {
+    "eventData": {
+      "inputName": "Overlay",
+      "inputVolumeDb": 0.0,
+      "inputVolumeMul": 1.0
+    },
+    "eventIntent": 8,
+    "eventType": "InputVolumeChanged"
+  },
+  "op": 5
+}

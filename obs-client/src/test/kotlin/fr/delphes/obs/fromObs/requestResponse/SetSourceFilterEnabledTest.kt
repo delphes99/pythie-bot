@@ -12,8 +12,11 @@ internal class SetSourceFilterEnabledTest {
         val payload = "/obs/fromObs/requestResponse/SetSourceFilterEnabled.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe SetSourceFilterEnabled(
-            "e0856478-0eb3-4402-9d80-112bfef90d62",
-            RequestStatus(true, 100)
+            requestId = "e0856478-0eb3-4402-9d80-112bfef90d62",
+            requestStatus = RequestStatus(
+                result = true,
+                code = 100
+            )
         )
     }
 }

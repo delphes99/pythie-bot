@@ -10,8 +10,8 @@ internal class IdentifiedTest {
         val payload = "/obs/fromObs/Identified.json".deserialize<FromOBSMessagePayload>()
 
         payload shouldBe Identified(
-            IdentifiedData(
-                1
+            d = IdentifiedData(
+                negotiatedRpcVersion = 1
             )
         )
     }

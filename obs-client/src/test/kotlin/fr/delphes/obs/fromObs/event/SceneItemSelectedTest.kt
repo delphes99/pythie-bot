@@ -11,10 +11,10 @@ internal class SceneItemSelectedTest {
         val payload = "/obs/fromObs/event/SceneItemSelected.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe SceneItemSelected(
-            128,
-            SceneItemSelectedData(
-                4,
-                "in_game",
+            eventIntent = 128,
+            eventData = SceneItemSelectedData(
+                sceneItemId = 4,
+                sceneName = "in_game",
             )
         )
     }

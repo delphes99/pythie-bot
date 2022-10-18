@@ -12,9 +12,12 @@ internal class GetSceneItemListTest {
         val payload = "/obs/fromObs/requestResponse/GetSceneItemList.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe GetSceneItemList(
-            "ed29f881-6fc5-4e4e-ac4d-c14102ec941f",
-            RequestStatus(true, 100),
-            GetSceneItemListData(
+            requestId = "ed29f881-6fc5-4e4e-ac4d-c14102ec941f",
+            requestStatus = RequestStatus(
+                result = true,
+                code = 100
+            ),
+            responseData = GetSceneItemListData(
                 SceneItem("main_capture", 7),
                 SceneItem("Streamlabs alert", 2),
                 SceneItem("Streamlabs emote wall", 3),

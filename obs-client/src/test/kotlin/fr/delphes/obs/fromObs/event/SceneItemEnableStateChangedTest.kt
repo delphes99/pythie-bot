@@ -11,11 +11,11 @@ internal class SceneItemEnableStateChangedTest {
         val payload = "/obs/fromObs/event/SceneItemEnableStateChanged.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe SceneItemEnableStateChanged(
-            128,
-            SceneItemEnableStateChangedData(
-                true,
-                4,
-                "in_game"
+            eventIntent = 128,
+            eventData = SceneItemEnableStateChangedData(
+                sceneItemEnabled = true,
+                sceneItemId = 4,
+                sceneName = "in_game"
             )
         )
     }

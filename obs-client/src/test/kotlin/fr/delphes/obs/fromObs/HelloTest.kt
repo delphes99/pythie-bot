@@ -10,7 +10,7 @@ internal class HelloTest {
         val payload = "/obs/fromObs/Hello_with_authentication.json".deserialize<FromOBSMessagePayload>()
 
         payload shouldBe Hello(
-            HelloPayloadData(
+            d = HelloPayloadData(
                 obsWebSocketVersion = "5.0.1",
                 rpcVersion = 1,
                 authentication = Authentication(

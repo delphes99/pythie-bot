@@ -1,0 +1,11 @@
+{
+  "d": {
+    "eventData": {
+      "outputActive": true,
+      "outputState": "OBS_WEBSOCKET_OUTPUT_STARTED"
+    },
+    "eventIntent": 64,
+    "eventType": "StreamStateChanged"
+  },
+  "op": 5
+}

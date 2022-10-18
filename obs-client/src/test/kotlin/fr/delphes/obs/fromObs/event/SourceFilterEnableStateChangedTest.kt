@@ -11,11 +11,11 @@ internal class SourceFilterEnableStateChangedTest {
         val payload = "/obs/fromObs/event/SourceFilterEnableStateChanged.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe SourceFilterEnableStateChanged(
-            32,
-            SourceFilterEnableStateChangedData(
-                false,
-                "matrix",
-                "webcam",
+            eventIntent = 32,
+            eventData = SourceFilterEnableStateChangedData(
+                filterEnabled = false,
+                filterName = "matrix",
+                sourceName = "webcam",
             )
         )
     }

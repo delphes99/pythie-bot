@@ -11,9 +11,9 @@ internal class CurrentProgramSceneChangedTest {
         val payload = "/obs/fromObs/event/CurrentProgramSceneChanged.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe CurrentProgramSceneChanged(
-            4,
-            CurrentProgramSceneChangedData(
-                "in_game"
+            eventIntent = 4,
+            eventData = CurrentProgramSceneChangedData(
+                sceneName = "in_game"
             )
         )
     }

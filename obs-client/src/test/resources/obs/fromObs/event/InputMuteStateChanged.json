@@ -1,0 +1,11 @@
+{
+  "d": {
+    "eventData": {
+      "inputMuted": true,
+      "inputName": "Audio du Bureau"
+    },
+    "eventIntent": 8,
+    "eventType": "InputMuteStateChanged"
+  },
+  "op": 5
+}
