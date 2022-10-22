@@ -1,7 +1,7 @@
 <template>
   <loading-promise :loading-promise="loadPromise">
     <div class="flex flex-col h-full">
-      <div class="w-full flex-shrink-0 flex flex-row">
+      <div class="w-full shrink-0 flex flex-row">
         <h1 class="flex justify-center text-3xl font-bold p-2">
           {{ overlay.title }}
         </h1>
@@ -14,25 +14,25 @@
         </div>
       </div>
       <div
-        class="flex-shrink overflow-auto flex flex-row bg-gray-200"
+        class="shrink overflow-auto flex flex-row bg-gray-200"
       >
-        <div class="flex-shrink-0 w-60 flex flex-col">
+        <div class="shrink-0 w-60 flex flex-col">
           <editor-add-component @add-text="addText" />
           <editor-component-list
             v-model:selection="selection"
             :components="components"
           />
         </div>
-        <div class="flex-shrink overflow-auto">
+        <div class="shrink overflow-auto">
           <editor-preview
             v-model:selection="selection"
             :overlay="overlay"
           />
         </div>
-        <div class="flex-shrink-0 w-60">
+        <div class="shrink-0 w-60">
           <editor-props
             v-model:selection="selection"
-            class="flex-grow"
+            class="grow"
           />
         </div>
       </div>

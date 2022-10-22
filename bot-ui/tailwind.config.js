@@ -1,7 +1,7 @@
 const defaultColors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
@@ -15,7 +15,7 @@ module.exports = {
         primaryTextColor: '#D8D2CB',
         primaryTextColorDark: '#D8D2CB',
         backgroundColor: '#FFFFFF',
-        backgroundColorDark: defaultColors.gray["700"],
+        backgroundColorDark: defaultColors.gray['700'],
       },
       maxHeight: {
         'screen-4/5': '80vh',
@@ -24,9 +24,6 @@ module.exports = {
         'screen-4/5': '80vw',
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 }
