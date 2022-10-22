@@ -5,7 +5,7 @@
         class="fixed top-0 right-0"
         style="height: 4rem"
       />
-      <Menu
+      <menu-panel
         class="fixed top-16 left-0"
         width-class="w-12"
       />
@@ -20,10 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import Menu from "@/common/components/common/Menu.vue"
 import StatusBar from "@/common/components/common/StatusBar.vue"
 import { Themes } from "@/common/components/common/theme/Themes"
 import { useApplicationTheme } from "@/common/components/common/theme/UseApplicationTheme"
+import MenuPanel from "@/common/components/common/MenuPanel.vue"
 
 const storedTheme = useApplicationTheme()
 

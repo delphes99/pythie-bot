@@ -1,25 +1,25 @@
-import About from "@/about/About.vue"
-import ObsConfiguration from "@/obs/ObsConfiguration.vue"
-import TwitchChannelConfiguration from "@/twitch/TwitchChannelConfiguration.vue"
-import TwitchConfiguration from "@/twitch/TwitchConfiguration.vue"
-import TwitchFeature from "@/twitch/feature/TwitchFeature.vue"
-import TwitchReward from "@/twitch/reward/TwitchReward.vue"
+import AboutPage from "@/about/AboutPage.vue"
 import DiscordConfiguration from "@/discord/DiscordConfiguration.vue"
 import FeaturesList from "@/features/FeaturesList.vue"
-import OverlaysRouter from "@/overlay/OverlaysRouter.vue"
-import OverlaysList from "@/overlay/OverlaysList.vue"
-import OverlayEditor from "@/overlay/editor/OverlayEditor.vue"
-import Home from "@/home/GlobalHome.vue"
-import TwitchRouter from "@/twitch/TwitchRouter.vue"
-import Settings from "@/settings/Settings.vue"
+import HomePage from "@/home/HomePage.vue"
 import MediasPage from "@/media/MediasPage.vue"
+import ObsConfiguration from "@/obs/ObsConfiguration.vue"
+import OverlayEditor from "@/overlay/editor/OverlayEditor.vue"
+import OverlaysList from "@/overlay/OverlaysList.vue"
+import OverlaysRouter from "@/overlay/OverlaysRouter.vue"
+import SettingsPage from "@/settings/SettingsPage.vue"
+import TwitchFeature from "@/twitch/feature/TwitchFeature.vue"
+import TwitchReward from "@/twitch/reward/TwitchReward.vue"
+import TwitchChannelConfiguration from "@/twitch/TwitchChannelConfiguration.vue"
+import TwitchConfiguration from "@/twitch/TwitchConfiguration.vue"
+import TwitchRouter from "@/twitch/TwitchRouter.vue"
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: HomePage,
   },
   {
     path: "/features",
@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/settings",
     name: "Settings",
-    component: Settings,
+    component: SettingsPage,
   },
   {
     path: "/medias",
@@ -55,7 +55,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/about",
     name: "About",
-    component: About,
+    component: AboutPage,
   },
   {
     path: "/discord",
