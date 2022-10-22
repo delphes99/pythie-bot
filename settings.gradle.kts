@@ -23,3 +23,4 @@ include(":obs-client")
 include(":twitch-api")
 
 include(":bot-ui")
+include(":bot-overlay")
