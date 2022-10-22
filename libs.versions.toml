@@ -1,18 +1,17 @@
 [versions]
-kotlin-version = "1.7.10"
-node-gradle-version = "3.4.0"
+kotlin-version = "1.7.20"
+node-gradle-version = "3.5.0"
 gradle-shadow-version = "7.1.2"
-ktor-version = "2.1.0"
+ktor-version = "2.1.2"
 kord-version = "0.8.0-M15"
-kitteh-version = "7.4.0"
+kitteh-version = "8.0.0"
 kumo-version = "1.27"
 
 #test
-mockk-version = "1.12.5"
-bytebuddy-version = "1.12.13"
-kotest-version = "5.4.2"
-junit-core-version = "5.9.0"
-junit-kotlin-version = "1.7.10"
+mockk-version = "1.13.2"
+bytebuddy-version = "1.12.18"
+kotest-version = "5.5.1"
+junit-core-version = "5.9.1"
 
 [libraries]
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
@@ -34,7 +33,7 @@ ktor-client-serialization-jvm = { module = "io.ktor:ktor-client-serialization-jv
 mockk = { module = "io.mockk:mockk", version.ref = "mockk-version" }
 bytebuddy = { module = "net.bytebuddy:byte-buddy", version.ref = "bytebuddy-version" }
 junit-core = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-core-version" }
-junit-kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "junit-kotlin-version" }
+junit-kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-version" }
 kotest-assertion-core = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest-version" }
 kotest-assertion-json = { module = "io.kotest:kotest-assertions-json-jvm", version.ref = "kotest-version" }
 
