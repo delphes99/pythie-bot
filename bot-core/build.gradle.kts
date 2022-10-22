@@ -19,8 +19,14 @@ tasks.register<Copy>("copyFrontToServer") {
     into(layout.buildDirectory.dir("resources/main/admin"))
 }
 
+tasks.register<Copy>("copyOverlayToServer") {
+    dependsOn(":bot-overlay:buildNpm")
+    from(layout.buildDirectory.dir("../../bot-overlay/dist"))
+    into(layout.buildDirectory.dir("resources/main/overlay"))
+}
+
 tasks.withType<Jar> {
-    dependsOn("copyFrontToServer")
+    dependsOn("copyFrontToServer", "copyOverlayToServer")
 }
 
 description = "bot-core"

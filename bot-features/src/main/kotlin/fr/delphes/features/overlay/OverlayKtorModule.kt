@@ -24,9 +24,6 @@ fun OverlayModule(
         routing {
             val twitchConnector = bot.connectors.filterIsInstance<TwitchConnector>().first()
             twitchConnector.configuration?.listenedChannels?.forEach { channelConfiguration ->
-                static("/${channelConfiguration.channel.normalizeName}/overlay") {
-                    resources("overlay")
-                }
                 get("/${channelConfiguration.channel.normalizeName}/overlay/infos") {
                     val statistics = twitchConnector.statistics.of(channelConfiguration.channel).statistics
 

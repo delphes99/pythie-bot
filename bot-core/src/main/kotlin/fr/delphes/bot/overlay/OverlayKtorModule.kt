@@ -16,6 +16,9 @@ import io.ktor.server.routing.routing
 fun Application.Overlays(bot: Bot) {
     val repository = bot.overlayRepository
     routing {
+        static("/overlay-legacy") {
+            resources("overlay-legacy")
+        }
         static("/overlay") {
             resources("overlay")
         }
