@@ -1,5 +1,5 @@
 <template>
-  <ui-panel :title="$t('medias.add')">
+  <ui-panel title="medias.add">
     <form>
       <label for="file">{{ $t("medias.file") }}</label>
       <input
@@ -21,7 +21,7 @@
       />
     </form>
   </ui-panel>
-  <ui-panel :title="$t('medias.list')">
+  <ui-panel title="medias.list">
     <ui-table
       :data="fileListData"
       :empty-message="$t('medias.noFiles')"

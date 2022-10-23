@@ -23,20 +23,21 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/features",
-    name: "Features",
+    name: "features",
     component: FeaturesList,
   },
   {
     path: "/overlay",
-    name: "Overlays",
     component: OverlaysRouter,
     children: [
       {
         path: "",
+        name: "overlays",
         component: OverlaysList,
       },
       {
         path: ":overlayId",
+        name: "overlay_detail",
         component: OverlayEditor,
         props: true,
       },
@@ -44,36 +45,36 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/settings",
-    name: "Settings",
+    name: "settings",
     component: SettingsPage,
   },
   {
     path: "/medias",
-    name: "Medias",
+    name: "medias",
     component: MediasPage,
   },
   {
     path: "/about",
-    name: "About",
+    name: "about",
     component: AboutPage,
   },
   {
     path: "/discord",
-    name: "Discord",
+    name: "discord",
     component: DiscordConfiguration,
   },
   {
     path: "/obs",
-    name: "Obs",
+    name: "obs",
     component: ObsConfiguration,
   },
   {
     path: "/twitch",
-    name: "Twitch",
     component: TwitchRouter,
     children: [
       {
         path: "",
+        name: "twitch",
         component: TwitchConfiguration,
       },
       {
@@ -83,16 +84,19 @@ const routes: Array<RouteRecordRaw> = [
         children: [
           {
             path: "features",
+            name: "twitch_channel_features",
             component: TwitchFeature,
             props: true,
           },
           {
             path: "rewards",
+            name: "twitch_channel_rewards",
             component: TwitchReward,
             props: true,
           },
           {
             path: "",
+            name: "twitch_channel_rewards",
             component: TwitchReward,
             props: true,
           },

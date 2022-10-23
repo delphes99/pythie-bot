@@ -1,6 +1,6 @@
 <template>
   <ui-panel
-    :title="$t('features.title')"
+    title="features.title"
     :menu="[UiPanelMenuItem.of('common.add', openNewFeature)]"
   >
     <ui-card-panel>
