@@ -4,4 +4,5 @@ export interface OverlayElement {
   left: bigint
   top: bigint
   text: string
+  color: string
 }

@@ -21,7 +21,8 @@
       "X": "X",
       "Y": "Y",
       "text-component": {
-        "text": "Text"
+        "text": "Text",
+        "color": "Color"
       }
     }
   },

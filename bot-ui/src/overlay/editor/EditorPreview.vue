@@ -38,6 +38,7 @@ const loadCanvas = () => {
       const divElement = components.get(element.id)
       if (divElement && element instanceof TextComponent) {
         divElement.innerText = element.text
+        divElement.style.color = element.color
         if (element.id == props.selection?.id) {
           divElement.classList.add("selected")
         } else {
@@ -59,6 +60,7 @@ const loadCanvas = () => {
           divElement.style.position = `absolute`
           divElement.style.display = `inline-block`
           divElement.style.transform = `translate(${element.left}px, ${element.top}px)`
+          divElement.style.color = element.color
           divElement.innerHTML = element.text
 
           const position = { x: element.left, y: element.top }

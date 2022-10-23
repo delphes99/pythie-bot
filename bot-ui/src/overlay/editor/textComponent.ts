@@ -7,12 +7,14 @@ export default class TextComponent implements OverlayElement {
   top: number
   type = "Text"
   text: string
+  color: string
 
-  constructor(left: number, top: number, text: string, id: string = uuid()) {
+  constructor(left: number, top: number, text: string, color: string, id: string = uuid()) {
     this.id = id
     this.left = left
     this.top = top
     this.text = text
+    this.color = color
   }
 
   equals(other: OverlayElement): boolean {
@@ -21,7 +23,8 @@ export default class TextComponent implements OverlayElement {
       this.id === other.id &&
       this.left === other.left &&
       this.top === other.top &&
-      this.text === other.text
+      this.text === other.text &&
+      this.color === other.color
     )
   }
   public get representation() {
@@ -33,8 +36,9 @@ export function fromObject(obj: {
   left: number
   top: number
   text: string
+  color: string
   id: string
 }): TextComponent {
-  const { left, top, text, id } = obj
-  return new TextComponent(left, top, text, id)
+  const { left, top, text, color, id } = obj
+  return new TextComponent(left, top, text, color, id)
 }

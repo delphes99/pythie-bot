@@ -9,13 +9,6 @@
       <h2>{{ $t("overlay.editor.properties") }}</h2>
       <div>
         <ui-textfield
-          v-model="selectedText"
-          label="overlay.editor.text-component.text"
-          @change="updateComponent"
-        />
-      </div>
-      <div>
-        <ui-textfield
           v-model="selectedLeft"
           label="overlay.editor.X"
           @change="updateComponent"
@@ -28,10 +21,25 @@
           @change="updateComponent"
         />
       </div>
+      <div>
+        <ui-textfield
+          v-model="selectedText"
+          label="overlay.editor.text-component.text"
+          @change="updateComponent"
+        />
+      </div>
+      <div>
+        <ui-color-picker
+          v-model="selectedColor"
+          label="overlay.editor.text-component.color"
+          @update:model-value="updateComponent"
+        />
+      </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import UiColorPicker from "@/ds/form/colorpicker/UiColorPicker.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import TextComponent, { fromObject } from "@/overlay/editor/textComponent"
 import { OverlayElement } from "@/overlay/OverlayElement"
@@ -48,6 +56,7 @@ const props = defineProps({
 const selectedLeft = ref()
 const selectedTop = ref()
 const selectedText = ref()
+const selectedColor = ref("#000000")
 
 watch(
   () => props.selection,
@@ -56,6 +65,7 @@ watch(
       selectedText.value = newValue.text
       selectedTop.value = newValue.top
       selectedLeft.value = newValue.left
+      selectedColor.value = newValue.color
     }
   },
 )
@@ -67,6 +77,7 @@ const updateComponent = () => {
       left: parseInt(selectedLeft?.value),
       top: parseInt(selectedTop?.value),
       text: selectedText.value,
+      color: selectedColor.value,
     }
 
     emit("update:selection", fromObject(updatedComponent))

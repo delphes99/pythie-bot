@@ -10,6 +10,7 @@
       :style="{
         top: element.top + 'px',
         left: element.left + 'px',
+        color: element.color,
       }"
     >
       {{ element.text }}

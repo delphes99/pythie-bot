@@ -72,7 +72,7 @@ const components = computed(() => {
 })
 
 function addText() {
-  const newComponent = new TextComponent(100, 100, "my text")
+  const newComponent = new TextComponent(100, 100, "my text", "#000000")
   if (overlay.value) {
     overlay.value.elements = [...overlay.value.elements, newComponent]
   }
@@ -82,7 +82,7 @@ function addText() {
 watch(
   () => selection.value,
   (newValue) => {
-    if (overlay.value && newValue) {
+    if (overlay && overlay.value && newValue) {
       const component = overlay.value.elements.find(
         (element) => element.id === newValue?.id,
       )

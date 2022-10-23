@@ -9,5 +9,6 @@ data class OverlayTextElement(
     val id: String,
     val left: Int,
     val top: Int,
-    val text: String
+    val text: String,
+    val color: String = "#000000",
 ) : OverlayElement()
