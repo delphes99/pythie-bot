@@ -22,7 +22,9 @@
       "Y": "Y",
       "text-component": {
         "text": "Texte",
-        "color": "Couleur"
+        "color": "Couleur",
+        "font": "Police",
+        "font-size": "Taille de la police"
       }
     }
   },

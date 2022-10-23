@@ -29,6 +29,20 @@
         />
       </div>
       <div>
+        <ui-textfield
+          v-model="selectedFont"
+          label="overlay.editor.text-component.font"
+          @change="updateComponent"
+        />
+      </div>
+      <div>
+        <ui-textfield
+          v-model="selectedFontSize"
+          label="overlay.editor.text-component.font-size"
+          @change="updateComponent"
+        />
+      </div>
+      <div>
         <ui-color-picker
           v-model="selectedColor"
           label="overlay.editor.text-component.color"
@@ -57,6 +71,8 @@ const selectedLeft = ref()
 const selectedTop = ref()
 const selectedText = ref()
 const selectedColor = ref("#000000")
+const selectedFont = ref()
+const selectedFontSize = ref()
 
 watch(
   () => props.selection,
@@ -66,6 +82,8 @@ watch(
       selectedTop.value = newValue.top
       selectedLeft.value = newValue.left
       selectedColor.value = newValue.color
+      selectedFont.value = newValue.font
+      selectedFontSize.value = newValue.fontSize
     }
   },
 )
@@ -78,6 +96,8 @@ const updateComponent = () => {
       top: parseInt(selectedTop?.value),
       text: selectedText.value,
       color: selectedColor.value,
+      font: selectedFont.value,
+      fontSize: selectedFontSize.value,
     }
 
     emit("update:selection", fromObject(updatedComponent))

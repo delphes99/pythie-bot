@@ -1,4 +1,10 @@
 <template>
+  <link
+    v-for="font in fonts"
+    :key="font"
+    :href="`https://fonts.googleapis.com/css2?family=${font.replaceAll(' ', '+')}&display=swap`"
+    rel="stylesheet"
+  >
   <div
     id="preview"
     :style="`width: ${overlay.resolution.width}px; height: ${overlay.resolution.height}px; position: relative;`"
@@ -10,7 +16,7 @@ import Overlay from "@/overlay/Overlay"
 import { OverlayElement } from "@/overlay/OverlayElement"
 import interact from "interactjs"
 import { v4 as uuidv4 } from "uuid"
-import { onMounted, PropType, watch } from "vue"
+import { onMounted, PropType, ref, watch } from "vue"
 
 const emits = defineEmits(["update:selection"])
 
@@ -28,6 +34,9 @@ const props = defineProps({
 const components = new Map<string, HTMLDivElement>()
 const positions = new Map<string, ElementPosition>()
 
+const fonts = ref<string[]>([])
+fonts.value = [...new Set(props.overlay.elements.map(e => e.font))]
+
 const loadCanvas = () => {
   function getElement(element: OverlayElement): TextComponent {
     return props.overlay.elements.find((e) => e.id === element.id) as TextComponent
@@ -39,6 +48,8 @@ const loadCanvas = () => {
       if (divElement && element instanceof TextComponent) {
         divElement.innerText = element.text
         divElement.style.color = element.color
+        divElement.style.fontSize = `${element.fontSize}px`
+        divElement.style.fontFamily = element.font
         if (element.id == props.selection?.id) {
           divElement.classList.add("selected")
         } else {
@@ -61,6 +72,8 @@ const loadCanvas = () => {
           divElement.style.display = `inline-block`
           divElement.style.transform = `translate(${element.left}px, ${element.top}px)`
           divElement.style.color = element.color
+          divElement.style.fontSize = `${element.fontSize}px`
+          divElement.style.fontFamily = element.font
           divElement.innerHTML = element.text
 
           const position = { x: element.left, y: element.top }

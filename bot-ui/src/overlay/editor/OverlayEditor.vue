@@ -72,7 +72,7 @@ const components = computed(() => {
 })
 
 function addText() {
-  const newComponent = new TextComponent(100, 100, "my text", "#000000")
+  const newComponent = new TextComponent(100, 100, "my text", "#000000", "Roboto", "20")
   if (overlay.value) {
     overlay.value.elements = [...overlay.value.elements, newComponent]
   }

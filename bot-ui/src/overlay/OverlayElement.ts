@@ -10,7 +10,7 @@ export interface OverlayElement {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function fromJson(json: any): OverlayElement | null {
   if (json.type === "Text") {
-    return new TextComponent(json.left, json.top, json.text, json.color, json.id)
+    return new TextComponent(json.left, json.top, json.text, json.color, json.font, json.fontSize, json.id)
   } else {
     return null
   }

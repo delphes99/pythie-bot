@@ -1,4 +1,10 @@
 <template>
+  <link
+    v-for="font in fonts"
+    :key="font"
+    :href="`https://fonts.googleapis.com/css2?family=${font.replaceAll(' ', '+')}&display=swap`"
+    rel="stylesheet"
+  >
   <div v-if="overlayNotFound">
     Overlay not found
   </div>
@@ -11,6 +17,8 @@
         top: element.top + 'px',
         left: element.left + 'px',
         color: element.color,
+        fontFamily: element.font,
+        fontSize: element.fontSize + 'px',
       }"
     >
       {{ element.text }}
@@ -26,6 +34,7 @@ const backendUrl = inject("backendUrl")
 
 const overlay = ref<Overlay>()
 const overlayNotFound = ref(true)
+const fonts = ref<string[]>([])
 
 async function load() {
   let overlayId = getOverlayId()
@@ -35,6 +44,7 @@ async function load() {
     fetchOverlay(overlayId).then(response => {
       overlay.value = response
       overlayNotFound.value = false
+      fonts.value = [...new Set(response.elements.map(e => e.font))]
     })
   }
 }

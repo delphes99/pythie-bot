@@ -22,7 +22,9 @@
       "Y": "Y",
       "text-component": {
         "text": "Text",
-        "color": "Color"
+        "color": "Color",
+        "font": "Font",
+        "font-size": "Font size"
       }
     }
   },
