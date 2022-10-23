@@ -13,20 +13,34 @@ dependencies {
     testImplementation(libs.bundles.kotlin.test)
 }
 
-tasks.register<Copy>("copyFrontToServer") {
+tasks.register<Copy>("copyBotUIToServer") {
     dependsOn(":bot-ui:buildNpm")
+
+    doFirst {
+        delete(
+            layout.buildDirectory.dir("resources/main/admin")
+        )
+    }
+
     from(layout.buildDirectory.dir("../../bot-ui/dist"))
     into(layout.buildDirectory.dir("resources/main/admin"))
 }
 
 tasks.register<Copy>("copyOverlayToServer") {
     dependsOn(":bot-overlay:buildNpm")
+
+    doFirst {
+        delete(
+            layout.buildDirectory.dir("resources/main/overlay")
+        )
+    }
+
     from(layout.buildDirectory.dir("../../bot-overlay/dist"))
     into(layout.buildDirectory.dir("resources/main/overlay"))
 }
 
 tasks.withType<Jar> {
-    dependsOn("copyFrontToServer", "copyOverlayToServer")
+    dependsOn("copyBotUIToServer", "copyOverlayToServer")
 }
 
 description = "bot-core"
