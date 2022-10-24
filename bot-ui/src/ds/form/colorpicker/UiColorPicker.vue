@@ -5,21 +5,23 @@
   >{{ $t(label) }}</label>
   <ColorPicker
     :id="id"
-    theme="light"
-    :color="selectedColor"
+    ref="colorPicker"
+    :theme="pickerTheme"
+    :color="modelValue"
     :sucker-hide="true"
-    :sucker-canvas="suckerCanvas"
     @change-color="changeColor"
   />
 </template>
 
 <script setup lang="ts">
+import { Themes } from "@/common/components/common/theme/Themes"
+import { useApplicationTheme } from "@/common/components/common/theme/UseApplicationTheme"
 import { v4 as uuid } from "uuid"
-import { computed, ref } from "vue"
+import { ref, watch } from "vue"
 import { ColorPicker } from "vue-color-kit"
 import "vue-color-kit/dist/vue-color-kit.css"
-
 const emits = defineEmits(["update:modelValue"])
+
 const props = defineProps({
   modelValue: {
     type: String,
@@ -35,19 +37,31 @@ const props = defineProps({
   },
 })
 
+const storedTheme = useApplicationTheme()
 
-const selectedColor = computed({
-  get() {
-    return props.modelValue
-  },
+function getPickerTheme() {
+  switch (storedTheme.theme) {
+    case Themes.DARK:
+      return "dark"
+    default:
+      return "light"
+  }
+}
 
-  set(value) {
-    return emits("update:modelValue", value)
+const pickerTheme = getPickerTheme()
+
+const colorPicker = ref()
+
+watch(
+  () => props.modelValue,
+  (newColor) => {
+    if(newColor) {
+      colorPicker.value.selectColor(newColor)
+    }
   },
-})
-const suckerCanvas = ref(null)
+)
 
 function changeColor(newColor: { hex: string }) {
-  selectedColor.value = newColor.hex
+  return emits("update:modelValue", newColor.hex)
 }
 </script>
