@@ -25,6 +25,9 @@
         "color": "Color",
         "font": "Font",
         "font-size": "Font size"
+      },
+      "items-list": {
+        "title": "Items list"
       }
     }
   },

@@ -1,22 +1,23 @@
 <template>
-  <div
+  <ui-accorion-panel
     v-if="components.length !== 0"
-    class="flex flex-col border border-black"
+    title="overlay.editor.items-list.title"
   >
-    <h2>Items</h2>
     <ul>
       <li
         v-for="component in components"
         :key="component.id"
+        class="m-2 bg-slate-900 p-1 shadow-md"
         :class="selection && component.id === selection.id ? 'selected' : ''"
         @click="selectComponent(component)"
       >
         {{ component.representation }}
       </li>
     </ul>
-  </div>
+  </ui-accorion-panel>
 </template>
 <script setup lang="ts">
+import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
 import { OverlayElement } from "@/overlay/OverlayElement"
 import { PropType } from "vue"
 
@@ -40,10 +41,6 @@ const selectComponent = (selected: OverlayElement) => {
 </script>
 
 <style scoped>
-li {
-  @apply m-2 bg-gray-200 p-1 shadow-md;
-}
-
 /*noinspection CssUnusedSymbol*/
 .selected {
   @apply bg-gray-400;

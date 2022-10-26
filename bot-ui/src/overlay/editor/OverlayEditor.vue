@@ -16,7 +16,7 @@
       <div
         class="shrink overflow-auto flex flex-row bg-gray-200"
       >
-        <div class="shrink-0 w-60 flex flex-col">
+        <div class="w-60 shrink-0 overflow-auto flex flex-col">
           <editor-add-component @add-text="addText" />
           <editor-component-list
             v-model:selection="selection"
@@ -29,7 +29,7 @@
             :overlay="overlay"
           />
         </div>
-        <div class="shrink-0 w-60">
+        <div class="w-60 shrink-0 overflow-auto">
           <editor-props
             v-model:selection="selection"
             class="grow"

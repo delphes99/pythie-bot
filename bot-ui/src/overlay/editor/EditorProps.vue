@@ -1,58 +1,63 @@
 <template>
-  <div v-if="selection">
-    <div class="flex flex-col border border-black p-2">
-      <h2>{{ $t("overlay.editor.selected-item.title") }}</h2>
+  <ui-accorion-panel
+    v-if="selection"
+    title="overlay.editor.selected-item.title"
+  >
+    <div class="flex flex-col">
       <div>{{ $t("overlay.editor.selected-item.id") }} : {{ selection.id }}</div>
       <div>{{ $t("overlay.editor.selected-item.type") }} : {{ selection.type }}</div>
     </div>
-    <div class="flex flex-col border border-black p-2">
-      <h2>{{ $t("overlay.editor.properties") }}</h2>
-      <div>
-        <ui-textfield
-          v-model="selectedLeft"
-          label="overlay.editor.X"
-          @change="updateComponent"
-        />
-      </div>
-      <div>
-        <ui-textfield
-          v-model="selectedTop"
-          label="overlay.editor.Y"
-          @change="updateComponent"
-        />
-      </div>
-      <div>
-        <ui-textfield
-          v-model="selectedText"
-          label="overlay.editor.text-component.text"
-          @change="updateComponent"
-        />
-      </div>
-      <div>
-        <ui-textfield
-          v-model="selectedFont"
-          label="overlay.editor.text-component.font"
-          @change="updateComponent"
-        />
-      </div>
-      <div>
-        <ui-textfield
-          v-model="selectedFontSize"
-          label="overlay.editor.text-component.font-size"
-          @change="updateComponent"
-        />
-      </div>
-      <div>
-        <ui-color-picker
-          v-model="selectedColor"
-          label="overlay.editor.text-component.color"
-          @update:model-value="updateComponent"
-        />
-      </div>
+  </ui-accorion-panel>
+  <ui-accorion-panel
+    v-if="selection"
+    title="overlay.editor.properties"
+  >
+    <div>
+      <ui-textfield
+        v-model="selectedLeft"
+        label="overlay.editor.X"
+        @change="updateComponent"
+      />
     </div>
-  </div>
+    <div>
+      <ui-textfield
+        v-model="selectedTop"
+        label="overlay.editor.Y"
+        @change="updateComponent"
+      />
+    </div>
+    <div>
+      <ui-textfield
+        v-model="selectedText"
+        label="overlay.editor.text-component.text"
+        @change="updateComponent"
+      />
+    </div>
+    <div>
+      <ui-textfield
+        v-model="selectedFont"
+        label="overlay.editor.text-component.font"
+        @change="updateComponent"
+      />
+    </div>
+    <div>
+      <ui-textfield
+        v-model="selectedFontSize"
+        label="overlay.editor.text-component.font-size"
+        @change="updateComponent"
+      />
+    </div>
+    <div>
+      <ui-color-picker
+        v-model="selectedColor"
+        label="overlay.editor.text-component.color"
+        @update:model-value="updateComponent"
+      />
+    </div>
+  </ui-accorion-panel>
 </template>
 <script setup lang="ts">
+import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
 import UiColorPicker from "@/ds/form/colorpicker/UiColorPicker.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import TextComponent, { fromObject } from "@/overlay/editor/textComponent"

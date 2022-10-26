@@ -25,6 +25,9 @@
         "color": "Couleur",
         "font": "Police",
         "font-size": "Taille de la police"
+      },
+      "items-list": {
+        "title": "Liste des éléments"
       }
     }
   },
