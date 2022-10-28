@@ -3,19 +3,31 @@
 @tailwind components;
 @tailwind utilities;
 
+.light-theme {
+    --background: #ffffff;
+    --background-text-color: #000000;
+    --primary-color: #1c658c;
+    --primary-color-hover: #0b2736;
+    --primary-text-color: #d8d2cb;
+    --secondary-color: #1c658c;
+    --title-color: #374151;
+    --input-color: #1c658c;
+    --input-text-color: #d8d2cb;
+}
+
+.dark-theme {
+    --background: #334155;
+    --background-text-color: #ffffff;
+    --primary-color: #0f172a;
+    --primary-color-hover: #0b2736;
+    --primary-text-color: #d8d2cb;
+    --secondary-color: #1c658c;
+    --title-color: #9ca3af;
+    --input-color: #4b5563;
+    --input-text-color: #dddddd;
+}
+
 @layer utilities {
-    .menu-colors {
-        @apply bg-primaryColor dark:bg-primaryColorDark text-primaryTextColor dark:text-primaryTextColorDark
-    }
-    .default-background {
-        @apply bg-backgroundColor dark:bg-backgroundColorDark text-black dark:text-white
-    }
-    label {
-        @apply block text-gray-700 dark:text-gray-400 text-sm font-semibold mb-2
-    }
-    select {
-        @apply bg-white text-black
-    }
     .min-h-1\/3 {
         min-height:33.3%
     }

@@ -5,7 +5,7 @@
         <slot name="icon" />
         <h1
           v-if="title"
-          class="w-full h-full p-2 menu-colors text-xl"
+          class="w-full h-full p-2 bg-primaryColor text-primaryTextColor text-xl"
         >
           {{ title }}
         </h1>

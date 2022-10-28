@@ -13,7 +13,7 @@ export const parameters = {
 
 export const decorators = [(story) => ({
   components: { story },
-  template: '<div class="default-background p-8"><story /></div>'
+  template: '<div class="bg-backgroundColor text-backgroundTextColor p-8"><story /></div>'
 })];
 
 import { app } from '@storybook/vue3'

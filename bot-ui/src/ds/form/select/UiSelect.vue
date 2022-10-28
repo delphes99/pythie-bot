@@ -7,7 +7,7 @@
     <select
       :id="id"
       v-model="selected"
-      class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline"
+      class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 bg-white text-black border rounded-lg appearance-none focus:shadow-outline"
     >
       <option
         v-for="option in options"

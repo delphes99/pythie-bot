@@ -7,7 +7,7 @@
       <li
         v-for="component in components"
         :key="component.id"
-        class="m-2 bg-slate-900 p-1 shadow-md"
+        class="m-2 bg-primaryColor text-primaryTextColor p-1 shadow-md"
         :class="selection && component.id === selection.id ? 'selected' : ''"
         @click="selectComponent(component)"
       >

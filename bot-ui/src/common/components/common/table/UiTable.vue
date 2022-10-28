@@ -11,7 +11,7 @@
           <th
             v-for="columnName in header"
             :key="columnName"
-            class="font-bold text-left"
+            class="font-bold text-left text-titleColor"
           >
             {{ columnName }}
           </th>
@@ -19,7 +19,7 @@
         <tr
           v-for="row in rows"
           :key="row.key"
-          class="border-b border-gray-200"
+          class="border-b border-gray-200 text-backgroundTextColor"
         >
           <td
             v-for="cell in row.value"

@@ -1,7 +1,12 @@
 <template>
   <ui-panel title="medias.add">
     <form>
-      <label for="file">{{ $t("medias.file") }}</label>
+      <label
+        class="block text-titleColor text-sm font-semibold mb-2"
+        for="file"
+      >
+        {{ $t("medias.file") }}
+      </label>
       <input
         id="file"
         ref=""

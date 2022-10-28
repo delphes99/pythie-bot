@@ -1,6 +1,6 @@
 <template>
-  <div :class="isDark() ? 'dark ' : ''">
-    <div class="box-border w-screen h-screen overflow-hidden default-background">
+  <div :class="isDark() ? 'dark-theme' : 'light-theme'">
+    <div class="box-border w-screen h-screen overflow-hidden bg-backgroundColor text-backgroundTextColor">
       <status-bar
         class="fixed top-0 right-0"
         style="height: 4rem"

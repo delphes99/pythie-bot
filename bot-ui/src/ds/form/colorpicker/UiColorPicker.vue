@@ -2,6 +2,7 @@
   <label
     v-if="label"
     :for="id"
+    class="block text-titleColor text-sm font-semibold mb-2"
   >{{ $t(label) }}</label>
   <ColorPicker
     :id="id"

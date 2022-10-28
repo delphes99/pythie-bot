@@ -6,7 +6,7 @@
   >
     <div
       id="modal"
-      class="max-w-screen-4/5 opacity-100 default-background rounded shadow-lg"
+      class="max-w-screen-4/5 opacity-100 bg-backgroundColor text-backgroundTextColor rounded shadow-lg"
       @click.stop
     >
       <ui-panel

@@ -2,6 +2,7 @@
   <div>
     <label
       v-if="title"
+      class="block text-titleColor text-sm font-semibold mb-2"
     >{{ title }}</label>
     <div class="flex items-center h-">
       <span

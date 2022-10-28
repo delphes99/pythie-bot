@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="h-full flex flex-col menu-colors overflow-hidden"
+    class="z-50 h-full flex flex-col bg-primaryColor text-primaryTextColor overflow-hidden"
     :class="expand ? 'w-52' : widthClass"
     :onmouseenter="mouseIn"
     :onmouseleave="mouseOut"

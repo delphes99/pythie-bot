@@ -1,12 +1,12 @@
 <template>
   <div class="mb-2 p-0 border-primaryColor border-2">
-    <div class="menu-colors p-2">
+    <div class="bg-primaryColor text-primaryTextColor p-2">
       <h1 class="inline text-2xl font-medium title-font">
         {{ $t(title) }}
       </h1>
     </div>
     <div v-if="menu && menu.length">
-      <div class="flex flex-row bg-secondaryColor dark:bg-secondaryColorDark">
+      <div class="flex flex-row bg-secondaryColor">
         <div
           v-for="menuItem in menu"
           :key="menuItem.label"

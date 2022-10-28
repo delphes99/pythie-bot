@@ -2,13 +2,14 @@
   <label
     v-if="label"
     :for="id"
+    class="block text-titleColor text-sm font-semibold mb-2"
   >{{ $t(label) }}</label>
   <input
     :id="id"
     v-model="model"
     :name="name"
     :type="password ? 'password' : 'text'"
-    class="w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 focus:outline-none focus:ring-2;"
+    class="w-full py-2 px-3 border border-primaryColor rounded-md shadow-sm text-sm leading-4 font-medium  bg-inputColor text-inputTextColor focus:outline-none focus:ring-2;"
     @change="$emit('change')"
   >
 </template>
