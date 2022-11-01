@@ -1,111 +1,72 @@
 <template>
   <ui-accorion-panel
-    v-if="selection"
+    v-if="modelValue"
     title="overlay.editor.selected-item.title"
   >
     <div class="flex flex-col">
-      <div>{{ $t("overlay.editor.selected-item.id") }} : {{ selection.id }}</div>
-      <div>{{ $t("overlay.editor.selected-item.type") }} : {{ selection.type }}</div>
+      <div>{{ $t("overlay.editor.selected-item.id") }} : {{ modelValue.id }}</div>
+      <div>{{ $t("overlay.editor.selected-item.type") }} : {{ modelValue.type }}</div>
     </div>
   </ui-accorion-panel>
   <ui-accorion-panel
-    v-if="selection"
+    v-if="modelValue"
     title="overlay.editor.properties"
   >
     <div>
       <ui-textfield
-        v-model="selectedLeft"
+        v-model="left"
         label="overlay.editor.X"
-        @change="updateComponent"
       />
     </div>
     <div>
       <ui-textfield
-        v-model="selectedTop"
+        v-model="top"
         label="overlay.editor.Y"
-        @change="updateComponent"
       />
     </div>
-    <div>
-      <ui-textfield
-        v-model="selectedText"
-        label="overlay.editor.text-component.text"
-        @change="updateComponent"
-      />
-    </div>
-    <div>
-      <ui-textfield
-        v-model="selectedFont"
-        label="overlay.editor.text-component.font"
-        @change="updateComponent"
-      />
-    </div>
-    <div>
-      <ui-textfield
-        v-model="selectedFontSize"
-        label="overlay.editor.text-component.font-size"
-        @change="updateComponent"
-      />
-    </div>
-    <div>
-      <ui-color-picker
-        v-model="selectedColor"
-        label="overlay.editor.text-component.color"
-        @update:model-value="updateComponent"
-      />
-    </div>
+    <component
+      :is="componentSpecifProps()"
+      v-model="model"
+    />
   </ui-accorion-panel>
 </template>
 <script setup lang="ts">
 import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
-import UiColorPicker from "@/ds/form/colorpicker/UiColorPicker.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
-import TextComponent, { fromObject } from "@/overlay/editor/textComponent"
+import TextComponentProperties from "@/overlay/editor/textComponent/textComponentProperties.vue"
 import { OverlayElement } from "@/overlay/OverlayElement"
-import { PropType, ref, watch } from "vue"
+import { useVModel } from "@vueuse/core"
+import { computed, PropType } from "vue"
 
-const emit = defineEmits(["update:selection"])
+const emits = defineEmits(["update:modelValue"])
 const props = defineProps({
-  selection: {
+  modelValue: {
     type: Object as PropType<OverlayElement>,
     default: null,
   },
 })
 
-const selectedLeft = ref()
-const selectedTop = ref()
-const selectedText = ref()
-const selectedColor = ref("#000000")
-const selectedFont = ref()
-const selectedFontSize = ref()
+const model = useVModel(props, "modelValue", emits)
 
-watch(
-  () => props.selection,
-  (newValue) => {
-    if (newValue instanceof TextComponent) {
-      selectedText.value = newValue.text
-      selectedTop.value = newValue.top
-      selectedLeft.value = newValue.left
-      selectedColor.value = newValue.color
-      selectedFont.value = newValue.font
-      selectedFontSize.value = newValue.fontSize
-    }
-  },
-)
-
-const updateComponent = () => {
-  if (props.selection instanceof TextComponent) {
-    const updatedComponent = {
-      ...props.selection,
-      left: parseInt(selectedLeft?.value),
-      top: parseInt(selectedTop?.value),
-      text: selectedText.value,
-      color: selectedColor.value,
-      font: selectedFont.value,
-      fontSize: selectedFontSize.value,
-    }
-
-    emit("update:selection", fromObject(updatedComponent))
-  }
+function componentSpecifProps(): any {
+  return TextComponentProperties
 }
+
+const left = computed({
+  get: () => props.modelValue.left,
+  set: (value) => {
+    const newModel = props.modelValue
+    newModel.left = value
+    emits("update:modelValue", newModel)
+  },
+})
+
+const top = computed({
+  get: () => props.modelValue.top,
+  set: (value) => {
+    const newModel = props.modelValue
+    newModel.top = value
+    emits("update:modelValue", newModel)
+  },
+})
 </script>

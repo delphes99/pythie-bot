@@ -11,21 +11,25 @@
   />
 </template>
 <script setup lang="ts">
-import TextComponent, { fromObject } from "@/overlay/editor/textComponent"
+import TextComponent, { fromObject } from "@/overlay/editor/textComponent/textComponent"
 import Overlay from "@/overlay/Overlay"
 import { OverlayElement } from "@/overlay/OverlayElement"
 import interact from "interactjs"
 import { v4 as uuidv4 } from "uuid"
 import { onMounted, PropType, ref, watch } from "vue"
 
-const emits = defineEmits(["update:selection"])
+const emits = defineEmits(["update:modelValue"])
 
 const props = defineProps({
   overlay: {
     type: Object as PropType<Overlay>,
     required: true,
   },
-  selection: {
+  components: {
+    type: Array as PropType<OverlayElement[]>,
+    required: true,
+  },
+  modelValue: {
     type: Object as PropType<OverlayElement>,
     default: null,
   },
@@ -35,11 +39,11 @@ const components = new Map<string, HTMLDivElement>()
 const positions = new Map<string, ElementPosition>()
 
 const fonts = ref<string[]>([])
-fonts.value = [...new Set(props.overlay.elements.map(e => e.font))]
+fonts.value = [...new Set(props.components.map(e => e.font))]
 
 const loadCanvas = () => {
   function getElement(element: OverlayElement): TextComponent {
-    return props.overlay.elements.find((e) => e.id === element.id) as TextComponent
+    return props.components.find((e) => e.id === element.id) as TextComponent
   }
 
   function renderElements(elements: OverlayElement[]) {
@@ -50,7 +54,7 @@ const loadCanvas = () => {
         divElement.style.color = element.color
         divElement.style.fontSize = `${element.fontSize}px`
         divElement.style.fontFamily = element.font
-        if (element.id == props.selection?.id) {
+        if (element.id == props.modelValue?.id) {
           divElement.classList.add("selected")
         } else {
           divElement.classList.remove("selected")
@@ -84,7 +88,7 @@ const loadCanvas = () => {
               left: position.x ?? 0,
               top: position.y ?? 0,
             }
-            emits("update:selection", fromObject(updatedElement))
+            emits("update:modelValue", fromObject(updatedElement))
           }
 
           divElement.onclick = () => {
@@ -122,10 +126,10 @@ const loadCanvas = () => {
     })
   }
 
-  renderElements(props.overlay.elements)
+  renderElements(props.components)
 
   watch(
-    () => props.selection,
+    () => props.modelValue,
     (newValue) => {
       if (newValue instanceof TextComponent) {
         const canvasComponent = components.get(newValue.id)
@@ -142,10 +146,11 @@ const loadCanvas = () => {
   )
 
   watch(
-    () => props.overlay.elements,
+    () => props.components,
     (newValue) => {
       renderElements(newValue)
     },
+    { deep: true },
   )
 }
 

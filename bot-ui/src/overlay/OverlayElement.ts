@@ -1,8 +1,10 @@
-import TextComponent from "@/overlay/editor/textComponent"
+import TextComponent from "@/overlay/editor/textComponent/textComponent"
 
 export interface OverlayElement {
   id: string
   type: string
+  left: number,
+  top: number,
   representation: string
   equals(other: OverlayElement): boolean
 }

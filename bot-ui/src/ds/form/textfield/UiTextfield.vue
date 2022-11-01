@@ -10,12 +10,11 @@
     :name="name"
     :type="password ? 'password' : 'text'"
     class="w-full py-2 px-3 border border-primaryColor rounded-md shadow-sm text-sm leading-4 font-medium  bg-inputColor text-inputTextColor focus:outline-none focus:ring-2;"
-    @change="$emit('change')"
   >
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
+import { useVModel } from "@vueuse/core"
 import { v4 as uuid } from "uuid"
 
 const props = defineProps({
@@ -25,7 +24,8 @@ const props = defineProps({
   },
   modelValue: {
     type: String,
-    require: true,
+    default: "",
+    required: true,
   },
   label: {
     type: String,
@@ -41,15 +41,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["update:modelValue", "change"])
+const emit = defineEmits(["update:modelValue"])
 
-const model = computed({
-  get() {
-    return props.modelValue
-  },
-
-  set(value) {
-    return emit("update:modelValue", value)
-  },
-})
+const model = useVModel(props, "modelValue", emit)
 </script>

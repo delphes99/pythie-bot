@@ -8,7 +8,7 @@
         v-for="component in components"
         :key="component.id"
         class="m-2 bg-primaryColor text-primaryTextColor p-1 shadow-md"
-        :class="selection && component.id === selection.id ? 'selected' : ''"
+        :class="modelValue && component.id === modelValue.id ? 'selected' : ''"
         @click="selectComponent(component)"
       >
         {{ component.representation }}
@@ -21,21 +21,21 @@ import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
 import { OverlayElement } from "@/overlay/OverlayElement"
 import { PropType } from "vue"
 
-const emits = defineEmits(["update:selection"])
+const emits = defineEmits(["update:modelValue"])
 
 defineProps({
   components: {
     type: Object as PropType<OverlayElement[]>,
     required: true,
   },
-  selection: {
+  modelValue: {
     type: Object as PropType<OverlayElement>,
     default: null,
   },
 })
 
 const selectComponent = (selected: OverlayElement) => {
-  emits("update:selection", selected)
+  emits("update:modelValue", selected)
 }
 
 </script>

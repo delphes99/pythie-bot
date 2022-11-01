@@ -6,7 +6,7 @@
     >{{ $t(label) }}</label>
     <select
       :id="id"
-      v-model="selected"
+      v-model="model"
       class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 bg-white text-black border rounded-lg appearance-none focus:shadow-outline"
     >
       <option
@@ -33,6 +33,7 @@
 </template>
 <script setup lang="ts">
 import { UiSelectOption } from "@/ds/form/select/UiSelectOption"
+import { useVModel } from "@vueuse/core"
 import { computed, PropType } from "vue"
 import { v4 as uuid } from "uuid"
 
@@ -53,15 +54,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["update:modelValue"])
+const emits = defineEmits(["update:modelValue"])
 
-const selected = computed({
-  get() {
-    return props.modelValue
-  },
-
-  set(value) {
-    return emit("update:modelValue", value)
-  },
-})
+const model = useVModel(props, "modelValue", emits)
 </script>
