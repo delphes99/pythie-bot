@@ -7,5 +7,5 @@ data class Overlay(
     val id: String,
     val title: String,
     val resolution: Resolution,
-    val elements: List<OverlayElement> = emptyList(),
+    val elements: List<OverlayElement<*>> = emptyList(),
 )

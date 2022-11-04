@@ -1,39 +1,37 @@
-import { OverlayElement } from "@/overlay/OverlayElement"
-import { v4 as uuid } from "uuid"
+import { OverlayElementProperties, PropertiesComponent, RenderComponent } from "@/overlay/OverlayElementProperties"
+import TextComponentRender from "@/overlay/editor/textComponent/TextComponentRender.vue"
+import TextComponentProperties from "@/overlay/editor/textComponent/TextComponentProperties.vue"
 
-export default class TextComponent implements OverlayElement {
-  id: string
-  left: number
-  top: number
+export default class TextComponent implements OverlayElementProperties {
   type = "Text"
   text: string
   font: string
   fontSize: string
   color: string
 
-  constructor(left: number,
-              top: number,
-              text: string,
-              color: string,
-              font: string,
-              fontSize: string,
-              id: string = uuid(),
+  constructor(
+    text: string,
+    color: string,
+    font: string,
+    fontSize: string,
   ) {
-    this.id = id
-    this.left = left
-    this.top = top
     this.text = text
     this.color = color
     this.font = font
     this.fontSize = fontSize
   }
 
-  equals(other: OverlayElement): boolean {
+  renderComponent(): RenderComponent {
+    return TextComponentRender
+  }
+
+  propertiesComponent(): PropertiesComponent {
+    return TextComponentProperties
+  }
+
+  equals(other: OverlayElementProperties): boolean {
     return (
       other instanceof TextComponent &&
-      this.id === other.id &&
-      this.left === other.left &&
-      this.top === other.top &&
       this.text === other.text &&
       this.color === other.color &&
       this.font === other.font &&
@@ -44,17 +42,14 @@ export default class TextComponent implements OverlayElement {
   public get representation() {
     return this.text
   }
-}
 
-export function fromObject(obj: {
-  left: number
-  top: number
-  text: string
-  font: string
-  fontSize: string
-  color: string
-  id: string
-}): TextComponent {
-  const { left, top, text, font, fontSize, color, id } = obj
-  return new TextComponent(left, top, text, color, font, fontSize, id)
+  public static fromObject(obj: {
+    text: string
+    font: string
+    fontSize: string
+    color: string
+  }): TextComponent {
+    const { text, font, fontSize, color } = obj
+    return new TextComponent(text, color, font, fontSize)
+  }
 }

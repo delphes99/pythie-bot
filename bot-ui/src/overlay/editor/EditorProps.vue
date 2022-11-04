@@ -25,48 +25,40 @@
       />
     </div>
     <component
-      :is="componentSpecifProps()"
-      v-model="model"
+      :is="modelVModel.properties.propertiesComponent()"
+      v-model="modelVModel"
     />
   </ui-accorion-panel>
 </template>
 <script setup lang="ts">
 import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
-import TextComponentProperties from "@/overlay/editor/textComponent/textComponentProperties.vue"
-import { OverlayElement } from "@/overlay/OverlayElement"
+import OverlayElement from "@/overlay/OverlayElement"
+import { OverlayElementProperties } from "@/overlay/OverlayElementProperties"
 import { useVModel } from "@vueuse/core"
 import { computed, PropType } from "vue"
 
 const emits = defineEmits(["update:modelValue"])
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<OverlayElement>,
+    type: Object as PropType<OverlayElement<OverlayElementProperties>>,
     default: null,
   },
 })
 
-const model = useVModel(props, "modelValue", emits)
-
-function componentSpecifProps(): any {
-  return TextComponentProperties
-}
+const modelVModel = useVModel(props, "modelValue", emits)
 
 const left = computed({
-  get: () => props.modelValue.left,
+  get: () => props.modelValue.general.left,
   set: (value) => {
-    const newModel = props.modelValue
-    newModel.left = value
-    emits("update:modelValue", newModel)
+    emits("update:modelValue", props.modelValue.modifyGeneral(old => old.modifyLeft(value)))
   },
 })
 
 const top = computed({
-  get: () => props.modelValue.top,
+  get: () => props.modelValue.general.top,
   set: (value) => {
-    const newModel = props.modelValue
-    newModel.top = value
-    emits("update:modelValue", newModel)
+    emits("update:modelValue", props.modelValue.modifyGeneral(old => old.modifyTop(value)))
   },
 })
 </script>

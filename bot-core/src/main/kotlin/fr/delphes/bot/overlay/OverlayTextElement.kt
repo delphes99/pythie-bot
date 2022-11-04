@@ -6,11 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("Text")
 data class OverlayTextElement(
-    val id: String,
-    val left: Int,
-    val top: Int,
     val text: String,
     val color: String = "#000000",
     val font: String = "Roboto",
     val fontSize: String = "20",
-) : OverlayElement()
+) : OverlayElementProperties()

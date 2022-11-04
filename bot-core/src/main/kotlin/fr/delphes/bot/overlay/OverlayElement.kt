@@ -3,4 +3,7 @@ package fr.delphes.bot.overlay
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class OverlayElement
+data class OverlayElement<T: OverlayElementProperties>(
+    val general: OverlayElementGeneralProperties,
+    val properties: T
+)

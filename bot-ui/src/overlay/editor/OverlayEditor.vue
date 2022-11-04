@@ -24,7 +24,7 @@
       </div>
       <div class="shrink overflow-auto">
         <editor-preview
-          v-model="selection"
+          v-model:selection="selection"
           :components="components"
           :overlay="overlay"
         />
@@ -48,7 +48,9 @@ import EditorPreview from "@/overlay/editor/EditorPreview.vue"
 import EditorProps from "@/overlay/editor/EditorProps.vue"
 import TextComponent from "@/overlay/editor/textComponent/textComponent"
 import Overlay from "@/overlay/Overlay"
-import { OverlayElement } from "@/overlay/OverlayElement"
+import OverlayElement from "@/overlay/OverlayElement"
+import { OverlayElementGeneralProperties } from "@/overlay/OverlayElementGeneralProperties"
+import { OverlayElementProperties } from "@/overlay/OverlayElementProperties"
 import OverlayRepository from "@/overlay/OverlayRepository"
 import { inject, ref, watch } from "vue"
 
@@ -63,11 +65,14 @@ const backendUrl = inject("backendUrl") as string
 const repository = new OverlayRepository(backendUrl)
 
 const overlay = await repository.get(props.overlayId)
-const selection = ref<OverlayElement | null>(null)
-const components = ref<OverlayElement[]>(overlay.elements)
+const selection = ref<OverlayElement<OverlayElementProperties> | null>(null)
+const components = ref<OverlayElement<OverlayElementProperties>[]>(overlay.elements)
 
 function addText() {
-  const newComponent = new TextComponent(100, 100, "my text", "#000000", "Roboto", "20")
+  const newComponent = new OverlayElement(
+    new OverlayElementGeneralProperties(0, 0),
+    new TextComponent("my text", "#000000", "Roboto", "20"),
+  )
 
   components.value = [...components.value, newComponent]
   selection.value = newComponent
@@ -76,6 +81,7 @@ function addText() {
 watch(
   () => selection.value,
   (newValue) => {
+    console.log("selection changed", newValue)
     if (newValue) {
       const component = components.value.find(
         (element) => element.id === newValue.id,
