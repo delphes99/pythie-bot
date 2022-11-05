@@ -17,10 +17,7 @@
     >
       <div class="w-60 shrink-0 overflow-auto flex flex-col">
         <editor-add-component @add-text="addText" />
-        <editor-component-list
-          v-model="selection"
-          :components="components"
-        />
+        <editor-component-list />
       </div>
       <div class="shrink overflow-auto">
         <editor-preview
@@ -30,10 +27,7 @@
         />
       </div>
       <div class="w-60 shrink-0 overflow-auto">
-        <editor-props
-          v-model="selection"
-          class="grow"
-        />
+        <editor-props />
       </div>
     </div>
   </div>
@@ -47,6 +41,7 @@ import EditorComponentList from "@/overlay/editor/EditorComponentList.vue"
 import EditorPreview from "@/overlay/editor/EditorPreview.vue"
 import EditorProps from "@/overlay/editor/EditorProps.vue"
 import TextComponent from "@/overlay/editor/textComponent/textComponent"
+import { useOverlayEditorStore } from "@/overlay/editor/useOverlayEditorStore"
 import Overlay from "@/overlay/Overlay"
 import OverlayElement from "@/overlay/OverlayElement"
 import { OverlayElementGeneralProperties } from "@/overlay/OverlayElementGeneralProperties"
@@ -65,6 +60,10 @@ const backendUrl = inject("backendUrl") as string
 const repository = new OverlayRepository(backendUrl)
 
 const overlay = await repository.get(props.overlayId)
+
+const store = useOverlayEditorStore()
+store.init(overlay.elements)
+
 const selection = ref<OverlayElement<OverlayElementProperties> | null>(null)
 const components = ref<OverlayElement<OverlayElementProperties>[]>(overlay.elements)
 
@@ -74,52 +73,40 @@ function addText() {
     new TextComponent("my text", "#000000", "Roboto", "20"),
   )
 
-  components.value = [...components.value, newComponent]
-  selection.value = newComponent
+  store.addComponent(newComponent)
 }
 
 watch(
-  () => selection.value,
-  (newValue) => {
-    console.log("selection changed", newValue)
-    if (newValue) {
-      const component = components.value.find(
-        (element) => element.id === newValue.id,
-      )
-      if (component && !component.equals(newValue)) {
-        components.value = [
-          ...components.value.filter((e) => e.id !== component.id),
-          newValue,
-        ]
-      } else if(!component) {
-        components.value = [...components.value, newValue]
-      }
-    }
+  () => components.value,
+  (newSelection) => {
+    saveOverlay(newSelection)
   },
-  {
-    deep: true,
-  },
+  { deep: true },
 )
 
-watch(
-  () => components.value,
-  (newV, oldV) => {
-    if (
-      newV &&
-      oldV &&
-      JSON.stringify(newV) !== JSON.stringify(oldV)
-    ) {
-      const newOverlay = new Overlay(
-        overlay.id,
-        overlay.title,
-        overlay.resolution,
-        components.value,
-      )
+function saveOverlay(newState: OverlayElement<OverlayElementProperties>[]) {
+  const newOverlay = new Overlay(
+    overlay.id,
+    overlay.title,
+    overlay.resolution,
+    newState,
+  )
 
-      if (!repository.save(newOverlay)) {
-        //TODO better error management
-        alert("Save error")
-      }
+  if (!repository.save(newOverlay)) {
+    //TODO better error management
+    alert("Save error")
+  }
+}
+
+watch(
+  () => store.$state.components,
+  (newState, oldState) => {
+    if (
+      newState &&
+      oldState &&
+      JSON.stringify(newState) !== JSON.stringify(oldState)
+    ) {
+      saveOverlay(newState)
     }
   },
   {

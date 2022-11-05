@@ -4,45 +4,31 @@
     :style="`width: ${overlay.resolution.width}px; height: ${overlay.resolution.height}px; position: relative;`"
   >
     <DraggableElement
-      v-for="(element, index) in componentsVModel"
+      v-for="(element, index) in components"
       :key="element.id"
-      v-model="componentsVModel[index]"
-      v-model:selection="selectionVModel"
+      :component="components[index]"
     />
   </div>
 </template>
 <script setup lang="ts">
 import DraggableElement from "@/overlay/editor/DraggableElement.vue"
+import { useOverlayEditorStore } from "@/overlay/editor/useOverlayEditorStore"
 import Overlay from "@/overlay/Overlay"
-import OverlayElement from "@/overlay/OverlayElement"
-import { OverlayElementProperties } from "@/overlay/OverlayElementProperties"
-import { useVModel } from "@vueuse/core"
-import { PropType, ref, watch } from "vue"
+import { storeToRefs } from "pinia"
+import { PropType, watch } from "vue"
 
-const emits = defineEmits(["update:selection"])
-
-const props = defineProps({
+defineProps({
   overlay: {
     type: Object as PropType<Overlay>,
     required: true,
   },
-  components: {
-    type: Array as PropType<OverlayElement<OverlayElementProperties>[]>,
-    required: true,
-  },
-  selection: {
-    type: Object as PropType<OverlayElement<OverlayElementProperties>>,
-    default: null,
-  },
 })
 
-const fonts = ref<string[]>([])
-fonts.value = [...new Set(props.components.map(e => e.font))]
+const store = useOverlayEditorStore()
+const { components, selectedElement } = storeToRefs(store)
 
-const selectionVModel = useVModel(props, "selection", emits)
-const componentsVModel = useVModel(props, "components", emits)
 watch(
-  () => selectionVModel.value,
+  () => selectedElement.value,
   (newValue) => {
     console.log("selection changed", newValue)
   },
@@ -51,17 +37,6 @@ watch(
 </script>
 
 <style>
-/*noinspection CssUnusedSymbol*/
-.draggable.selected {
-  @apply border-black;
-}
-
-/*noinspection CssUnusedSymbol*/
-.draggable {
-  @apply border-dashed border border-gray-300 inline-block box-border;
-  user-select: none;
-}
-
 #preview {
   background-image: repeating-linear-gradient(
     to bottom,

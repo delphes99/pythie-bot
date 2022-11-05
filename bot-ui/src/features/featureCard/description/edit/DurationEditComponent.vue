@@ -10,7 +10,7 @@ import { DurationFormItem } from "@/features/featureCard/description/DurationFor
 import { computed, PropType } from "vue"
 
 const props = defineProps({
-  modelValue: {
+  component: {
     type: Object as PropType<DurationFormItem>,
     required: true,
   },
@@ -19,7 +19,7 @@ const emit = defineEmits(["update:modelValue"])
 
 const model = computed({
   get() {
-    return props.modelValue
+    return props.component
   },
 
   set(value) {

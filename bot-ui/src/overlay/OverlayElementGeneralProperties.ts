@@ -12,11 +12,15 @@ export class OverlayElementGeneralProperties {
   }
 
   modifyLeft(left: number): OverlayElementGeneralProperties {
-    return new OverlayElementGeneralProperties(left, this.top, this.id)
+     return this.modifyCoordinate(left, this.top)
   }
 
   modifyTop(top: number): OverlayElementGeneralProperties {
-    return new OverlayElementGeneralProperties(this.left, top, this.id)
+    return this.modifyCoordinate(this.left, top)
+  }
+
+  modifyCoordinate(left: number, top: number): OverlayElementGeneralProperties {
+    return new OverlayElementGeneralProperties(left, top, this.id)
   }
 
   equals(other: OverlayElementGeneralProperties): boolean {

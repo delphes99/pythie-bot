@@ -7,36 +7,27 @@
       <li
         v-for="component in components"
         :key="component.id"
-        class="m-2 bg-primaryColor text-primaryTextColor p-1 shadow-md"
-        :class="modelValue && component.id === modelValue.id ? 'selected' : ''"
+        class="truncate m-2 bg-primaryColor text-primaryTextColor p-1 shadow-md"
+        :class="component.id === selectedElementId ? 'selected' : ''"
         @click="selectComponent(component)"
       >
-        {{ component.representation }}
+        {{ component.properties.representation }}
       </li>
     </ul>
   </ui-accorion-panel>
 </template>
 <script setup lang="ts">
 import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
+import { useOverlayEditorStore } from "@/overlay/editor/useOverlayEditorStore"
 import OverlayElement from "@/overlay/OverlayElement"
 import { OverlayElementProperties } from "@/overlay/OverlayElementProperties"
-import { PropType } from "vue"
+import { storeToRefs } from "pinia"
 
-const emits = defineEmits(["update:modelValue"])
-
-defineProps({
-  components: {
-    type: Object as PropType<OverlayElement<OverlayElementProperties>[]>,
-    required: true,
-  },
-  modelValue: {
-    type: Object as PropType<OverlayElement<OverlayElementProperties>>,
-    default: null,
-  },
-})
+const store = useOverlayEditorStore()
+const { components, selectedElementId } = storeToRefs(store)
 
 const selectComponent = (selected: OverlayElement<OverlayElementProperties>) => {
-  emits("update:modelValue", selected)
+  store.selection(selected)
 }
 
 </script>

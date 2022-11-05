@@ -1,64 +1,44 @@
 <template>
   <ui-accorion-panel
-    v-if="modelValue"
+    v-if="selectedElement"
     title="overlay.editor.selected-item.title"
   >
     <div class="flex flex-col">
-      <div>{{ $t("overlay.editor.selected-item.id") }} : {{ modelValue.id }}</div>
-      <div>{{ $t("overlay.editor.selected-item.type") }} : {{ modelValue.type }}</div>
+      <div class="truncate">
+        {{ $t("overlay.editor.selected-item.id") }} : {{ selectedElement.id }}
+      </div>
+      <div class="truncate">
+        {{ $t("overlay.editor.selected-item.type") }} : {{ selectedElement.properties.type }}
+      </div>
     </div>
   </ui-accorion-panel>
   <ui-accorion-panel
-    v-if="modelValue"
+    v-if="selectedElement"
     title="overlay.editor.properties"
   >
     <div>
       <ui-textfield
-        v-model="left"
+        v-model="selectedElement.general.left"
         label="overlay.editor.X"
       />
     </div>
     <div>
       <ui-textfield
-        v-model="top"
+        v-model="selectedElement.general.top"
         label="overlay.editor.Y"
       />
     </div>
     <component
-      :is="modelVModel.properties.propertiesComponent()"
-      v-model="modelVModel"
+      :is="selectedElement.properties.propertiesComponent()"
     />
   </ui-accorion-panel>
 </template>
 <script setup lang="ts">
 import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
-import OverlayElement from "@/overlay/OverlayElement"
-import { OverlayElementProperties } from "@/overlay/OverlayElementProperties"
-import { useVModel } from "@vueuse/core"
-import { computed, PropType } from "vue"
+import { useOverlayEditorStore } from "@/overlay/editor/useOverlayEditorStore"
+import { storeToRefs } from "pinia"
 
-const emits = defineEmits(["update:modelValue"])
-const props = defineProps({
-  modelValue: {
-    type: Object as PropType<OverlayElement<OverlayElementProperties>>,
-    default: null,
-  },
-})
-
-const modelVModel = useVModel(props, "modelValue", emits)
-
-const left = computed({
-  get: () => props.modelValue.general.left,
-  set: (value) => {
-    emits("update:modelValue", props.modelValue.modifyGeneral(old => old.modifyLeft(value)))
-  },
-})
-
-const top = computed({
-  get: () => props.modelValue.general.top,
-  set: (value) => {
-    emits("update:modelValue", props.modelValue.modifyGeneral(old => old.modifyTop(value)))
-  },
-})
+const store = useOverlayEditorStore()
+const { selectedElement } = storeToRefs(store)
 </script>
