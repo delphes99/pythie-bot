@@ -56,5 +56,14 @@ export const useOverlayEditorStore = defineStore("overlayEditor",
           componentToUpdate,
         ].sort(overlayElementComparator)
       },
+      unselect() {
+        this.selectedElementId = null
+      },
+      deleteElement(componentToDelete: OverlayElement<OverlayElementProperties>) {
+
+        this.components = [
+          ...this.components.filter((e) => e.id !== componentToDelete.id),
+        ].sort(overlayElementComparator)
+      },
     },
   })

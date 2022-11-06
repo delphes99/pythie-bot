@@ -84,29 +84,18 @@ onMounted(() => {
       ],
       listeners: {
         start() {
-          console.log("start")
           updateSelection()
         },
         move(event) {
-          console.log("move")
           x.value += event.dx
           y.value += event.dy
         },
         end() {
-          console.log("end")
           updateComponent()
           updateSelection()
         },
       },
     })
-})
-
-onUnmounted(() => {
-  console.log("unmounted")
-})
-
-onUpdated(() => {
-  console.log("updated")
 })
 </script>
 

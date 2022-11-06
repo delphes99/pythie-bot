@@ -81,6 +81,7 @@ function addText() {
   )
 
   store.addComponent(newComponent)
+  store.selection(newComponent)
 }
 
 function addImage() {
@@ -90,6 +91,7 @@ function addImage() {
   )
 
   store.addComponent(newComponent)
+  store.selection(newComponent)
 }
 
 watch(

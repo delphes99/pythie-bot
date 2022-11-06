@@ -15,7 +15,7 @@ import DraggableElement from "@/overlay/editor/DraggableElement.vue"
 import { useOverlayEditorStore } from "@/overlay/editor/useOverlayEditorStore"
 import Overlay from "@/overlay/Overlay"
 import { storeToRefs } from "pinia"
-import { PropType, watch } from "vue"
+import { PropType } from "vue"
 
 defineProps({
   overlay: {
@@ -25,14 +25,7 @@ defineProps({
 })
 
 const store = useOverlayEditorStore()
-const { components, selectedElement } = storeToRefs(store)
-
-watch(
-  () => selectedElement.value,
-  (newValue) => {
-    console.log("selection changed", newValue)
-  },
-)
+const { components } = storeToRefs(store)
 
 </script>
 

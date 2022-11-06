@@ -18,6 +18,7 @@
         "id": "Id",
         "type": "Type"
       },
+      "unselectElement": "Désélectionner",
       "properties": "Propriétés",
       "X": "X",
       "Y": "Y",

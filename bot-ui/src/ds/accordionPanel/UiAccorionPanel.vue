@@ -38,7 +38,6 @@ defineProps({
 const isCollapsed = ref(false)
 
 const toggle = () => {
-  console.log("toggle")
   return isCollapsed.value = !isCollapsed.value
 }
 </script>
