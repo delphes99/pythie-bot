@@ -1,10 +1,4 @@
 <template>
-  <link
-    v-for="font in fonts"
-    :key="font"
-    :href="`https://fonts.googleapis.com/css2?family=${font.replaceAll(' ', '+')}&display=swap`"
-    rel="stylesheet"
-  >
   <div v-if="overlayNotFound">
     Overlay not found
   </div>
@@ -14,27 +8,27 @@
       :key="element.id"
       class="absolute"
       :style="{
-        top: element.top + 'px',
-        left: element.left + 'px',
-        color: element.color,
-        fontFamily: element.font,
-        fontSize: element.fontSize + 'px',
+        left: element.general.left + 'px',
+        top: element.general.top + 'px',
       }"
     >
-      {{ element.text }}
+      <component
+        :is="element.properties.renderComponent()"
+        :component="element"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Overlay } from "@/overlay/Overlay"
+import Overlay from "@/overlay/Overlay"
+import { fromJson } from "@/overlay/OverlayElement"
 import { inject, ref } from "vue"
 
 const backendUrl = inject("backendUrl")
 
 const overlay = ref<Overlay>()
 const overlayNotFound = ref(true)
-const fonts = ref<string[]>([])
 
 async function load() {
   let overlayId = getOverlayId()
@@ -44,7 +38,6 @@ async function load() {
     fetchOverlay(overlayId).then(response => {
       overlay.value = response
       overlayNotFound.value = false
-      fonts.value = [...new Set(response.elements.map(e => e.font))]
     })
   }
 }
@@ -53,7 +46,16 @@ async function fetchOverlay(overlayId: string): Promise<Overlay> {
   const response = await fetch(`${backendUrl}/api/overlays/${overlayId}`)
 
   if (response.ok) {
-    return response.json()
+    return response.json().then(data => {
+      return new Overlay(
+        data.id,
+        data.name,
+        data.resolution,
+        data.elements
+          .map((e: any) => fromJson(e))
+          .filter((e: any) => e),
+      )
+    })
   } else {
     return Promise.reject("fetching error")
   }
