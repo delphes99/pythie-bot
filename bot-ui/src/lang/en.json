@@ -21,6 +21,7 @@
       "properties": "Properties",
       "X": "X",
       "Y": "Y",
+      "sortOrder": "Sort order",
       "text-component": {
         "text": "Text",
         "color": "Color",

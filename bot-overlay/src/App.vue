@@ -10,6 +10,7 @@
       :style="{
         left: element.general.left + 'px',
         top: element.general.top + 'px',
+        'z-index': element.general.sortOrder,
       }"
     >
       <component

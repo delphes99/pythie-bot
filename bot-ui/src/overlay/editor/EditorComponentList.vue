@@ -11,7 +11,7 @@
         :class="component.id === selectedElementId ? 'selected' : ''"
         @click="selectComponent(component)"
       >
-        {{ component.properties.representation }}
+        [{{ component.general.sortOrder }}] {{ component.properties.representation }}
       </li>
     </ul>
   </ui-accorion-panel>

@@ -28,6 +28,10 @@
         label="overlay.editor.Y"
       />
     </div>
+    <ui-textfield
+      v-model="selectedElement.general.sortOrder"
+      label="overlay.editor.sortOrder"
+    />
     <component
       :is="selectedElement.properties.propertiesComponent()"
     />

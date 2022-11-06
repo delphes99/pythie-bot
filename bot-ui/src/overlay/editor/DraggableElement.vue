@@ -45,20 +45,23 @@ watch(
   { immediate: true, deep: true },
 )
 
+const isSelected = computed(() => props.component.id === selectedElementId.value)
+
 const classes = computed(() => {
-  const isSelected = props.component.id === selectedElementId.value
   return {
-    "border-gray-300": !isSelected,
-    "border-black": isSelected,
+    "border-gray-300": !isSelected.value,
+    "border-black": isSelected.value,
   }
 })
 
 const style = computed(() => {
+  const Z_INDEX_MAX = "9999"
   return {
     transform: `translate(${x.value}px, ${y.value}px)`,
     position: "absolute",
     display: "inline-block",
     "user-select": "none",
+    "z-index": isSelected.value ? Z_INDEX_MAX : props.component.general.sortOrder,
   }
 })
 

@@ -21,6 +21,7 @@
       "properties": "Propriétés",
       "X": "X",
       "Y": "Y",
+      "sortOrder": "Ordre de tri",
       "text-component": {
         "text": "Texte",
         "color": "Couleur",

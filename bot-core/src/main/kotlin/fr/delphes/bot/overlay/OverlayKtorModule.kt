@@ -36,7 +36,7 @@ fun Application.Overlays(bot: Bot) {
             this.call.respond(HttpStatusCode.OK, repository.load())
         }
         post("/api/overlay") {
-            repository.upsert(call.receive())
+            repository.upsert(call.receive<Overlay>().sanitize())
 
             this.context.respond(HttpStatusCode.OK)
         }

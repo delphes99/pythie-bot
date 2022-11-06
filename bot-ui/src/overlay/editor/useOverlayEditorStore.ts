@@ -7,6 +7,11 @@ interface OverlayEditorStoreState {
   selectedElementId: string | null
 }
 
+function overlayElementComparator(a: OverlayElement<OverlayElementProperties>,
+                                  b: OverlayElement<OverlayElementProperties>) {
+  return a.general.sortOrder - b.general.sortOrder
+}
+
 export const useOverlayEditorStore = defineStore("overlayEditor",
   {
     state: (): OverlayEditorStoreState => ({
@@ -21,7 +26,7 @@ export const useOverlayEditorStore = defineStore("overlayEditor",
     },
     actions: {
       init(components: OverlayElement<OverlayElementProperties>[]) {
-        this.components = components
+        this.components = components.sort(overlayElementComparator)
         this.selectedElementId = null
       },
       selection(selection: OverlayElement<OverlayElementProperties>) {
@@ -39,7 +44,7 @@ export const useOverlayEditorStore = defineStore("overlayEditor",
         this.components = [
           ...this.components.filter((e) => e.id !== componentToUpdate.id),
           componentToUpdate,
-        ]
+        ].sort(overlayElementComparator)
       },
       addComponent(componentToUpdate: OverlayElement<OverlayElementProperties>) {
         if (this.components.find(component => componentToUpdate.id === component.id)) {
@@ -49,7 +54,7 @@ export const useOverlayEditorStore = defineStore("overlayEditor",
         this.components = [
           ...this.components,
           componentToUpdate,
-        ]
+        ].sort(overlayElementComparator)
       },
     },
   })
