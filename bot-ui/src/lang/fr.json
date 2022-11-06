@@ -12,6 +12,7 @@
     "createOverlay": "Créer un overlay",
     "editor": {
       "addText": "Ajouter un texte",
+      "addImage": "Ajouter une image",
       "selected-item": {
         "title": "Elément sélectionné",
         "id": "Id",
@@ -25,6 +26,11 @@
         "color": "Couleur",
         "font": "Police",
         "font-size": "Taille de la police"
+      },
+      "image-component": {
+        "url": "URL de l'image",
+        "width": "Largeur",
+        "height": "Hauteur"
       },
       "items-list": {
         "title": "Liste des éléments"

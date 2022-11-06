@@ -16,7 +16,14 @@
       class="shrink overflow-auto flex flex-row bg-gray-200"
     >
       <div class="w-60 shrink-0 overflow-auto flex flex-col">
-        <editor-add-component @add-text="addText" />
+        <ui-button
+          label="overlay.editor.addText"
+          @on-click="addText"
+        />
+        <ui-button
+          label="overlay.editor.addImage"
+          @on-click="addImage"
+        />
         <editor-component-list />
       </div>
       <div class="shrink overflow-auto">
@@ -36,11 +43,11 @@
 <script async setup lang="ts">
 import UiButton from "@/ds/button/UiButton.vue"
 import UiButtonType from "@/ds/button/UiButtonType"
-import EditorAddComponent from "@/overlay/editor/EditorAddComponent.vue"
+import ImageComponent from "@/overlay/editor/component/imageComponent/ImageComponent"
 import EditorComponentList from "@/overlay/editor/EditorComponentList.vue"
 import EditorPreview from "@/overlay/editor/EditorPreview.vue"
 import EditorProps from "@/overlay/editor/EditorProps.vue"
-import TextComponent from "@/overlay/editor/textComponent/textComponent"
+import TextComponent from "@/overlay/editor/component/textComponent/TextComponent"
 import { useOverlayEditorStore } from "@/overlay/editor/useOverlayEditorStore"
 import Overlay from "@/overlay/Overlay"
 import OverlayElement from "@/overlay/OverlayElement"
@@ -71,6 +78,15 @@ function addText() {
   const newComponent = new OverlayElement(
     new OverlayElementGeneralProperties(0, 0),
     new TextComponent("my text", "#000000", "Roboto", "20"),
+  )
+
+  store.addComponent(newComponent)
+}
+
+function addImage() {
+  const newComponent = new OverlayElement(
+    new OverlayElementGeneralProperties(0, 0),
+    new ImageComponent(""),
   )
 
   store.addComponent(newComponent)

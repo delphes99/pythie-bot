@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import TextComponent from "@/overlay/editor/textComponent/textComponent"
+import TextComponent from "@/overlay/editor/component/textComponent/TextComponent"
 import OverlayElement from "@/overlay/OverlayElement"
 import { computed, PropType } from "vue"
 

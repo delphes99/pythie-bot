@@ -1,3 +1,4 @@
+import ImageComponent from "@/overlay/component/imageComponent/ImageComponent"
 import TextComponent from "@/overlay/component/textComponent/textComponent"
 import { OverlayElementGeneralProperties } from "@/overlay/OverlayElementGeneralProperties"
 import { OverlayElementProperties } from "@/overlay/OverlayElementProperties"
@@ -31,6 +32,8 @@ export function fromJson(json: any): OverlayElement<any> | null {
 function specificPropertiesFromJson(json: any): OverlayElementProperties | null {
   if (json.type === "Text") {
     return TextComponent.fromObject(json)
+  } else if (json.type === "Image") {
+    return ImageComponent.fromObject(json)
   } else {
     return null
   }

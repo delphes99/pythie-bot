@@ -1,6 +1,6 @@
 import { OverlayElementProperties, PropertiesComponent, RenderComponent } from "@/overlay/OverlayElementProperties"
-import TextComponentRender from "@/overlay/editor/textComponent/TextComponentRender.vue"
-import TextComponentProperties from "@/overlay/editor/textComponent/TextComponentProperties.vue"
+import TextComponentRender from "@/overlay/editor/component/textComponent/TextComponentRender.vue"
+import TextComponentProperties from "@/overlay/editor/component/textComponent/TextComponentProperties.vue"
 
 export default class TextComponent implements OverlayElementProperties {
   type = "Text"
