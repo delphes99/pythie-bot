@@ -10,5 +10,5 @@ import kotlinx.serialization.json.JsonClassDiscriminator
 sealed class EventData {
     abstract val eventIntent: Long
     abstract val eventType: String
-    abstract val eventData: Any
+    abstract val eventData: Any?
 }

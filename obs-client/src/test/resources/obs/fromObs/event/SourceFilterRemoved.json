@@ -1,0 +1,11 @@
+{
+  "d": {
+    "eventData": {
+      "filterName": "Background Removal",
+      "sourceName": "Webcam"
+    },
+    "eventIntent": 32,
+    "eventType": "SourceFilterRemoved"
+  },
+  "op": 5
+}

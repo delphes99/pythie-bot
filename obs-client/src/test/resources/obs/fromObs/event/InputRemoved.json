@@ -1,0 +1,10 @@
+{
+  "d": {
+    "eventData": {
+      "inputName": "fullscreen"
+    },
+    "eventIntent": 8,
+    "eventType": "InputRemoved"
+  },
+  "op": 5
+}

@@ -26,4 +26,8 @@ enum class StreamStateChangedState {
     STARTING,
     @SerialName("OBS_WEBSOCKET_OUTPUT_STARTED")
     STARTED,
+    @SerialName("OBS_WEBSOCKET_OUTPUT_STOPPING")
+    STOPPING,
+    @SerialName("OBS_WEBSOCKET_OUTPUT_STOPPED")
+    STOPPED,
 }
