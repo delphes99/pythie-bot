@@ -1,0 +1,10 @@
+{
+  "d": {
+    "eventData": {
+      "sceneName": "start_screen"
+    },
+    "eventIntent": 4,
+    "eventType": "CurrentPreviewSceneChanged"
+  },
+  "op": 5
+}

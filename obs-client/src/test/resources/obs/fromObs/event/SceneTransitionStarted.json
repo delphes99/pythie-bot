@@ -1,0 +1,10 @@
+{
+  "d": {
+    "eventData": {
+      "transitionName": "Fondu"
+    },
+    "eventIntent": 16,
+    "eventType": "SceneTransitionStarted"
+  },
+  "op": 5
+}
