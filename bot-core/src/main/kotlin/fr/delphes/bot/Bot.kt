@@ -10,9 +10,7 @@ import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.descriptor.registry.DescriptorRegistry
-import fr.delphes.descriptor.registry.MergeDescriptorRegistry
 import fr.delphes.feature.EditableFeature
-import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.feature.featureNew.FeatureConfiguration
@@ -27,7 +25,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
 import java.io.File
 
 class Bot(
@@ -35,11 +32,10 @@ class Bot(
     val configFilepath: String,
     val legacyfeatures: List<NonEditableFeature<*>>,
     val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
-    private val featureSerializationModule: SerializersModule,
-    featureConfigurationsPath: String,
     val botFeatures: BotFeatures,
-    val featureRegistry: DescriptorRegistry,
     val outgoingEventRegistry: DescriptorRegistry,
+    val serializer: Json,
+    val featuresManager: FeaturesManager
 ) {
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
@@ -49,28 +45,11 @@ class Bot(
 
     val alerts = Channel<Alert>()
 
-    val serializer = Json {
-        ignoreUnknownKeys = true
-        isLenient = false
-        encodeDefaults = true
-        coerceInputValues = true
-        serializersModule = featureSerializationModule
-    }
-
     //TODO remove when all features are migrated
     private val featureRepositoryOld = OldFeatureConfigurationRepository(
         "${configFilepath}${File.separator}feature${File.separator}features - Copie.json",
         serializer
     )
-
-    private val featureRepository = FeatureConfigurationRepository(
-        "${configFilepath}$featureConfigurationsPath",
-        serializer
-    )
-
-    private val globalDescriptorRegistry = MergeDescriptorRegistry(featureRegistry, outgoingEventRegistry)
-
-    val featuresManager = FeaturesManager(featureRepository, featureRegistry, globalDescriptorRegistry)
 
     val featureHandler = FeatureHandler().also {
         it.load(runBlocking { featureRepositoryOld.load() })
@@ -143,12 +122,6 @@ class Bot(
 
     suspend fun loadFeatures(): List<FeatureConfiguration<out FeatureState>> {
         return featureRepositoryOld.load()
-    }
-
-    suspend fun getAllFeaturesDescriptor() {
-
-
-        return;
     }
 
     //TODO better return type

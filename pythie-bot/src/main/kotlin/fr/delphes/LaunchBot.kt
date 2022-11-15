@@ -14,6 +14,9 @@ import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.builder.SendMessageBuilder
 import fr.delphes.connector.twitch.builder.sendMessageMapper
 import fr.delphes.descriptor.registry.DescriptorRegistry
+import fr.delphes.descriptor.registry.MergeDescriptorRegistry
+import fr.delphes.feature.FeatureConfigurationRepository
+import fr.delphes.feature.FeaturesManager
 import fr.delphes.features.FeatureSerializationConfiguration
 import fr.delphes.features.twitch.command.EditableCommand
 import fr.delphes.features.twitch.command.EditableCommandConfiguration
@@ -21,6 +24,7 @@ import fr.delphes.features.twitch.command.NewTwitchCommand
 import fr.delphes.features.twitch.command.twitchCommandMapper
 import fr.delphes.features.twitch.command.type
 import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.json.Json
 import java.io.File
 
 @InternalSerializationApi
@@ -31,6 +35,21 @@ fun main() {
     val tunnel = Ngrok.createHttpTunnel(80, props.getProperty("ngrok.tunnel.name"))
 
     val configFilepath = "A:${File.separator}pythiebot"
+
+    val serializer = Json {
+        ignoreUnknownKeys = true
+        isLenient = false
+        encodeDefaults = true
+        coerceInputValues = true
+        serializersModule = FeatureSerializationConfiguration.serializersModule
+    }
+
+    val featureConfigurationsPath = "${File.separator}feature${File.separator}features.json"
+
+    val outgoingEventRegistry = DescriptorRegistry.of(
+        sendMessageMapper
+    )
+
     val bot = Bot(
         tunnel.publicUrl,
         configFilepath,
@@ -48,8 +67,6 @@ fun main() {
                 )
             )
         ),
-        FeatureSerializationConfiguration.serializersModule,
-        "${File.separator}feature${File.separator}features.json",
         //TODO remove when new features are implemented
         BotFeatures(
             mapOf(
@@ -58,10 +75,9 @@ fun main() {
                 SendMessageBuilder.type to SendMessageBuilder.description()
             )
         ),
-        DescriptorRegistry.of(twitchCommandMapper),
-        DescriptorRegistry.of(
-            sendMessageMapper
-        ),
+        outgoingEventRegistry,
+        serializer,
+        buildFeatureManager(configFilepath, featureConfigurationsPath, serializer, outgoingEventRegistry)
     )
 
     bot.init(
@@ -80,4 +96,20 @@ fun main() {
             configFilepath
         ),
     )
+}
+
+private fun buildFeatureManager(
+    configFilepath: String,
+    featureConfigurationsPath: String,
+    serializer: Json,
+    outgoingEventRegistry: DescriptorRegistry
+): FeaturesManager {
+    val featureRepository = FeatureConfigurationRepository(
+        "${configFilepath}$featureConfigurationsPath",
+        serializer
+    )
+    val featureRegistry = DescriptorRegistry.of(twitchCommandMapper)
+    val globalDescriptorRegistry = MergeDescriptorRegistry(featureRegistry, outgoingEventRegistry)
+
+    return FeaturesManager(featureRepository, featureRegistry, globalDescriptorRegistry)
 }

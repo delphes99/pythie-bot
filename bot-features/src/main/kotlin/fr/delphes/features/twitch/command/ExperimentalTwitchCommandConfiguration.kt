@@ -5,10 +5,11 @@ package fr.delphes.features.twitch.command
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.ExperimentalFeatureConfiguration
 import fr.delphes.utils.serialization.DurationSerializer
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.time.Duration
 
-@kotlinx.serialization.Serializable
+@Serializable
 class ExperimentalTwitchCommandConfiguration(
     override val id: String,
     val channel: String?,
