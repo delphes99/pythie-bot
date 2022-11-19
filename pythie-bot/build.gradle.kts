@@ -11,3 +11,18 @@ dependencies {
 }
 
 description = "pythie-bot"
+
+tasks.withType<Jar> {
+    archiveBaseName.set("pythie-bot")
+    archiveClassifier.set("")
+    archiveVersion.set("")
+
+    manifest {
+        attributes(
+            mapOf(
+                "Main-Class" to "fr.delphes.LaunchBotKt",
+                "Description" to "PythieBot - Streamer tool",
+            )
+        )
+    }
+}

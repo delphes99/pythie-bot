@@ -20,7 +20,8 @@ The project offers two approaches:
 - Outgoing event: Event emitted by the bot, in response of an incoming events
 - Connector: Abstraction of an external platform, provides connection method and state, set of incoming and outgoing event 
 - Event Handler: Transforms an incoming event into a list of outgoing events
-- Feature: Group of event handler, possibly with a state, which provides a coherent behavior
+- Feature: Group of event handler, possibly with a state, which provides a coherent behavior for the user ([more details](documentation/feature.md))
+- Descriptor: Model for generating UI from backend object ([more details](documentation/descriptor.md))
 
 ### Roadmap
 https://github.com/delphes99/pythie-bot/projects/1, feel free to create issues to propose new feature
@@ -32,15 +33,20 @@ https://github.com/delphes99/pythie-bot/projects/1, feel free to create issues t
 #### Static configuration
 The project is modularized, you can load only what is needed.
 
-The `LaunchBot.kt` file of the `pythie-bot` module is an example that launches all modules. The only configuration needed is the configuration of [Ngrok](https://ngrok.com/), which is mandatory for the majority of connectors because of the webhooks.
+The [LaunchBot.kt](pythie-bot/src/main/kotlin/fr/delphes/LaunchBot.kt) file that launches all modules. The only configuration needed is the [configuration](pythie-bot/src/main/resources/configuration-pythiebot.properties) of [Ngrok](https://ngrok.com/), which is mandatory for the majority of connectors because of the webhooks.
 
 #### Build
-run `mvn clean package`
-
+```shell
+./gradlew shadowJar
+```
+The jar is generated in [./pythie-bot/build/libs](pythie-bot/build/libs) with the name [pythie-bot.jar](pythie-bot/build/libs/pythie-bot.jar)
 #### Launch your bot
-run `java -jar pythie-bot-1.0-SNAPSHOT-jar-with-dependencies.jar`
+
+```shell
+java -jar ./pythie-bot/build/libs/pythie-bot.jar
+```
 
 You can now connect to bot-ui to configure your bot : http://localhost:8080/admin
 
 #### Kotlin Feature
-For more advanced customization, check all the `pythie-bot` module, where all the custom features are configured (especially the `delphes99.kt` file). Any modification requires bot reboot.
+For more advanced customization, check all the [pythie-bot](pythie-bot) module, where all the custom features are configured (especially the [delphes99.kt](pythie-bot/src/main/kotlin/fr/delphes/configuration/channel/delphes99/delphes99.kt) file). Any modification requires bot reboot.
