@@ -34,6 +34,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk-version" }
 bytebuddy = { module = "net.bytebuddy:byte-buddy", version.ref = "bytebuddy-version" }
 junit-core = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-core-version" }
 junit-kotlin = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-version" }
+kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest-version" }
 kotest-assertion-core = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest-version" }
 kotest-assertion-json = { module = "io.kotest:kotest-assertions-json-jvm", version.ref = "kotest-version" }
 
@@ -47,7 +48,7 @@ kitteh = { module = "org.kitteh.irc:client-lib", version.ref = "kitteh-version" 
 kumo = { module = "com.kennycason:kumo-core", version.ref = "kumo-version" }
 
 [bundles]
-kotlin-test = ["mockk", "bytebuddy", "junit-core", "junit-kotlin", "kotest-assertion-core", "kotest-assertion-json"]
+kotlin-test = ["mockk", "bytebuddy", "junit-core", "junit-kotlin", "kotest-assertion-core", "kotest-assertion-json", "kotest-runner"]
 ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-serialization", "ktor-server-content-negotiation", "ktor-server-websockets", "ktor-server-cors"]
 ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-serialization", "ktor-client-content-negotiation", "ktor-client-serialization-jvm"]
 
