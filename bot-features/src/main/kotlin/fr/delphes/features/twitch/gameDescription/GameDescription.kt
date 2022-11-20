@@ -1,11 +1,11 @@
 package fr.delphes.features.twitch.gameDescription
 
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
-import fr.delphes.connector.twitch.command.CommandHandler
+import fr.delphes.connector.twitch.command.LegacyCommandHandler
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
@@ -28,12 +28,12 @@ class GameDescription(
 
     val command = Command(commandTrigger)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(buildCommandHandler())
         .build()
 
-    private fun buildCommandHandler() = CommandHandler(channel, command) { _, twitchConnector ->  this.displayInfoFor(twitchConnector) }
+    private fun buildCommandHandler() = LegacyCommandHandler(channel, command) { _, twitchConnector ->  this.displayInfoFor(twitchConnector) }
     override val commands: Iterable<Command> = listOf(command)
 
     private fun displayInfoFor(

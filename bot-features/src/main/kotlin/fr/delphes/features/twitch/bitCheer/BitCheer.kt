@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.bitCheer
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
@@ -15,7 +15,7 @@ class BitCheer(
 ) : NonEditableFeature<BitCheerDescription>, TwitchFeature {
     override fun description() = BitCheerDescription(channel.name)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(BitCheeredHandler())
         .build()

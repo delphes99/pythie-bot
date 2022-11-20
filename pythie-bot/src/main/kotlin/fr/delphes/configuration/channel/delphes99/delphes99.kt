@@ -30,6 +30,7 @@ import fr.delphes.features.overlay.Overlay
 import fr.delphes.features.twitch.bitCheer.BitCheer
 import fr.delphes.features.twitch.clipCreated.ClipCreated
 import fr.delphes.features.twitch.command.Command
+import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.endCredits.EndCredits
 import fr.delphes.features.twitch.gameDescription.GameDescription
@@ -522,3 +523,9 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
         DelphesReward.toRewardList()
     )
 }
+
+val delphes99CustomFeatures = listOf(
+    CustomCommand(channel, "!customCommand") {
+        executeOutgoingEvent(SendMessage("New command", channel))
+    }
+)

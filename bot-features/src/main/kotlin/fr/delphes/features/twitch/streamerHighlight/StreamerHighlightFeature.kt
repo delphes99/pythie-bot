@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.streamerHighlight
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.TwitchEventHandler
@@ -31,7 +31,7 @@ class StreamerHighlightFeature(
     WithStateManager<StreamerHighlightState> by stateManagerWithRepository {
     override fun description() = StreamerHighlightDescription(channel.name)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(MessageReceivedHandler())
         .build()

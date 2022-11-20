@@ -39,7 +39,7 @@ class ObsConnector(
                 //TODO move listener build
                 val listeners = ObsListener(
                     onSwitchScene = {
-                        bot.handleIncomingEvent(SceneChanged(it.eventData.sceneName))
+                        bot.handle(SceneChanged(it.eventData.sceneName))
                     },
                     onSourceFilterEnableStateChanged = {
                         val filter = SourceFilter(it.eventData.sourceName, it.eventData.filterName)
@@ -48,7 +48,7 @@ class ObsConnector(
                         } else {
                             SourceFilterDeactivated(filter)
                         }
-                        bot.handleIncomingEvent(event)
+                        bot.handle(event)
                     },
                     onError = { message ->
                         LOGGER.error { "Obs client error : $message" }

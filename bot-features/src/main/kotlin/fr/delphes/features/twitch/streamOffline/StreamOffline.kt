@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.streamOffline
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
@@ -15,7 +15,7 @@ class StreamOffline(
 ) : NonEditableFeature<StreamOfflineDescription>, TwitchFeature {
     override fun description() = StreamOfflineDescription(channel.name)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(StreamOfflineHandler())
         .build()

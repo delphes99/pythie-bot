@@ -1,7 +1,7 @@
 package fr.delphes.features.overlay
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
@@ -16,7 +16,7 @@ import io.ktor.server.application.Application
 class Overlay(private val channel: TwitchChannel) : NonEditableFeature<OverlayDescription>, HaveHttp {
     override fun description() = OverlayDescription()
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(NewFollowHandler())
         .addHandler(NewSubHandler())

@@ -13,10 +13,10 @@ internal class EventHandlersTest {
 
     @Test
     internal fun `get handler by event type`() {
-        val handlerA = mockk<EventHandler<EventA>>()
-        val handlerB = mockk<EventHandler<EventB>>()
-        val handlerBbis = mockk<EventHandler<EventB>>()
-        val eventHandlers = EventHandlers.builder()
+        val handlerA = mockk<LegacyEventHandler<EventA>>()
+        val handlerB = mockk<LegacyEventHandler<EventB>>()
+        val handlerBbis = mockk<LegacyEventHandler<EventB>>()
+        val eventHandlers = LegacyEventHandlers.builder()
             .addHandler(handlerA)
             .addHandler(handlerB)
             .addHandler(handlerBbis)
@@ -28,9 +28,9 @@ internal class EventHandlersTest {
 
     @Test
     internal fun `handle event by event type`() {
-        val handlerA = mockk<EventHandler<EventA>>(relaxed = true)
+        val handlerA = mockk<LegacyEventHandler<EventA>>(relaxed = true)
 
-        val eventHandlers = EventHandlers.builder()
+        val eventHandlers = LegacyEventHandlers.builder()
             .addHandler(handlerA)
             .build()
 

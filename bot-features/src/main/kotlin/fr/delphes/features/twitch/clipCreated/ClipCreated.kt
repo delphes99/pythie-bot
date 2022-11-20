@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.clipCreated
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
@@ -15,7 +15,7 @@ class ClipCreated(
 ) : NonEditableFeature<ClipCreatedDescription>, TwitchFeature {
     override fun description() = ClipCreatedDescription(channel.name)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(ClipCreatedHandler())
         .build()

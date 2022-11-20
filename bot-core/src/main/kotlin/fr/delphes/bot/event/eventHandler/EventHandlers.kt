@@ -2,10 +2,8 @@ package fr.delphes.bot.event.eventHandler
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.incoming.IncomingEvent
-import fr.delphes.bot.event.outgoing.OutgoingEvent
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import kotlin.reflect.KClass
 
@@ -16,6 +14,9 @@ class EventHandlers(
         private val LOGGER = KotlinLogging.logger {}
 
         val Empty = EventHandlers(emptyMap())
+
+        @Suppress("UNCHECKED_CAST")
+        inline fun <reified U : IncomingEvent> of(handler: EventHandler<U>) = builder().addHandler(handler).build()
 
         fun builder() = Builder()
 
@@ -40,25 +41,19 @@ class EventHandlers(
     }
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun handleEvent(event: IncomingEvent, bot: Bot): List<OutgoingEvent> {
+    suspend fun handleEvent(event: IncomingEvent, bot: Bot) {
         return coroutineScope {
             eventHandlers[event::class]
                 ?.map { it as EventHandler<IncomingEvent> }
-                ?.let { handlers ->
-                    handlers.map { handler ->
-                        async {
-                            try {
-                                handler.handle(event, bot)
-                            } catch (e: Exception) {
-                                LOGGER.error(e) { "Skip ${handler::class.simpleName} : Error while handling event" }
-                                emptyList()
-                            }
+                ?.forEach { handler ->
+                    launch {
+                        try {
+                            handler.handle(event, bot)
+                        } catch (e: Exception) {
+                            LOGGER.error(e) { "Skip ${handler::class.simpleName} : Error while handling event" }
                         }
                     }
                 }
-                ?.awaitAll()
-                ?.flatten()
-                ?: emptyList()
         }
     }
 }

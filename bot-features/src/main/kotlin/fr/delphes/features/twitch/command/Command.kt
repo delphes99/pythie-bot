@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.command
 
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
@@ -27,7 +27,7 @@ class Command(
 
     private val command = Command(trigger)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(buildCommandHandler())
         .build()

@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.streamUpdate
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
@@ -16,7 +16,7 @@ class StreamUpdate(
 ) : NonEditableFeature<StreamUpdateDescription>, TwitchFeature {
     override fun description() = StreamUpdateDescription(channel.name)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(StreamChangedHandler())
         .build()

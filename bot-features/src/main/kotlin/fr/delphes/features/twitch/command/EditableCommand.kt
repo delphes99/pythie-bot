@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.command
 
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.command.SimpleCommandHandler
@@ -17,7 +17,7 @@ class EditableCommand(
 
     val command = Command(configuration.trigger)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(buildCommandHandler())
         .build()

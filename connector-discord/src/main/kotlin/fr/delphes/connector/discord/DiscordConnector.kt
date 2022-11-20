@@ -36,7 +36,7 @@ class DiscordConnector(
             val client = Kord(configuration.oAuthToken)
             client.on<MemberJoinEvent> {
                 println(this.member.memberData)
-                bot.handleIncomingEvent(NewGuildMember(this.member.displayName))
+                bot.handle(NewGuildMember(this.member.displayName))
             }
 
             scope.launch {

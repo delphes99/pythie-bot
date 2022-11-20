@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.statistics
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.feature.HaveHttp
 import fr.delphes.feature.NonEditableFeature
@@ -18,5 +18,5 @@ class Statistics(
         StatisticsModule(channel, twitchConnector)
     }
 
-    override val eventHandlers = EventHandlers.Empty
+    override val eventHandlers = LegacyEventHandlers.Empty
 }

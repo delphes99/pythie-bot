@@ -1,14 +1,14 @@
 package fr.delphes.connector.twitch
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandler
+import fr.delphes.bot.event.eventHandler.LegacyEventHandler
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 
 abstract class TwitchEventHandler<T: TwitchIncomingEvent>(
     private val channel: TwitchChannel
-): EventHandler<T> {
+): LegacyEventHandler<T> {
     override suspend fun handle(event: T, bot: Bot): List<OutgoingEvent> {
         return event.isFor(channel) {
             handleIfGoodChannel(event, bot)

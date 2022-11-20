@@ -1,13 +1,13 @@
 package fr.delphes.features.twitch.voth
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
-import fr.delphes.connector.twitch.command.CommandHandler
+import fr.delphes.connector.twitch.command.LegacyCommandHandler
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
@@ -39,7 +39,7 @@ class VOTH(
     private val statsCommand = Command(configuration.statsCommand)
     private val top3Command = Command(configuration.top3Command)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(VOTHRewardRedemptionHandler())
         .addHandler(VOTHVIPListReceivedHandler())
@@ -49,7 +49,7 @@ class VOTH(
         .addHandler(buildCommandTop3Handler())
         .build()
 
-    private fun buildCommandStatsHandler() = CommandHandler(
+    private fun buildCommandStatsHandler() = LegacyCommandHandler(
         channel,
         statsCommand
     ) { user, _ ->
@@ -57,7 +57,7 @@ class VOTH(
         configuration.statsResponse(stats)
     }
 
-    private fun buildCommandTop3Handler() = CommandHandler(
+    private fun buildCommandTop3Handler() = LegacyCommandHandler(
         channel,
         top3Command
     ) { _, _ ->

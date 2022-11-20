@@ -59,16 +59,23 @@ class TwitchConnector(
     }
 
     fun commandsFor(channel: TwitchChannel): List<Command> {
-        return bot.legacyfeatures
+        val commands = bot.featuresManager
+            .featureDefinitions
             .filterIsInstance<TwitchFeature>()
             .filter { feature -> feature.channel == channel }
-            .flatMap(TwitchFeature::commands) + bot.featureHandler.configurations
+            .flatMap(TwitchFeature::commands)
+        //TODO : delete
+        val legacyCommands = bot.legacyfeatures
+            .filterIsInstance<TwitchFeature>()
+            .filter { feature -> feature.channel == channel }
+            .flatMap(TwitchFeature::commands)
+        val legacyConfigurableCommands = bot.featureHandler.configurations
             .filterIsInstance<TwitchFeatureConfiguration<out FeatureState>>()
             .filter { feature -> feature.channel == channel }
             .filterIsInstance<WithCommand>()
             .flatMap(WithCommand::commands)
 
-        //TODO editable command
+        return commands + legacyCommands + legacyConfigurableCommands
     }
 
     suspend fun newBotAccountConfiguration(newBotAuth: AuthToken) {
@@ -131,7 +138,7 @@ class TwitchConnector(
 
     internal suspend fun handleIncomingEvent(event: TwitchIncomingEvent) {
         internalHandler.handle(event)
-        bot.handleIncomingEvent(event)
+        bot.handle(event)
     }
 
     val botAccount: TwitchChannel?

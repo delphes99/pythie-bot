@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.gameReward
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
@@ -38,7 +38,7 @@ class GameReward(
     //TODO change visibility on start of the bot when the stream is already started
 
     override val eventHandlers =
-        EventHandlers
+        LegacyEventHandlers
             .builder()
             .addHandler(StreamOnlineHandler())
             .addHandler(StreamChangedHandler())

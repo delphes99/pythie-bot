@@ -57,12 +57,12 @@ object IrcStateManagerBuilder {
             val ircClient = IrcClient.builder(channelConfiguration.channel, credentialsManager)
                 .withOnMessage { message ->
                     runBlocking {
-                        IRCMessageMapper(channelConfiguration.channel).handle(message).forEach { bot.handleIncomingEvent(it) }
+                        IRCMessageMapper(channelConfiguration.channel).handle(message).forEach { bot.handle(it) }
                     }
                 }
                 .withOnChannelMessage { message ->
                     runBlocking {
-                        ChannelMessageMapper(channelConfiguration.channel, connector).handle(message).forEach { bot.handleIncomingEvent(it) }
+                        ChannelMessageMapper(channelConfiguration.channel, connector).handle(message).forEach { bot.handle(it) }
                     }
                 }
                 .build()

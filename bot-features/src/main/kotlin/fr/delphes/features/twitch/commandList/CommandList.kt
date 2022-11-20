@@ -1,10 +1,10 @@
 package fr.delphes.features.twitch.commandList
 
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
-import fr.delphes.connector.twitch.command.CommandHandler
+import fr.delphes.connector.twitch.command.LegacyCommandHandler
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
 
@@ -17,12 +17,12 @@ class CommandList(
 
     private val command = Command(triggerMessage)
 
-    override val eventHandlers =EventHandlers
+    override val eventHandlers =LegacyEventHandlers
         .builder()
         .addHandler(buildCommandHandler())
         .build()
 
-    private fun buildCommandHandler() = CommandHandler(
+    private fun buildCommandHandler() = LegacyCommandHandler(
         channel,
         command
     ) { _, twitchConnector ->

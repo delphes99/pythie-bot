@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.BotFeatures
 import fr.delphes.bot.Ngrok
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
+import fr.delphes.configuration.channel.delphes99.delphes99CustomFeatures
 import fr.delphes.configuration.channel.delphes99.delphes99Features
 import fr.delphes.configuration.channel.delphestestChannel
 import fr.delphes.configuration.channel.delphestestFeatures
@@ -23,6 +24,7 @@ import fr.delphes.features.twitch.command.EditableCommandConfiguration
 import fr.delphes.features.twitch.command.NewTwitchCommand
 import fr.delphes.features.twitch.command.twitchCommandMapper
 import fr.delphes.features.twitch.command.type
+import fr.delphes.rework.feature.FeatureDefinition
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -77,7 +79,13 @@ fun main() {
         ),
         outgoingEventRegistry,
         serializer,
-        buildFeatureManager(configFilepath, featureConfigurationsPath, serializer, outgoingEventRegistry)
+        buildFeatureManager(
+            configFilepath,
+            featureConfigurationsPath,
+            serializer,
+            outgoingEventRegistry,
+            delphes99CustomFeatures
+        )
     )
 
     bot.init(
@@ -102,7 +110,8 @@ private fun buildFeatureManager(
     configFilepath: String,
     featureConfigurationsPath: String,
     serializer: Json,
-    outgoingEventRegistry: DescriptorRegistry
+    outgoingEventRegistry: DescriptorRegistry,
+    customFeatures: List<FeatureDefinition>
 ): FeaturesManager {
     val featureRepository = FeatureConfigurationRepository(
         "${configFilepath}$featureConfigurationsPath",
@@ -111,5 +120,5 @@ private fun buildFeatureManager(
     val featureRegistry = DescriptorRegistry.of(twitchCommandMapper)
     val globalDescriptorRegistry = MergeDescriptorRegistry(featureRegistry, outgoingEventRegistry)
 
-    return FeaturesManager(featureRepository, featureRegistry, globalDescriptorRegistry)
+    return FeaturesManager(featureRepository, featureRegistry, globalDescriptorRegistry, customFeatures)
 }

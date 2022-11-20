@@ -36,7 +36,7 @@ class Bot(
     val outgoingEventRegistry: DescriptorRegistry,
     val serializer: Json,
     val featuresManager: FeaturesManager
-) {
+) : IncomingEventHandler, OutgoingEventProcessor {
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
 
@@ -55,17 +55,19 @@ class Bot(
         it.load(runBlocking { featureRepositoryOld.load() })
     }
 
-    suspend fun handleIncomingEvent(incomingEvent: IncomingEvent) {
+    override suspend fun handle(incomingEvent: IncomingEvent) {
         listOf(legacyfeatures, editableFeatures)
             .flatten()
             .flatMap { feature -> feature.handleIncomingEvent(incomingEvent, this) }
-            .forEach { event -> handleOutgoingEvent(event) }
+            .forEach { event -> processOutgoingEvent(event) }
 
         featureHandler.handleIncomingEvent(incomingEvent)
-            .forEach { event -> handleOutgoingEvent(event) }
+            .forEach { event -> processOutgoingEvent(event) }
+
+        featuresManager.handle(incomingEvent, this)
     }
 
-    private suspend fun handleOutgoingEvent(event: OutgoingEvent) {
+    override suspend fun processOutgoingEvent(event: OutgoingEvent) {
         if (event is CoreOutgoingEvent) {
             when (event) {
                 is Alert -> alerts.send(event)
@@ -92,7 +94,7 @@ class Bot(
         runBlocking {
             _connectors.map { connector -> async { connector.connect() } }.awaitAll()
 
-            handleIncomingEvent(BotStarted)
+            handle(BotStarted)
         }
     }
 

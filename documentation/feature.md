@@ -3,9 +3,8 @@
 A feature is a group of event handler, possibly with a state, which provides a coherent behavior for the user. It is the main abstraction of the bot, and is the main way to extend the bot.
 ```mermaid
 flowchart LR
-    ConfigurableFeature --> FeatureBuilder
-    CustomFeature --> FeatureBuilder
-    FeatureBuilder --> FeatureRuntime
+    ConfigurableFeature --> FeatureRuntime
+    CustomFeature --> FeatureRuntime
     FeatureRuntime --> EventHandler
     FeatureRuntime --> State
     CustomFeature -.-> FeatureDefinition
@@ -35,7 +34,4 @@ sequenceDiagram
     feature manager ->> feature: handle message(incoming message)
     feature ->> feature: find handler and states
     feature ->> event Handler: handle message(message, states)
-    event Handler -->> feature: outgoing events
-    feature -->> feature manager: outgoing events
-    feature manager -->> bot: outgoing events
 ```

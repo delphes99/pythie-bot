@@ -8,7 +8,7 @@ import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 
-class CommandHandler(
+class LegacyCommandHandler(
     val channel: TwitchChannel,
     val command: Command,
     private val doCommand: suspend (User, TwitchConnector) -> List<OutgoingEvent>

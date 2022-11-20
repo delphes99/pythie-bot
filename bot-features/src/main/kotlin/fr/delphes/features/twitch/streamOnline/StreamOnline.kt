@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.streamOnline
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlers
+import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
@@ -15,7 +15,7 @@ class StreamOnline(
 ) : NonEditableFeature<StreamOnlineDescription>, TwitchFeature {
     override fun description() = StreamOnlineDescription(channel.name)
 
-    override val eventHandlers = EventHandlers
+    override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(StreamOnlineHandler())
         .build()
