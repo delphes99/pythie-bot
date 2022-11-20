@@ -15,11 +15,10 @@ class NewFollow(
 ) : NonEditableFeature<NewFollowDescription>, TwitchFeature {
     override fun description() = NewFollowDescription(channel.name)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(NewFollowHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(NewFollowHandler())
+        .build()
 
     inner class NewFollowHandler : TwitchEventHandler<NewFollowEvent>(channel) {
         override suspend fun handleIfGoodChannel(event: NewFollowEvent, bot: Bot): List<OutgoingEvent> = newFollowResponse(event)

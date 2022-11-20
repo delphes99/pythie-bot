@@ -4,6 +4,7 @@ import fr.delphes.bot.event.incoming.IncomingEvent
 import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 internal class EventHandlersTest {
@@ -12,28 +13,32 @@ internal class EventHandlersTest {
 
     @Test
     internal fun `get handler by event type`() {
-        val eventHandlers = EventHandlers()
         val handlerA = mockk<EventHandler<EventA>>()
         val handlerB = mockk<EventHandler<EventB>>()
         val handlerBbis = mockk<EventHandler<EventB>>()
-        eventHandlers.addHandler(handlerA)
-        eventHandlers.addHandler(handlerB)
-        eventHandlers.addHandler(handlerBbis)
+        val eventHandlers = EventHandlers.builder()
+            .addHandler(handlerA)
+            .addHandler(handlerB)
+            .addHandler(handlerBbis)
+            .build()
 
         eventHandlers.getHandlers<EventA>().shouldContainExactly(handlerA)
         eventHandlers.getHandlers<EventB>().shouldContainExactly(handlerB, handlerBbis)
     }
 
     @Test
-    internal suspend fun `handle event by event type`() {
-        val eventHandlers = EventHandlers()
+    internal fun `handle event by event type`() {
         val handlerA = mockk<EventHandler<EventA>>(relaxed = true)
 
-        eventHandlers.addHandler(handlerA)
+        val eventHandlers = EventHandlers.builder()
+            .addHandler(handlerA)
+            .build()
 
         val event = EventA()
-        eventHandlers.handleEvent(event, mockk())
+        runTest {
+            eventHandlers.handleEvent(event, mockk())
+        }
 
-        coVerify (exactly = 1) { handlerA.handle(event, any()) }
+        coVerify(exactly = 1) { handlerA.handle(event, any()) }
     }
 }

@@ -17,11 +17,10 @@ class CommandList(
 
     private val command = Command(triggerMessage)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(buildCommandHandler())
-        handlers
-    }
+    override val eventHandlers =EventHandlers
+        .builder()
+        .addHandler(buildCommandHandler())
+        .build()
 
     private fun buildCommandHandler() = CommandHandler(
         channel,

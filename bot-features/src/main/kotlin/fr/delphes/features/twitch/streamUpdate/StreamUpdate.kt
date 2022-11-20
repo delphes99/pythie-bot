@@ -16,11 +16,10 @@ class StreamUpdate(
 ) : NonEditableFeature<StreamUpdateDescription>, TwitchFeature {
     override fun description() = StreamUpdateDescription(channel.name)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(StreamChangedHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(StreamChangedHandler())
+        .build()
 
     inner class StreamChangedHandler : TwitchEventHandler<StreamChanged>(channel) {
         override suspend fun handleIfGoodChannel(event: StreamChanged, bot: Bot): List<OutgoingEvent> {

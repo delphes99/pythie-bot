@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin.common)
     implementation(project(":bot-core"))
     api(project(":connector-discord"))
     api(project(":connector-obs"))

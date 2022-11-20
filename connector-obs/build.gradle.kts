@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin.common)
     implementation(project(":utils"))
     implementation(project(":bot-core"))
     implementation(project(":obs-client"))

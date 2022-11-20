@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin.common)
     api(project(":utils"))
     implementation(project(":twitch-api"))
     api(libs.ktor.server.core)

@@ -12,11 +12,10 @@ class BotStarted(
 ) : NonEditableFeature<BotStartedDescription> {
     override fun description() = BotStartedDescription()
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(BotStartedHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(BotStartedHandler())
+        .build()
 
     inner class BotStartedHandler : EventHandler<BotStarted> {
         override suspend fun handle(event: BotStarted, bot: Bot): List<OutgoingEvent> =

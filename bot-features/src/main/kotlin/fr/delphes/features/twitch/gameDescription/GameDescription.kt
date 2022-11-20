@@ -28,11 +28,10 @@ class GameDescription(
 
     val command = Command(commandTrigger)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(buildCommandHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(buildCommandHandler())
+        .build()
 
     private fun buildCommandHandler() = CommandHandler(channel, command) { _, twitchConnector ->  this.displayInfoFor(twitchConnector) }
     override val commands: Iterable<Command> = listOf(command)

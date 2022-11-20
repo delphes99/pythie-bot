@@ -15,11 +15,10 @@ class StreamOffline(
 ) : NonEditableFeature<StreamOfflineDescription>, TwitchFeature {
     override fun description() = StreamOfflineDescription(channel.name)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(StreamOfflineHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(StreamOfflineHandler())
+        .build()
 
     inner class StreamOfflineHandler : TwitchEventHandler<StreamOfflineEvent>(channel) {
         override suspend fun handleIfGoodChannel(event: StreamOfflineEvent, bot: Bot): List<OutgoingEvent> = streamOfflineResponse(event)

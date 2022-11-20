@@ -16,13 +16,12 @@ import io.ktor.server.application.Application
 class Overlay(private val channel: TwitchChannel) : NonEditableFeature<OverlayDescription>, HaveHttp {
     override fun description() = OverlayDescription()
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(NewFollowHandler())
-        handlers.addHandler(NewSubHandler())
-        handlers.addHandler(BitCheeredHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(NewFollowHandler())
+        .addHandler(NewSubHandler())
+        .addHandler(BitCheeredHandler())
+        .build()
 
     override val module: (Bot) -> Application.() -> Unit = {
         OverlayModule(it)

@@ -27,11 +27,10 @@ class Command(
 
     private val command = Command(trigger)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(buildCommandHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(buildCommandHandler())
+        .build()
 
     private fun buildCommandHandler() = SimpleCommandHandler(
         channel,

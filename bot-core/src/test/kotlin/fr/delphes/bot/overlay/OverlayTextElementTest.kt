@@ -1,60 +1,65 @@
 package fr.delphes.bot.overlay
 
 import io.kotest.assertions.json.shouldEqualJson
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Test
 
-internal class OverlayTextElementSerializationTest {
-    private val serializer = Json {
+internal class OverlayTextElementSerializationTest: ShouldSpec({
+    val serializer = Json {
         ignoreUnknownKeys = true
         isLenient = false
         encodeDefaults = true
         coerceInputValues = true
     }
 
-    @Test
-    internal fun deserialize() {
-        serializer.decodeFromString<OverlayElement>(
-            """
+    val json = """
                 {
-                  "type": "Text",
-                  "id": "0ea18104-c775-4741-acba-5c0944b554bb",
-                  "left": 273,
-                  "top": 308,
-                  "text": "my text"
+                  "general": {
+                    "id": "b634f8b3-a437-44cb-a6fe-daa339c245a0",
+                    "left": 514,
+                    "top": 58,
+                    "sortOrder": 0
+                  },
+                  "properties": {
+                    "type": "Text",
+                    "text": "my text",
+                    "color": "#24B0A5",
+                    "font": "Roboto",
+                    "fontSize": "40"
+                  }
                 }
             """
+
+    val obj: OverlayElement<OverlayElementProperties> = OverlayElement(
+        OverlayElementGeneralProperties(
+            id = "b634f8b3-a437-44cb-a6fe-daa339c245a0",
+            left = 514,
+            top = 58,
+            sortOrder = 0
+        ),
+        OverlayTextElement(
+            text = "my text",
+            color = "#24B0A5",
+            font = "Roboto",
+            fontSize = "40"
+        )
+    )
+    should("deserialize") {
+        serializer.decodeFromString<OverlayElement<OverlayTextElement>>(
+            json
         ).shouldBe(
-            OverlayTextElement(
-                "0ea18104-c775-4741-acba-5c0944b554bb",
-                273,
-                308,
-                "my text"
-            )
+            obj
         )
     }
 
-    @Test
-    internal fun serialize() {
+    should("serialize") {
         serializer.encodeToString(
-            OverlayTextElement(
-                "0ea18104-c775-4741-acba-5c0944b554bb",
-                273,
-                308,
-                "my text"
-            )
+            obj
         ).shouldEqualJson(
-            """
-                {
-                  "id": "0ea18104-c775-4741-acba-5c0944b554bb",
-                  "top": 308,
-                  "left": 273,
-                  "text": "my text"
-                }
-            """
+            json
         )
     }
-}
+})

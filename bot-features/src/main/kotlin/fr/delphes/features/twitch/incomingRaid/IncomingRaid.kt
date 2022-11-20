@@ -24,11 +24,10 @@ class IncomingRaid(
     WithStateManager<StreamerHighlightState> by stateManagerWithRepository {
     override fun description() = IncomingRaidDescription(channel.name)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(IncomingRaidHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+            .builder()
+            .addHandler(IncomingRaidHandler())
+            .build()
 
     private inner class IncomingRaidHandler : TwitchEventHandler<IncomingRaid>(channel) {
         override suspend fun handleIfGoodChannel(event: IncomingRaid, bot: Bot): List<OutgoingEvent> {

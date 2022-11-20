@@ -12,11 +12,10 @@ class NewGuildMember(
 ) : NonEditableFeature<NewGuildMemberDescription> {
     override fun description() = NewGuildMemberDescription()
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(NewGuildMemberHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(NewGuildMemberHandler())
+        .build()
 
     inner class NewGuildMemberHandler : EventHandler<NewGuildMember> {
         override suspend fun handle(event: NewGuildMember, bot: Bot): List<OutgoingEvent> =

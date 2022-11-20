@@ -15,11 +15,10 @@ class ClipCreated(
 ) : NonEditableFeature<ClipCreatedDescription>, TwitchFeature {
     override fun description() = ClipCreatedDescription(channel.name)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(ClipCreatedHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(ClipCreatedHandler())
+        .build()
 
     inner class ClipCreatedHandler : TwitchEventHandler<ClipCreated>(channel) {
         override suspend fun handleIfGoodChannel(event: ClipCreated, bot: Bot): List<OutgoingEvent> {

@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin.common)
     testImplementation(libs.bundles.kotlin.test)
 }
 

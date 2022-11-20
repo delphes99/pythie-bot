@@ -39,16 +39,15 @@ class VOTH(
     private val statsCommand = Command(configuration.statsCommand)
     private val top3Command = Command(configuration.top3Command)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(VOTHRewardRedemptionHandler())
-        handlers.addHandler(VOTHVIPListReceivedHandler())
-        handlers.addHandler(StreamOnlineHandler())
-        handlers.addHandler(StreamOfflineHandler())
-        handlers.addHandler(buildCommandStatsHandler())
-        handlers.addHandler(buildCommandTop3Handler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(VOTHRewardRedemptionHandler())
+        .addHandler(VOTHVIPListReceivedHandler())
+        .addHandler(StreamOnlineHandler())
+        .addHandler(StreamOfflineHandler())
+        .addHandler(buildCommandStatsHandler())
+        .addHandler(buildCommandTop3Handler())
+        .build()
 
     private fun buildCommandStatsHandler() = CommandHandler(
         channel,

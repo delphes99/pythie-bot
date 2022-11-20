@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin.common)
     implementation(project(":utils"))
     implementation(project(":bot-core"))
     //TODO >implementation : remove Twitch model from connector output ?

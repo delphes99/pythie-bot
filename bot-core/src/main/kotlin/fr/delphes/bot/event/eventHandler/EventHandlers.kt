@@ -9,21 +9,40 @@ import kotlinx.coroutines.coroutineScope
 import mu.KotlinLogging
 import kotlin.reflect.KClass
 
-class EventHandlers {
-    private val LOGGER = KotlinLogging.logger {}
+class EventHandlers(
+    val eventHandlers: Map<KClass<*>, List<EventHandler<*>>>
+) {
+    companion object {
+        private val LOGGER = KotlinLogging.logger {}
 
-    @PublishedApi
-    internal val map = mutableMapOf<KClass<*>, MutableList<EventHandler<*>>>()
+        val Empty = EventHandlers(emptyMap())
+
+        fun builder() = Builder()
+
+        class Builder {
+            @PublishedApi
+            internal val map = mutableMapOf<KClass<*>, MutableList<EventHandler<*>>>()
+
+            inline fun <reified U : IncomingEvent> addHandler(handler: EventHandler<U>): Builder {
+                map.putIfAbsent(U::class, mutableListOf())
+                map[U::class]!!.add(handler)
+                return this
+            }
+
+            fun build() = EventHandlers(map)
+        }
+    }
+
 
     @Suppress("UNCHECKED_CAST")
     inline fun <reified U : IncomingEvent> getHandlers(): List<EventHandler<U>> {
-        return map[U::class]?.let { it as List<EventHandler<U>> } ?: emptyList()
+        return eventHandlers[U::class]?.let { it as List<EventHandler<U>> } ?: emptyList()
     }
 
     @Suppress("UNCHECKED_CAST")
     suspend fun handleEvent(event: IncomingEvent, bot: Bot): List<OutgoingEvent> {
         return coroutineScope {
-            map[event::class]
+            eventHandlers[event::class]
                 ?.map { it as EventHandler<IncomingEvent> }
                 ?.let { handlers ->
                     handlers.map { handler ->
@@ -41,10 +60,5 @@ class EventHandlers {
                 ?.flatten()
                 ?: emptyList()
         }
-    }
-
-    inline fun <reified U : IncomingEvent> addHandler(handler: EventHandler<U>) {
-        map.putIfAbsent(U::class, mutableListOf())
-        map[U::class]!!.add(handler)
     }
 }

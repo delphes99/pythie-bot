@@ -18,5 +18,5 @@ class Statistics(
         StatisticsModule(channel, twitchConnector)
     }
 
-    override val eventHandlers = EventHandlers()
+    override val eventHandlers = EventHandlers.Empty
 }

@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin.common)
     implementation(project(":bot-core"))
     implementation(project(":bot-features"))
 }

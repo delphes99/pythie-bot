@@ -31,11 +31,10 @@ class StreamerHighlightFeature(
     WithStateManager<StreamerHighlightState> by stateManagerWithRepository {
     override fun description() = StreamerHighlightDescription(channel.name)
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(MessageReceivedHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(MessageReceivedHandler())
+        .build()
 
     private val normalizedExcludedUserNames = excludedUserNames.map(String::lowercase) + channel.normalizeName
 

@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin.common)
     implementation(project(":utils"))
     implementation(libs.ktor.server.core)
     implementation(libs.bundles.ktor.client)

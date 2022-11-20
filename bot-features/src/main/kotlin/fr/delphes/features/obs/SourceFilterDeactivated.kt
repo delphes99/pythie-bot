@@ -12,11 +12,10 @@ class SourceFilterDeactivated(
 ) : NonEditableFeature<SourceFilterDeactivatedDescription> {
     override fun description() = SourceFilterDeactivatedDescription()
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(SourceFilterDeactivatedHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(SourceFilterDeactivatedHandler())
+        .build()
 
     inner class SourceFilterDeactivatedHandler : EventHandler<ObsSourceFilterDeactivated> {
         override suspend fun handle(event: ObsSourceFilterDeactivated, bot: Bot): List<OutgoingEvent> =

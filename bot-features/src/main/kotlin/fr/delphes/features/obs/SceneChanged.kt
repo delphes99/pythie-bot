@@ -12,11 +12,10 @@ class SceneChanged(
 ) : NonEditableFeature<SceneChangedDescription> {
     override fun description() = SceneChangedDescription()
 
-    override val eventHandlers = run {
-        val handlers = EventHandlers()
-        handlers.addHandler(SceneChangedHandler())
-        handlers
-    }
+    override val eventHandlers = EventHandlers
+        .builder()
+        .addHandler(SceneChangedHandler())
+        .build()
 
     inner class SceneChangedHandler : EventHandler<SceneChanged> {
         override suspend fun handle(event: SceneChanged, bot: Bot): List<OutgoingEvent> =
