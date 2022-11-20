@@ -16,7 +16,7 @@ import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
 import kotlinx.coroutines.runBlocking
 
-object IrcStateManagerBuilder {
+object TwitchIrcStateManagerBuilder {
     fun buildBotStateManager(connector: TwitchConnector): StandAloneConnectorStateMachine<TwitchConfiguration, TwitchIrcRuntime> = initStateMachine(
         connectionName = "Irc - Bot",
         doConnection = { configuration, _ ->

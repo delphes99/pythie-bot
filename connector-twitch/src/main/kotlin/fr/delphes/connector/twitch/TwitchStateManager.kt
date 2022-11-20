@@ -8,15 +8,18 @@ import fr.delphes.bot.connector.StandAloneConnectorStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.status.ConnectorConnectionName
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.connector.twitch.irc.IrcStateManagerBuilder
+import fr.delphes.connector.twitch.api.TwitchApiRuntime
+import fr.delphes.connector.twitch.api.TwitchApiStateManagerBuilder
+import fr.delphes.connector.twitch.irc.TwitchIrcStateManagerBuilder
 import fr.delphes.connector.twitch.irc.TwitchIrcRuntime
 import mu.KotlinLogging
 
 class TwitchStateManager(
     private val connector: TwitchConnector,
-    private val legacyStateMachine: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchLegacyRuntime>,
+    private val legacyStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchLegacyRuntime>,
     private val ircBotStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchIrcRuntime>,
-    private val ircStateManagerBuilder: IrcStateManagerBuilder,
+    private val apiStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchApiRuntime>,
+    private val ircStateManagerBuilder: TwitchIrcStateManagerBuilder,
     private val bot: Bot,
 ) : CompositeConnectorStateMachine<TwitchConfiguration> {
     override suspend fun handle(command: ConnectorCommand, configurationManager: ConfigurationManager<TwitchConfiguration>) {
@@ -42,8 +45,9 @@ class TwitchStateManager(
 
     private suspend fun removeUnconfiguredConnections(configurationManager: ConfigurationManager<TwitchConfiguration>) {
         val connectionToDelete = subStateManagers
-            .filterNot { it == legacyStateMachine }
+            .filterNot { it == legacyStateManager }
             .filterNot { it == ircBotStateManager }
+            .filterNot { it == apiStateManager }
             .map { it.connectionName }.filter { connectionName -> connectionName.isNotConfigured() }
         connectionToDelete.forEach { connectionName ->
             subStateManagers
@@ -59,8 +63,9 @@ class TwitchStateManager(
     private fun ChannelConfiguration.toConnectionName() = "Irc - ${channel.normalizeName}"
 
     override val subStateManagers = mutableListOf(
-        legacyStateMachine,
-        ircBotStateManager
+        legacyStateManager,
+        ircBotStateManager,
+        apiStateManager,
     )
 
 
@@ -68,7 +73,7 @@ class TwitchStateManager(
         whenRunning: suspend TwitchLegacyRuntime.() -> T,
         whenNotRunning: suspend () -> T,
     ): T {
-        val currentState = legacyStateMachine.state
+        val currentState = legacyStateManager.state
         return if (currentState is Connected) {
             currentState.runtime.whenRunning()
         } else {
@@ -83,13 +88,15 @@ class TwitchStateManager(
             connector: TwitchConnector,
             bot: Bot,
             twitchLegacyStateManagerBuilder: TwitchLegacyStateManagerBuilder = TwitchLegacyStateManagerBuilder,
-            ircStateManagerBuilder: IrcStateManagerBuilder = IrcStateManagerBuilder
+            ircStateManagerBuilder: TwitchIrcStateManagerBuilder = TwitchIrcStateManagerBuilder,
+            apiStateManagerBuilder: TwitchApiStateManagerBuilder = TwitchApiStateManagerBuilder,
         ): TwitchStateManager {
             try {
                 return TwitchStateManager(
                     connector,
                     twitchLegacyStateManagerBuilder.build(connector, LOGGER),
                     ircStateManagerBuilder.buildBotStateManager(connector),
+                    apiStateManagerBuilder.buildBotStateManager(connector),
                     ircStateManagerBuilder,
                     bot
                 )
