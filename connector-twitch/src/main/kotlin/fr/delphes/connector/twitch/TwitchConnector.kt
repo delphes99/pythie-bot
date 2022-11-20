@@ -39,7 +39,7 @@ class TwitchConnector(
 
     private val twitchHelixApi = TwitchHelixClient()
 
-    override val connectorStateManager = TwitchStateManager(this)
+    override val connectorStateManager = TwitchStateManager.build(this, bot)
 
     private val internalHandler = TwitchConnectorHandler(this)
 

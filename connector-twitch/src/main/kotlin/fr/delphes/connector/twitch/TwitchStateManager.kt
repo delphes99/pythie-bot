@@ -1,130 +1,64 @@
 package fr.delphes.connector.twitch
 
+import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.CompositeConnectorStateMachine
-import fr.delphes.bot.connector.initStateMachine
+import fr.delphes.bot.connector.ConfigurationManager
+import fr.delphes.bot.connector.ConnectorCommand
+import fr.delphes.bot.connector.StandAloneConnectorStateMachine
 import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.state.ConnectionSuccessful
+import fr.delphes.bot.connector.status.ConnectorConnectionName
+import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.connector.twitch.irc.IrcStateManagerBuilder
 import fr.delphes.connector.twitch.irc.TwitchIrcRuntime
-import fr.delphes.connector.twitch.outgoingEvent.TwitchApiOutgoingEvent
-import fr.delphes.connector.twitch.outgoingEvent.TwitchChatOutgoingEvent
-import fr.delphes.connector.twitch.outgoingEvent.TwitchOutgoingEvent
-import fr.delphes.connector.twitch.outgoingEvent.TwitchOwnerChatOutgoingEvent
-import fr.delphes.twitch.irc.IrcChannel
-import fr.delphes.twitch.irc.IrcClient
 import mu.KotlinLogging
 
 class TwitchStateManager(
-    private val connector: TwitchConnector
+    private val connector: TwitchConnector,
+    private val legacyStateMachine: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchLegacyRuntime>,
+    private val ircBotStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchIrcRuntime>,
+    private val ircStateManagerBuilder: IrcStateManagerBuilder,
+    private val bot: Bot,
 ) : CompositeConnectorStateMachine<TwitchConfiguration> {
-    private val legacyStateMachine = initStateMachine<TwitchConfiguration, TwitchLegacyRuntime>(
-        connectionName = "Legacy",
-        doConnection = { configuration, _ ->
-            val credentialsManager = connector.configurationManager.buildCredentialsManager() ?: error("Connection with no configuration")
-
-            val clientBot = ClientBot(
-                configuration,
-                connector,
-                connector.bot.publicUrl,
-                connector.bot.configFilepath,
-                connector.bot,
-                credentialsManager
-            )
-
-            configuration.listenedChannels.forEach { configuredAccount ->
-                val legacyChannelConfiguration = connector.channels
-                    .firstOrNull { channel -> channel.channel == configuredAccount.channel }
-
-                clientBot.register(
-                    Channel(
-                        configuredAccount.channel,
-                        legacyChannelConfiguration,
-                        credentialsManager,
-                        clientBot,
-                        connector
-                    )
-                )
+    override suspend fun handle(command: ConnectorCommand, configurationManager: ConfigurationManager<TwitchConfiguration>) {
+        try {
+            if (command == ConnectorCommand.CONNECTION_REQUESTED) {
+                removeUnconfiguredConnections(configurationManager)
+                addConfiguredManager()
             }
+        }catch (e: Exception) {
+            LOGGER.error(e) { "Error while handling command $command" }
+        }
+        super.handle(command, configurationManager)
+    }
 
-            clientBot.connect()
+    private fun addConfiguredManager() {
+        connector.channels
+            .filter(::haveNoRunningManager)
+            .map { channel -> ircStateManagerBuilder.buildChannelStateManager(channel, bot, connector) }
+            .let { managerToAdd -> subStateManagers.addAll(managerToAdd) }
+    }
 
-            clientBot.resetWebhook()
+    private fun haveNoRunningManager(channel: ChannelConfiguration) = subStateManagers.map { it.connectionName }.none { it == channel.toConnectionName() }
 
-            ConnectionSuccessful(
-                configuration,
-                TwitchLegacyRuntime(
-                    configuration,
-                    clientBot
-                )
-            )
-        },
-        executeEvent = { event ->
-            if (event is TwitchOutgoingEvent) {
-                val currentState = state
-                if (currentState is Connected) {
-                    val clientBot = currentState.runtime.clientBot
-                    try {
-                        when (event) {
-                            is TwitchApiOutgoingEvent -> {
-                                val channel = clientBot.channelOf(event.channel)!!
-                                event.executeOnTwitch(channel.twitchApi)
-                            }
-                            is TwitchOwnerChatOutgoingEvent -> {
-                                val channel = clientBot.channelOf(event.channel)!!
-                                event.executeOnTwitch(channel.ircClient)
-                            }
-                            else -> {
-                                // Nothing
-                            }
-                        }
-                    } catch (e: Exception) {
-                        LOGGER.error(e) { "Error while handling event ${e.message}" }
-                    }
-                }
-            }
-        },
-        configurationManager = connector.configurationManager
-    )
+    private suspend fun removeUnconfiguredConnections(configurationManager: ConfigurationManager<TwitchConfiguration>) {
+        val connectionToDelete = subStateManagers
+            .filterNot { it == legacyStateMachine }
+            .filterNot { it == ircBotStateManager }
+            .map { it.connectionName }.filter { connectionName -> connectionName.isNotConfigured() }
+        connectionToDelete.forEach { connectionName ->
+            subStateManagers
+                .firstOrNull { it.connectionName == connectionName }
+                ?.handle(ConnectorCommand.DISCONNECTION_REQUESTED, configurationManager)
+            subStateManagers.removeIf { it.connectionName == connectionName }
+        }
+    }
 
-    private val ircBotStateManager = initStateMachine<TwitchConfiguration, TwitchIrcRuntime>(
-        connectionName = "Irc Bot",
-        doConnection = { configuration, _ ->
-            val credentialsManager = connector.configurationManager.buildCredentialsManager() ?: error("Connection with no configuration")
+    private fun ConnectorConnectionName.isNotConfigured() =
+        connector.channels.none { channel -> channel.toConnectionName() == this }
 
-            val ircClient = IrcClient.builder(configuration.botIdentity?.channel!!, credentialsManager).build()
-            ircClient.connect()
+    private fun ChannelConfiguration.toConnectionName() = "Irc - ${channel.normalizeName}"
 
-            configuration.listenedChannels.forEach { channel ->
-                ircClient.join(IrcChannel.withName(channel.channel.normalizeName))
-            }
-
-            ConnectionSuccessful(
-                configuration,
-                TwitchIrcRuntime(ircClient)
-            )
-        },
-        executeEvent = { event ->
-            if (event is TwitchOutgoingEvent) {
-                val currentState = state
-                if (currentState is Connected) {
-                    try {
-                        when (event) {
-                            is TwitchChatOutgoingEvent -> {
-                                event.executeOnTwitch(currentState.runtime.ircClient, connector)
-                            }
-                            else -> {
-                                // Nothing
-                            }
-                        }
-                    } catch (e: Exception) {
-                        LOGGER.error(e) { "Error while handling event ${e.message}" }
-                    }
-                }
-            }
-        },
-        configurationManager = connector.configurationManager
-    )
-
-    override val subStateManagers = listOf(
+    override val subStateManagers = mutableListOf(
         legacyStateMachine,
         ircBotStateManager
     )
@@ -144,5 +78,25 @@ class TwitchStateManager(
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}
+
+        fun build(
+            connector: TwitchConnector,
+            bot: Bot,
+            twitchLegacyStateManagerBuilder: TwitchLegacyStateManagerBuilder = TwitchLegacyStateManagerBuilder,
+            ircStateManagerBuilder: IrcStateManagerBuilder = IrcStateManagerBuilder
+        ): TwitchStateManager {
+            try {
+                return TwitchStateManager(
+                    connector,
+                    twitchLegacyStateManagerBuilder.build(connector, LOGGER),
+                    ircStateManagerBuilder.buildBotStateManager(connector),
+                    ircStateManagerBuilder,
+                    bot
+                )
+            } catch (e: Exception) {
+                LOGGER.error(e) { "Error while building TwitchStateManager" }
+                throw e
+            }
+        }
     }
 }

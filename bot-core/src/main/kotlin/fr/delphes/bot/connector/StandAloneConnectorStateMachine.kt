@@ -21,7 +21,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime>(
-    private val connectionName: ConnectorConnectionName,
+    val connectionName: ConnectorConnectionName,
     private val doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
     private val executeEvent: suspend StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME>.(event: OutgoingEvent) -> Unit,
     var state: ConnectorState<CONFIGURATION, RUNTIME> = Disconnected()

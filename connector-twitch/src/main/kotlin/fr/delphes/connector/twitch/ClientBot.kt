@@ -34,12 +34,6 @@ class ClientBot(
         return channels.firstOrNull { it.channel == channel }
     }
 
-    fun connect() {
-        channels.forEach { channel ->
-            channel.join()
-        }
-    }
-
     fun channelApiBuilder(
         configFilepath: String,
         rewards: List<RewardConfiguration>,
