@@ -6,6 +6,7 @@ import fr.delphes.bot.connector.initStateMachine
 import fr.delphes.bot.connector.state.Connected
 import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.connector.twitch.ConfigurationTwitchAccount
 import fr.delphes.connector.twitch.TwitchConfiguration
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.eventMapper.ChannelMessageMapper
@@ -46,7 +47,7 @@ object TwitchIrcStateManagerBuilder {
     )
 
     fun buildChannelStateManager(
-        channelConfiguration: ChannelConfiguration,
+        channelConfiguration: ConfigurationTwitchAccount,
         bot: Bot,
         connector: TwitchConnector
     ): StandAloneConnectorStateMachine<TwitchConfiguration, TwitchIrcRuntime> = initStateMachine(

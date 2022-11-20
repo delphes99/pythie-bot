@@ -4,70 +4,69 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.CompositeConnectorStateMachine
 import fr.delphes.bot.connector.ConfigurationManager
 import fr.delphes.bot.connector.ConnectorCommand
+import fr.delphes.bot.connector.ConnectorRuntime
 import fr.delphes.bot.connector.StandAloneConnectorStateMachine
 import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.status.ConnectorConnectionName
-import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.api.TwitchApiRuntime
 import fr.delphes.connector.twitch.api.TwitchApiStateManagerBuilder
-import fr.delphes.connector.twitch.irc.TwitchIrcStateManagerBuilder
 import fr.delphes.connector.twitch.irc.TwitchIrcRuntime
+import fr.delphes.connector.twitch.irc.TwitchIrcStateManagerBuilder
 import mu.KotlinLogging
 
 class TwitchStateManager(
     private val connector: TwitchConnector,
     private val legacyStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchLegacyRuntime>,
-    private val ircBotStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchIrcRuntime>,
-    private val apiStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchApiRuntime>,
+    ircBotStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchIrcRuntime>,
+    apiStateManager: StandAloneConnectorStateMachine<TwitchConfiguration, TwitchApiRuntime>,
     private val ircStateManagerBuilder: TwitchIrcStateManagerBuilder,
-    private val bot: Bot,
+    private val apiStateManagerBuilder: TwitchApiStateManagerBuilder,
+    private val bot: Bot
 ) : CompositeConnectorStateMachine<TwitchConfiguration> {
     override suspend fun handle(command: ConnectorCommand, configurationManager: ConfigurationManager<TwitchConfiguration>) {
         try {
             if (command == ConnectorCommand.CONNECTION_REQUESTED) {
-                removeUnconfiguredConnections(configurationManager)
-                addConfiguredManager()
+                val specificBuilders = configurationManager.configuration?.listenedChannels?.flatMap { c -> buildersFor(c) }.orEmpty()
+                removeUnconfiguredConnections(specificBuilders, configurationManager)
+                addConfiguredManager(specificBuilders)
             }
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             LOGGER.error(e) { "Error while handling command $command" }
         }
         super.handle(command, configurationManager)
     }
 
-    private fun addConfiguredManager() {
-        connector.channels
-            .filter(::haveNoRunningManager)
-            .map { channel -> ircStateManagerBuilder.buildChannelStateManager(channel, bot, connector) }
-            .let { managerToAdd -> subStateManagers.addAll(managerToAdd) }
+    private fun addConfiguredManager(specificBuilders: List<ChannelSpecificBuilder>) {
+        val builderToAdd = specificBuilders.filter { channelStateManagers.none { existingManager -> existingManager.connectionName == it.getConnexionName() } }
+
+        builderToAdd.map(ChannelSpecificBuilder::build)
+            .let { managerToAdd -> channelStateManagers.addAll(managerToAdd) }
     }
 
-    private fun haveNoRunningManager(channel: ChannelConfiguration) = subStateManagers.map { it.connectionName }.none { it == channel.toConnectionName() }
+    private suspend fun removeUnconfiguredConnections(specificBuilders: List<ChannelSpecificBuilder>, configurationManager: ConfigurationManager<TwitchConfiguration>) {
+        val specificNames = specificBuilders
+            .map { it.getConnexionName() }
 
-    private suspend fun removeUnconfiguredConnections(configurationManager: ConfigurationManager<TwitchConfiguration>) {
-        val connectionToDelete = subStateManagers
-            .filterNot { it == legacyStateManager }
-            .filterNot { it == ircBotStateManager }
-            .filterNot { it == apiStateManager }
-            .map { it.connectionName }.filter { connectionName -> connectionName.isNotConfigured() }
+        val connectionToDelete = channelStateManagers
+            .map { it.connectionName }
+            .filter { connectionName -> specificNames.none { channelToBuild -> channelToBuild == connectionName } }
+
         connectionToDelete.forEach { connectionName ->
-            subStateManagers
+            channelStateManagers
                 .firstOrNull { it.connectionName == connectionName }
                 ?.handle(ConnectorCommand.DISCONNECTION_REQUESTED, configurationManager)
-            subStateManagers.removeIf { it.connectionName == connectionName }
+            channelStateManagers.removeIf { it.connectionName == connectionName }
         }
     }
 
-    private fun ConnectorConnectionName.isNotConfigured() =
-        connector.channels.none { channel -> channel.toConnectionName() == this }
-
-    private fun ChannelConfiguration.toConnectionName() = "Irc - ${channel.normalizeName}"
-
-    override val subStateManagers = mutableListOf(
+    private val permanentStateManagers = listOf(
         legacyStateManager,
         ircBotStateManager,
         apiStateManager,
     )
 
+    private val channelStateManagers = mutableListOf<StandAloneConnectorStateMachine<TwitchConfiguration, *>>()
+
+    override val subStateManagers get() = permanentStateManagers + channelStateManagers
 
     suspend fun <T> whenRunning(
         whenRunning: suspend TwitchLegacyRuntime.() -> T,
@@ -80,6 +79,34 @@ class TwitchStateManager(
             whenNotRunning()
         }
     }
+
+    class ChannelSpecificBuilder(
+        val channel: ConfigurationTwitchAccount,
+        val extractName: ExtractName,
+        val buildFor: (ConfigurationTwitchAccount) -> StandAloneConnectorStateMachine<TwitchConfiguration, out ConnectorRuntime>
+    ) {
+        fun getConnexionName() = extractName(channel)
+
+        fun build() = buildFor(channel)
+    }
+
+    private fun buildersFor(
+        channel: ConfigurationTwitchAccount
+    ): List<ChannelSpecificBuilder> {
+        return listOf(
+            ChannelSpecificBuilder(
+                channel,
+                { it.toIrcConnectionName() }
+            ) { c -> ircStateManagerBuilder.buildChannelStateManager(c, bot, connector) },
+            ChannelSpecificBuilder(
+                channel,
+                { it.toApiConnectionName() }
+            ) { c -> apiStateManagerBuilder.buildChannelStateManager(c, bot, connector, LOGGER) }
+        )
+    }
+
+    private fun ConfigurationTwitchAccount.toIrcConnectionName() = "Irc - ${channel.normalizeName}"
+    private fun ConfigurationTwitchAccount.toApiConnectionName() = "Helix - ${channel.normalizeName}"
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}
@@ -98,6 +125,7 @@ class TwitchStateManager(
                     ircStateManagerBuilder.buildBotStateManager(connector),
                     apiStateManagerBuilder.buildBotStateManager(connector),
                     ircStateManagerBuilder,
+                    apiStateManagerBuilder,
                     bot
                 )
             } catch (e: Exception) {
@@ -107,3 +135,6 @@ class TwitchStateManager(
         }
     }
 }
+
+
+typealias ExtractName = (ConfigurationTwitchAccount) -> String

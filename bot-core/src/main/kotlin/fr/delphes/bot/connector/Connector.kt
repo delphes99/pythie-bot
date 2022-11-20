@@ -43,7 +43,7 @@ interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorR
 fun <CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> initStateMachine(
     connectionName: ConnectorConnectionName,
     doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
-    executeEvent: suspend StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME>.(event: OutgoingEvent) -> Unit,
+    executeEvent: suspend StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME>.(event: OutgoingEvent) -> Unit = {},
     configurationManager: ConfigurationManager<CONFIGURATION>,
 ): StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME> {
     return StandAloneConnectorStateMachine(

@@ -46,20 +46,6 @@ object TwitchLegacyStateManagerBuilder {
                 )
             )
         },
-        executeEvent = { event ->
-            if (event is TwitchApiOutgoingEvent) {
-                val currentState = state
-                if (currentState is Connected) {
-                    val clientBot = currentState.runtime.clientBot
-                    try {
-                        val channel = clientBot.channelOf(event.channel)!!
-                        event.executeOnTwitch(channel.twitchApi)
-                    } catch (e: Exception) {
-                        logger.error(e) { "Error while handling event ${e.message}" }
-                    }
-                }
-            }
-        },
         configurationManager = connector.configurationManager
     )
 }
