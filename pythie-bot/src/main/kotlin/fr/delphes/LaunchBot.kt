@@ -25,6 +25,7 @@ import fr.delphes.features.twitch.command.NewTwitchCommand
 import fr.delphes.features.twitch.command.twitchCommandMapper
 import fr.delphes.features.twitch.command.type
 import fr.delphes.rework.feature.FeatureDefinition
+import fr.delphes.state.StateManager
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -120,5 +121,5 @@ private fun buildFeatureManager(
     val featureRegistry = DescriptorRegistry.of(twitchCommandMapper)
     val globalDescriptorRegistry = MergeDescriptorRegistry(featureRegistry, outgoingEventRegistry)
 
-    return FeaturesManager(featureRepository, featureRegistry, globalDescriptorRegistry, customFeatures)
+    return FeaturesManager(featureRepository, featureRegistry, globalDescriptorRegistry, StateManager(), customFeatures)
 }

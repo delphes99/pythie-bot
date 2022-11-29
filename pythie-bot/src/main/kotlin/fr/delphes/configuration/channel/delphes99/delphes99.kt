@@ -525,7 +525,11 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
 }
 
 val delphes99CustomFeatures = listOf(
-    CustomCommand(channel, "!customCommand") {
+    CustomCommand(
+        channel,
+        "!customCommand",
+        cooldown = Duration.ofSeconds(10)
+    ) {
         executeOutgoingEvent(SendMessage("New command", channel))
     }
 )

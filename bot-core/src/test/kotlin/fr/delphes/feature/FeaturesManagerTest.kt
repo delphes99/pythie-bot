@@ -22,6 +22,7 @@ internal class FeaturesManagerTest : ShouldSpec({
                 mockk(),
                 mockk(),
                 mockk(),
+                mockk(),
                 listOf(FakeFeatureDefinition(ID, runtime))
             )
 
@@ -34,6 +35,7 @@ internal class FeaturesManagerTest : ShouldSpec({
             var isRuntime2Called = false
             val runtime2 = FakeFeatureRuntime { _, _ -> isRuntime2Called = true }
             val featuresManager = FeaturesManager(
+                mockk(),
                 mockk(),
                 mockk(),
                 mockk(),
