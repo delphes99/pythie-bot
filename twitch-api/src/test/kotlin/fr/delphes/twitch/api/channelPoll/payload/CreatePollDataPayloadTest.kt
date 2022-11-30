@@ -1,13 +1,12 @@
 package fr.delphes.twitch.api.channelPoll.payload
 
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.junit.jupiter.api.Test
 
-internal class CreatePollDataPayloadTest {
-    @Test
-    internal fun deserialize() {
+class CreatePollDataPayloadTest : ShouldSpec({
+    should("deserialize") {
         Serializer.decodeFromString<CreatePollDataPayload>(
             """
             {
@@ -47,4 +46,4 @@ internal class CreatePollDataPayloadTest {
             )
         )
     }
-}
+})

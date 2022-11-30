@@ -4,16 +4,13 @@ import fr.delphes.connector.twitch.incomingEvent.NewSub
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscriptionMessageCondition
 import fr.delphes.twitch.api.user.User
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ShouldSpec
 
-internal class NewSubMessageMapperTest {
-    private val newSubMessageMapper = NewSubMessageMapper()
-
-    @Test
-    internal fun `map to incomingEvent`() {
+class NewSubMessageMapperTest : ShouldSpec({
+    should("map to incomingEvent") {
         "/eventsub/payload/channel.subscription.message.json"
             .shouldBeMappedTo(
-                newSubMessageMapper,
+                NewSubMessageMapper(),
                 ChannelSubscriptionMessageCondition::class,
                 NewSub(
                     TwitchChannel("Cooler_User"),
@@ -21,4 +18,4 @@ internal class NewSubMessageMapperTest {
                 )
             )
     }
-}
+})

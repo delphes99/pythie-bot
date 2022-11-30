@@ -2,6 +2,7 @@ package fr.delphes.feature.featureNew
 
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -11,9 +12,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 
-internal class SimpleFeatureRuntimeTest {
-    @Test
-    internal fun `execute responses when filters are applicable`() {
+internal class SimpleFeatureRuntimeTest : ShouldSpec({
+    should("execute responses when filters are applicable") {
         val runtime = SimpleFeatureRuntime(
             IncomingEventFilters(FILTER_APPLICABLE),
             INITIAL_STATE
@@ -22,8 +22,7 @@ internal class SimpleFeatureRuntimeTest {
         runtime.execute(INCOMING_EVENT).shouldContainExactly(OUTGOING_EVENT)
     }
 
-    @Test
-    internal fun `should not execute responses when filters are not applicable`() {
+    should("should not execute responses when filters are not applicable") {
         val runtime = SimpleFeatureRuntime(
             IncomingEventFilters(FILTER_NOT_APPLICABLE),
             INITIAL_STATE
@@ -32,8 +31,7 @@ internal class SimpleFeatureRuntimeTest {
         runtime.execute(INCOMING_EVENT).shouldBeEmpty()
     }
 
-    @Test
-    internal fun `should save new state when filters are applicable`() {
+    should("should save new state when filters are applicable") {
         val runtime = SimpleFeatureRuntime(
             IncomingEventFilters(FILTER_APPLICABLE),
             INITIAL_STATE
@@ -44,11 +42,8 @@ internal class SimpleFeatureRuntimeTest {
         runtime.state shouldBe NEW_STATE
     }
 
-    @Nested
-    @DisplayName("No State")
-    inner class NoStateTest {
-        @Test
-        internal fun `execute responses`() {
+    context("no state") {
+        should("execute responses") {
             val runtime = SimpleFeatureRuntime.noState(
                 IncomingEventFilters(listOf(IncomingEventFilter { _, _ -> true }))
             ) { listOf(OUTGOING_EVENT) }
@@ -56,8 +51,7 @@ internal class SimpleFeatureRuntimeTest {
             runtime.execute(INCOMING_EVENT).shouldContainExactly(OUTGOING_EVENT)
         }
 
-        @Test
-        internal fun `should not execute responses if filters are off`() {
+        should("should not execute responses if filters are off") {
             val runtime = SimpleFeatureRuntime.noState(
                 IncomingEventFilters(listOf(IncomingEventFilter { _, _ -> false }))
             ) { fail("should not execute") }
@@ -65,7 +59,7 @@ internal class SimpleFeatureRuntimeTest {
             runtime.execute(INCOMING_EVENT).shouldBeEmpty()
         }
     }
-
+}) {
     companion object {
         private val INCOMING_EVENT = mockk<IncomingEvent>()
         private val OUTGOING_EVENT = mockk<OutgoingEvent>()
@@ -75,7 +69,7 @@ internal class SimpleFeatureRuntimeTest {
 
         private val INITIAL_STATE = StateTest("initial state")
         private val NEW_STATE = StateTest("new state")
-    }
 
-    data class StateTest(val value: String) : FeatureState
+        data class StateTest(val value: String) : FeatureState
+    }
 }

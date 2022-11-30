@@ -6,16 +6,13 @@ import fr.delphes.connector.twitch.incomingEvent.PollUpdated
 import fr.delphes.connector.twitch.incomingEvent.PollVote
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelPoll.payload.ChannelPollProgressCondition
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ShouldSpec
 
-internal class ChannelPollProgressMapperTest {
-    private val channelPollProgressMapper = ChannelPollProgressMapper()
-
-    @Test
-    internal fun `map to incomingEvent`() {
+class ChannelPollProgressMapperTest : ShouldSpec({
+    should("map to incomingEvent") {
         "/eventsub/payload/channel.poll.progress.json"
             .shouldBeMappedTo(
-                channelPollProgressMapper,
+                ChannelPollProgressMapper(),
                 ChannelPollProgressCondition::class,
                 PollUpdated(
                     TwitchChannel("Cool_User"),
@@ -36,4 +33,4 @@ internal class ChannelPollProgressMapperTest {
                 )
             )
     }
-}
+})

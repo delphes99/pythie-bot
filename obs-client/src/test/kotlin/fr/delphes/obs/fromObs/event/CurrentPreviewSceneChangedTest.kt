@@ -2,12 +2,11 @@ package fr.delphes.obs.fromObs.event
 
 import fr.delphes.obs.deserialize
 import fr.delphes.obs.fromObs.FromOBSMessagePayload
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 
-internal class CurrentPreviewSceneChangedTest {
-    @Test
-    internal fun deserialize() {
+class CurrentPreviewSceneChangedTest : ShouldSpec({
+    should("deserialize") {
         val payload = "/obs/fromObs/event/CurrentPreviewSceneChanged.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe CurrentPreviewSceneChanged(
@@ -17,4 +16,4 @@ internal class CurrentPreviewSceneChangedTest {
             )
         )
     }
-}
+})

@@ -1,12 +1,11 @@
 package fr.delphes.obs.fromObs
 
 import fr.delphes.obs.deserialize
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 
-internal class IdentifiedTest {
-    @Test
-    internal fun deserialize() {
+class IdentifiedTest : ShouldSpec({
+    should("deserialize") {
         val payload = "/obs/fromObs/Identified.json".deserialize<FromOBSMessagePayload>()
 
         payload shouldBe Identified(
@@ -15,5 +14,4 @@ internal class IdentifiedTest {
             )
         )
     }
-
-}
+})

@@ -3,20 +3,17 @@ package fr.delphes.connector.twitch.eventMapper
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.streamOffline.payload.StreamOfflineCondition
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ShouldSpec
 
-internal class StreamOfflineMapperTest {
-    private val streamOfflineMapper = StreamOfflineMapper()
-
-    @Test
-    internal fun `map to incomingEvent`() {
+class StreamOfflineMapperTest : ShouldSpec({
+    should("map to incomingEvent") {
         "/eventsub/payload/stream.offline.json"
             .shouldBeMappedTo(
-                streamOfflineMapper,
+                StreamOfflineMapper(),
                 StreamOfflineCondition::class,
                 StreamOffline(
                     TwitchChannel("Cool_User")
                 )
             )
     }
-}
+})

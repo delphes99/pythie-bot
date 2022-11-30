@@ -6,36 +6,31 @@ import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.Clock
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.LocalDateTime
 
-internal class SimpleCommandHandlerTest {
-    private val clock = mockk<Clock>()
-    private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
-    private val bot = mockk<Bot>()
-    private val channel = TwitchChannel("channel")
+class SimpleCommandHandlerTest : ShouldSpec({
+    val clock = mockk<Clock>()
+    val bot = mockk<Bot>()
 
-    @BeforeEach
-    internal fun setUp() {
+    fun `given now`(now: LocalDateTime) {
+        every { clock.now() } returns now
+    }
+
+    beforeTest {
         clearAllMocks()
 
         `given now`(now)
     }
 
-    private fun `given now`(now: LocalDateTime) {
-        every { clock.now() } returns now
-    }
-
-    @Test
-    internal suspend fun `trigger command`() {
+    should("trigger command") {
         val command = Command("!cmd")
         val simpleCommand = SimpleCommandHandler(
             channel = channel,
@@ -52,8 +47,7 @@ internal class SimpleCommandHandlerTest {
         )
     }
 
-    @Test
-    internal suspend fun `don't trigger command if too frequent`() {
+    should("don't trigger command if too frequent") {
         val command = Command("!cmd")
         val simpleCommand = SimpleCommandHandler(
             channel = channel,
@@ -73,8 +67,7 @@ internal class SimpleCommandHandlerTest {
         simpleCommand.handle(event, bot).shouldBeEmpty()
     }
 
-    @Test
-    internal suspend fun `trigger command if after cooldown`() {
+    should("trigger command if after cooldown") {
         val command = Command("!cmd")
         val simpleCommand = SimpleCommandHandler(
             channel = channel,
@@ -92,5 +85,10 @@ internal class SimpleCommandHandlerTest {
 
         `given now`(now.plusMinutes(15))
         simpleCommand.handle(event, bot).shouldNotBeEmpty()
+    }
+}) {
+    companion object {
+        private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
+        private val channel = TwitchChannel("channel")
     }
 }

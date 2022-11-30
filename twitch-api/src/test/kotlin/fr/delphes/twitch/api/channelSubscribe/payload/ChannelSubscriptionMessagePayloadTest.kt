@@ -4,13 +4,12 @@ import fr.delphes.twitch.api.channelSubscribe.SubscribeTier.TIER_1
 import fr.delphes.twitch.api.payload.MessageEmotePayload
 import fr.delphes.twitch.api.payload.MessagePayload
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.junit.jupiter.api.Test
 
-internal class ChannelSubscriptionMessagePayloadTest {
-    @Test
-    internal fun deserialize() {
+class ChannelSubscriptionMessagePayloadTest : ShouldSpec({
+    should("deserialize") {
         Serializer.decodeFromString<ChannelSubscriptionMessagePayload>(
             """
             {
@@ -61,4 +60,4 @@ internal class ChannelSubscriptionMessagePayloadTest {
             )
         )
     }
-}
+})

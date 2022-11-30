@@ -1,13 +1,12 @@
 package fr.delphes.twitch.api.channelRaid.payload
 
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.junit.jupiter.api.Test
 
-internal class ChannelRaidPayloadTest {
-    @Test
-    internal fun deserialize() {
+class ChannelRaidPayloadTest : ShouldSpec({
+    should("deserialize") {
         Serializer.decodeFromString<ChannelRaidPayload>(
             """
                 {
@@ -32,4 +31,4 @@ internal class ChannelRaidPayloadTest {
             )
         )
     }
-}
+})

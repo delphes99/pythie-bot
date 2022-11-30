@@ -36,11 +36,14 @@ class StateManagerTest : ShouldSpec({
 
         stateManager.get<TestState>(stateId) shouldBe addedState
     }
-})
+}) {
+    companion object {
+        private val stateId = StateId("test id")
+        private val anotherStateId = StateId("other test id")
 
-val stateId = StateId("test id")
-val anotherStateId = StateId("other test id")
+        private class TestState(
+            override val id: StateId = stateId
+        ) : State
+    }
+}
 
-private class TestState(
-    override val id: StateId = stateId
-) : State

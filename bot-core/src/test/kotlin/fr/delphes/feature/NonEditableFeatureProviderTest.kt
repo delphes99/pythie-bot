@@ -1,20 +1,19 @@
 package fr.delphes.feature
 
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Test
+import kotlinx.coroutines.test.runTest
 
-internal class NonEditableFeatureProviderTest {
-    @Test
-    internal fun `keep non editable features`() {
-        runBlocking {
+class NonEditableFeatureProviderTest : ShouldSpec({
+    should("keep non editable features") {
+        runTest {
             val manager = NonEditableFeatureProvider(
                 listOf(
-                    PersonnaFeature.WORKING
+                    PersonaFeature.WORKING
                 )
             )
 
-            manager.get().shouldContainExactlyInAnyOrder(PersonnaFeature.WORKING)
+            manager.get().shouldContainExactlyInAnyOrder(PersonaFeature.WORKING)
         }
     }
-}
+})

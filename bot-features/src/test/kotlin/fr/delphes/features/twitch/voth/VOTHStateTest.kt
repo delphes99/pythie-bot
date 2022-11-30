@@ -1,18 +1,14 @@
 package fr.delphes.features.twitch.voth
 
 import fr.delphes.twitch.api.user.User
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.LocalDateTime
 
-internal class VOTHStateTest {
-    private val NOW = LocalDateTime.of(2020, 7, 1, 10, 0)
-    private val USER = User("user")
-
-    @Test
-    internal fun `list previous reigns for user`() {
+class VOTHStateTest : ShouldSpec({
+    should("list previous reigns for user") {
         val reign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val state =
             VOTHState(previousReigns = mutableListOf(reign))
@@ -20,8 +16,7 @@ internal class VOTHStateTest {
         state.getReignsFor(USER, NOW) shouldBe Stats(USER, reign)
     }
 
-    @Test
-    internal fun `list previous reigns and current reign`() {
+    should("list previous reigns and current reign") {
         val previousReign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), 25)
         val state =
@@ -38,8 +33,7 @@ internal class VOTHStateTest {
 
     }
 
-    @Test
-    internal fun `get top 3`() {
+    should("get top 3") {
         val user1 = User("user1")
         val user2 = User("user2")
         val user3 = User("user3")
@@ -79,8 +73,7 @@ internal class VOTHStateTest {
         )
     }
 
-    @Test
-    internal fun `freeze current reign when pause`() {
+    should("freeze current reign when pause") {
         val previousReign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val currentReignCost = 25L
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), currentReignCost)
@@ -95,8 +88,7 @@ internal class VOTHStateTest {
         state.currentVip shouldBe VOTHWinner("user", null, currentReignCost, listOf(Duration.ofMinutes(15)))
     }
 
-    @Test
-    internal fun `restart current reign from now when unpause`() {
+    should("restart current reign from now when unpause") {
         val previousReign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val currentReignCost = 25L
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), currentReignCost)
@@ -119,8 +111,7 @@ internal class VOTHStateTest {
         )
     }
 
-    @Test
-    internal fun `multiple pause and unpause`() {
+    should("multiple pause and unpause") {
         val previousReign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val currentReignCost = 25L
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), currentReignCost)
@@ -146,8 +137,7 @@ internal class VOTHStateTest {
         )
     }
 
-    @Test
-    internal fun `last reigns`() {
+    should("last reigns") {
         val previousReign1 = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val previousReign2 = VOTHReign(User("user2"), Duration.ofMinutes(5), 50)
         val previousReign3 = VOTHReign(USER, Duration.ofMinutes(5), 50)
@@ -169,5 +159,10 @@ internal class VOTHStateTest {
             previousReign2,
             previousReign1
         )
+    }
+}) {
+    companion object {
+        private val NOW = LocalDateTime.of(2020, 7, 1, 10, 0)
+        private val USER = User("user")
     }
 }

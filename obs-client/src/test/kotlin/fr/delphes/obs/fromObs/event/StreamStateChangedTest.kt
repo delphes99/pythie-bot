@@ -2,12 +2,11 @@ package fr.delphes.obs.fromObs.event
 
 import fr.delphes.obs.deserialize
 import fr.delphes.obs.fromObs.FromOBSMessagePayload
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 
-internal class StreamStateChangedTest {
-    @Test
-    internal fun deserialize() {
+class StreamStateChangedTest : ShouldSpec({
+    should("deserialize") {
         val payload = "/obs/fromObs/event/StreamStateChanged.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe StreamStateChanged(
@@ -18,4 +17,4 @@ internal class StreamStateChangedTest {
             )
         )
     }
-}
+})

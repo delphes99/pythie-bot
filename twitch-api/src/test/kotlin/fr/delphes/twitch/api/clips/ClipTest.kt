@@ -3,14 +3,13 @@ package fr.delphes.twitch.api.clips
 import fr.delphes.twitch.api.clips.payload.GetClips
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-internal class ClipTest {
-    @Test
-    fun `deserialize`() {
+class ClipTest : ShouldSpec({
+    should("deserialize") {
         val payloadStr = """
             {
               "data": [
@@ -60,4 +59,4 @@ internal class ClipTest {
             )
         )
     }
-}
+})

@@ -20,6 +20,7 @@ import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.RewardId
 import fr.delphes.twitch.api.user.User
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -30,134 +31,95 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-internal class VOTHTest {
-    private val channel = TwitchChannel("channel")
-    private val rewardName = "voth"
-    private val reward = RewardConfiguration(rewardName, 100)
-    private val rewardRedemption = RewardRedemption(channel, RewardId("id", rewardName), "user", 50)
-    private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
-    private val defaultState = VOTHState(true, VOTHWinner("oldVip", now.minusMinutes(5), 50))
-    private val clock = TestClock(now)
-    private val configuration = VOTHConfiguration(
-        reward,
-        { emptyList() },
-        "!cmdstats",
-        { emptyList() },
-        "!top3",
-        { _, _, _ -> emptyList() })
+class VOTHTest : ShouldSpec({
     val clientBot = mockk<Bot>()
 
-    @Nested
-    @DisplayName("RewardRedemption")
-    inner class RewardRedemptionHandlers {
-        @Test
-        internal fun `promote vip`() {
+    context("RewardRedemption") {
+        should("promote vip") {
             val voth = voth(VOTHState())
 
-            runBlocking {
-                voth.handleIncomingEvent(rewardRedemption, clientBot)
-            }
+            voth.handleIncomingEvent(rewardRedemption, clientBot)
+
             voth.currentVip shouldBe VOTHWinner("user", now, 50)
             voth.vothChanged.shouldBeTrue()
         }
 
-        @Test
-        internal fun `don't promote vip if already VOTH`() {
+        should("don't promote vip if already VOTH") {
             val state = VOTHState(currentVip = VOTHWinner("user", now.minusMinutes(1), 50))
             val voth = voth(state)
 
-            runBlocking {
-                voth.handleIncomingEvent(rewardRedemption, clientBot)
-            }
+            voth.handleIncomingEvent(rewardRedemption, clientBot)
+
             voth.currentVip shouldBe VOTHWinner("user", now.minusMinutes(1), 50)
             voth.vothChanged.shouldBeFalse()
         }
 
-        @Test
-        internal fun `redeem launch vip list`() {
+        should("redeem launch vip list") {
             val voth = voth()
-            val messages = runBlocking {
-                voth.handleIncomingEvent(rewardRedemption, clientBot)
-            }
+
+            val messages = voth.handleIncomingEvent(rewardRedemption, clientBot)
+
             messages.shouldContain(RetrieveVip(channel))
         }
     }
 
-    @Nested
-    @DisplayName("VIPListReceived")
-    inner class VipListReceivedHandlers {
-        @Test
-        internal fun `remove all old vip`() {
+    context("VIPListReceived") {
+        should("remove all old vip") {
             val voth = voth()
 
-            val messages = runBlocking {
-                voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
-            }
+            val messages = voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+
             messages.shouldContainAll(
                 RemoveVIP("oldVip", channel),
                 RemoveVIP("oldVip2", channel)
             )
         }
 
-        @Test
-        internal fun `promote vip`() {
+        should("promote vip") {
             val state = VOTHState(true, VOTHWinner("newVip", now.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = runBlocking {
-                voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
-            }
+            val messages = voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+
             messages.shouldContain(
                 PromoteVIP("newVip", channel)
             )
         }
 
-        @Test
-        internal fun `do nothing when on vip change`() {
+        should("do nothing when on vip change") {
             val state = VOTHState(false, VOTHWinner("user", now.minusMinutes(1), 50))
             val voth = voth(state)
 
-            val messages = runBlocking {
-                voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
-            }
+            val messages = voth.handleIncomingEvent(VIPListReceived(channel, "oldVip", "oldVip2"), clientBot)
+
             messages.shouldBeEmpty()
         }
     }
 
-    @Test
-    internal fun `pause when stream goes offline`() {
+    should("pause when stream goes offline") {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val messages = runBlocking {
-            voth.handleIncomingEvent(StreamOffline(channel), clientBot)
-        }
+        val messages = voth.handleIncomingEvent(StreamOffline(channel), clientBot)
 
         verify(exactly = 1) { state.pause(any()) }
         messages.shouldBeEmpty()
     }
 
-    @Test
-    internal fun `unpause when stream goes online`() {
+    should("unpause when stream goes online") {
         val state = mockk<VOTHState>(relaxed = true)
         val voth = voth(state)
 
         val incomingEvent = StreamOnline(channel, "id", "title", now, Game(GameId("gameId"), "game title"), "thumbnailUrl")
-        val messages = runBlocking {
-            voth.handleIncomingEvent(incomingEvent, clientBot)
-        }
+        val messages = voth.handleIncomingEvent(incomingEvent, clientBot)
 
         verify(exactly = 1) { state.unpause(any()) }
         messages.shouldBeEmpty()
     }
 
-    @Test
-    internal fun `display top 3`() {
+    should("display top 3") {
         val state = mockk<VOTHState>(relaxed = true)
         every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
 
@@ -177,20 +139,35 @@ internal class VOTHTest {
         val bot = mockk<Bot>()
         every { bot.connectors } returns listOf(mockk<TwitchConnector>())
 
-        val events = runBlocking {
-            voth.handleIncomingEvent(CommandAsked(channel, Command("!top3"), User("user")), bot)
-        }
+        val events = voth.handleIncomingEvent(CommandAsked(channel, Command("!top3"), User("user")), bot)
 
         events.shouldContain(SendMessage("user1, user2, user3", channel))
     }
+}) {
+    companion object {
+        private val channel = TwitchChannel("channel")
+        private const val rewardName = "voth"
+        private val reward = RewardConfiguration(rewardName, 100)
+        private val rewardRedemption = RewardRedemption(channel, RewardId("id", rewardName), "user", 50)
+        private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
+        private val defaultState = VOTHState(true, VOTHWinner("oldVip", now.minusMinutes(5), 50))
+        private val clock = TestClock(now)
+        private val configuration = VOTHConfiguration(
+            reward,
+            { emptyList() },
+            "!cmdstats",
+            { emptyList() },
+            "!top3",
+            { _, _, _ -> emptyList() })
 
-    private fun voth(state: VOTHState = defaultState): VOTH {
-        return VOTH(
-            channel,
-            configuration,
-            stateRepository = TestStateRepository { state },
-            state = state,
-            clock = clock
-        )
+        private fun voth(state: VOTHState = defaultState): VOTH {
+            return VOTH(
+                channel,
+                configuration,
+                stateRepository = TestStateRepository { state },
+                state = state,
+                clock = clock
+            )
+        }
     }
 }

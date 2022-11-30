@@ -2,19 +2,16 @@ package fr.delphes.feature.featureNew
 
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
 
-internal class FeatureHandlerTest {
-    @Nested
-    inner class LoadConfiguration {
-        @Test
-        internal fun init() {
+class FeatureHandlerTest : ShouldSpec({
+    context("Load configuration") {
+        should("init") {
             val featureHandler = FeatureHandler()
 
             featureHandler.load(listOf())
@@ -23,8 +20,7 @@ internal class FeatureHandlerTest {
             featureHandler.configurations shouldBe emptyList()
         }
 
-        @Test
-        internal fun `load a configuration`() {
+        should("load a configuration") {
             val featureHandler = FeatureHandler()
 
             val runtime = SimpleFeatureRuntime.noState()
@@ -36,8 +32,7 @@ internal class FeatureHandlerTest {
             featureHandler.configurations.shouldContainExactly(configuration)
         }
 
-        @Test
-        internal fun `replace a configuration`() {
+        should("replace a configuration") {
             val identifier = "id"
             val oldRuntime = SimpleFeatureRuntime.noState()
             val configuration = FeatureConfigurationTest(
@@ -55,11 +50,8 @@ internal class FeatureHandlerTest {
             featureHandler.configurations.shouldContainExactly(newConfiguration)
         }
     }
-
-    @Nested
-    inner class HandleIncomingEvent {
-        @Test
-        internal fun `dispatch incoming event responses`() {
+    context("handle incoming event") {
+        should("dispatch incoming event responses") {
             val incomingEvent = mockk<IncomingEvent>()
             val outgoingEvent = mockk<OutgoingEvent>()
 
@@ -75,17 +67,21 @@ internal class FeatureHandlerTest {
             outgoingEvents.shouldContainExactly(outgoingEvent)
         }
     }
-}
+}) {
+    companion object {
 
-private class FeatureConfigurationTest(
-    override val identifier: String,
-    private val runtimeToBuild: SimpleFeatureRuntime<NoState>
-) : FeatureConfiguration<NoState> {
-    override fun buildRuntime(): SimpleFeatureRuntime<NoState> {
-        return runtimeToBuild
-    }
 
-    override fun description(serializer: Json): FeatureDescription {
-        error("no serializer for test")
+        private class FeatureConfigurationTest(
+            override val identifier: String,
+            private val runtimeToBuild: SimpleFeatureRuntime<NoState>
+        ) : FeatureConfiguration<NoState> {
+            override fun buildRuntime(): SimpleFeatureRuntime<NoState> {
+                return runtimeToBuild
+            }
+
+            override fun description(serializer: Json): FeatureDescription {
+                error("no serializer for test")
+            }
+        }
     }
 }

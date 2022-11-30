@@ -1,15 +1,14 @@
 package fr.delphes.feature
 
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Test
+import kotlinx.coroutines.test.runTest
 
-internal class FeaturePlatformTest {
-    @Test
-    internal fun `no runtime if no feature`() {
-        runBlocking {
+class FeaturePlatformTest : ShouldSpec({
+    should("no runtime if no feature") {
+        runTest {
             val repository = TestFeatureRepository()
 
             val manager = FeaturePlatform(repository)
@@ -19,9 +18,8 @@ internal class FeaturePlatformTest {
         }
     }
 
-    @Test
-    internal fun `map runtime`() {
-        runBlocking {
+    should("map runtime") {
+        runTest {
             val repository = TestFeatureRepository(FEATURE)
 
             val manager = FeaturePlatform(repository)
@@ -31,9 +29,8 @@ internal class FeaturePlatformTest {
         }
     }
 
-    @Test
-    internal fun `map only feature that can build runtime`() {
-        runBlocking {
+    should("map only feature that can build runtime") {
+        runTest {
             val repository = TestFeatureRepository(FEATURE, FEATURE_WHICH_CAN_NOT_BUILD_RUNTIME)
 
             val manager = FeaturePlatform(repository)
@@ -43,9 +40,8 @@ internal class FeaturePlatformTest {
         }
     }
 
-    @Test
-    internal fun `failure don't make other features to fail`() {
-        runBlocking {
+    should("failure don't make other features to fail") {
+        runTest {
             val repository = TestFeatureRepository(FEATURE, FEATURE_WITH_FAILURE)
 
             val manager = FeaturePlatform(repository)
@@ -55,6 +51,8 @@ internal class FeaturePlatformTest {
         }
     }
 
+
+}) {
     companion object {
         private val FEATURE_RUNTIME = mockk<ExperimentalFeatureRuntime>()
         private val FEATURE = object : ExperimentalFeature<ExperimentalFeatureRuntime> {
@@ -72,7 +70,9 @@ internal class FeaturePlatformTest {
         private val FEATURE_WITH_FAILURE = object : ExperimentalFeature<ExperimentalFeatureRuntime> {
             override val id = "feature"
 
-            override fun buildRuntime(): ExperimentalFeatureRuntime? { throw RuntimeException("Something went wrong.") }
+            override fun buildRuntime(): ExperimentalFeatureRuntime? {
+                throw RuntimeException("Something went wrong.")
+            }
         }
     }
 }

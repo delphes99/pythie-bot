@@ -5,16 +5,13 @@ import fr.delphes.connector.twitch.incomingEvent.Poll
 import fr.delphes.connector.twitch.incomingEvent.PollChoice
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelPoll.payload.ChannelPollBeginCondition
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ShouldSpec
 
-internal class ChannelPollBeginMapperTest {
-    private val channelPollBeginMapper = ChannelPollBeginMapper()
-
-    @Test
-    internal fun `map to incomingEvent`() {
+class ChannelPollBeginMapperTest : ShouldSpec({
+    should("map to incomingEvent") {
         "/eventsub/payload/channel.poll.begin.json"
             .shouldBeMappedTo(
-                channelPollBeginMapper,
+                ChannelPollBeginMapper(),
                 ChannelPollBeginCondition::class,
                 NewPoll(
                     TwitchChannel("Cool_User"),
@@ -30,4 +27,4 @@ internal class ChannelPollBeginMapperTest {
                 )
             )
     }
-}
+})

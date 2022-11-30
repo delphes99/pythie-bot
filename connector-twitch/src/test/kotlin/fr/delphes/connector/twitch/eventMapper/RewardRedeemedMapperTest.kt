@@ -5,16 +5,13 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionCondition
 import fr.delphes.twitch.api.reward.RewardId
 import fr.delphes.twitch.api.user.User
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ShouldSpec
 
-internal class RewardRedeemedMapperTest {
-    private val rewardRedeemedMapper = RewardRedeemedMapper()
-
-    @Test
-    internal fun `map to incomingEvent`() {
+class RewardRedeemedMapperTest : ShouldSpec({
+    should("map to incomingEvent") {
         "/eventsub/payload/channel.points.custom.reward.redemption.add.json"
             .shouldBeMappedTo(
-                rewardRedeemedMapper,
+                RewardRedeemedMapper(),
                 ChannelPointsCustomRewardRedemptionCondition::class,
                 RewardRedemption(
                     channel = TwitchChannel("Cool_User"),
@@ -27,4 +24,4 @@ internal class RewardRedeemedMapperTest {
                 )
             )
     }
-}
+})

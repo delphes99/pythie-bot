@@ -3,12 +3,11 @@ package fr.delphes.obs.fromObs.requestResponse
 import fr.delphes.obs.deserialize
 import fr.delphes.obs.fromObs.FromOBSMessagePayload
 import fr.delphes.obs.fromObs.RequestStatus
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 
-internal class SetSceneItemEnabledTest {
-    @Test
-    internal fun deserialize() {
+class SetSceneItemEnabledTest : ShouldSpec({
+    should("deserialize") {
         val payload = "/obs/fromObs/requestResponse/SetSceneItemEnabled.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe SetSceneItemEnabled(
@@ -19,4 +18,4 @@ internal class SetSceneItemEnabledTest {
             )
         )
     }
-}
+})

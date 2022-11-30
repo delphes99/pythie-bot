@@ -4,16 +4,13 @@ import fr.delphes.connector.twitch.incomingEvent.IncomingRaid
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelRaid.payload.ChannelRaidCondition
 import fr.delphes.twitch.api.user.User
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ShouldSpec
 
-internal class IncomingRaidMapperTest {
-    private val incomingRaidMapper = IncomingRaidMapper()
-
-    @Test
-    internal fun `map to incomingEvent`() {
+class IncomingRaidMapperTest : ShouldSpec({
+    should("map to incomingEvent") {
         "/eventsub/payload/channel.raid.json"
             .shouldBeMappedTo(
-                incomingRaidMapper,
+                IncomingRaidMapper(),
                 ChannelRaidCondition::class,
                 IncomingRaid(
                     TwitchChannel("Cooler_User"),
@@ -22,4 +19,4 @@ internal class IncomingRaidMapperTest {
                 )
             )
     }
-}
+})

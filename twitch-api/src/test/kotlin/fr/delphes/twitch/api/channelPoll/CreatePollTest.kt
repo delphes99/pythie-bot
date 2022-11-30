@@ -3,13 +3,12 @@ package fr.delphes.twitch.api.channelPoll
 import fr.delphes.twitch.api.channelPoll.payload.CreatePollQuery
 import fr.delphes.utils.serialization.Serializer
 import io.kotest.assertions.json.shouldEqualJson
+import io.kotest.core.spec.style.ShouldSpec
 import kotlinx.serialization.encodeToString
-import org.junit.jupiter.api.Test
 import java.time.Duration
 
-internal class CreatePollTest {
-    @Test
-    internal fun serialize() {
+class CreatePollTest : ShouldSpec({
+    should("serialize") {
         val createPoll = CreatePoll(
             title = "Heads or Tails?",
             choices = listOf(
@@ -40,4 +39,4 @@ internal class CreatePollTest {
             """
         )
     }
-}
+})

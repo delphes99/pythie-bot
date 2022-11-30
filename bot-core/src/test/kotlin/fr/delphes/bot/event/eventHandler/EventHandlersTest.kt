@@ -1,18 +1,14 @@
 package fr.delphes.bot.event.eventHandler
 
 import fr.delphes.bot.event.incoming.IncomingEvent
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Test
 
-internal class EventHandlersTest {
-    class EventA : IncomingEvent
-    class EventB : IncomingEvent
-
-    @Test
-    internal fun `get handler by event type`() {
+class EventHandlersTest : ShouldSpec({
+    should("get handler by event type") {
         val handlerA = mockk<LegacyEventHandler<EventA>>()
         val handlerB = mockk<LegacyEventHandler<EventB>>()
         val handlerBbis = mockk<LegacyEventHandler<EventB>>()
@@ -26,8 +22,7 @@ internal class EventHandlersTest {
         eventHandlers.getHandlers<EventB>().shouldContainExactly(handlerB, handlerBbis)
     }
 
-    @Test
-    internal fun `handle event by event type`() {
+    should("handle event by event type") {
         val handlerA = mockk<LegacyEventHandler<EventA>>(relaxed = true)
 
         val eventHandlers = LegacyEventHandlers.builder()
@@ -40,5 +35,10 @@ internal class EventHandlersTest {
         }
 
         coVerify(exactly = 1) { handlerA.handle(event, any()) }
+    }
+}) {
+    companion object {
+        private class EventA : IncomingEvent
+        private class EventB : IncomingEvent
     }
 }

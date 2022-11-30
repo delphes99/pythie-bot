@@ -1,14 +1,13 @@
 package fr.delphes.twitch.api.video.payload
 
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-internal class ChannelVideosPayloadTest {
-    @Test
-    internal fun deserialize() {
+class ChannelVideosPayloadTest : ShouldSpec({
+    should("deserialize") {
         val payload = """
             {
               "data": [
@@ -54,4 +53,4 @@ internal class ChannelVideosPayloadTest {
             )
         )
     }
-}
+})

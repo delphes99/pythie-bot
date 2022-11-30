@@ -15,12 +15,7 @@ import io.mockk.mockk
 import java.time.Duration
 import java.time.LocalDateTime
 
-private val NOW = LocalDateTime.of(2021, 1, 1, 0, 0, 0)
-
 class CustomCommandTest : ShouldSpec({
-    val CHANNEL = TwitchChannel("channel")
-    val FEATURE_ID = "featureId"
-
     should("should register a command message handler") {
         var isCalled = false
         val runtime = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
@@ -119,4 +114,10 @@ class CustomCommandTest : ShouldSpec({
 
         isCalled shouldBe true
     }
-})
+}) {
+    companion object {
+        private val NOW = LocalDateTime.of(2021, 1, 1, 0, 0, 0)
+        private val CHANNEL = TwitchChannel("channel")
+        private const val FEATURE_ID = "featureId"
+    }
+}

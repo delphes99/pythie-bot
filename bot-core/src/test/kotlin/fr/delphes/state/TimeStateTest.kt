@@ -8,8 +8,6 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 class TimeStateTest : ShouldSpec({
-    val A_DATE = LocalDateTime.of(2021, 1, 1, 0, 0, 0)
-
     should("return null if state does not exist") {
         val state = TimeState()
 
@@ -48,4 +46,8 @@ class TimeStateTest : ShouldSpec({
 
         state.hasMoreThan(Duration.ofHours(3)) shouldBe false
     }
-})
+}) {
+    companion object {
+        private val A_DATE = LocalDateTime.of(2021, 1, 1, 0, 0, 0)
+    }
+}

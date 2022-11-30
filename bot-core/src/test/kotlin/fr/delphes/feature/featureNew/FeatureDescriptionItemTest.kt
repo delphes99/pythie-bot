@@ -1,16 +1,13 @@
 package fr.delphes.feature.featureNew
 
 import io.kotest.assertions.json.shouldEqualJson
+import io.kotest.core.spec.style.ShouldSpec
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Test
 
-internal class FeatureDescriptionItemTest {
-    private val JSON = Json { }
-
-    @Test
-    internal fun `serialize string`() {
+class FeatureDescriptionItemTest : ShouldSpec({
+    should("serialize string") {
         val featureDescriptionItem = FeatureDescriptionItem.build(
             FeatureDescriptionItemType.STRING,
             "toto",
@@ -27,8 +24,7 @@ internal class FeatureDescriptionItemTest {
         """.trimIndent()
     }
 
-    @Test
-    internal fun `serialize serializable item`() {
+    should("serialize serializable item") {
         val featureDescriptionItem = FeatureDescriptionItem.build(
             FeatureDescriptionItemType.STRING,
             "toto",
@@ -46,7 +42,13 @@ internal class FeatureDescriptionItemTest {
             }
         """.trimIndent()
     }
+}) {
+    companion object {
+        private val JSON = Json {
+            prettyPrint = true
+        }
 
-    @Serializable
-    private class SerializableItem(val value: String)
+        @Serializable
+        private class SerializableItem(val value: String)
+    }
 }

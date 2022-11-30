@@ -6,16 +6,13 @@ import fr.delphes.connector.twitch.incomingEvent.PollClosed
 import fr.delphes.connector.twitch.incomingEvent.PollVote
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelPoll.payload.ChannelPollEndCondition
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ShouldSpec
 
-internal class ChannelPollEndMapperTest {
-    private val channelPollEndMapper = ChannelPollEndMapper()
-
-    @Test
-    internal fun `map to incomingEvent`() {
+class ChannelPollEndMapperTest : ShouldSpec({
+    should("map to incomingEvent") {
         "/eventsub/payload/channel.poll.end.json"
             .shouldBeMappedTo(
-                channelPollEndMapper,
+                ChannelPollEndMapper(),
                 ChannelPollEndCondition::class,
                 PollClosed(
                     TwitchChannel("Cool_User"),
@@ -36,4 +33,4 @@ internal class ChannelPollEndMapperTest {
                 )
             )
     }
-}
+})

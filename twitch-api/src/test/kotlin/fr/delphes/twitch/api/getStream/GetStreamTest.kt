@@ -3,14 +3,13 @@ package fr.delphes.twitch.api.getStream
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
 import fr.delphes.utils.serialization.Serializer
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
-import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-internal class GetStreamTest {
-    @Test
-    fun `deserialize GetStream with empty tags`() {
+class GetStreamTest : ShouldSpec({
+    should("deserialize GetStream with empty tags") {
         val payloadStr = """
             {
               "data": [
@@ -51,4 +50,4 @@ internal class GetStreamTest {
             )
         )
     }
-}
+})

@@ -4,16 +4,13 @@ import fr.delphes.connector.twitch.incomingEvent.BitCheered
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelCheer.payload.ChannelCheerCondition
 import fr.delphes.twitch.api.user.User
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ShouldSpec
 
-internal class ChannelBitsMapperTest {
-    private val channelBitsMapper = ChannelBitsMapper()
-
-    @Test
-    internal fun `map to incomingEvent`() {
+class ChannelBitsMapperTest : ShouldSpec({
+    should("map to incomingEvent") {
         "/eventsub/payload/channel.cheer.json"
             .shouldBeMappedTo(
-                channelBitsMapper,
+                ChannelBitsMapper(),
                 ChannelCheerCondition::class,
                 BitCheered(
                     TwitchChannel("Cooler_User"),
@@ -23,4 +20,4 @@ internal class ChannelBitsMapperTest {
                 )
             )
     }
-}
+})

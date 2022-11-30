@@ -3,12 +3,11 @@ package fr.delphes.bot.connector.state.endpoint
 import fr.delphes.bot.connector.status.ConnectorConnectionStatus
 import fr.delphes.bot.connector.status.ConnectorStatus
 import fr.delphes.bot.connector.status.toOutput
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 
-internal class ConnectorStatusOutputTest {
-    @Test
-    internal fun `one connection returns the status of the connection`() {
+class ConnectorStatusOutputTest : ShouldSpec({
+    should("one connection returns the status of the connection") {
         val connectorStatus = ConnectorStatus(
             mapOf(
                 "connection successful" to ConnectorConnectionStatus.Connected,
@@ -31,4 +30,4 @@ internal class ConnectorStatusOutputTest {
             )
         )
     }
-}
+})

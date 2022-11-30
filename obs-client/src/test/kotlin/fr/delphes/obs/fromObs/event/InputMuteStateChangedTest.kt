@@ -2,12 +2,11 @@ package fr.delphes.obs.fromObs.event
 
 import fr.delphes.obs.deserialize
 import fr.delphes.obs.fromObs.FromOBSMessagePayload
+import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 
-internal class InputMuteStateChangedTest {
-    @Test
-    internal fun deserialize() {
+class InputMuteStateChangedTest : ShouldSpec({
+    should("deserialize") {
         val payload = "/obs/fromObs/event/InputMuteStateChanged.json".deserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe InputMuteStateChanged(
@@ -18,4 +17,4 @@ internal class InputMuteStateChangedTest {
             )
         )
     }
-}
+})
