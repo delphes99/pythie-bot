@@ -1,8 +1,12 @@
 package fr.delphes.state
 
+import fr.delphes.utils.time.Clock
+import fr.delphes.utils.time.SystemClock
 import kotlin.reflect.KClass
 
-class StateManager {
+class StateManager(
+    val clock: Clock = SystemClock
+) {
     @PublishedApi
     internal val map = mutableMapOf<KClass<*>, MutableMap<StateId, out State>>()
 
@@ -23,19 +27,9 @@ class StateManager {
         return actualValue as T
     }
 
-    companion object {
-        fun builder() = Builder()
 
-        class Builder {
-            @PublishedApi
-            internal val instance = StateManager()
-
-            inline fun <reified U : State> addState(state: U): Builder {
-                instance.put(state)
-                return this
-            }
-
-            fun build() = this.instance
-        }
+    inline fun <reified U : State> withState(state: U): StateManager {
+        put(state)
+        return this
     }
 }

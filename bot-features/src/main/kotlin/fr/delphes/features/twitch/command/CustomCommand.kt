@@ -11,7 +11,6 @@ import fr.delphes.state.StateId
 import fr.delphes.state.StateManager
 import fr.delphes.state.TimeState
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.utils.time.Clock
 import fr.delphes.utils.uuid.uuid
 import java.time.Duration
 
@@ -25,14 +24,13 @@ class CustomCommand(
     private val triggerCommand = Command(trigger)
     override val commands = setOf(triggerCommand)
 
-    override fun buildRuntime(stateManager: StateManager, clock: Clock): SimpleFeatureRuntime {
-        val lastCallState = stateManager.getOrPut(StateId(id.value)) { TimeState(StateId(id.value)) }
+    override fun buildRuntime(stateManager: StateManager): SimpleFeatureRuntime {
+        val lastCallState = stateManager.getOrPut(StateId(id.value)) { TimeState(StateId(id.value), clock = stateManager.clock) }
 
         val eventHandlers = EventHandlers.of { event: CommandAsked, bot ->
             if (event.command == triggerCommand && event.channel == channel) {
-                val now = clock.now()
-                if(lastCallState.getValue()?.plus(cooldown)?.isBefore(now) != false)  {
-                    lastCallState.put(now)
+                if(lastCallState.hasMoreThan(cooldown))  {
+                    lastCallState.putNow()
                     CustomCommandParameters(bot, event).action()
                 }
             }

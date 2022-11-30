@@ -24,7 +24,7 @@ class CustomCommandTest : ShouldSpec({
     should("should register a command message handler") {
         var isCalled = false
         val runtime = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
-            .buildRuntime(StateManager(), TestClock(NOW))
+            .buildRuntime(StateManager(TestClock(NOW)))
 
         runtime.handleIncomingEvent(
             CommandAsked(
@@ -41,7 +41,7 @@ class CustomCommandTest : ShouldSpec({
     should("not call action if trigger does not match") {
         var isCalled = false
         val runtime = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
-            .buildRuntime(StateManager(), TestClock(NOW))
+            .buildRuntime(StateManager(TestClock(NOW)))
 
         runtime.handleIncomingEvent(
             CommandAsked(
@@ -58,7 +58,7 @@ class CustomCommandTest : ShouldSpec({
     should("not call action if channel does not match") {
         var isCalled = false
         val runtime = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
-            .buildRuntime(StateManager(), TestClock(NOW))
+            .buildRuntime(StateManager(TestClock(NOW)))
 
         runtime.handleIncomingEvent(
             CommandAsked(
@@ -74,17 +74,15 @@ class CustomCommandTest : ShouldSpec({
 
     should("not call action if previous call is too recent") {
         var isCalled = false
-        val stateManager = StateManager
-            .builder()
-            .addState(TimeState(StateId(FEATURE_ID), NOW.minusMinutes(3)))
-            .build()
+        val stateManager = StateManager(TestClock(NOW))
+            .withState(TimeState(StateId(FEATURE_ID), NOW.minusMinutes(1), TestClock(NOW)))
         val runtime = CustomCommand(
             CHANNEL,
             "!trigger",
             FeatureId(FEATURE_ID),
             Duration.ofMinutes(2)
         ) { isCalled = true }
-            .buildRuntime(stateManager, TestClock(NOW))
+            .buildRuntime(stateManager)
 
         runtime.handleIncomingEvent(
             CommandAsked(
@@ -100,17 +98,15 @@ class CustomCommandTest : ShouldSpec({
 
     should("call action if the cooldown is over") {
         var isCalled = false
-        val stateManager = StateManager
-            .builder()
-            .addState(TimeState(StateId(FEATURE_ID), NOW.minusMinutes(3)))
-            .build()
+        val stateManager = StateManager(TestClock(NOW))
+            .withState(TimeState(StateId(FEATURE_ID), NOW.minusMinutes(3), TestClock(NOW)))
         val runtime = CustomCommand(
             CHANNEL,
             "!trigger",
             FeatureId(FEATURE_ID),
             Duration.ofMinutes(2)
         ) { isCalled = true }
-            .buildRuntime(stateManager, TestClock(NOW))
+            .buildRuntime(stateManager)
 
         runtime.handleIncomingEvent(
             CommandAsked(
