@@ -7,6 +7,7 @@ import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99CustomFeatures
 import fr.delphes.configuration.channel.delphes99.delphes99Features
 import fr.delphes.configuration.channel.delphestestChannel
+import fr.delphes.configuration.channel.delphestestCustomFeatures
 import fr.delphes.configuration.channel.delphestestFeatures
 import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
@@ -85,7 +86,7 @@ fun main() {
             featureConfigurationsPath,
             serializer,
             outgoingEventRegistry,
-            delphes99CustomFeatures
+            delphes99CustomFeatures + delphestestCustomFeatures
         )
     )
 

@@ -100,7 +100,6 @@ class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RU
         scope.launch {
             handle(
                 try {
-                    println("Effect started")
                     doEffect()
                 } catch (e: Exception) {
                     ErrorOccurred(configuration, "Error has occurred : ${e.message}")

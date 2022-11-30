@@ -12,13 +12,12 @@ import fr.delphes.features.obs.SceneChangedDescription
 import fr.delphes.features.obs.SourceFilterActivatedDescription
 import fr.delphes.features.obs.SourceFilterDeactivatedDescription
 import fr.delphes.features.overlay.OverlayDescription
-import fr.delphes.features.twitch.command.NewTwitchCommand
-import fr.delphes.features.twitch.command.NewTwitchCommandState
 import fr.delphes.features.twitch.bitCheer.BitCheerDescription
 import fr.delphes.features.twitch.clipCreated.ClipCreatedDescription
-import fr.delphes.features.twitch.command.CommandDescription
 import fr.delphes.features.twitch.command.EditableCommandConfiguration
 import fr.delphes.features.twitch.command.ExperimentalTwitchCommandConfiguration
+import fr.delphes.features.twitch.command.NewTwitchCommand
+import fr.delphes.features.twitch.command.NewTwitchCommandState
 import fr.delphes.features.twitch.commandList.CommandListDescription
 import fr.delphes.features.twitch.endCredits.EndCreditsDescription
 import fr.delphes.features.twitch.gameDescription.GameDescriptionDescription
@@ -54,7 +53,6 @@ object FeatureSerializationConfiguration {
         //Twitch
         registerLegacyFeatureConfiguration<BitCheerDescription>()
         registerLegacyFeatureConfiguration<ClipCreatedDescription>()
-        registerLegacyFeatureConfiguration<CommandDescription>()
         registerLegacyFeatureConfiguration<CommandListDescription>()
         registerLegacyFeatureConfiguration<EndCreditsDescription>()
         registerLegacyFeatureConfiguration<GameDescriptionDescription>()

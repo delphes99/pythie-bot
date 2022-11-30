@@ -29,7 +29,6 @@ import fr.delphes.features.obs.SourceFilterActivated
 import fr.delphes.features.overlay.Overlay
 import fr.delphes.features.twitch.bitCheer.BitCheer
 import fr.delphes.features.twitch.clipCreated.ClipCreated
-import fr.delphes.features.twitch.command.Command
 import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.endCredits.EndCredits
@@ -143,29 +142,6 @@ val delphes99Features = listOf(
         stateRepository = FileVOTHStateRepository(
             "A:\\pythiebot\\feature\\voth.json"
         )
-    ),
-    Command(
-        channel,
-        "!bot",
-        cooldown = Duration.ofMinutes(2),
-        responses = {
-            listOf(
-                SendMessage(
-                    "\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !",
-                    channel
-                )
-            )
-        }
-    ),
-    Command(
-        channel,
-        "!discord",
-        cooldown = Duration.ofSeconds(10),
-        responses = {
-            listOf(
-                SendMessage(discordInvitationLink, channel)
-            )
-        }
     ),
     NewFollow(channel) { newFollow ->
         listOf(
@@ -305,94 +281,6 @@ val delphes99Features = listOf(
         DelphesReward.DEV_TEST3 to Games.SOFTWARE_DEVELOPMENT,
         DelphesReward.SATISFACTORY_COLOR to Games.SATISFACTORY
     ),
-    Command(
-        channel,
-        "!deactivateTest",
-        responses = {
-            listOf(DeactivateReward(DelphesReward.DEV_TEST, channel))
-        }
-    ),
-    Command(
-        channel,
-        "!activateTest",
-        responses = {
-            listOf(ActivateReward(DelphesReward.DEV_TEST, channel))
-        }
-    ),
-    Command(
-        channel,
-        "!ping",
-        responses = {
-            listOf(SendMessage("pong", channel))
-        }
-    ),
-    Command(
-        channel,
-        "!helloDiscord",
-        responses = {
-            listOf(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
-        }
-    ),
-    Command(
-        channel,
-        "!mod",
-        responses = {
-            if (moderators.contains(it.by.normalizeName)) {
-                listOf(PromoteModerator(it.by, it.channel))
-            } else {
-                emptyList()
-            }
-        }
-    ),
-    Command(
-        channel,
-        "!unmod",
-        responses = {
-            if (moderators.contains(it.by.normalizeName)) {
-                listOf(RemoveModerator(it.by, it.channel))
-            } else {
-                emptyList()
-            }
-        }
-    ),
-    Command(
-        channel,
-        "!bluff",
-        responses = {
-            listOf(
-                PlaySound(
-                    listOf(
-                        "bluff-1.mp3",
-                        "bluff-2.mp3",
-                        "bluff-3.mp3",
-                        "bluff-4.mp3",
-                        "bluff-5.mp3",
-                        "bluff-6.mp3",
-                        "bluff-7.mp3",
-                        "bluff-8.mp3",
-                        "bluff-9.mp3",
-                        "bluff-10.mp3",
-                        "bluff-11.mp3",
-                        "bluff-12.mp3",
-                        "bluff-13.mp3",
-                        "bluff-14.mp3",
-                        "bluff-15.mp3",
-                    ).random()
-                )
-            )
-        }
-    ),
-    Command(
-        channel,
-        "!clair",
-        responses = {
-            listOf(
-                PlaySound(
-                    "clair.mp3"
-                )
-            )
-        }
-    ),
     RewardRedeem(
         channel,
         DelphesReward.RIP,
@@ -453,21 +341,6 @@ val delphes99Features = listOf(
             buildShoutOut(messageReceived.user)
         }
     ),
-    Command(
-        channel,
-        "!so",
-        responses = { commandAsked ->
-            listOfNotNull(
-                if (moderators.contains(commandAsked.by.normalizeName)) {
-                    commandAsked.parameters.firstOrNull()?.let { promotedUser ->
-                        buildShoutOut(User(promotedUser))
-                    }
-                } else {
-                    null
-                }
-            )
-        }
-    ),
     IncomingRaid(
         channel = channel,
         stateManagerWithRepository = highlightStateManager,
@@ -487,16 +360,6 @@ val delphes99Features = listOf(
                     "La totale !",
                     "On te connait (ou OSEF)"
                 ),
-            )
-        }
-    ),
-    Command(
-        channel,
-        "!coucou",
-        cooldown = secondsOf(10),
-        responses = { commandAsked ->
-            listOf(
-                SendMessage("Coucou ${commandAsked.by.name} !", channel)
             )
         }
     ),
@@ -527,9 +390,118 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
 val delphes99CustomFeatures = listOf(
     CustomCommand(
         channel,
-        "!customCommand",
+        "!discord",
         cooldown = Duration.ofSeconds(10)
     ) {
-        executeOutgoingEvent(SendMessage("New command", channel))
-    }
+        executeOutgoingEvent(
+            SendMessage(discordInvitationLink, channel)
+        )
+    },
+    CustomCommand(
+        channel,
+        "!bot",
+        cooldown = Duration.ofMinutes(2)
+    ) {
+        executeOutgoingEvent(
+            SendMessage(
+                "\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !",
+                channel
+            )
+        )
+    },
+    CustomCommand(
+        channel,
+        "!so"
+    ) {
+        if (moderators.contains(event.by.normalizeName)) {
+            event.parameters.firstOrNull()?.also { promotedUser ->
+                executeOutgoingEvent(buildShoutOut(User(promotedUser)))
+            }
+        }
+    },
+    CustomCommand(
+        channel,
+        "!deactivateTest"
+    ) {
+        executeOutgoingEvent(DeactivateReward(DelphesReward.DEV_TEST, channel))
+    },
+    CustomCommand(
+        channel,
+        "!activateTest"
+    ) {
+        executeOutgoingEvent(ActivateReward(DelphesReward.DEV_TEST, channel))
+    },
+    CustomCommand(
+        channel,
+        "!ping"
+    ) {
+        executeOutgoingEvent(SendMessage("pong", channel))
+    },
+    CustomCommand(
+        channel,
+        "!helloDiscord"
+    ) {
+        executeOutgoingEvent(DiscordMessage("Coucou discord depuis une commande !", 789537633487159396))
+    },
+    CustomCommand(
+        channel,
+        "!mod"
+    ) {
+        if (moderators.contains(event.by.normalizeName)) {
+            executeOutgoingEvent(PromoteModerator(event.by, event.channel))
+        }
+    },
+    CustomCommand(
+        channel,
+        "!unmod"
+    ) {
+        if (moderators.contains(event.by.normalizeName)) {
+            executeOutgoingEvent(RemoveModerator(event.by, event.channel))
+        }
+    },
+    CustomCommand(
+        channel,
+        "!clair"
+    ) {
+        executeOutgoingEvent(
+            PlaySound(
+                "clair.mp3"
+            )
+        )
+    },
+    CustomCommand(
+        channel,
+        "!bluff"
+    ) {
+        listOf(
+            PlaySound(
+                listOf(
+                    "bluff-1.mp3",
+                    "bluff-2.mp3",
+                    "bluff-3.mp3",
+                    "bluff-4.mp3",
+                    "bluff-5.mp3",
+                    "bluff-6.mp3",
+                    "bluff-7.mp3",
+                    "bluff-8.mp3",
+                    "bluff-9.mp3",
+                    "bluff-10.mp3",
+                    "bluff-11.mp3",
+                    "bluff-12.mp3",
+                    "bluff-13.mp3",
+                    "bluff-14.mp3",
+                    "bluff-15.mp3",
+                ).random()
+            )
+        )
+    },
+    CustomCommand(
+        channel,
+        "!coucou",
+        cooldown = secondsOf(10)
+    ) {
+        executeOutgoingEvent(
+            SendMessage("Coucou ${event.by.name} !", channel)
+        )
+    },
 )

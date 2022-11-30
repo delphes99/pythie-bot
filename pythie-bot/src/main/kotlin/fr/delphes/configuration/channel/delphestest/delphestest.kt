@@ -4,7 +4,7 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
-import fr.delphes.features.twitch.command.Command
+import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.newFollow.NewFollow
@@ -20,16 +20,6 @@ import java.time.Duration
  */
 val channel = TwitchChannel("delphestest")
 val delphestestFeatures = listOf(
-    Command(
-        channel,
-        "!test",
-        cooldown = Duration.ofSeconds(10),
-        responses = {
-            listOf(
-                SendMessage("Compte de test opérationnel !", channel)
-            )
-        },
-    ),
     NewFollow(channel) { newFollow ->
         listOf(SendMessage("Merci du follow ${newFollow.follower.name}", channel))
     },
@@ -69,6 +59,7 @@ val delphestestFeatures = listOf(
                         is StreamChanges.Title -> {
                             "Nouveau titre : ${change.newTitle}"
                         }
+
                         is StreamChanges.Game -> {
                             "${change.oldGame.label} ➡ ${change.newGame.label}"
                         }
@@ -84,13 +75,6 @@ val delphestestFeatures = listOf(
         Games.SCIENCE_TECHNOLOGY to "development",
         Games.JUST_CHATTING to "just chatting"
     ),
-    Command(
-        channel,
-        "!ping",
-        responses = {
-            listOf(SendMessage("pong", channel))
-        },
-    )
 )
 val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.properties") { properties ->
     ChannelConfiguration(
@@ -98,3 +82,20 @@ val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.p
         emptyList()
     )
 }
+val delphestestCustomFeatures = listOf(
+    CustomCommand(
+        channel,
+        "!test",
+        cooldown = Duration.ofSeconds(10)
+    ) {
+        listOf(
+            SendMessage("Compte de test opérationnel !", channel)
+        )
+    },
+    CustomCommand(
+        channel,
+        "!ping"
+    ) {
+        listOf(SendMessage("ping ?", channel))
+    },
+)
