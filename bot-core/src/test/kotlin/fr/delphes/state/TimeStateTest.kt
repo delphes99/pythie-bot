@@ -1,6 +1,6 @@
 package fr.delphes.state
 
-import fr.delphes.TestClock
+import fr.delphes.test.TestClock
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe

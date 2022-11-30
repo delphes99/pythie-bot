@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)
     testImplementation(libs.bundles.kotlin.test)
+    testImplementation(project(":utils-test"))
 }
 
 tasks.register<Copy>("copyBotUIToServer") {

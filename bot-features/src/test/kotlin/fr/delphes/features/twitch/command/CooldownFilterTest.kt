@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.command
 
+import fr.delphes.test.TestClock
 import fr.delphes.features.IncomingEventStub
-import fr.delphes.features.TestClock
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue

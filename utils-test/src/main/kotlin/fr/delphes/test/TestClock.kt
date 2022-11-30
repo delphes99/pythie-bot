@@ -1,9 +1,8 @@
-package fr.delphes
+package fr.delphes.test
 
 import fr.delphes.utils.time.Clock
 import java.time.LocalDateTime
 
-//TODO move to shared package (duplicate code)
 class TestClock(
     private val now: LocalDateTime
 ) : Clock {

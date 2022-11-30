@@ -1,8 +1,8 @@
 package fr.delphes.features.twitch.command
 
+import fr.delphes.test.TestClock
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
-import fr.delphes.features.TestClock
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.state.StateId
 import fr.delphes.state.StateManager

@@ -6,13 +6,8 @@ plugins {
 
 dependencies {
     implementation(libs.bundles.kotlin.common)
-    implementation(project(":bot-core"))
-    api(project(":connector-discord"))
-    api(project(":connector-obs"))
-    api(project(":connector-twitch"))
-    implementation(libs.kumo)
+    implementation(project(":utils"))
     testImplementation(libs.bundles.kotlin.test)
-    testImplementation(project(":utils-test"))
 }
 
-description = "bot-features"
+description = "utils-test"

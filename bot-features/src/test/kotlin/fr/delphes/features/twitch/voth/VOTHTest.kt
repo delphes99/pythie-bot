@@ -1,5 +1,6 @@
 package fr.delphes.features.twitch.voth
 
+import fr.delphes.test.TestClock
 import fr.delphes.bot.Bot
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.command.Command
@@ -12,7 +13,6 @@ import fr.delphes.connector.twitch.outgoingEvent.PromoteVIP
 import fr.delphes.connector.twitch.outgoingEvent.RemoveVIP
 import fr.delphes.connector.twitch.outgoingEvent.RetrieveVip
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
-import fr.delphes.features.TestClock
 import fr.delphes.features.TestStateRepository
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
@@ -30,7 +30,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 
 class VOTHTest : ShouldSpec({

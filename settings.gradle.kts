@@ -11,6 +11,7 @@ dependencyResolutionManagement {
 }
 
 include(":utils")
+include(":utils-test")
 include(":bot-core")
 include(":bot-features")
 include(":pythie-bot")
