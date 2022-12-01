@@ -9,9 +9,7 @@ import fr.delphes.feature.NonEditableFeature
 
 class NewGuildMember(
     val newGuildMember: (NewGuildMember) -> List<OutgoingEvent>
-) : NonEditableFeature<NewGuildMemberDescription> {
-    override fun description() = NewGuildMemberDescription()
-
+) : NonEditableFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(NewGuildMemberHandler())

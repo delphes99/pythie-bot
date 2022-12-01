@@ -10,9 +10,7 @@ import io.ktor.server.application.Application
 
 class Statistics(
     private val channel: TwitchChannel
-) : NonEditableFeature<StatisticsDescription>, HaveHttp {
-    override fun description() = StatisticsDescription()
-
+) : NonEditableFeature, HaveHttp {
     override val module: (Bot) -> Application.() -> Unit = {
         val twitchConnector = it.connectors.filterIsInstance<TwitchConnector>().first()
         StatisticsModule(channel, twitchConnector)

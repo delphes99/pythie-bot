@@ -21,9 +21,7 @@ import fr.delphes.twitch.api.reward.WithRewardConfiguration
 class GameReward(
     override val channel: TwitchChannel,
     private val gameRewards: Map<GameId, List<RewardConfiguration>>
-) : NonEditableFeature<GameRewardDescription>, TwitchFeature {
-    override fun description() = GameRewardDescription(channel.name)
-
+) : NonEditableFeature, TwitchFeature {
     constructor(
         channel: TwitchChannel,
         vararg gameRewards: Pair<WithRewardConfiguration, WithGameId>
@@ -36,7 +34,6 @@ class GameReward(
     )
 
     //TODO change visibility on start of the bot when the stream is already started
-
     override val eventHandlers =
         LegacyEventHandlers
             .builder()

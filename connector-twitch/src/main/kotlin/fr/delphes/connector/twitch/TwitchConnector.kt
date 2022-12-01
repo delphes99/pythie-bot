@@ -4,8 +4,6 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
-import fr.delphes.connector.twitch.feature.TwitchFeatureConfiguration
-import fr.delphes.connector.twitch.feature.WithCommand
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
 import fr.delphes.connector.twitch.user.UserInfos
@@ -13,7 +11,6 @@ import fr.delphes.connector.twitch.user.getUserInfos
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
-import fr.delphes.feature.featureNew.FeatureState
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.api.channel.ChannelInformation
@@ -69,13 +66,8 @@ class TwitchConnector(
             .filterIsInstance<TwitchFeature>()
             .filter { feature -> feature.channel == channel }
             .flatMap(TwitchFeature::commands)
-        val legacyConfigurableCommands = bot.featureHandler.configurations
-            .filterIsInstance<TwitchFeatureConfiguration<out FeatureState>>()
-            .filter { feature -> feature.channel == channel }
-            .filterIsInstance<WithCommand>()
-            .flatMap(WithCommand::commands)
 
-        return commands + legacyCommands + legacyConfigurableCommands
+        return commands + legacyCommands
     }
 
     suspend fun newBotAccountConfiguration(newBotAuth: AuthToken) {

@@ -26,11 +26,9 @@ class StreamerHighlightFeature(
     private val shoutOut: (MessageReceived, UserInfos) -> ShoutOut?,
     stateManagerWithRepository: StateManagerWithRepository<StreamerHighlightState>,
     private val clock: Clock = SystemClock
-) : NonEditableFeature<StreamerHighlightDescription>,
+) : NonEditableFeature,
     TwitchFeature,
     WithStateManager<StreamerHighlightState> by stateManagerWithRepository {
-    override fun description() = StreamerHighlightDescription(channel.name)
-
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(MessageReceivedHandler())

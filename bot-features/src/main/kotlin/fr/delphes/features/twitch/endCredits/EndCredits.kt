@@ -7,9 +7,7 @@ import fr.delphes.feature.HaveHttp
 import fr.delphes.feature.NonEditableFeature
 import io.ktor.server.application.Application
 
-class EndCredits : NonEditableFeature<EndCreditsDescription>, HaveHttp {
-    override fun description() = EndCreditsDescription()
-
+class EndCredits : NonEditableFeature, HaveHttp {
     override val eventHandlers = LegacyEventHandlers.Empty
 
     override val module: (Bot) -> Application.() -> Unit = {

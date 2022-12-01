@@ -3,12 +3,9 @@ package fr.delphes.feature
 import fr.delphes.FakeFeatureDefinition
 import fr.delphes.FakeFeatureRuntime
 import fr.delphes.FakeIncomingEvent
-import fr.delphes.descriptor.registry.DescriptorRegistry
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.SimpleFeatureRuntime
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 
@@ -17,9 +14,6 @@ internal class FeaturesManagerTest : ShouldSpec({
         should("build runtime when feature is registered") {
             val runtime = mockk<SimpleFeatureRuntime>()
             val featuresManager = FeaturesManager(
-                mockk(),
-                mockk(),
-                mockk(),
                 mockk(),
                 listOf(FakeFeatureDefinition(ID, runtime))
             )
@@ -34,9 +28,6 @@ internal class FeaturesManagerTest : ShouldSpec({
             val runtime2 = FakeFeatureRuntime { _, _ -> isRuntime2Called = true }
             val featuresManager = FeaturesManager(
                 mockk(),
-                mockk(),
-                mockk(),
-                mockk(),
                 listOf(
                     FakeFeatureDefinition(ID, runtime1),
                     FakeFeatureDefinition(ID, runtime2)
@@ -49,44 +40,8 @@ internal class FeaturesManagerTest : ShouldSpec({
             isRuntime2Called shouldBe true
         }
     }
-
-    //TODO delete ?
-    context("descritor") {
-        should("no descriptor if no configuration") {
-            val repository = TestRepository()
-            val registry = DescriptorRegistry.of<ExperimentalFeatureConfiguration<out ExperimentalFeature<*>>>()
-
-            FeaturesManager(repository, registry, registry).getDescriptors().shouldBeEmpty()
-        }
-
-        should("no descriptor if no mapper") {
-            val repository = TestRepository(PersonaFeatureConfiguration.WORKING)
-            val registry = DescriptorRegistry.of<ExperimentalFeatureConfiguration<out ExperimentalFeature<*>>>()
-
-            FeaturesManager(repository, registry, registry).getDescriptors().shouldBeEmpty()
-        }
-
-        should("get descriptor") {
-            val repository = TestRepository(PersonaFeatureConfiguration.WORKING)
-            val registry = DescriptorRegistry.of(
-                personaFeatureMapper
-            )
-
-            FeaturesManager(repository, registry, registry).getDescriptors().shouldContain(personaFeatureDescriptor)
-        }
-    }
 }) {
     companion object {
         val ID = FeatureId("id")
-    }
-}
-
-private class TestRepository(
-    private val configurations: List<ExperimentalFeatureConfiguration<out ExperimentalFeature<*>>>
-) : ExperimentalFeatureConfigurationRepository {
-    constructor(vararg configurations: ExperimentalFeatureConfiguration<out ExperimentalFeature<*>>) : this(configurations.toList())
-
-    override suspend fun getAll(): List<ExperimentalFeatureConfiguration<out ExperimentalFeature<*>>> {
-        return configurations
     }
 }

@@ -17,14 +17,12 @@ class GameDescription(
     override val channel: TwitchChannel,
     commandTrigger: String,
     private val descriptions: Map<GameId, String>
-) : NonEditableFeature<GameDescriptionDescription>, TwitchFeature {
+) : NonEditableFeature, TwitchFeature {
     constructor(
         channel: TwitchChannel,
         commandTrigger: String,
         vararg descriptions: Pair<WithGameId, String>
     ) : this(channel, commandTrigger, mapOf(*descriptions).mapKeys { entry -> entry.key.gameId })
-
-    override fun description() = GameDescriptionDescription(channel.name)
 
     val command = Command(commandTrigger)
 
@@ -33,7 +31,7 @@ class GameDescription(
         .addHandler(buildCommandHandler())
         .build()
 
-    private fun buildCommandHandler() = LegacyCommandHandler(channel, command) { _, twitchConnector ->  this.displayInfoFor(twitchConnector) }
+    private fun buildCommandHandler() = LegacyCommandHandler(channel, command) { _, twitchConnector -> this.displayInfoFor(twitchConnector) }
     override val commands: Iterable<Command> = listOf(command)
 
     private fun displayInfoFor(

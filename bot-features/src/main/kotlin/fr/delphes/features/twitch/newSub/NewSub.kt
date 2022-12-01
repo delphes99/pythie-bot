@@ -12,9 +12,7 @@ import fr.delphes.connector.twitch.incomingEvent.NewSub as NewSubEvent
 class NewSub(
     override val channel: TwitchChannel,
     val newSubResponse: (NewSubEvent) -> List<OutgoingEvent>
-) : NonEditableFeature<NewSubDescription>, TwitchFeature {
-    override fun description() = NewSubDescription(channel.name)
-
+) : NonEditableFeature, TwitchFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(NewSubHandler())

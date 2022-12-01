@@ -9,9 +9,7 @@ import fr.delphes.connector.obs.incomingEvent.SceneChanged
 
 class SceneChanged(
     val sceneChanged: (SceneChanged) -> List<OutgoingEvent>
-) : NonEditableFeature<SceneChangedDescription> {
-    override fun description() = SceneChangedDescription()
-
+) : NonEditableFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(SceneChangedHandler())

@@ -9,9 +9,7 @@ import fr.delphes.feature.NonEditableFeature
 
 class BotStarted(
     val listener: () -> List<OutgoingEvent>
-) : NonEditableFeature<BotStartedDescription> {
-    override fun description() = BotStartedDescription()
-
+) : NonEditableFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(BotStartedHandler())

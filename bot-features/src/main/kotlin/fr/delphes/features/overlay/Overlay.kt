@@ -13,9 +13,7 @@ import fr.delphes.feature.NonEditableFeature
 import fr.delphes.twitch.TwitchChannel
 import io.ktor.server.application.Application
 
-class Overlay(private val channel: TwitchChannel) : NonEditableFeature<OverlayDescription>, HaveHttp {
-    override fun description() = OverlayDescription()
-
+class Overlay(private val channel: TwitchChannel) : NonEditableFeature, HaveHttp {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(NewFollowHandler())

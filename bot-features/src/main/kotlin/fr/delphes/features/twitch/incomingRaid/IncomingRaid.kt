@@ -19,11 +19,9 @@ class IncomingRaid(
     stateManagerWithRepository: StateManagerWithRepository<StreamerHighlightState>,
     val incomingRaidResponse: (IncomingRaid) -> List<OutgoingEvent>,
     private val clock: Clock = SystemClock,
-) : NonEditableFeature<IncomingRaidDescription>,
+) : NonEditableFeature,
     TwitchFeature,
     WithStateManager<StreamerHighlightState> by stateManagerWithRepository {
-    override fun description() = IncomingRaidDescription(channel.name)
-
     override val eventHandlers = LegacyEventHandlers
             .builder()
             .addHandler(IncomingRaidHandler())

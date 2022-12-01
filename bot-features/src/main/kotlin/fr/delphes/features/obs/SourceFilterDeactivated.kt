@@ -9,9 +9,7 @@ import fr.delphes.feature.NonEditableFeature
 
 class SourceFilterDeactivated(
     val sourceFilterDeactivated: (ObsSourceFilterDeactivated) -> List<OutgoingEvent>
-) : NonEditableFeature<SourceFilterDeactivatedDescription> {
-    override fun description() = SourceFilterDeactivatedDescription()
-
+) : NonEditableFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(SourceFilterDeactivatedHandler())

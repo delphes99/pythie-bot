@@ -12,9 +12,7 @@ import fr.delphes.twitch.TwitchChannel
 class ClipCreated(
     override val channel: TwitchChannel,
     val clipCreatedResponse: (ClipCreated) -> List<OutgoingEvent>
-) : NonEditableFeature<ClipCreatedDescription>, TwitchFeature {
-    override fun description() = ClipCreatedDescription(channel.name)
-
+) : NonEditableFeature, TwitchFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(ClipCreatedHandler())

@@ -12,9 +12,7 @@ import fr.delphes.connector.twitch.incomingEvent.NewFollow as NewFollowEvent
 class NewFollow(
     override val channel: TwitchChannel,
     val newFollowResponse: (NewFollowEvent) -> List<OutgoingEvent>
-) : NonEditableFeature<NewFollowDescription>, TwitchFeature {
-    override fun description() = NewFollowDescription(channel.name)
-
+) : NonEditableFeature, TwitchFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(NewFollowHandler())

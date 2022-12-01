@@ -13,9 +13,7 @@ import fr.delphes.twitch.TwitchChannel
 class StreamUpdate(
     override val channel: TwitchChannel,
     private val handleChanges: (List<StreamChanges>) -> List<OutgoingEvent>
-) : NonEditableFeature<StreamUpdateDescription>, TwitchFeature {
-    override fun description() = StreamUpdateDescription(channel.name)
-
+) : NonEditableFeature, TwitchFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(StreamChangedHandler())

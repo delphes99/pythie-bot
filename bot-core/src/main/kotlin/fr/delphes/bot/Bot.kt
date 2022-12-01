@@ -9,15 +9,8 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
-import fr.delphes.descriptor.registry.DescriptorRegistry
-import fr.delphes.feature.EditableFeature
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
-import fr.delphes.feature.featureNew.FeatureConfiguration
-import fr.delphes.feature.featureNew.FeatureCreation
-import fr.delphes.feature.featureNew.FeatureHandler
-import fr.delphes.feature.featureNew.FeatureState
-import fr.delphes.feature.featureNew.OldFeatureConfigurationRepository
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -30,10 +23,7 @@ import java.io.File
 class Bot(
     val publicUrl: String,
     val configFilepath: String,
-    val legacyfeatures: List<NonEditableFeature<*>>,
-    val editableFeatures: List<EditableFeature<*>>, //TODO move to a repository
-    val botFeatures: BotFeatures,
-    val outgoingEventRegistry: DescriptorRegistry,
+    val legacyfeatures : List<NonEditableFeature>,
     val serializer: Json,
     val featuresManager: FeaturesManager
 ) : IncomingEventHandler, OutgoingEventProcessor {
@@ -45,23 +35,10 @@ class Bot(
 
     val alerts = Channel<Alert>()
 
-    //TODO remove when all features are migrated
-    private val featureRepositoryOld = OldFeatureConfigurationRepository(
-        "${configFilepath}${File.separator}feature${File.separator}features - Copie.json",
-        serializer
-    )
-
-    val featureHandler = FeatureHandler().also {
-        it.load(runBlocking { featureRepositoryOld.load() })
-    }
-
     override suspend fun handle(incomingEvent: IncomingEvent) {
-        listOf(legacyfeatures, editableFeatures)
+        listOf(legacyfeatures)
             .flatten()
             .flatMap { feature -> feature.handleIncomingEvent(incomingEvent, this) }
-            .forEach { event -> processOutgoingEvent(event) }
-
-        featureHandler.handleIncomingEvent(incomingEvent)
             .forEach { event -> processOutgoingEvent(event) }
 
         featuresManager.handle(incomingEvent, this)
@@ -104,45 +81,4 @@ class Bot(
 
     fun findConnector(name: String?): Connector<*, *>? = connectors
         .firstOrNull { connector -> connector.connectorName == name }
-
-    suspend fun reloadFeature() {
-        featureHandler.load(featureRepositoryOld.load())
-    }
-
-    suspend fun editFeature(newConfiguration: FeatureConfiguration<out FeatureState>) {
-        val actualConfigurations = featureRepositoryOld.load()
-        val newConfigurations = actualConfigurations.map { oldConfiguration ->
-            if (oldConfiguration.identifier == newConfiguration.identifier) {
-                newConfiguration
-            } else {
-                oldConfiguration
-            }
-        }
-        featureRepositoryOld.save(newConfigurations)
-        featureHandler.load(newConfigurations)
-    }
-
-    suspend fun loadFeatures(): List<FeatureConfiguration<out FeatureState>> {
-        return featureRepositoryOld.load()
-    }
-
-    //TODO better return type
-    suspend fun createFeature(configuration: FeatureCreation): Boolean {
-        val (id, type) = configuration
-
-        val currentFeatures = featureRepositoryOld.load()
-
-        val identifierAlreadyExist = currentFeatures.any { f -> f.identifier == id }
-        if(identifierAlreadyExist) {
-            return false
-        }
-
-        val newFeature = botFeatures.build(id, type)
-            ?.also { newFeature ->
-                featureRepositoryOld.save(currentFeatures + newFeature)
-                reloadFeature()
-            }
-
-        return newFeature != null
-    }
 }

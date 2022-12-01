@@ -29,13 +29,7 @@ class VOTH(
     override val stateRepository: StateRepository<VOTHState>,
     override val state: VOTHState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock
-) : NonEditableFeature<VOTHDescription>, TwitchFeature, HavePersistantState<VOTHState> {
-    override fun description() = VOTHDescription(
-        channel.name,
-        configuration.reward.rewardConfiguration.title,
-        configuration.statsCommand,
-        configuration.top3Command
-    )
+) : NonEditableFeature, TwitchFeature, HavePersistantState<VOTHState> {
     private val statsCommand = Command(configuration.statsCommand)
     private val top3Command = Command(configuration.top3Command)
 

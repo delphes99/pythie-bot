@@ -12,9 +12,7 @@ import fr.delphes.connector.twitch.incomingEvent.StreamOffline as StreamOfflineE
 class StreamOffline(
     override val channel: TwitchChannel,
     val streamOfflineResponse: (StreamOfflineEvent) -> List<OutgoingEvent>
-) : NonEditableFeature<StreamOfflineDescription>, TwitchFeature {
-    override fun description() = StreamOfflineDescription(channel.name)
-
+) : NonEditableFeature, TwitchFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(StreamOfflineHandler())

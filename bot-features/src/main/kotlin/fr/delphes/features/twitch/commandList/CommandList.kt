@@ -12,9 +12,7 @@ class CommandList(
     override val channel: TwitchChannel,
     private val triggerMessage: String,
     private val displayCommands: (List<String>) -> List<OutgoingEvent>
-) : NonEditableFeature<CommandListDescription>, TwitchFeature {
-    override fun description() = CommandListDescription(channel.name, triggerMessage)
-
+) : NonEditableFeature, TwitchFeature {
     private val command = Command(triggerMessage)
 
     override val eventHandlers =LegacyEventHandlers

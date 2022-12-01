@@ -12,9 +12,7 @@ import fr.delphes.twitch.TwitchChannel
 class BitCheer(
     override val channel: TwitchChannel,
     val bitCheeredResponse: (BitCheered) -> List<OutgoingEvent>
-) : NonEditableFeature<BitCheerDescription>, TwitchFeature {
-    override fun description() = BitCheerDescription(channel.name)
-
+) : NonEditableFeature, TwitchFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(BitCheeredHandler())

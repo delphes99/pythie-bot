@@ -12,9 +12,7 @@ import fr.delphes.connector.twitch.incomingEvent.StreamOnline as StreamOnlineEve
 class StreamOnline(
     override val channel: TwitchChannel,
     val streamOnlineResponse: (StreamOnlineEvent) -> List<OutgoingEvent>
-) : NonEditableFeature<StreamOnlineDescription>, TwitchFeature {
-    override fun description() = StreamOnlineDescription(channel.name)
-
+) : NonEditableFeature, TwitchFeature {
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(StreamOnlineHandler())
