@@ -35,7 +35,7 @@ import fr.delphes.features.twitch.endCredits.EndCredits
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.gameReward.GameReward
 import fr.delphes.features.twitch.incomingRaid.IncomingRaid
-import fr.delphes.features.twitch.newFollow.NewFollow
+import fr.delphes.features.twitch.newFollow.CustomNewFollow
 import fr.delphes.features.twitch.newSub.NewSub
 import fr.delphes.features.twitch.rewardRedeem.RewardRedeem
 import fr.delphes.features.twitch.statistics.Statistics
@@ -143,12 +143,6 @@ val delphes99Features = listOf(
             "A:\\pythiebot\\feature\\voth.json"
         )
     ),
-    NewFollow(channel) { newFollow ->
-        listOf(
-            SendMessage("\uD83D\uDC9C Merci du follow ${newFollow.follower.name} \uD83D\uDE4F", channel),
-            PlaySound("welcome.mp3"),
-        )
-    },
     NewSub(channel) { newSub ->
         listOf(
             SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F", channel),
@@ -504,4 +498,10 @@ val delphes99CustomFeatures = listOf(
             SendMessage("Coucou ${event.by.name} !", channel)
         )
     },
+    CustomNewFollow(
+        channel
+    ) {
+        executeOutgoingEvent(SendMessage("\uD83D\uDC9C Merci du follow ${event.follower.name} \uD83D\uDE4F", channel))
+        executeOutgoingEvent(PlaySound("welcome.mp3"))
+    }
 )

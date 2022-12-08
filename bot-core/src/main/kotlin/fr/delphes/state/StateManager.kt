@@ -1,12 +1,8 @@
 package fr.delphes.state
 
-import fr.delphes.utils.time.Clock
-import fr.delphes.utils.time.SystemClock
 import kotlin.reflect.KClass
 
-class StateManager(
-    val clock: Clock = SystemClock
-) {
+class StateManager {
     @PublishedApi
     internal val map = mutableMapOf<KClass<*>, MutableMap<StateId, out State>>()
 
@@ -18,6 +14,7 @@ class StateManager(
         if (map[T::class] == null) {
             map[T::class] = mutableMapOf()
         }
+        @Suppress("UNCHECKED_CAST")
         (this.map[T::class] as MutableMap<StateId, State>)[state.id] = state
         return state
     }

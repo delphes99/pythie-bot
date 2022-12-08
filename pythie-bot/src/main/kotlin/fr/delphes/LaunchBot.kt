@@ -15,6 +15,7 @@ import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
+import fr.delphes.state.state.ClockState
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -69,5 +70,8 @@ fun main() {
 private fun buildFeatureManager(
     customFeatures: List<FeatureDefinition>
 ): FeaturesManager {
-    return FeaturesManager(StateManager(), customFeatures)
+    val stateManager = StateManager()
+        .withState(ClockState())
+
+    return FeaturesManager(stateManager, customFeatures)
 }

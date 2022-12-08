@@ -9,7 +9,7 @@ import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.SimpleFeatureRuntime
 import fr.delphes.state.StateId
 import fr.delphes.state.StateManager
-import fr.delphes.state.TimeState
+import fr.delphes.state.state.TimeState
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.uuid.uuid
 import java.time.Duration
@@ -25,7 +25,7 @@ class CustomCommand(
     override val commands = setOf(triggerCommand)
 
     override fun buildRuntime(stateManager: StateManager): SimpleFeatureRuntime {
-        val lastCallState = stateManager.getOrPut(StateId(id.value)) { TimeState(StateId(id.value), clock = stateManager.clock) }
+        val lastCallState = stateManager.getOrPut(StateId(id.value)) { TimeState.withClockFrom(stateManager, StateId(id.value)) }
 
         val eventHandlers = EventHandlers.of { event: CommandAsked, bot ->
             if (event.command == triggerCommand && event.channel == channel) {

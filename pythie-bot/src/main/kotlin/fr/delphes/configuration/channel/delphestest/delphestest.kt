@@ -7,7 +7,7 @@ import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.gameDescription.GameDescription
-import fr.delphes.features.twitch.newFollow.NewFollow
+import fr.delphes.features.twitch.newFollow.CustomNewFollow
 import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.StreamOffline
 import fr.delphes.features.twitch.streamOnline.StreamOnline
@@ -20,9 +20,6 @@ import java.time.Duration
  */
 val channel = TwitchChannel("delphestest")
 val delphestestFeatures = listOf(
-    NewFollow(channel) { newFollow ->
-        listOf(SendMessage("Merci du follow ${newFollow.follower.name}", channel))
-    },
     StreamOffline(channel) { listOf(SendMessage("Le stream est fini, au revoir !", channel)) },
     StreamOnline(channel) {
         listOf(
@@ -98,4 +95,9 @@ val delphestestCustomFeatures = listOf(
     ) {
         listOf(SendMessage("ping ?", channel))
     },
+    CustomNewFollow(
+        channel
+    ) {
+        executeOutgoingEvent(SendMessage("Merci du follow ${event.follower.name}", channel))
+    }
 )
