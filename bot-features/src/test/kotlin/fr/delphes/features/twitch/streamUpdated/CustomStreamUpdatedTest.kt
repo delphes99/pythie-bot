@@ -1,24 +1,22 @@
-package fr.delphes.features.twitch.newFollow
+package fr.delphes.features.twitch.streamUpdated
 
-import fr.delphes.connector.twitch.incomingEvent.NewFollow
+import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.features.hasReceived
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 
-class CustomNewFollowTest : ShouldSpec({
+class CustomStreamUpdatedTest : ShouldSpec({
     should("execute action if channel match") {
         var isCalled = false
 
-        val customNewFollow = CustomNewFollow(CHANNEL) {
+        val customStreamUpdated = CustomStreamUpdated(CHANNEL) {
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
-            NewFollow(
-                CHANNEL,
-                User("user")
+        customStreamUpdated.hasReceived(
+            StreamChanged(
+                CHANNEL
             )
         )
 
@@ -27,14 +25,13 @@ class CustomNewFollowTest : ShouldSpec({
     should("not execute action if channel doesn't match") {
         var isCalled = false
 
-        val customNewFollow = CustomNewFollow(CHANNEL) {
+        val customStreamUpdated = CustomStreamUpdated(CHANNEL) {
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
-            NewFollow(
-                TwitchChannel("otherchannel"),
-                User("user")
+        customStreamUpdated.hasReceived(
+            StreamChanged(
+                TwitchChannel("otherchannel")
             )
         )
 

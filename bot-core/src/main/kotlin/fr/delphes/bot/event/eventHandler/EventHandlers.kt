@@ -18,6 +18,8 @@ class EventHandlers(
         @Suppress("UNCHECKED_CAST")
         inline fun <reified U : IncomingEvent> of(handler: EventHandler<U>) = builder().addHandler(handler).build()
 
+        fun <U : IncomingEvent> of(clazz: KClass<U>, handler: EventHandler<U>) = builder().addHandler(clazz, handler).build()
+
         fun builder() = Builder()
 
         class Builder {
@@ -27,6 +29,12 @@ class EventHandlers(
             inline fun <reified U : IncomingEvent> addHandler(handler: EventHandler<U>): Builder {
                 map.putIfAbsent(U::class, mutableListOf())
                 map[U::class]!!.add(handler)
+                return this
+            }
+
+            fun <U : IncomingEvent> addHandler(clazz: KClass<U>, handler: EventHandler<U>): Builder {
+                map.putIfAbsent(clazz, mutableListOf())
+                map[clazz]!!.add(handler)
                 return this
             }
 

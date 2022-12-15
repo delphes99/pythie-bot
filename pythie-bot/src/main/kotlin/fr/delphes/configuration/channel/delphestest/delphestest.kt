@@ -1,7 +1,7 @@
-package fr.delphes.configuration.channel
+package fr.delphes.configuration.channel.delphestest
 
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
+import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.twitch.command.CustomCommand
@@ -9,9 +9,9 @@ import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
 import fr.delphes.features.twitch.statistics.Statistics
-import fr.delphes.features.twitch.streamOffline.StreamOffline
-import fr.delphes.features.twitch.streamOnline.StreamOnline
-import fr.delphes.features.twitch.streamUpdate.StreamUpdate
+import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
+import fr.delphes.features.twitch.streamOnline.CustomStreamOnline
+import fr.delphes.features.twitch.streamUpdated.CustomStreamUpdated
 import fr.delphes.twitch.TwitchChannel
 import java.time.Duration
 
@@ -20,22 +20,6 @@ import java.time.Duration
  */
 val channel = TwitchChannel("delphestest")
 val delphestestFeatures = listOf(
-    StreamOffline(channel) { listOf(SendMessage("Le stream est fini, au revoir !", channel)) },
-    StreamOnline(channel) {
-        listOf(
-            SendMessage("Le stream démarre, ravi de vous revoir !", channel),
-            DiscordEmbeddedMessage(
-                it.title,
-                "https://www.twitch.tv/delphestest",
-                it.thumbnailUrl.withResolution(320, 160),
-                789537633487159396,
-                "delphestest",
-                "https://www.twitch.tv/delphestest",
-                "https://static-cdn.jtvnw.net/user-default-pictures-uv/ebe4cd89-b4f4-4cd9-adac-2f30151b4209-profile_image-300x300.png",
-                "Catégorie" to it.game.label
-            )
-        )
-    },
     Statistics(channel),
     CommandList(
         channel,
@@ -44,24 +28,6 @@ val delphestestFeatures = listOf(
         listOf(
             SendMessage(
                 "Liste des commandes : ${commands.joinToString(", ")}",
-                channel
-            )
-        )
-    },
-    StreamUpdate(channel) { changes ->
-        listOf(
-            SendMessage(
-                changes.joinToString(" | ") { change ->
-                    when (change) {
-                        is StreamChanges.Title -> {
-                            "Nouveau titre : ${change.newTitle}"
-                        }
-
-                        is StreamChanges.Game -> {
-                            "${change.oldGame.label} ➡ ${change.newGame.label}"
-                        }
-                    }
-                },
                 channel
             )
         )
@@ -99,5 +65,33 @@ val delphestestCustomFeatures = listOf(
         channel
     ) {
         executeOutgoingEvent(SendMessage("Merci du follow ${event.follower.name}", channel))
-    }
+    },
+    CustomStreamOffline(channel) {
+        executeOutgoingEvent(SendMessage("Le stream est fini, au revoir !", channel))
+    },
+    CustomStreamOnline(channel) {
+        executeOutgoingEvent(
+            SendMessage("Le stream démarre, ravi de vous revoir !", channel)
+        )
+    },
+    CustomStreamUpdated(
+        channel
+    ) {
+        executeOutgoingEvent(
+            SendMessage(
+                event.changes.joinToString(" | ") { change ->
+                    when (change) {
+                        is StreamChanges.Title -> {
+                            "Nouveau titre : ${change.newTitle}"
+                        }
+
+                        is StreamChanges.Game -> {
+                            "${change.oldGame.label} ➡ ${change.newGame.label}"
+                        }
+                    }
+                },
+                channel
+            )
+        )
+    },
 )

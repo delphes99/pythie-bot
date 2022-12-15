@@ -1,24 +1,22 @@
-package fr.delphes.features.twitch.newFollow
+package fr.delphes.features.twitch.streamOffline
 
-import fr.delphes.connector.twitch.incomingEvent.NewFollow
 import fr.delphes.features.hasReceived
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
+import fr.delphes.connector.twitch.incomingEvent.StreamOffline as StreamOfflineEvent
 
-class CustomNewFollowTest : ShouldSpec({
+class CustomStreamOfflineTest : ShouldSpec({
     should("execute action if channel match") {
         var isCalled = false
 
-        val customNewFollow = CustomNewFollow(CHANNEL) {
+        val customStreamOffline = CustomStreamOffline(CHANNEL) {
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
-            NewFollow(
-                CHANNEL,
-                User("user")
+        customStreamOffline.hasReceived(
+            StreamOfflineEvent(
+                CHANNEL
             )
         )
 
@@ -27,14 +25,13 @@ class CustomNewFollowTest : ShouldSpec({
     should("not execute action if channel doesn't match") {
         var isCalled = false
 
-        val customNewFollow = CustomNewFollow(CHANNEL) {
+        val customStreamOffline = CustomStreamOffline(CHANNEL) {
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
-            NewFollow(
-                TwitchChannel("otherchannel"),
-                User("user")
+        customStreamOffline.hasReceived(
+            StreamOfflineEvent(
+                TwitchChannel("otherchannel")
             )
         )
 

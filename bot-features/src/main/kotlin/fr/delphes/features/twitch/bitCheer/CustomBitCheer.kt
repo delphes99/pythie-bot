@@ -1,14 +1,14 @@
-package fr.delphes.features.twitch.newFollow
+package fr.delphes.features.twitch.bitCheer
 
-import fr.delphes.connector.twitch.incomingEvent.NewFollow
+import fr.delphes.connector.twitch.incomingEvent.BitCheered
 import fr.delphes.features.twitch.SimpleTwitchEventFeature
 import fr.delphes.features.twitch.TwitchEventParameters
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.uuid.uuid
 
-class CustomNewFollow(
+class CustomBitCheer(
     override val channel: TwitchChannel,
     override val id: FeatureId = FeatureId(uuid()),
-    action: suspend TwitchEventParameters<NewFollow>.() -> Unit
-) : SimpleTwitchEventFeature<NewFollow>(NewFollow::class, id, action)
+    action: suspend TwitchEventParameters<BitCheered>.() -> Unit
+) : SimpleTwitchEventFeature<BitCheered>(BitCheered::class, id, action)

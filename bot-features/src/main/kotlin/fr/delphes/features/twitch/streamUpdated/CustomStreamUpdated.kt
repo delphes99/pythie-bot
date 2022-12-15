@@ -1,14 +1,14 @@
-package fr.delphes.features.twitch.newFollow
+package fr.delphes.features.twitch.streamUpdated
 
-import fr.delphes.connector.twitch.incomingEvent.NewFollow
+import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.features.twitch.SimpleTwitchEventFeature
 import fr.delphes.features.twitch.TwitchEventParameters
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.uuid.uuid
 
-class CustomNewFollow(
+class CustomStreamUpdated(
     override val channel: TwitchChannel,
     override val id: FeatureId = FeatureId(uuid()),
-    action: suspend TwitchEventParameters<NewFollow>.() -> Unit
-) : SimpleTwitchEventFeature<NewFollow>(NewFollow::class, id, action)
+    action: suspend TwitchEventParameters<StreamChanged>.() -> Unit
+) : SimpleTwitchEventFeature<StreamChanged>(StreamChanged::class, id, action)

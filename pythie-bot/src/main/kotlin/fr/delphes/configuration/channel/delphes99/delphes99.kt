@@ -27,8 +27,8 @@ import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.obs.SceneChanged
 import fr.delphes.features.obs.SourceFilterActivated
 import fr.delphes.features.overlay.Overlay
-import fr.delphes.features.twitch.bitCheer.BitCheer
-import fr.delphes.features.twitch.clipCreated.ClipCreated
+import fr.delphes.features.twitch.bitCheer.CustomBitCheer
+import fr.delphes.features.twitch.clipCreated.CustomClipCreated
 import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.endCredits.EndCredits
@@ -36,12 +36,12 @@ import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.gameReward.GameReward
 import fr.delphes.features.twitch.incomingRaid.IncomingRaid
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
-import fr.delphes.features.twitch.newSub.NewSub
+import fr.delphes.features.twitch.newSub.CustomNewSub
 import fr.delphes.features.twitch.rewardRedeem.RewardRedeem
 import fr.delphes.features.twitch.statistics.Statistics
-import fr.delphes.features.twitch.streamOffline.StreamOffline
-import fr.delphes.features.twitch.streamOnline.StreamOnline
-import fr.delphes.features.twitch.streamUpdate.StreamUpdate
+import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
+import fr.delphes.features.twitch.streamOnline.CustomStreamOnline
+import fr.delphes.features.twitch.streamUpdated.CustomStreamUpdated
 import fr.delphes.features.twitch.streamerHighlight.FileStreamerHighlightRepository
 import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightFeature
 import fr.delphes.features.twitch.voth.FileVOTHStateRepository
@@ -143,37 +143,6 @@ val delphes99Features = listOf(
             "A:\\pythiebot\\feature\\voth.json"
         )
     ),
-    NewSub(channel) { newSub ->
-        listOf(
-            SendMessage("⭐ Merci pour le sub ${newSub.sub.name} \uD83D\uDE4F", channel),
-            PlaySound("thank-you.mp3"),
-        )
-    },
-    StreamOffline(channel) {
-        listOf(
-            SendMessage(
-                "\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18",
-                channel
-            )
-        )
-    },
-    StreamOnline(channel) {
-        listOf(
-            SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !", channel),
-            DiscordEmbeddedMessage(
-                it.title,
-                "https://www.twitch.tv/delphes99",
-                "${it.thumbnailUrl.withResolution(320, 160)}?r=${
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
-                }",
-                708949759725010984,
-                "Delphes99",
-                "https://www.twitch.tv/delphes99",
-                "https://static-cdn.jtvnw.net/jtv_user_pictures/9bda888d-167b-4e12-83d3-d8519fa45bcd-profile_image-300x300.png",
-                "Catégorie" to it.game.label
-            )
-        )
-    },
     Statistics(channel),
     EndCredits(),
     Overlay(channel),
@@ -184,31 +153,6 @@ val delphes99Features = listOf(
         listOf(
             SendMessage(
                 "ℹ️ Commandes : ${commands.joinToString(", ")}",
-                channel
-            )
-        )
-    },
-    StreamUpdate(channel) { changes ->
-        listOf(
-            SendMessage(
-                changes.joinToString(" | ") { change ->
-                    when (change) {
-                        is StreamChanges.Title -> {
-                            "\uD83D\uDCDD ${change.newTitle}"
-                        }
-                        is StreamChanges.Game -> {
-                            "\uD83D\uDD04 ${change.oldGame.label} ➡ ${change.newGame.label}"
-                        }
-                    }
-                },
-                channel
-            )
-        )
-    },
-    BitCheer(channel) { bitCheered ->
-        listOf(
-            SendMessage(
-                "💎 ${bitCheered.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${bitCheered.bitsUsed} bits. Merci beaucoup ! 💎",
                 channel
             )
         )
@@ -301,27 +245,6 @@ val delphes99Features = listOf(
             SendMessage(
                 "${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même ➡ $discordInvitationLink !",
                 channel
-            )
-        )
-    },
-    ClipCreated(channel) { clipCreated ->
-        val clip = clipCreated.clip
-        listOf(
-            SendMessage(
-                "\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}",
-                channel
-            ),
-            DiscordEmbeddedMessage(
-                clip.title,
-                clip.url,
-                "${clip.thumbnailUrl.withResolution(320, 160)}?r=${
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
-                }",
-                752185895050018937,
-                clip.creator.name,
-                "https://www.twitch.tv/${clip.creator.name}",
-                null,
-                "Catégorie" to clip.gameId
             )
         )
     },
@@ -503,5 +426,96 @@ val delphes99CustomFeatures = listOf(
     ) {
         executeOutgoingEvent(SendMessage("\uD83D\uDC9C Merci du follow ${event.follower.name} \uD83D\uDE4F", channel))
         executeOutgoingEvent(PlaySound("welcome.mp3"))
-    }
+    },
+    CustomBitCheer(
+        channel
+    ) {
+        executeOutgoingEvent(
+            SendMessage(
+                "💎 ${event.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${event.bitsUsed} bits. Merci beaucoup ! 💎",
+                channel
+            )
+        )
+    },
+    CustomNewSub(
+        channel
+    ) {
+        executeOutgoingEvent(
+            SendMessage("⭐ Merci pour le sub ${event.sub.name} \uD83D\uDE4F", channel)
+        )
+        executeOutgoingEvent(
+            PlaySound("thank-you.mp3")
+        )
+    },
+    CustomStreamOnline(
+        channel
+    ) {
+        executeOutgoingEvent(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !", channel))
+        executeOutgoingEvent(
+            DiscordEmbeddedMessage(
+                event.title,
+                "https://www.twitch.tv/delphes99",
+                "${event.thumbnailUrl.withResolution(320, 160)}?r=${
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+                }",
+                708949759725010984,
+                "Delphes99",
+                "https://www.twitch.tv/delphes99",
+                "https://static-cdn.jtvnw.net/jtv_user_pictures/9bda888d-167b-4e12-83d3-d8519fa45bcd-profile_image-300x300.png",
+                "Catégorie" to event.game.label
+            )
+        )
+    },
+    CustomStreamOffline(
+        channel
+    ) {
+        executeOutgoingEvent(
+            SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18", channel)
+        )
+    },
+    CustomStreamUpdated(
+        channel
+    ) {
+        executeOutgoingEvent(
+            SendMessage(
+                event.changes.joinToString(" | ") { change ->
+                    when (change) {
+                        is StreamChanges.Title -> {
+                            "\uD83D\uDCDD ${change.newTitle}"
+                        }
+
+                        is StreamChanges.Game -> {
+                            "\uD83D\uDD04 ${change.oldGame.label} ➡ ${change.newGame.label}"
+                        }
+                    }
+                },
+                channel
+            )
+        )
+    },
+    CustomClipCreated(
+        channel
+    ) {
+        val clip = event.clip
+        executeOutgoingEvent(
+            SendMessage(
+                "\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}",
+                channel
+            )
+        )
+        executeOutgoingEvent(
+            DiscordEmbeddedMessage(
+                clip.title,
+                clip.url,
+                "${clip.thumbnailUrl.withResolution(320, 160)}?r=${
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+                }",
+                752185895050018937,
+                clip.creator.name,
+                "https://www.twitch.tv/${clip.creator.name}",
+                null,
+                "Catégorie" to clip.gameId
+            )
+        )
+    },
 )

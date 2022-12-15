@@ -5,9 +5,9 @@ import fr.delphes.bot.Ngrok
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99CustomFeatures
 import fr.delphes.configuration.channel.delphes99.delphes99Features
-import fr.delphes.configuration.channel.delphestestChannel
-import fr.delphes.configuration.channel.delphestestCustomFeatures
-import fr.delphes.configuration.channel.delphestestFeatures
+import fr.delphes.configuration.channel.delphestest.delphestestChannel
+import fr.delphes.configuration.channel.delphestest.delphestestCustomFeatures
+import fr.delphes.configuration.channel.delphestest.delphestestFeatures
 import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.obs.ObsConnector
