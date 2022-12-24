@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
 fun <U : TwitchIncomingEvent> TwitchChannel.handlerFor(clazz: KClass<U>, handler: suspend TwitchEventParameters<U>.() -> Unit): EventHandlers {
     return EventHandlers.builder().addHandler(clazz) { event: U, bot: Bot ->
         if (event.channel == this) {
-            TwitchEventParameters(bot, event).handler()
+            TwitchEventParameters(bot, event, bot.featuresManager.stateManager).handler()
         }
     }.build()
 }

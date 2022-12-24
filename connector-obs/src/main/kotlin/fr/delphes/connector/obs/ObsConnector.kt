@@ -17,6 +17,7 @@ import fr.delphes.connector.obs.outgoingEvent.ObsOutgoingEvent
 import fr.delphes.obs.Configuration
 import fr.delphes.obs.ObsClient
 import fr.delphes.obs.ObsListener
+import fr.delphes.state.State
 import io.ktor.server.application.Application
 import kotlinx.serialization.InternalSerializationApi
 import mu.KotlinLogging
@@ -27,6 +28,8 @@ class ObsConnector(
     override val configFilepath: String,
 ) : Connector<ObsConfiguration, ObsRunTime> {
     override val connectorName = "Obs"
+
+    override val states = emptyList<State>()
 
     override val configurationManager = SimpleConfigurationManager(
         ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")

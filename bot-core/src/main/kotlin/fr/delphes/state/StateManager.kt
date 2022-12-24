@@ -11,11 +11,16 @@ class StateManager {
     }
 
     inline fun <reified T : State> put(state: T): T {
-        if (map[T::class] == null) {
-            map[T::class] = mutableMapOf()
+        return put(T::class, state)
+    }
+
+    fun <T: State> put(clazz: KClass<out T>, state: T): T {
+        if (map[clazz] == null) {
+            map[clazz] = mutableMapOf()
         }
         @Suppress("UNCHECKED_CAST")
-        (this.map[T::class] as MutableMap<StateId, State>)[state.id] = state
+        (this.map[clazz] as MutableMap<StateId, State>)[state.id] = state
+
         return state
     }
 

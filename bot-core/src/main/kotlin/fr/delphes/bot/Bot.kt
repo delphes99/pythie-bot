@@ -70,6 +70,9 @@ class Bot(
         // After initial state
         runBlocking {
             _connectors.map { connector -> async { connector.connect() } }.awaitAll()
+            _connectors.flatMap(Connector<*, *>::states).forEach { state ->
+                featuresManager.stateManager.put(state::class, state)
+            }
 
             handle(BotStarted)
         }

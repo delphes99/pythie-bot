@@ -4,8 +4,8 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
+import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.features.twitch.command.CustomCommand
-import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
 import fr.delphes.features.twitch.statistics.Statistics
@@ -13,6 +13,7 @@ import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
 import fr.delphes.features.twitch.streamOnline.CustomStreamOnline
 import fr.delphes.features.twitch.streamUpdated.CustomStreamUpdated
 import fr.delphes.twitch.TwitchChannel
+import fr.delphes.utils.time.secondsOf
 import java.time.Duration
 
 /**
@@ -21,17 +22,6 @@ import java.time.Duration
 val channel = TwitchChannel("delphestest")
 val delphestestFeatures = listOf(
     Statistics(channel),
-    CommandList(
-        channel,
-        "!help"
-    ) { commands ->
-        listOf(
-            SendMessage(
-                "Liste des commandes : ${commands.joinToString(", ")}",
-                channel
-            )
-        )
-    },
     GameDescription(
         channel,
         "!tufekoi",
@@ -60,6 +50,20 @@ val delphestestCustomFeatures = listOf(
         "!ping"
     ) {
         listOf(SendMessage("ping ?", channel))
+    },
+    CustomCommand(
+        channel,
+        "!help",
+        cooldown = secondsOf(10)
+    ) {
+        this.state<CommandListState>(CommandListState.stateId)?.getCommandsOf(fr.delphes.configuration.channel.delphes99.channel)?.let { commands ->
+            executeOutgoingEvent(
+                SendMessage(
+                    "Liste des commandes : ${commands.joinToString(", ")}",
+                    channel
+                )
+            )
+        }
     },
     CustomNewFollow(
         channel

@@ -26,7 +26,7 @@ class CustomCommand(
     override val commands = setOf(triggerCommand)
 
     override fun buildRuntime(stateManager: StateManager): SimpleFeatureRuntime {
-        val lastCallState = stateManager.getOrPut(StateId(id.value)) { TimeState.withClockFrom(stateManager, StateId(id.value)) }
+        val lastCallState = stateManager.getOrPut(StateId("cooldown-${id.value}")) { TimeState.withClockFrom(stateManager, StateId(id.value)) }
 
         val eventHandlers = channel.handlerFor<CommandAsked> {
             if (event.command == triggerCommand && lastCallState.hasMoreThan(cooldown)) {

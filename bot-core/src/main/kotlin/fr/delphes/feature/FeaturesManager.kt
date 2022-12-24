@@ -10,7 +10,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class FeaturesManager(
-    private val stateManager: StateManager,
+    val stateManager: StateManager,
     private val customFeatures: List<FeatureDefinition> = emptyList()
 ) {
     private val runtimes = customFeatures.associateWith { definition ->

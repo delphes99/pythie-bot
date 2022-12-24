@@ -5,6 +5,7 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
+import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
 import fr.delphes.connector.twitch.user.UserInfos
 import fr.delphes.connector.twitch.user.getUserInfos
@@ -27,6 +28,10 @@ class TwitchConnector(
     val channels: List<ChannelConfiguration>
 ) : Connector<TwitchConfiguration, TwitchLegacyRuntime> {
     override val connectorName = "Twitch"
+
+    override val states = listOf(
+        CommandListState(this)
+    )
 
     override val configurationManager = TwitchConfigurationManager(
         TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")

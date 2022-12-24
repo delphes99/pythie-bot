@@ -15,6 +15,7 @@ import fr.delphes.bot.connector.state.ConnectionSuccessful
 import fr.delphes.connector.discord.endpoint.DiscordModule
 import fr.delphes.connector.discord.incomingEvent.NewGuildMember
 import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent
+import fr.delphes.state.State
 import io.ktor.server.application.Application
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,9 @@ class DiscordConnector(
     override val configFilepath: String
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
     override val connectorName = "Discord"
+
+    override val states = emptyList<State>()
+
     override val configurationManager = SimpleConfigurationManager(
         DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
     )

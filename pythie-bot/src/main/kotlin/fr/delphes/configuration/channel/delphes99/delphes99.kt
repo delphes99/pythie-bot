@@ -13,6 +13,7 @@ import fr.delphes.connector.obs.outgoingEvent.ChangeItemPosition
 import fr.delphes.connector.obs.outgoingEvent.ChangeItemVisibility
 import fr.delphes.connector.obs.outgoingEvent.DeactivateFilter
 import fr.delphes.connector.obs.outgoingEvent.RefreshSource
+import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.CreatePoll
@@ -21,6 +22,7 @@ import fr.delphes.connector.twitch.outgoingEvent.PromoteModerator
 import fr.delphes.connector.twitch.outgoingEvent.RemoveModerator
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.outgoingEvent.ShoutOut
+import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.feature.StateManagerWithRepository
 import fr.delphes.features.core.botStarted.BotStarted
 import fr.delphes.features.discord.NewGuildMember
@@ -30,7 +32,6 @@ import fr.delphes.features.overlay.Overlay
 import fr.delphes.features.twitch.bitCheer.CustomBitCheer
 import fr.delphes.features.twitch.clipCreated.CustomClipCreated
 import fr.delphes.features.twitch.command.CustomCommand
-import fr.delphes.features.twitch.commandList.CommandList
 import fr.delphes.features.twitch.endCredits.EndCredits
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.gameReward.GameReward
@@ -146,17 +147,6 @@ val delphes99Features = listOf(
     Statistics(channel),
     EndCredits(),
     Overlay(channel),
-    CommandList(
-        channel,
-        "!help"
-    ) { commands ->
-        listOf(
-            SendMessage(
-                "ℹ️ Commandes : ${commands.joinToString(", ")}",
-                channel
-            )
-        )
-    },
     GameDescription(
         channel,
         "!tufekoi",
@@ -420,6 +410,20 @@ val delphes99CustomFeatures = listOf(
         executeOutgoingEvent(
             SendMessage("Coucou ${event.by.name} !", channel)
         )
+    },
+    CustomCommand(
+        channel,
+        "!help",
+        cooldown = secondsOf(10)
+    ) {
+        this.state<CommandListState>(CommandListState.stateId)?.getCommandsOf(channel)?.let { commands ->
+            executeOutgoingEvent(
+                SendMessage(
+                    "ℹ️ Commandes : ${commands.map(Command::triggerMessage).joinToString(", ")}",
+                    channel
+                )
+            )
+        }
     },
     CustomNewFollow(
         channel
