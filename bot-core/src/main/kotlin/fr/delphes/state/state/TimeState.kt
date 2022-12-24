@@ -2,6 +2,7 @@ package fr.delphes.state.state
 
 import fr.delphes.state.State
 import fr.delphes.state.StateId
+import fr.delphes.state.StateIdQualifier
 import fr.delphes.state.StateManager
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
@@ -9,10 +10,12 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 class TimeState(
-    override val id: StateId = StateId(),
+    qualifier: StateIdQualifier = StateIdQualifier(),
     private var currentValue: LocalDateTime? = null,
     private val clock: Clock = SystemClock
 ) : State {
+    override val id = StateId.from<TimeState>(qualifier)
+
     fun getValue(): LocalDateTime? {
         return currentValue
     }
@@ -30,15 +33,17 @@ class TimeState(
     }
 
     companion object {
+        fun id(qualifier: String) = StateId.from<TimeState>(qualifier)
+
         fun withClockFrom(
             stateManager: StateManager,
-            id: StateId = StateId(),
+            id: StateIdQualifier = StateIdQualifier(),
             currentValue: LocalDateTime? = null
         ): TimeState {
-            val clock = stateManager.get<ClockState>(ClockState.STATE_ID)?.clock
+            val clock = stateManager.getState(ClockState.ID)?.clock
                 ?: throw IllegalStateException("Clock state required")
             return TimeState(
-                id = id,
+                qualifier = id,
                 currentValue = currentValue,
                 clock = clock
             )

@@ -7,13 +7,13 @@ import fr.delphes.utils.time.SystemClock
 import java.time.LocalDateTime
 
 class ClockState(val clock: Clock = SystemClock) : State {
-    override val id: StateId = STATE_ID
+    override val id = ID
 
     fun getValue(): LocalDateTime {
         return clock.now()
     }
 
     companion object {
-        val STATE_ID = StateId("clock")
+        val ID = StateId.from<ClockState>("clock")
     }
 }

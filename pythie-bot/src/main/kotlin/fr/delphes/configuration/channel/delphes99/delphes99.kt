@@ -416,7 +416,7 @@ val delphes99CustomFeatures = listOf(
         "!help",
         cooldown = secondsOf(10)
     ) {
-        this.state<CommandListState>(CommandListState.stateId)?.getCommandsOf(channel)?.let { commands ->
+        this.state(CommandListState.ID)?.getCommandsOf(channel)?.let { commands ->
             executeOutgoingEvent(
                 SendMessage(
                     "ℹ️ Commandes : ${commands.map(Command::triggerMessage).joinToString(", ")}",

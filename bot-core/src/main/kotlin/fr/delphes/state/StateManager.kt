@@ -4,33 +4,29 @@ import kotlin.reflect.KClass
 
 class StateManager {
     @PublishedApi
-    internal val map = mutableMapOf<KClass<*>, MutableMap<StateId, out State>>()
+    internal val map = mutableMapOf<KClass<*>, MutableMap<StateIdQualifier, out State>>()
 
-    inline fun <reified T : State> get(name: StateId): T? {
-        return map[T::class]?.get(name) as T?
+    inline fun <reified T : State> getState(id: StateId<T>): T? {
+        return map[T::class]?.get(id.qualifier) as T?
     }
 
-    inline fun <reified T : State> put(state: T): T {
-        return put(T::class, state)
-    }
-
-    fun <T: State> put(clazz: KClass<out T>, state: T): T {
+    fun <T: State> put(state: T): T {
+        val (clazz, qualifier) = state.id
         if (map[clazz] == null) {
             map[clazz] = mutableMapOf()
         }
         @Suppress("UNCHECKED_CAST")
-        (this.map[clazz] as MutableMap<StateId, State>)[state.id] = state
+        (this.map[clazz] as MutableMap<StateIdQualifier, State>)[qualifier] = state
 
         return state
     }
 
-    inline fun <reified T : State> getOrPut(name: StateId, defaultValue: () -> T): T {
-        val actualValue = map[T::class]?.get(name) ?: return put(defaultValue())
-        return actualValue as T
+    fun <T : State> getOrPut(id: StateId<T>, defaultValue: () -> T): T {
+        @Suppress("UNCHECKED_CAST")
+        return map[id.clazz]?.get(id.qualifier) as T? ?: return put(defaultValue())
     }
 
-
-    inline fun <reified U : State> withState(state: U): StateManager {
+    fun <U : State> withState(state: U): StateManager {
         put(state)
         return this
     }

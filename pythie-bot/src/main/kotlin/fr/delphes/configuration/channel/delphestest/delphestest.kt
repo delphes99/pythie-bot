@@ -56,7 +56,7 @@ val delphestestCustomFeatures = listOf(
         "!help",
         cooldown = secondsOf(10)
     ) {
-        this.state<CommandListState>(CommandListState.stateId)?.getCommandsOf(fr.delphes.configuration.channel.delphes99.channel)?.let { commands ->
+        this.state(CommandListState.ID)?.getCommandsOf(channel)?.let { commands ->
             executeOutgoingEvent(
                 SendMessage(
                     "Liste des commandes : ${commands.joinToString(", ")}",

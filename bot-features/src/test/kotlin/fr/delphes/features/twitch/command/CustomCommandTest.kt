@@ -5,7 +5,6 @@ import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.features.atFixedTime
 import fr.delphes.features.hasReceived
 import fr.delphes.rework.feature.FeatureId
-import fr.delphes.state.StateId
 import fr.delphes.state.state.TimeState
 import fr.delphes.test.TestClock
 import fr.delphes.twitch.TwitchChannel
@@ -76,7 +75,7 @@ class CustomCommandTest : ShouldSpec({
 
         command
             .atFixedTime(NOW)
-            .withState(TimeState(StateId(FEATURE_ID), NOW.minusMinutes(1), TestClock(NOW)))
+            .withState(TimeState(command.lastCallStateId.qualifier, NOW.minusMinutes(1), TestClock(NOW)))
             .hasReceived(
                 CommandAsked(
                     CHANNEL,
@@ -100,7 +99,7 @@ class CustomCommandTest : ShouldSpec({
 
         command
             .atFixedTime(NOW)
-            .withState(TimeState(StateId(FEATURE_ID), NOW.minusMinutes(3), TestClock(NOW)))
+            .withState(TimeState(command.lastCallStateId.qualifier, NOW.minusMinutes(3), TestClock(NOW)))
             .hasReceived(
                 CommandAsked(
                     CHANNEL,

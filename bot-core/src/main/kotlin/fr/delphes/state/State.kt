@@ -1,5 +1,5 @@
 package fr.delphes.state
 
 interface State {
-    val id: StateId
+    val id: StateId<out State>
 }

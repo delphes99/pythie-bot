@@ -7,6 +7,7 @@ import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
 import fr.delphes.test.TestClock
 import fr.delphes.test.personna.NOW
+import io.mockk.every
 import io.mockk.mockk
 import java.time.LocalDateTime
 
@@ -22,8 +23,8 @@ class CustomFeatureRuntimeBuilder(
         return this
     }
 
-    inline fun <reified U : State> withState(timeState: U): CustomFeatureRuntimeBuilder {
-        stateManager.withState(timeState)
+    inline fun <reified U : State> withState(state: U): CustomFeatureRuntimeBuilder {
+        stateManager.withState(state)
         return this
     }
 
@@ -32,7 +33,7 @@ class CustomFeatureRuntimeBuilder(
             stateManager
                 .withState(ClockState(TestClock(fixedNow)))
         )
-        runtime.handleIncomingEvent(event, mockk())
+        runtime.handleIncomingEvent(event, mockk { every { featuresManager.stateManager } returns stateManager })
     }
 }
 
