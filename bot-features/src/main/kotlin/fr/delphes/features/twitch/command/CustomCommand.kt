@@ -1,9 +1,10 @@
 package fr.delphes.features.twitch.command
 
-import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
+import fr.delphes.features.twitch.TwitchEventParameters
+import fr.delphes.features.twitch.handlerFor
 import fr.delphes.rework.feature.CustomFeature
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.SimpleFeatureRuntime
@@ -19,7 +20,7 @@ class CustomCommand(
     trigger: String,
     override val id: FeatureId = FeatureId(uuid()),
     val cooldown: Duration = Duration.ZERO,
-    private val action: suspend CustomCommandParameters.() -> Unit
+    private val action: suspend TwitchEventParameters<CommandAsked>.() -> Unit
 ) : CustomFeature, TwitchFeature {
     private val triggerCommand = Command(trigger)
     override val commands = setOf(triggerCommand)
@@ -27,12 +28,11 @@ class CustomCommand(
     override fun buildRuntime(stateManager: StateManager): SimpleFeatureRuntime {
         val lastCallState = stateManager.getOrPut(StateId(id.value)) { TimeState.withClockFrom(stateManager, StateId(id.value)) }
 
-        val eventHandlers = EventHandlers.of { event: CommandAsked, bot ->
-            if (event.command == triggerCommand && event.channel == channel) {
-                if(lastCallState.hasMoreThan(cooldown))  {
-                    lastCallState.putNow()
-                    CustomCommandParameters(bot, event).action()
-                }
+        val eventHandlers = channel.handlerFor<CommandAsked> {
+            if (event.command == triggerCommand && lastCallState.hasMoreThan(cooldown)) {
+                lastCallState.putNow()
+
+                action()
             }
         }
 
