@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.bundles.ktor.client)
     implementation(libs.kitteh)
     testImplementation(libs.bundles.kotlin.test)
+    testImplementation(project(":utils-test"))
 }
 
 description = "twitch-api"

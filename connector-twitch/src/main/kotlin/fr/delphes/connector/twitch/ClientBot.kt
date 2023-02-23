@@ -44,6 +44,7 @@ class ClientBot(
         }
 
         return ChannelTwitchClient.builder(
+            twitchApi,
             configuration.clientId,
             credentialsManager,
             user,

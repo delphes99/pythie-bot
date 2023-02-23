@@ -1,12 +1,12 @@
 package fr.delphes.obs.fromObs
 
-import fr.delphes.obs.deserialize
+import fr.delphes.test.serialization.readAndDeserialize
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 
 class HelloTest : ShouldSpec({
     should("deserialize (with authentication required)") {
-        val payload = "/obs/fromObs/Hello_with_authentication.json".deserialize<FromOBSMessagePayload>()
+        val payload = "/obs/fromObs/Hello_with_authentication.json".readAndDeserialize<FromOBSMessagePayload>()
 
         payload shouldBe Hello(
             d = HelloPayloadData(
@@ -21,7 +21,7 @@ class HelloTest : ShouldSpec({
     }
 
     should("deserialize (with no authentication required)") {
-        val payload = "/obs/fromObs/Hello_without_authentication.json".deserialize<FromOBSMessagePayload>()
+        val payload = "/obs/fromObs/Hello_without_authentication.json".readAndDeserialize<FromOBSMessagePayload>()
 
         payload shouldBe Hello(
             HelloPayloadData(

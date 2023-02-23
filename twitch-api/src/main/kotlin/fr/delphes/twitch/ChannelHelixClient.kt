@@ -17,6 +17,8 @@ import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataP
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
+import fr.delphes.twitch.api.vip.payload.GetVIPsPayload
+import fr.delphes.twitch.api.vip.payload.VIPPayload
 import fr.delphes.twitch.auth.CredentialsManager
 import io.ktor.client.statement.HttpResponse
 import java.time.LocalDateTime
@@ -105,5 +107,13 @@ internal class ChannelHelixClient(
         )
 
         return payload.data.first()
+    }
+
+    override suspend fun getVIPs(): List<VIPPayload> {
+        val payload = "https://api.twitch.tv/helix/channels/vips".get<GetVIPsPayload>(
+            "broadcaster_id" to userId,
+        )
+
+        return payload.data
     }
 }

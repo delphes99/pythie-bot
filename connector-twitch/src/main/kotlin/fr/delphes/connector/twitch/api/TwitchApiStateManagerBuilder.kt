@@ -54,6 +54,7 @@ object TwitchApiStateManagerBuilder {
             val webhookSecret = "secretWithMoreThan10caracters"
 
             val channelTwitchApi = ChannelTwitchClient.builder(
+                appTwitchApi,
                 configuration.clientId,
                 credentialsManager,
                 user,

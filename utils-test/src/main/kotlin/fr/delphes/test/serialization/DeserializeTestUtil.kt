@@ -1,4 +1,4 @@
-package fr.delphes.obs
+package fr.delphes.test.serialization
 
 import fr.delphes.utils.loadResourceAsText
 import kotlinx.serialization.decodeFromString
@@ -12,7 +12,11 @@ internal val serializer = Json {
     coerceInputValues = true
 }
 
-inline fun <reified T> String.deserialize(): T {
+inline fun <reified T> String.readAndDeserialize(): T {
     val json = loadResourceAsText(this)!!
     return serializer.decodeFromString(json)
+}
+
+inline fun <reified T> String.deserialize(): T {
+    return serializer.decodeFromString(this)
 }

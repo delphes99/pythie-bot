@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "user_id": "11111",
+      "user_name": "UserDisplayName1",
+      "user_login": "userloginname1"
+    },
+    {
+      "user_id": "22222",
+      "user_name": "UserDisplayName2",
+      "user_login": "userloginname2"
+    }
+  ],
+  "pagination": {
+    "cursor": "eyJiIjpudWxsLCJhIjp7Ik9mZnNldCI6NX19"
+  }
+}

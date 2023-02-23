@@ -1,13 +1,13 @@
 package fr.delphes.obs.fromObs.event
 
-import fr.delphes.obs.deserialize
+import fr.delphes.test.serialization.readAndDeserialize
 import fr.delphes.obs.fromObs.FromOBSMessagePayload
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 
 class SourceFilterRemovedTest : ShouldSpec({
     should("deserialize") {
-        val payload = "/obs/fromObs/event/SourceFilterRemoved.json".deserialize<FromOBSMessagePayload>()
+        val payload = "/obs/fromObs/event/SourceFilterRemoved.json".readAndDeserialize<FromOBSMessagePayload>()
 
         payload.d shouldBe SourceFilterRemoved(
             eventIntent = 32,

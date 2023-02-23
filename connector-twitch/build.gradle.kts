@@ -12,6 +12,7 @@ dependencies {
     api(project(":twitch-api"))
     implementation(libs.ktor.client.core)
     testImplementation(libs.bundles.kotlin.test)
+    testImplementation(project(":utils-test"))
 }
 
 description = "connector-twitch"

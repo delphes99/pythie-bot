@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":bot-core"))
     implementation(libs.bundles.ktor.client)
     testImplementation(libs.bundles.kotlin.test)
+    testImplementation(project(":utils-test"))
 }
 
 description = "obs-client"

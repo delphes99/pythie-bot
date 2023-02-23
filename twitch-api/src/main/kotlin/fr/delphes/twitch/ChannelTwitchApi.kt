@@ -6,6 +6,7 @@ import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.streams.Stream
+import fr.delphes.twitch.api.user.TwitchUser
 import java.time.LocalDateTime
 
 interface ChannelTwitchApi : WebhookApi {
@@ -20,4 +21,6 @@ interface ChannelTwitchApi : WebhookApi {
     suspend fun getClips(startedAfter: LocalDateTime): List<Clip>
 
     suspend fun createPoll(poll: CreatePoll)
+
+    suspend fun getVIPs(): List<TwitchUser>
 }

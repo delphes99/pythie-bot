@@ -26,10 +26,14 @@ import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.api.streams.ThumbnailUrl
 import fr.delphes.twitch.api.user.TwitchUser
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.clip.ClipCreated
 import fr.delphes.twitch.clip.LastClipClient
 import fr.delphes.twitch.eventSub.EventSubConfiguration
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import mu.KotlinLogging
 import java.time.Duration
 import java.time.LocalDateTime
@@ -37,7 +41,8 @@ import java.time.LocalDateTime
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
     private val webhookApi: WebhookApi,
-    rewardsConfigurations: List<RewardConfiguration>
+    rewardsConfigurations: List<RewardConfiguration>,
+    private val appTwitchApi: AppTwitchApi
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
     private val rewards = RewardCache(rewardsConfigurations, helixApi)
 
@@ -74,10 +79,20 @@ class ChannelTwitchClient(
         helixApi.createPoll(poll)
     }
 
+    override suspend fun getVIPs(): List<TwitchUser> {
+        return coroutineScope {
+            helixApi.getVIPs()
+                .map { async { appTwitchApi.getUserById(UserId(it.userId)) } }
+                .awaitAll()
+                .filterNotNull()
+        }
+    }
+
     companion object {
         private val LOGGER = KotlinLogging.logger {}
 
         fun builder(
+            appTwitchApi: AppTwitchApi,
             clientId: String,
             credentialsManager: CredentialsManager,
             user: TwitchUser,
@@ -87,6 +102,7 @@ class ChannelTwitchClient(
             rewardsConfigurations: List<RewardConfiguration>
         ): Builder {
             return Builder(
+                appTwitchApi,
                 clientId,
                 credentialsManager,
                 user,
@@ -99,6 +115,7 @@ class ChannelTwitchClient(
     }
 
     class Builder(
+        private val appTwitchApi: AppTwitchApi,
         private val clientId: String,
         private val credentialsManager: CredentialsManager,
         private val user: TwitchUser,
@@ -218,6 +235,7 @@ class ChannelTwitchClient(
         }
 
         fun build(): ChannelTwitchClient {
+
             val helixApi = ChannelHelixClient(channel, clientId, credentialsManager, user.id)
 
             val webhookApi = WebhookClient(
@@ -243,7 +261,8 @@ class ChannelTwitchClient(
             return ChannelTwitchClient(
                 helixApi,
                 webhookApi,
-                rewardsConfigurations
+                rewardsConfigurations,
+                appTwitchApi
             )
         }
     }
