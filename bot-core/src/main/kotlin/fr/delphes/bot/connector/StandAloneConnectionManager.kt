@@ -14,19 +14,19 @@ import fr.delphes.bot.connector.state.InError
 import fr.delphes.bot.connector.status.ConnectorConnectionName
 import fr.delphes.bot.connector.status.ConnectorConnectionStatus
 import fr.delphes.bot.connector.status.ConnectorStatus
-import fr.delphes.bot.event.outgoing.OutgoingEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime>(
-    val connectionName: ConnectorConnectionName,
-    private val doConnection: suspend CoroutineScope.(CONFIGURATION, dispatchTransition: suspend (ConnectorTransition<CONFIGURATION, RUNTIME>) -> Unit) -> ConnectorTransition<CONFIGURATION, RUNTIME>,
-    private val executeEvent: suspend StandAloneConnectorStateMachine<CONFIGURATION, RUNTIME>.(event: OutgoingEvent) -> Unit,
-    var state: ConnectorState<CONFIGURATION, RUNTIME> = Disconnected()
-) : ConnectorStateManager<CONFIGURATION> {
-    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+abstract class StandAloneConnectionManager<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime>(
+    val configurationManager: ConfigurationManager<CONFIGURATION>,
+    var state: ConnectorState<CONFIGURATION, RUNTIME> = Disconnected(configurationManager.configuration)
+) : ConnectionManager<CONFIGURATION> {
+    protected val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    abstract val connectionName: ConnectorConnectionName
+
+    abstract suspend fun doConnection(configuration: CONFIGURATION) : ConnectorTransition<CONFIGURATION, RUNTIME>
 
     override val status: ConnectorStatus
         get() = ConnectorStatus(
@@ -42,8 +42,8 @@ class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RU
             )
         )
 
-    override suspend fun handle(command: ConnectorCommand, configurationManager: ConfigurationManager<CONFIGURATION>) {
-        handle(toTransition(command))
+    override suspend fun dispatchTransition(command: ConnectorCommand) {
+        dispatchTransition(toTransition(command))
     }
 
     private fun toTransition(command: ConnectorCommand): ConnectorTransition<CONFIGURATION, RUNTIME> = when (command) {
@@ -51,7 +51,7 @@ class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RU
         ConnectorCommand.DISCONNECTION_REQUESTED -> DisconnectionRequested()
     }
 
-    suspend fun handle(transition: ConnectorTransition<out CONFIGURATION, RUNTIME>) {
+    suspend fun dispatchTransition(transition: ConnectorTransition<out CONFIGURATION, RUNTIME>) {
         val oldState = state
         val newState = oldState.handle(transition)
 
@@ -80,7 +80,7 @@ class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RU
         val configuration = newState.configuration
 
         launchEffect(configuration) {
-            doConnection(configuration, this@StandAloneConnectorStateMachine::handle)
+            doConnection(configuration)
         }
     }
 
@@ -98,7 +98,7 @@ class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RU
         doEffect: suspend CoroutineScope.() -> ConnectorTransition<CONFIGURATION, RUNTIME>
     ) {
         scope.launch {
-            handle(
+            dispatchTransition(
                 try {
                     doEffect()
                 } catch (e: Exception) {
@@ -106,9 +106,5 @@ class StandAloneConnectorStateMachine<CONFIGURATION : ConnectorConfiguration, RU
                 }
             )
         }
-    }
-
-    override suspend fun execute(event: OutgoingEvent) {
-        executeEvent(event)
     }
 }

@@ -19,7 +19,7 @@ class StreamOnlineMapper(
     ): List<TwitchIncomingEvent> {
         val twitchChannel = TwitchChannel(twitchEvent.broadcaster_user_name)
         val statistics = connector.statistics.of(twitchChannel)
-        return connector.connectorStateManager.whenRunning(
+        return connector.connectionManager.whenRunning(
             whenRunning = {
                 val channel = clientBot.channelOf(twitchChannel)
 

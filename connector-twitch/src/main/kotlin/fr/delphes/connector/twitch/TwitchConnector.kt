@@ -41,7 +41,7 @@ class TwitchConnector(
 
     private val twitchHelixApi = TwitchHelixClient()
 
-    override val connectorStateManager = TwitchStateManager.build(this, bot)
+    override val connectionManager = TwitchConnectionManager(this)
 
     private val internalHandler = TwitchConnectorHandler(this)
 
@@ -92,14 +92,14 @@ class TwitchConnector(
     private suspend fun AuthToken.toConfigurationTwitchAccount(): ConfigurationTwitchAccount {
         val userInfos = twitchHelixApi.getUserInfosOf(this)
 
-        return ConfigurationTwitchAccount(this, userInfos.preferred_username.lowercase())
+        return ConfigurationTwitchAccount.of(this, userInfos.preferred_username.lowercase())
     }
 
     private val userCache = InMemoryCache<String, UserInfos>(
         expirationDuration = Duration.ofMinutes(120),
         clock = SystemClock,
         retrieve = { user ->
-            connectorStateManager.whenRunning(
+            connectionManager.whenRunning(
                 whenRunning = {
                     getUserInfos(User(user), clientBot.twitchApi)
                 },
@@ -114,7 +114,7 @@ class TwitchConnector(
         expirationDuration = Duration.ofMinutes(5),
         clock = SystemClock,
         retrieve = { user ->
-            connectorStateManager.whenRunning(
+            connectionManager.whenRunning(
                 whenRunning = {
                     clientBot.twitchApi.getChannelInformation(user)
                 },

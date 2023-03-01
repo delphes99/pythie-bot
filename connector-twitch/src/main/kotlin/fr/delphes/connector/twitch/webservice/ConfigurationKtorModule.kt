@@ -28,7 +28,7 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
             this.call.respond(
                 ConfigurationOverview(
                     configuration?.clientId ?: "",
-                    configuration?.botAccountName ?: "",
+                    configuration?.botAccountName?.userName,
                     configuration?.channelsName?.toList() ?: emptyList()
                 )
             )

@@ -9,17 +9,17 @@ import kotlinx.serialization.Serializable
 data class TwitchConfiguration(
     val clientId: String,
     val clientSecret: String,
-    val botAccountName: String?,
+    val botAccountName: ConfigurationTwitchAccountName?,
     val channelsName: Set<String> = emptySet(),
     private val channelsCredentials: List<ConfigurationTwitchAccount> = emptyList(),
     val appToken: AuthToken? = null
 ): ConnectorConfiguration {
-    val botAccount get() = botAccountName?.let(::TwitchChannel)
+    val botAccount get() = botAccountName?.userName?.let(::TwitchChannel)
     val botIdentity get() = channelsCredentials.firstOrNull { account -> account.userName == botAccountName }
 
     val listenedChannels get() = run {
         //TODO normalize twitch channel name
-        channelsCredentials.filter { account -> channelsName.any { it.equals(account.userName, true) } }
+        channelsCredentials.filter { account -> channelsName.any { it.equals(account.userName.userName, true) } }
     }
 
     companion object {
@@ -44,7 +44,7 @@ data class TwitchConfiguration(
 
     fun addChannel(account: ConfigurationTwitchAccount): TwitchConfiguration {
         return this.copy(
-            channelsName = this.channelsName.plus(account.userName),
+            channelsName = this.channelsName.plus(account.userName.userName),
             channelsCredentials = this.channelsCredentials
                 .filter { channel -> channel.userName != account.userName }
                 .plus(account)
@@ -61,7 +61,7 @@ data class TwitchConfiguration(
     private fun clean(): TwitchConfiguration {
         return this.copy(
             channelsCredentials = this.channelsCredentials
-                .filter { channel -> channelsName.contains(channel.userName) || channel.userName == botAccountName }
+                .filter { channel -> channelsName.contains(channel.userName.userName) || channel.userName == botAccountName }
         )
     }
 
@@ -73,7 +73,7 @@ data class TwitchConfiguration(
 
     fun getChannelConfiguration(channel: TwitchChannel): ConfigurationTwitchAccount? {
         return this.channelsCredentials.firstOrNull { credential ->
-            credential.userName.equals(
+            credential.userName.userName.equals(
                 channel.normalizeName,
                 ignoreCase = true
             )
@@ -83,8 +83,8 @@ data class TwitchConfiguration(
     fun newChannelToken(channel: TwitchChannel, newToken: AuthToken): TwitchConfiguration {
         return copy(
             channelsCredentials = channelsCredentials
-                .filter { savedChannel -> savedChannel.userName != channel.normalizeName }
-                .plus(ConfigurationTwitchAccount(newToken, channel.normalizeName))
+                .filter { savedChannel -> savedChannel.userName.userName != channel.normalizeName }
+                .plus(ConfigurationTwitchAccount.of(newToken, channel.normalizeName))
         )
     }
 }

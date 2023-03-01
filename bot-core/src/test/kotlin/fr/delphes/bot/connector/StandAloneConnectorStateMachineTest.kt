@@ -9,115 +9,99 @@ import fr.delphes.bot.connector.state.ConnectorTransition
 import fr.delphes.bot.connector.state.Disconnected
 import fr.delphes.bot.connector.state.ErrorOccurred
 import fr.delphes.bot.connector.state.InError
+import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class StandAloneConnectorStateMachineTest : ShouldSpec({
     should("state after connection request is connecting") {
-        val stateMachine = buildStateMachine(
-            doConnection = { _, _ ->
-                delay(1)
-                ConnectionSuccessful(CONFIGURATION, ConnectorRuntimeForTest)
-            },
-            initialState = Disconnected(CONFIGURATION),
-        )
+        val stateMachine = TestConnectionManager()
 
-        runBlocking {
-            stateMachine.handle(ConnectionRequested())
-        }
+        stateMachine.dispatchTransition(ConnectionRequested())
 
         stateMachine.state shouldBe Connecting(CONFIGURATION)
     }
 
     should("state after connection successful is connected") {
-        val stateMachine = buildStateMachine(
-            doConnection = { _, _ ->
-                delay(1)
-                ConnectionSuccessful(CONFIGURATION, ConnectorRuntimeForTest)
-            },
-            initialState = Disconnected(CONFIGURATION),
-        )
+        val stateMachine = TestConnectionManager()
 
-        runBlocking {
-            stateMachine.handle(ConnectionRequested())
+        stateMachine.dispatchTransition(ConnectionRequested())
 
-            delay(50)
-            stateMachine.state shouldBe Connected(CONFIGURATION, ConnectorRuntimeForTest)
-        }
+        delay(50)
+        stateMachine.state shouldBe Connected(CONFIGURATION, ConnectorRuntimeForTest)
     }
 
     should("state after error has occurred is in error") {
-        val stateMachine = buildStateMachine(
-            doConnection = { _, _ ->
-                delay(1)
-                ErrorOccurred(CONFIGURATION, "some error")
-            },
-            initialState = Disconnected(CONFIGURATION),
+        val stateMachine = TestConnectionManager(
+            ErrorOccurred(CONFIGURATION, "some error")
         )
 
-        runBlocking {
-            stateMachine.handle(ConnectionRequested())
+        stateMachine.dispatchTransition(ConnectionRequested())
 
-            delay(50)
-            stateMachine.state shouldBe InError(CONFIGURATION, "some error")
-        }
+        delay(50)
+        stateMachine.state shouldBe InError(CONFIGURATION, "some error")
     }
 
     should("state after an exception is in error") {
-        val stateMachine = buildStateMachine(
-            doConnection = { _, _ ->
-                delay(1)
-                withContext(Dispatchers.Default + SupervisorJob()) {
-                    throw Exception("some error")
-                }
-            },
-            initialState = Disconnected(CONFIGURATION),
-        )
+        val stateMachine = TestConnectionManager({
+            withContext(Dispatchers.Default + SupervisorJob()) {
+                throw Exception("some error")
+            }
+        })
 
-        runBlocking {
-            stateMachine.handle(ConnectionRequested())
+        stateMachine.dispatchTransition(ConnectionRequested())
 
-            delay(50)
-            stateMachine.state shouldBe InError(CONFIGURATION, "Error has occurred : some error")
-        }
+        delay(50)
+        stateMachine.state shouldBe InError(CONFIGURATION, "Error has occurred : some error")
     }
 
     should("change state when connected will kill the runtime") {
         val runtime = mockk<ConnectorRuntimeForTest>(relaxed = true)
 
-        val stateMachine = buildStateMachine(
+        val stateMachine = TestConnectionManager(
             initialState = Connected(CONFIGURATION, runtime),
         )
 
-        runBlocking {
-            stateMachine.handle(ErrorOccurred(CONFIGURATION, "error"))
+        stateMachine.dispatchTransition(ErrorOccurred(CONFIGURATION, "error"))
 
-            coVerify(exactly = 1) { runtime.kill() }
-        }
+        coVerify(exactly = 1) { runtime.kill() }
     }
 }) {
     companion object {
         private val CONFIGURATION = ConfigurationStub("value")
+    }
 
-        private fun buildStateMachine(
-            initialState: ConnectorState<ConfigurationStub, ConnectorRuntimeForTest> = Disconnected(),
-            doConnection: suspend CoroutineScope.(ConfigurationStub, suspend (ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest>) -> Unit) -> ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest> = { _, _ ->
-                ConnectionSuccessful(CONFIGURATION, ConnectorRuntimeForTest)
-            }
-        ) =
-            StandAloneConnectorStateMachine(
-                connectionName = "Test",
-                doConnection = doConnection,
-                state = initialState,
-                executeEvent = {}
-            )
+    class TestConnectionManager(
+        private val transitionToReturnAtConnection: suspend () -> ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest>,
+        initialState: ConnectorState<ConfigurationStub, ConnectorRuntimeForTest> = Disconnected(CONFIGURATION),
+    ) :
+        StandAloneConnectionManager<ConfigurationStub, ConnectorRuntimeForTest>(
+            InMemoryConfigurationManager(CONFIGURATION),
+            initialState
+        ) {
+
+        constructor(
+            transitionToReturnAtConnection: ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest> = ConnectionSuccessful(CONFIGURATION, ConnectorRuntimeForTest),
+            initialState: ConnectorState<ConfigurationStub, ConnectorRuntimeForTest> = Disconnected(CONFIGURATION),
+        ) : this(
+            { transitionToReturnAtConnection },
+            initialState
+        )
+
+        override val connectionName = "connection for test"
+
+        override suspend fun doConnection(configuration: ConfigurationStub): ConnectorTransition<ConfigurationStub, ConnectorRuntimeForTest> {
+            return transitionToReturnAtConnection()
+        }
+
+        override suspend fun execute(event: OutgoingEvent) {
+            //Nothing
+        }
     }
 }

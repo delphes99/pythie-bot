@@ -8,8 +8,19 @@ import kotlinx.serialization.Transient
 @Serializable
 data class ConfigurationTwitchAccount(
     val authToken: AuthToken,
-    val userName: String
+    val userName: ConfigurationTwitchAccountName
 ) {
     @Transient
-    val channel = TwitchChannel(userName)
+    val channel = TwitchChannel(userName.userName)
+
+    companion object {
+        fun of(authToken: AuthToken, userName: String) = ConfigurationTwitchAccount(
+            authToken,
+            ConfigurationTwitchAccountName(userName)
+        )
+    }
 }
+
+@Serializable
+@JvmInline
+value class ConfigurationTwitchAccountName(val userName: String)

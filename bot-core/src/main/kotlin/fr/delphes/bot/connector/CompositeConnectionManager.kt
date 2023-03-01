@@ -6,24 +6,24 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-interface CompositeConnectorStateMachine<CONFIGURATION : ConnectorConfiguration> : ConnectorStateManager<CONFIGURATION> {
-    val subStateManagers: List<ConnectorStateManager<CONFIGURATION>>
+interface CompositeConnectionManager<CONFIGURATION : ConnectorConfiguration> : ConnectionManager<CONFIGURATION> {
+    val subConnectionManagers: List<ConnectionManager<CONFIGURATION>>
 
     override val status: ConnectorStatus
         get() = ConnectorStatus(
-            subStateManagers.fold(emptyMap()) { acc, manager ->
+            subConnectionManagers.fold(emptyMap()) { acc, manager ->
                 acc + manager.status.subStatus
             }
         )
 
-    override suspend fun handle(command: ConnectorCommand, configurationManager: ConfigurationManager<CONFIGURATION>) {
+    override suspend fun dispatchTransition(command: ConnectorCommand) {
         coroutineScope {
-            subStateManagers.map { sm -> async { sm.handle(command, configurationManager) } }
+            subConnectionManagers.map { sm -> async { sm.dispatchTransition(command) } }
         }.awaitAll()
     }
 
     override suspend fun execute(event: OutgoingEvent) {
-        subStateManagers.forEach { sm ->
+        subConnectionManagers.forEach { sm ->
             sm.execute(event)
         }
     }
