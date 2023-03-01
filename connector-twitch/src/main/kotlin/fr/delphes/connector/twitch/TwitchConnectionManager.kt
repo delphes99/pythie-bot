@@ -2,7 +2,7 @@ package fr.delphes.connector.twitch
 
 import fr.delphes.bot.connector.CompositeConnectionManager
 import fr.delphes.bot.connector.ConnectorCommand
-import fr.delphes.bot.connector.state.Connected
+import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.connector.twitch.api.TwitchApiChannelConnectionManager
 import fr.delphes.connector.twitch.api.TwitchApiConnectionManager
 import fr.delphes.connector.twitch.irc.TwitchIrcChannelConnectionManager

@@ -1,7 +1,7 @@
 package fr.delphes.bot.connector.status
 
-import fr.delphes.bot.connector.state.endpoint.ConnectorStatusEnum
-import fr.delphes.bot.connector.state.endpoint.ConnectorStatusOutput
+import fr.delphes.bot.connector.connectionstate.endpoint.ConnectorStatusEnum
+import fr.delphes.bot.connector.connectionstate.endpoint.ConnectorStatusOutput
 
 data class ConnectorStatus(
     val subStatus: Map<ConnectorConnectionName, ConnectorConnectionStatus>

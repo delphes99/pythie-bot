@@ -1,4 +1,4 @@
-package fr.delphes.bot.connector.state.endpoint
+package fr.delphes.bot.connector.connectionstate.endpoint
 
 import fr.delphes.bot.connector.status.ConnectorConnectionStatus
 import fr.delphes.bot.connector.status.ConnectorStatus

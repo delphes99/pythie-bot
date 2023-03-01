@@ -1,16 +1,16 @@
 package fr.delphes.bot.connector
 
-import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.state.Connecting
-import fr.delphes.bot.connector.state.ConnectionRequested
-import fr.delphes.bot.connector.state.ConnectorState
-import fr.delphes.bot.connector.state.ConnectorTransition
-import fr.delphes.bot.connector.state.Disconnected
-import fr.delphes.bot.connector.state.Disconnecting
-import fr.delphes.bot.connector.state.DisconnectionRequested
-import fr.delphes.bot.connector.state.DisconnectionSuccessful
-import fr.delphes.bot.connector.state.ErrorOccurred
-import fr.delphes.bot.connector.state.InError
+import fr.delphes.bot.connector.connectionstate.Connected
+import fr.delphes.bot.connector.connectionstate.Connecting
+import fr.delphes.bot.connector.connectionstate.ConnectionRequested
+import fr.delphes.bot.connector.connectionstate.ConnectorState
+import fr.delphes.bot.connector.connectionstate.ConnectorTransition
+import fr.delphes.bot.connector.connectionstate.Disconnected
+import fr.delphes.bot.connector.connectionstate.Disconnecting
+import fr.delphes.bot.connector.connectionstate.DisconnectionRequested
+import fr.delphes.bot.connector.connectionstate.DisconnectionSuccessful
+import fr.delphes.bot.connector.connectionstate.ErrorOccurred
+import fr.delphes.bot.connector.connectionstate.InError
 import fr.delphes.bot.connector.status.ConnectorConnectionName
 import fr.delphes.bot.connector.status.ConnectorConnectionStatus
 import fr.delphes.bot.connector.status.ConnectorStatus

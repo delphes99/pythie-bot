@@ -1,8 +1,8 @@
 package fr.delphes.connector.twitch.irc
 
 import fr.delphes.bot.connector.StandAloneConnectionManager
-import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.state.ConnectionSuccessful
+import fr.delphes.bot.connector.connectionstate.Connected
+import fr.delphes.bot.connector.connectionstate.ConnectionSuccessful
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchConfiguration
 import fr.delphes.connector.twitch.TwitchConnector

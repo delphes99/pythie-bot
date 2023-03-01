@@ -1,10 +1,10 @@
 package fr.delphes.connector.obs
 
 import fr.delphes.bot.connector.StandAloneConnectionManager
-import fr.delphes.bot.connector.state.ConnectionSuccessful
-import fr.delphes.bot.connector.state.ConnectorTransition
-import fr.delphes.bot.connector.state.DisconnectionRequested
-import fr.delphes.bot.connector.state.ErrorOccurred
+import fr.delphes.bot.connector.connectionstate.ConnectionSuccessful
+import fr.delphes.bot.connector.connectionstate.ConnectorTransition
+import fr.delphes.bot.connector.connectionstate.DisconnectionRequested
+import fr.delphes.bot.connector.connectionstate.ErrorOccurred
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.business.SourceFilter
 import fr.delphes.connector.obs.incomingEvent.SceneChanged

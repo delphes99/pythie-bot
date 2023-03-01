@@ -1,14 +1,14 @@
 package fr.delphes.bot.connector
 
-import fr.delphes.bot.connector.state.Connected
-import fr.delphes.bot.connector.state.Connecting
-import fr.delphes.bot.connector.state.ConnectionRequested
-import fr.delphes.bot.connector.state.ConnectionSuccessful
-import fr.delphes.bot.connector.state.ConnectorState
-import fr.delphes.bot.connector.state.ConnectorTransition
-import fr.delphes.bot.connector.state.Disconnected
-import fr.delphes.bot.connector.state.ErrorOccurred
-import fr.delphes.bot.connector.state.InError
+import fr.delphes.bot.connector.connectionstate.Connected
+import fr.delphes.bot.connector.connectionstate.Connecting
+import fr.delphes.bot.connector.connectionstate.ConnectionRequested
+import fr.delphes.bot.connector.connectionstate.ConnectionSuccessful
+import fr.delphes.bot.connector.connectionstate.ConnectorState
+import fr.delphes.bot.connector.connectionstate.ConnectorTransition
+import fr.delphes.bot.connector.connectionstate.Disconnected
+import fr.delphes.bot.connector.connectionstate.ErrorOccurred
+import fr.delphes.bot.connector.connectionstate.InError
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe

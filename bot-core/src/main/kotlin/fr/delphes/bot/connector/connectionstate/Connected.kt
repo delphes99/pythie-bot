@@ -1,4 +1,4 @@
-package fr.delphes.bot.connector.state
+package fr.delphes.bot.connector.connectionstate
 
 import fr.delphes.bot.connector.ConnectorConfiguration
 import fr.delphes.bot.connector.ConnectorRuntime

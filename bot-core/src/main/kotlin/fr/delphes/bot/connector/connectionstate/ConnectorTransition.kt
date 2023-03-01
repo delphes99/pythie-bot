@@ -1,4 +1,4 @@
-package fr.delphes.bot.connector.state
+package fr.delphes.bot.connector.connectionstate
 
 sealed interface ConnectorTransition<CONFIGURATION, RUNTIME>
 

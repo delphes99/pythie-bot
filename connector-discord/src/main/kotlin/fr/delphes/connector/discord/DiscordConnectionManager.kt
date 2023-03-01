@@ -7,8 +7,8 @@ import dev.kord.gateway.Intent
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
 import fr.delphes.bot.connector.StandAloneConnectionManager
-import fr.delphes.bot.connector.state.ConnectionSuccessful
-import fr.delphes.bot.connector.state.ConnectorTransition
+import fr.delphes.bot.connector.connectionstate.ConnectionSuccessful
+import fr.delphes.bot.connector.connectionstate.ConnectorTransition
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.discord.incomingEvent.NewGuildMember
 import fr.delphes.connector.discord.outgoingEvent.DiscordOutgoingEvent

@@ -3,7 +3,7 @@ package fr.delphes.connector.discord
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.SimpleConfigurationManager
-import fr.delphes.bot.connector.state.Connected
+import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.connector.discord.endpoint.DiscordModule
 import fr.delphes.state.State
 import io.ktor.server.application.Application

@@ -1,6 +1,6 @@
 package fr.delphes.bot
 
-import fr.delphes.bot.connector.state.endpoint.ConnectorsModule
+import fr.delphes.bot.connector.connectionstate.endpoint.ConnectorsModule
 import fr.delphes.bot.media.MediaModule
 import fr.delphes.bot.media.MediasService
 import fr.delphes.bot.overlay.Overlays

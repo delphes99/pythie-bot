@@ -1,4 +1,4 @@
-package fr.delphes.bot.connector.state.endpoint
+package fr.delphes.bot.connector.connectionstate.endpoint
 
 import kotlinx.serialization.Serializable
 

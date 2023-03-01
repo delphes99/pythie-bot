@@ -1,18 +1,17 @@
-package fr.delphes.bot.connector.state
+package fr.delphes.bot.connector.connectionstate
 
 import fr.delphes.bot.connector.ConnectorConfiguration
 import fr.delphes.bot.connector.ConnectorRuntime
 
-data class Disconnected<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime>(
-    override val configuration: CONFIGURATION? = null
+data class InError<CONFIGURATION: ConnectorConfiguration, RUNTIME: ConnectorRuntime>(
+    override val configuration: CONFIGURATION,
+    private val error: String
 ) : ConnectorState<CONFIGURATION, RUNTIME> {
     override suspend fun handle(
         transition: ConnectorTransition<out CONFIGURATION, RUNTIME>
     ): ConnectorState<CONFIGURATION, RUNTIME> {
-        if (configuration == null) return this
-
         return when (transition) {
-            is Configure -> Disconnected(transition.configuration)
+            is Configure -> configureIfNewConfiguration(transition.configuration)
             is ConnectionRequested -> Connecting(configuration)
             is ConnectionSuccessful -> if (configuration == transition.configuration) {
                 Connected(configuration, transition.runtime)
@@ -21,11 +20,15 @@ data class Disconnected<CONFIGURATION : ConnectorConfiguration, RUNTIME : Connec
             }
             is DisconnectionRequested -> this
             is DisconnectionSuccessful -> if (configuration == transition.configuration) {
-                this
+                Disconnected(configuration)
             } else {
                 InError(configuration, "disconnection received for another configuration")
             }
-            is ErrorOccurred -> InError(configuration, errorMessageFor(transition))
+            is ErrorOccurred -> if (configuration == transition.configuration) {
+                InError(configuration, transition.error)
+            } else {
+                InError(configuration, "error for another configuration")
+            }
         }
     }
 }
