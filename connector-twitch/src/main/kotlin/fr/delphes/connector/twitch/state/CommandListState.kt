@@ -1,15 +1,15 @@
 package fr.delphes.connector.twitch.state
 
+import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.command.Command
-import fr.delphes.state.State
-import fr.delphes.state.StateIdQualifier
 import fr.delphes.state.StateId
+import fr.delphes.state.StateIdQualifier
 import fr.delphes.twitch.TwitchChannel
 
 class CommandListState(
     private val connector: TwitchConnector
-) : State {
+) : ConnectorState {
     override val id = ID
 
     fun getCommandsOf(channel: TwitchChannel): List<Command> = connector.commandsFor(channel)

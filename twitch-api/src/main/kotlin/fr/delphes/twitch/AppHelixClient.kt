@@ -49,7 +49,7 @@ class AppHelixClient(
 
     override suspend fun getUserById(userId: UserId): GetUsersDataPayload? {
         val payload = "https://api.twitch.tv/helix/users".get<GetUsersPayload>(
-            "id" to userId
+            "id" to userId.id
         )
 
         return payload.data.firstOrNull()

@@ -2,6 +2,7 @@ package fr.delphes.connector.discord
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.connector.discord.endpoint.DiscordModule
@@ -14,7 +15,7 @@ class DiscordConnector(
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
     override val connectorName = "Discord"
 
-    override val states = emptyList<State>()
+    override val states = emptyList<ConnectorState>()
 
     override val configurationManager = SimpleConfigurationManager(
         DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")

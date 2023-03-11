@@ -2,12 +2,11 @@ package fr.delphes.bot.connector
 
 import fr.delphes.bot.connector.status.ConnectorStatus
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.state.State
 import io.ktor.server.application.Application
 
 interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> {
     val connectorName: String
-    val states: List<State>
+    val states: List<ConnectorState>
     val configurationManager: ConfigurationManager<CONFIGURATION>
     val connectionManager: ConnectionManager<CONFIGURATION>
 

@@ -52,7 +52,6 @@ data class TwitchConfiguration(
     }
 
     fun removeChannel(channelName: String): TwitchConfiguration {
-
         return this
             .copy(channelsName = this.channelsName.minus(channelName))
             .clean()

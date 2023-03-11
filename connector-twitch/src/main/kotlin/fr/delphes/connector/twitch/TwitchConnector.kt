@@ -6,6 +6,7 @@ import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.connector.twitch.state.CommandListState
+import fr.delphes.connector.twitch.state.GetVipState
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
 import fr.delphes.connector.twitch.user.UserInfos
 import fr.delphes.connector.twitch.user.getUserInfos
@@ -30,7 +31,8 @@ class TwitchConnector(
     override val connectorName = "Twitch"
 
     override val states = listOf(
-        CommandListState(this)
+        CommandListState(this),
+        GetVipState(this)
     )
 
     override val configurationManager = TwitchConfigurationManager(

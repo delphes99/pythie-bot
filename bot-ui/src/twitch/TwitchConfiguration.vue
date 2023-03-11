@@ -151,7 +151,7 @@ const buildGetAuthUrl = (state: string) => () => {
   params.append("redirect_uri", `${backendUrl}/twitch/configuration/userCredential`)
   params.append(
     "scope",
-    "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions channel:manage:polls channel:manage:predictions",
+    "user:read:email bits:read channel:read:hype_train channel:read:subscriptions chat:read chat:edit whispers:edit channel:moderate channel:read:redemptions channel:manage:redemptions channel:manage:polls channel:manage:predictions channel:manage:vips",
   )
   params.append("state", state)
 

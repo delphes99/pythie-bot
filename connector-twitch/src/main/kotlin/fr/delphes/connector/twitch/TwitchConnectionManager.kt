@@ -4,6 +4,7 @@ import fr.delphes.bot.connector.CompositeConnectionManager
 import fr.delphes.bot.connector.ConnectorCommand
 import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.connector.twitch.api.TwitchApiChannelConnectionManager
+import fr.delphes.connector.twitch.api.TwitchApiChannelRuntime
 import fr.delphes.connector.twitch.api.TwitchApiConnectionManager
 import fr.delphes.connector.twitch.irc.TwitchIrcChannelConnectionManager
 import fr.delphes.connector.twitch.irc.TwitchIrcConnectionManager
@@ -20,6 +21,12 @@ class TwitchConnectionManager(
 
     private val ircChannelConnectionManagers = mutableMapOf<ConfigurationTwitchAccountName, TwitchIrcChannelConnectionManager>()
     private val apiChannelConnectionManagers = mutableMapOf<ConfigurationTwitchAccountName, TwitchApiChannelConnectionManager>()
+
+    suspend fun <T> whenConnected(channelName: ConfigurationTwitchAccountName, doStuff: suspend TwitchApiChannelRuntime.() -> T?) =
+        when (val state = apiChannelConnectionManagers[channelName]?.state) {
+            is Connected -> state.runtime.doStuff()
+            else -> null
+        }
 
     override suspend fun dispatchTransition(command: ConnectorCommand) {
         try {
