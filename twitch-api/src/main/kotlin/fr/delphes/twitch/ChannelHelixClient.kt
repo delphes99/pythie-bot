@@ -131,4 +131,12 @@ internal class ChannelHelixClient(
             "user_id" to user.id
         )
     }
+
+    override suspend fun sendShoutout(user: TwitchUser) {
+        "https://api.twitch.tv/helix/chat/shoutouts".post<HttpResponse>(
+            "from_broadcaster_id" to userId,
+            "to_broadcaster_id" to user.id,
+            "moderator_id" to userId,
+        )
+    }
 }

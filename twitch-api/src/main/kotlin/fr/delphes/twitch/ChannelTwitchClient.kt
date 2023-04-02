@@ -96,6 +96,10 @@ class ChannelTwitchClient(
         helixApi.promoteVip(user)
     }
 
+    override suspend fun sendShoutout(user: TwitchUser) {
+        helixApi.sendShoutout(user)
+    }
+
     companion object {
         private val LOGGER = KotlinLogging.logger {}
 

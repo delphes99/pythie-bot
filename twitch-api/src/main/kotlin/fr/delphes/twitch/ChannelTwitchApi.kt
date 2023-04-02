@@ -27,4 +27,6 @@ interface ChannelTwitchApi : WebhookApi {
     suspend fun removeVip(user: TwitchUser)
 
     suspend fun promoteVip(user: TwitchUser)
+
+    suspend fun sendShoutout(user: TwitchUser)
 }
