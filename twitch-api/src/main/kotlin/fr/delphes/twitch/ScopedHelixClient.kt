@@ -60,6 +60,17 @@ abstract class ScopedHelixClient(
         }
     }
 
+    protected suspend inline fun <reified T> String.post(
+        vararg parameters: Pair<String, String>
+    ): T {
+        return authorizeCall { token ->
+            httpClient.post(this) {
+                headersAndParameters(token, *parameters)
+                contentType(ContentType.Application.Json)
+            }.body()
+        }
+    }
+
     protected suspend inline fun <reified T> String.patch(
         payload: Any,
         vararg parameters: Pair<String, String>

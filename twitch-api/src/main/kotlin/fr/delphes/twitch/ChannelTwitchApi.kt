@@ -25,4 +25,6 @@ interface ChannelTwitchApi : WebhookApi {
     suspend fun getVIPs(): List<TwitchUser>
 
     suspend fun removeVip(user: TwitchUser)
+
+    suspend fun promoteVip(user: TwitchUser)
 }

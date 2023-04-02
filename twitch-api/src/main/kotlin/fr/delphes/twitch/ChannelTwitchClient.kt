@@ -92,6 +92,10 @@ class ChannelTwitchClient(
         helixApi.removeVip(user)
     }
 
+    override suspend fun promoteVip(user: TwitchUser) {
+        helixApi.promoteVip(user)
+    }
+
     companion object {
         private val LOGGER = KotlinLogging.logger {}
 

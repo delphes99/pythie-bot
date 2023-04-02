@@ -124,4 +124,11 @@ internal class ChannelHelixClient(
             "user_id" to user.id
         )
     }
+
+    override suspend fun promoteVip(user: TwitchUser) {
+        "https://api.twitch.tv/helix/channels/vips".post<HttpResponse>(
+            "broadcaster_id" to userId,
+            "user_id" to user.id
+        )
+    }
 }

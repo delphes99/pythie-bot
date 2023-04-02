@@ -1,22 +1,23 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
+import fr.delphes.connector.twitch.TwitchConnector
+import fr.delphes.connector.twitch.user.toTwitchUser
+import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.User
-import fr.delphes.twitch.irc.IrcChannel
-import fr.delphes.twitch.irc.IrcClient
 
 data class PromoteVIP(
     val user: User,
     override val channel: TwitchChannel
-) : TwitchOwnerChatOutgoingEvent {
+) : TwitchApiOutgoingEvent {
     constructor(
         user: String,
         channel: TwitchChannel
     ) : this(User(user), channel)
 
-    override suspend fun executeOnTwitch(
-        chat: IrcClient,
-    ) {
-        chat.sendMessage(IrcChannel.of(channel), "/vip $user")
+    override suspend fun executeOnTwitch(twitchApi: ChannelTwitchApi, connector: TwitchConnector) {
+        connector.getUser(user)?.toTwitchUser()?.let { user ->
+            twitchApi.promoteVip(user)
+        }
     }
 }

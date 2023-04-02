@@ -36,4 +36,6 @@ interface ChannelHelixApi {
     suspend fun getVIPs(): List<VIPPayload>
 
     suspend fun removeVip(user: TwitchUser)
+
+    suspend fun promoteVip(user: TwitchUser)
 }
