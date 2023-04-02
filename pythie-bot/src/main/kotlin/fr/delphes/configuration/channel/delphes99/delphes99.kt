@@ -380,7 +380,7 @@ val delphes99CustomFeatures = listOf(
         channel,
         "!bluff"
     ) {
-        listOf(
+        executeOutgoingEvent(
             PlaySound(
                 listOf(
                     "bluff-1.mp3",
