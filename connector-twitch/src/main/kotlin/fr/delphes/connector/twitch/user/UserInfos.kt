@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 
 data class UserInfos(
     val name: String,
+    val id: String,
     val broadcasterType: BroadcasterType,
     val viewCount: Long,
     val lastStreamTitle: String? = null,

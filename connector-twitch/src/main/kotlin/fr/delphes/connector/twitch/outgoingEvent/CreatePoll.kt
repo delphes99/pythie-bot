@@ -1,5 +1,6 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
+import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelPoll.PollChoice
@@ -20,7 +21,8 @@ data class CreatePoll(
     ) : this(channel, title, duration, listOf(*choices))
 
     override suspend fun executeOnTwitch(
-        twitchApi: ChannelTwitchApi
+        twitchApi: ChannelTwitchApi,
+        connector: TwitchConnector
     ) {
         twitchApi.createPoll(
             TwitchCreatePoll(

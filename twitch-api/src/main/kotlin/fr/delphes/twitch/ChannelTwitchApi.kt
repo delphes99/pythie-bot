@@ -23,4 +23,6 @@ interface ChannelTwitchApi : WebhookApi {
     suspend fun createPoll(poll: CreatePoll)
 
     suspend fun getVIPs(): List<TwitchUser>
+
+    suspend fun removeVip(user: TwitchUser)
 }

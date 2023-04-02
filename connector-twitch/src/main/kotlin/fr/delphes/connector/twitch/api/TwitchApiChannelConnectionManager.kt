@@ -75,7 +75,7 @@ class TwitchApiChannelConnectionManager(
 
             try {
                 if (currentState is Connected) {
-                    event.executeOnTwitch(currentState.runtime.channelTwitchApi)
+                    event.executeOnTwitch(currentState.runtime.channelTwitchApi, connector)
                 }
             } catch (e: Exception) {
                 logger.error(e) { "Error while handling event ${e.message}" }

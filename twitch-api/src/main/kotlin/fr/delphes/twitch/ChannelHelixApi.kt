@@ -10,6 +10,7 @@ import fr.delphes.twitch.api.reward.payload.RedemptionStatusForUpdate
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
+import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.api.vip.payload.VIPPayload
 import java.time.LocalDateTime
 
@@ -33,4 +34,6 @@ interface ChannelHelixApi {
     suspend fun createPoll(poll: CreatePoll): CreatePollDataPayload
 
     suspend fun getVIPs(): List<VIPPayload>
+
+    suspend fun removeVip(user: TwitchUser)
 }

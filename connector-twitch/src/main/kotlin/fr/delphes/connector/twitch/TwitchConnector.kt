@@ -105,6 +105,7 @@ class TwitchConnector(
                 whenRunning = {
                     getUserInfos(User(user), clientBot.twitchApi)
                 },
+                //TODO do not set cache value if not connected
                 whenNotRunning = {
                     null
                 }

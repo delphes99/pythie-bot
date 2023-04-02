@@ -17,6 +17,7 @@ import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataP
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.streams.payload.StreamPayload
+import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.api.vip.payload.GetVIPsPayload
 import fr.delphes.twitch.api.vip.payload.VIPPayload
 import fr.delphes.twitch.auth.CredentialsManager
@@ -115,5 +116,12 @@ internal class ChannelHelixClient(
         )
 
         return payload.data
+    }
+
+    override suspend fun removeVip(user: TwitchUser) {
+        "https://api.twitch.tv/helix/channels/vips".delete<HttpResponse>(
+            "broadcaster_id" to userId,
+            "user_id" to user.id
+        )
     }
 }
