@@ -31,6 +31,7 @@ class CustomCommand(
         val lastCallState = stateManager.getOrPut(lastCallStateId) { TimeState.withClockFrom(stateManager, StateIdQualifier(id.value)) }
 
         val eventHandlers = channel.handlerFor<CommandAsked> {
+            //TODO use statemanager to retrieve state
             if (event.command == triggerCommand && lastCallState.hasMoreThan(cooldown)) {
                 lastCallState.putNow()
 

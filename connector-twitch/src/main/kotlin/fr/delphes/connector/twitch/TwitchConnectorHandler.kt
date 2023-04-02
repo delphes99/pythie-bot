@@ -16,7 +16,6 @@ import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
-import fr.delphes.connector.twitch.incomingEvent.VIPListReceived
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.utils.exhaustive
 
@@ -57,7 +56,6 @@ class TwitchConnectorHandler(
                     )
                 )
             }
-            is VIPListReceived -> Nothing
             is NewPoll -> Nothing
             is PollUpdated -> Nothing
             is PollClosed -> Nothing

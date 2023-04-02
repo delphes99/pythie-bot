@@ -11,14 +11,14 @@ import fr.delphes.connector.twitch.command.LegacyCommandHandler
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
-import fr.delphes.connector.twitch.incomingEvent.VIPListReceived
 import fr.delphes.connector.twitch.outgoingEvent.PromoteVIP
 import fr.delphes.connector.twitch.outgoingEvent.RemoveVIP
-import fr.delphes.connector.twitch.outgoingEvent.RetrieveVip
+import fr.delphes.connector.twitch.state.GetVipState
 import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.feature.StateRepository
 import fr.delphes.twitch.TwitchChannel
+import fr.delphes.twitch.api.user.User
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
@@ -36,7 +36,6 @@ class VOTH(
     override val eventHandlers = LegacyEventHandlers
         .builder()
         .addHandler(VOTHRewardRedemptionHandler())
-        .addHandler(VOTHVIPListReceivedHandler())
         .addHandler(StreamOnlineHandler())
         .addHandler(StreamOfflineHandler())
         .addHandler(buildCommandStatsHandler())
@@ -71,30 +70,29 @@ class VOTH(
                 val oldVOTH = currentVip
                 val newVOTH = state.newVOTH(event, clock.now())
 
-                configuration.newVipAnnouncer(
+                val removeAllVips = bot.featuresManager.stateManager
+                    .getState(GetVipState.ID)
+                    ?.getVipOf(channel)
+                    ?.map { RemoveVIP(User(it.name), channel) }
+                    ?: emptyList()
+
+                val promoteVIP = PromoteVIP(redeemUser, channel)
+
+                val alert = Alert("newVip", "newVip" to (currentVip!!.user.name))
+
+                val newVipAnnouncer = configuration.newVipAnnouncer(
                     NewVOTHAnnounced(
                         oldVOTH,
                         newVOTH,
                         event
                     )
-                ) + RetrieveVip(channel)
-            } else {
-                emptyList()
-            }
-        }
-    }
-
-    internal inner class VOTHVIPListReceivedHandler : TwitchEventHandler<VIPListReceived>(channel) {
-        override suspend fun handleIfGoodChannel(event: VIPListReceived, bot: Bot): List<OutgoingEvent> {
-            return if (vothChanged) {
-                state.vothChanged = false
-
-                val alert = Alert("newVip", "newVip" to (currentVip!!.user.name))
-
-                val events =
-                    event.vips.map { RemoveVIP(it, channel) } + PromoteVIP(currentVip!!.user, channel) + alert
-                save()
-                events
+                )
+                listOf(
+                    *removeAllVips.toTypedArray(),
+                    promoteVIP,
+                    *newVipAnnouncer.toTypedArray(),
+                    alert
+                )
             } else {
                 emptyList()
             }
