@@ -20,7 +20,7 @@ interface AppHelixApi {
 
     suspend fun getUserById(userId: UserId): GetUsersDataPayload?
 
-    suspend fun getVideosOf(userId: String, type: ChannelVideoType = ChannelVideoType.all): ChannelVideosPayload
+    suspend fun getVideosOf(userId: UserId, type: ChannelVideoType = ChannelVideoType.all): ChannelVideosPayload
 
     suspend fun getChannelInformation(userId: UserId): fr.delphes.twitch.api.channel.payload.ChannelInformation?
 }

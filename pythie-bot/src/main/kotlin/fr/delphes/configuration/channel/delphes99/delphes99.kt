@@ -51,7 +51,7 @@ import fr.delphes.features.twitch.voth.VOTH
 import fr.delphes.features.twitch.voth.VOTHConfiguration
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.TwitchUser
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.utils.time.prettyPrint
 import fr.delphes.utils.time.secondsOf
 import kotlinx.serialization.InternalSerializationApi
@@ -79,9 +79,9 @@ private val highlightStateManager = StateManagerWithRepository(
     )
 )
 
-fun buildShoutOut(user: User): ShoutOut {
+fun buildShoutOut(user: UserName): ShoutOut {
     return ShoutOut(
-        User(user.name),
+        UserName(user.name),
         channel
     ) { userInfos, channelInformation ->
         val lastStream = userInfos.lastStreamTitle?.let { "« $it », ça vous intrigue ?" } ?: ""
@@ -324,7 +324,7 @@ val delphes99CustomFeatures = listOf(
     ) {
         if (moderators.contains(event.by.normalizeName)) {
             event.parameters.firstOrNull()?.also { promotedUser ->
-                executeOutgoingEvent(buildShoutOut(User(promotedUser)))
+                executeOutgoingEvent(buildShoutOut(UserName(promotedUser)))
             }
         }
     },
@@ -468,7 +468,7 @@ val delphes99CustomFeatures = listOf(
                 "Delphes99",
                 "https://www.twitch.tv/delphes99",
                 "https://static-cdn.jtvnw.net/jtv_user_pictures/9bda888d-167b-4e12-83d3-d8519fa45bcd-profile_image-300x300.png",
-                "Catégorie" to event.game.label
+                "Catégorie" to (event.game?.label ?: "Sans catégorie"),
             )
         )
     },
@@ -491,7 +491,7 @@ val delphes99CustomFeatures = listOf(
                         }
 
                         is StreamChanges.Game -> {
-                            "\uD83D\uDD04 ${change.oldGame.label} ➡ ${change.newGame.label}"
+                            "\uD83D\uDD04 ${change.oldGame?.label ?: "Sans catégorie"} ➡ ${change.newGame?.label ?: "Sans catégorie"}"
                         }
                     }
                 },

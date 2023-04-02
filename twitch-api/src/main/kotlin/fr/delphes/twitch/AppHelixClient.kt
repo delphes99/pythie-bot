@@ -63,9 +63,9 @@ class AppHelixClient(
         return payload.data.firstOrNull()
     }
 
-    override suspend fun getVideosOf(userId: String, type: ChannelVideoType): ChannelVideosPayload {
+    override suspend fun getVideosOf(userId: UserId, type: ChannelVideoType): ChannelVideosPayload {
         return authorizeCall { token ->
-            httpClient.get("https://api.twitch.tv/helix/videos?user_id=$userId&type=$type") {
+            httpClient.get("https://api.twitch.tv/helix/videos?user_id=${userId.id}&type=$type") {
                 header("Authorization", "Bearer ${token.access_token}")
                 header("Client-Id", clientId)
                 header("Accept", "application/vnd.twitchtv.v5+json")

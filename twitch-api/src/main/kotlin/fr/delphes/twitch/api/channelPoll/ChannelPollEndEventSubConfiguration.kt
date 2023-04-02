@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.channelPoll
 import fr.delphes.twitch.api.channelPoll.payload.ChannelPollEndCondition
 import fr.delphes.twitch.api.channelPoll.payload.ChannelPollEndPayload
 import fr.delphes.twitch.api.channelPoll.payload.SubscribeChannelPollEnd
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -15,7 +16,7 @@ class ChannelPollEndEventSubConfiguration :
         EventSubTopic.CHANNEL_POLL_END
     ) {
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribeChannelPollEnd(
         ChannelPollEndCondition(

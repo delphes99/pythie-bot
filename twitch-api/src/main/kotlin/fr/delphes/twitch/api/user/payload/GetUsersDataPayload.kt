@@ -1,10 +1,11 @@
 package fr.delphes.twitch.api.user.payload
 
+import fr.delphes.twitch.api.user.UserId
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetUsersDataPayload(
-    val id: String,
+    val id: UserId,
     val login: String,
     val display_name: String,
     val type: String,

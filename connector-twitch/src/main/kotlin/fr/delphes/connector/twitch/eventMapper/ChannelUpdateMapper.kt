@@ -28,7 +28,7 @@ class ChannelUpdateMapper(
                 } else {
                     null
                 },
-                if (currentStream.game.id.id != twitchEvent.category_id) {
+                if (currentStream.game?.id?.id != twitchEvent.category_id) {
                     val newCategory = Game(
                         GameId(twitchEvent.category_id),
                         twitchEvent.category_name

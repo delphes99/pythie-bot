@@ -90,7 +90,7 @@ val delphestestCustomFeatures = listOf(
                         }
 
                         is StreamChanges.Game -> {
-                            "${change.oldGame.label} ➡ ${change.newGame.label}"
+                            "${change.oldGame?.label ?: "Sans catégorie"} ➡ ${change.newGame?.label ?: "Sans catégorie"}"
                         }
                     }
                 },

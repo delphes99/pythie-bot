@@ -43,7 +43,7 @@ class GameReward(
 
     inner class StreamOnlineHandler : TwitchEventHandler<StreamOnline>(channel) {
         override suspend fun handleIfGoodChannel(event: StreamOnline, bot: Bot): List<OutgoingEvent> {
-            return deactivateFeaturesNotAssociateWith(event.game.id) + activateFeaturesAssociateWith(event.game.id)
+            return deactivateFeaturesNotAssociateWith(event.game?.id) + activateFeaturesAssociateWith(event.game?.id)
         }
     }
 
@@ -62,11 +62,11 @@ class GameReward(
     }
 
     //TODO cache if the feature is already enabled / disabled
-    private fun deactivateFeaturesNotAssociateWith(game: GameId): List<OutgoingEvent> {
+    private fun deactivateFeaturesNotAssociateWith(game: GameId?): List<OutgoingEvent> {
         return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten().map { DeactivateReward(it, channel) }
     }
 
-    private fun activateFeaturesAssociateWith(game: GameId): List<OutgoingEvent> {
+    private fun activateFeaturesAssociateWith(game: GameId?): List<OutgoingEvent> {
         return gameRewards[game]?.map { ActivateReward(it, channel) } ?: emptyList()
     }
 }

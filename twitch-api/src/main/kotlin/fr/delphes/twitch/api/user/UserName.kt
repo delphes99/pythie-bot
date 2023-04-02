@@ -3,7 +3,7 @@ package fr.delphes.twitch.api.user
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class User(val name: String) {
+data class UserName(val name: String) {
     val normalizeName = name.lowercase()
 
     override fun toString(): String {
@@ -14,7 +14,7 @@ data class User(val name: String) {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as User
+        other as UserName
 
         if (normalizeName != other.normalizeName) return false
 

@@ -7,12 +7,13 @@ import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.api.user.TwitchUser
+import fr.delphes.twitch.api.user.UserId
 import java.time.LocalDateTime
 
 interface ChannelTwitchApi : WebhookApi {
     suspend fun getStream(): Stream?
 
-    suspend fun getGame(id: GameId): Game
+    suspend fun getGame(id: GameId): Game?
 
     suspend fun deactivateReward(reward: RewardConfiguration)
 
@@ -24,9 +25,9 @@ interface ChannelTwitchApi : WebhookApi {
 
     suspend fun getVIPs(): List<TwitchUser>
 
-    suspend fun removeVip(user: TwitchUser)
+    suspend fun removeVip(userId: UserId)
 
-    suspend fun promoteVip(user: TwitchUser)
+    suspend fun promoteVip(userId: UserId)
 
-    suspend fun sendShoutout(user: TwitchUser)
+    suspend fun sendShoutout(userId: UserId)
 }

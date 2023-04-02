@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.channelRaid
 import fr.delphes.twitch.api.channelRaid.payload.ChannelRaidCondition
 import fr.delphes.twitch.api.channelRaid.payload.ChannelRaidPayload
 import fr.delphes.twitch.api.channelRaid.payload.SubscribeChannelRaid
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -16,7 +17,7 @@ class ChannelRaidEventSubConfiguration :
     ) {
 
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribeChannelRaid(
         ChannelRaidCondition(to_broadcaster_user_id = userId),

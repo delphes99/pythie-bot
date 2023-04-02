@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.channelSubscribe
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscriptionMessageCondition
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscriptionMessagePayload
 import fr.delphes.twitch.api.channelSubscribe.payload.SubscribeChannelSubscriptionMessage
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubSubscribe
 import fr.delphes.twitch.eventSub.EventSubTopic
@@ -16,7 +17,7 @@ class ChannelSubscriptionMessageEventSubConfiguration :
         EventSubTopic.CHANNEL_SUBSCRIPTION_MESSAGE
     ) {
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ): EventSubSubscribe<ChannelSubscriptionMessageCondition> {
         return SubscribeChannelSubscriptionMessage(

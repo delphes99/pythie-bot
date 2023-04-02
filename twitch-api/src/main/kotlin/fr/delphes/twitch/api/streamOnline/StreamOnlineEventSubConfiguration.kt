@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.streamOnline
 import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineCondition
 import fr.delphes.twitch.api.streamOnline.payload.StreamOnlineEventPayload
 import fr.delphes.twitch.api.streamOnline.payload.SubscribeStreamOnline
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -15,7 +16,7 @@ class StreamOnlineEventSubConfiguration :
         EventSubTopic.STREAM_ONLINE
     ) {
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribeStreamOnline(
         StreamOnlineCondition(userId),

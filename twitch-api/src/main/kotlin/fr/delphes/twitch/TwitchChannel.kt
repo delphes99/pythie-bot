@@ -1,6 +1,6 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -15,8 +15,8 @@ data class TwitchChannel(
 ) {
     val normalizeName = name.lowercase()
 
-    fun toUser(): User {
-        return User(name)
+    fun toUser(): UserName {
+        return UserName(name)
     }
 
     override fun equals(other: Any?): Boolean {

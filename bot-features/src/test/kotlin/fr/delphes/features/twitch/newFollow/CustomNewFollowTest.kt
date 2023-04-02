@@ -3,7 +3,7 @@ package fr.delphes.features.twitch.newFollow
 import fr.delphes.connector.twitch.incomingEvent.NewFollow
 import fr.delphes.features.hasReceived
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 
@@ -18,7 +18,7 @@ class CustomNewFollowTest : ShouldSpec({
         customNewFollow.hasReceived(
             NewFollow(
                 CHANNEL,
-                User("user")
+                UserName("user")
             )
         )
 
@@ -34,7 +34,7 @@ class CustomNewFollowTest : ShouldSpec({
         customNewFollow.hasReceived(
             NewFollow(
                 TwitchChannel("otherchannel"),
-                User("user")
+                UserName("user")
             )
         )
 

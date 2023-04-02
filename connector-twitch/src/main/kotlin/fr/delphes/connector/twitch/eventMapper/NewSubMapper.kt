@@ -4,7 +4,7 @@ import fr.delphes.connector.twitch.incomingEvent.NewSub
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscribeEventPayload
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 
 class NewSubMapper : TwitchIncomingEventMapper<ChannelSubscribeEventPayload> {
     override suspend fun handle(
@@ -15,7 +15,7 @@ class NewSubMapper : TwitchIncomingEventMapper<ChannelSubscribeEventPayload> {
         return listOf(
             NewSub(
                 channel,
-                User(twitchEvent.user_name)
+                UserName(twitchEvent.user_name)
             )
         )
     }

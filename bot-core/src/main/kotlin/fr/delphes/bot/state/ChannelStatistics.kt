@@ -1,7 +1,7 @@
 package fr.delphes.bot.state
 
 import fr.delphes.twitch.api.streams.Stream
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -42,14 +42,14 @@ class ChannelStatistics(
         saveStats()
     }
 
-    override suspend fun newFollow(newFollow: User) {
+    override suspend fun newFollow(newFollow: UserName) {
         statistics.newFollow(newFollow)
         streamStatistics?.newFollow(newFollow)
 
         saveStats()
     }
 
-    override suspend fun newSub(newSub: User) {
+    override suspend fun newSub(newSub: UserName) {
         statistics.newSub(newSub)
         streamStatistics?.newSub(newSub)
 
@@ -57,7 +57,7 @@ class ChannelStatistics(
         saveStats()
     }
 
-    override suspend fun newCheer(cheerer: User?, bits: Long) {
+    override suspend fun newCheer(cheerer: UserName?, bits: Long) {
         statistics.newCheer(cheerer, bits)
         streamStatistics?.newCheer(cheerer, bits)
 

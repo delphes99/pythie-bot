@@ -3,7 +3,7 @@
 package fr.delphes.features.twitch.voth
 
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardCost
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.utils.serialization.LocalDateTimeSerializer
 import fr.delphes.utils.serialization.DurationSerializer
 import kotlinx.serialization.Serializable
@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 
 @Serializable
 data class VOTHWinner(
-    val user: User,
+    val user: UserName,
     val since: LocalDateTime?,
     val cost: RewardCost,
     val previousPeriods: List<Duration> = emptyList()
@@ -23,7 +23,7 @@ data class VOTHWinner(
         since: LocalDateTime?,
         cost: RewardCost,
         previousPeriods: List<Duration> = emptyList()
-    ) : this(User(user), since, cost, previousPeriods)
+    ) : this(UserName(user), since, cost, previousPeriods)
 
     fun duration(now: LocalDateTime): Duration {
         return (previousPeriods.reduceOrNull(Duration::plus) ?: Duration.ZERO) +

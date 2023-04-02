@@ -5,7 +5,7 @@ import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.incomingEvent.MessageReceived
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.irc.IrcChannelMessage
 
 class ChannelMessageMapper(
@@ -15,7 +15,7 @@ class ChannelMessageMapper(
     override suspend fun handle(
         twitchEvent: IrcChannelMessage
     ): List<TwitchIncomingEvent> {
-        val user = User(twitchEvent.user.name)
+        val user = UserName(twitchEvent.user.name)
         val message = twitchEvent.message
 
         return if (twitchEvent.isFor(channel)) {

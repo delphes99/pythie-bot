@@ -3,7 +3,7 @@ package fr.delphes.connector.twitch.eventMapper
 import fr.delphes.connector.twitch.incomingEvent.NewSub
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelSubscribe.payload.ChannelSubscribeCondition
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 
 class NewSubMapperTest : ShouldSpec({
@@ -14,7 +14,7 @@ class NewSubMapperTest : ShouldSpec({
                 ChannelSubscribeCondition::class,
                 NewSub(
                     TwitchChannel("Cooler_User"),
-                    User("Cool_User")
+                    UserName("Cool_User")
                 )
             )
     }

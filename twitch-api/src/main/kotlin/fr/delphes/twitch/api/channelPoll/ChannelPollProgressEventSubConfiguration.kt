@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.channelPoll
 import fr.delphes.twitch.api.channelPoll.payload.ChannelPollProgressCondition
 import fr.delphes.twitch.api.channelPoll.payload.ChannelPollProgressPayload
 import fr.delphes.twitch.api.channelPoll.payload.SubscribeChannelPollProgress
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -15,7 +16,7 @@ class ChannelPollProgressEventSubConfiguration :
         EventSubTopic.CHANNEL_POLL_PROGRESS
     ) {
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribeChannelPollProgress(
         ChannelPollProgressCondition(

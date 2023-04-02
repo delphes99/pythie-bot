@@ -8,7 +8,7 @@ import fr.delphes.rework.feature.FeatureId
 import fr.delphes.state.state.TimeState
 import fr.delphes.test.TestClock
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import java.time.Duration
@@ -24,7 +24,7 @@ class CustomCommandTest : ShouldSpec({
             CommandAsked(
                 CHANNEL,
                 Command("!trigger"),
-                User("user")
+                UserName("user")
             )
         )
 
@@ -41,7 +41,7 @@ class CustomCommandTest : ShouldSpec({
             CommandAsked(
                 CHANNEL,
                 Command("!othertrigger"),
-                User("user")
+                UserName("user")
             )
         )
 
@@ -56,7 +56,7 @@ class CustomCommandTest : ShouldSpec({
             CommandAsked(
                 TwitchChannel("otherchannel"),
                 Command("!trigger"),
-                User("user")
+                UserName("user")
             )
         )
 
@@ -80,7 +80,7 @@ class CustomCommandTest : ShouldSpec({
                 CommandAsked(
                     CHANNEL,
                     Command("!trigger"),
-                    User("user")
+                    UserName("user")
                 )
             )
 
@@ -104,7 +104,7 @@ class CustomCommandTest : ShouldSpec({
                 CommandAsked(
                     CHANNEL,
                     Command("!trigger"),
-                    User("user")
+                    UserName("user")
                 )
             )
 

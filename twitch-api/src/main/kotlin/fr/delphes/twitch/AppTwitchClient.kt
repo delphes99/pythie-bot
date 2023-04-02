@@ -4,7 +4,7 @@ import fr.delphes.twitch.api.channel.ChannelInformation
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.user.TwitchUser
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.api.video.ChannelVideo
 import fr.delphes.twitch.api.video.payload.ChannelVideoType
@@ -35,9 +35,9 @@ class AppTwitchClient(
         }
     }
 
-    override suspend fun getUserByName(user: User): TwitchUser? {
+    override suspend fun getUserByName(userName: UserName): TwitchUser? {
         return coroutineScope {
-            twitchAppHelixApi.getUserByName(user.normalizeName)?.let { user ->
+            twitchAppHelixApi.getUserByName(userName.normalizeName)?.let { user ->
                 TwitchUser(
                     user.id,
                     user.login,
@@ -61,21 +61,18 @@ class AppTwitchClient(
         }
     }
 
-    override suspend fun getChannelInformation(user: User): ChannelInformation? {
-        val userByName = getUserByName(user)
-        val broadcaster = userByName ?: return null
-        val userId = UserId(broadcaster.id)
+    override suspend fun getChannelInformation(userId: UserId): ChannelInformation? {
         val channelInformation = twitchAppHelixApi.getChannelInformation(userId)
         val payload = channelInformation ?: return null
         val game = Game(GameId(payload.game_id), payload.game_name)
 
-        return ChannelInformation(broadcaster, payload.broadcaster_language, game, payload.title, payload.delay)
+        return ChannelInformation(userId, payload.broadcaster_language, game, payload.title, payload.delay)
     }
 
-    override suspend fun getVideosOf(channelId: String, channelVideoType: ChannelVideoType): List<ChannelVideo> {
+    override suspend fun getVideosOf(userId: UserId, channelVideoType: ChannelVideoType): List<ChannelVideo> {
         return coroutineScope {
             twitchAppHelixApi
-                .getVideosOf(channelId, channelVideoType).data
+                .getVideosOf(userId, channelVideoType).data
                 .map { payload ->
                     ChannelVideo(
                         title = payload.title,

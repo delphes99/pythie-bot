@@ -1,13 +1,13 @@
 package fr.delphes.bot.state
 
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import kotlinx.serialization.Serializable
 
 @Serializable
 class Statistics(
     private val userMessages: MutableList<UserMessage> = mutableListOf(),
-    private val newFollows: MutableList<User> = mutableListOf(),
-    private val newSubs: MutableList<User> = mutableListOf(),
+    private val newFollows: MutableList<UserName> = mutableListOf(),
+    private val newSubs: MutableList<UserName> = mutableListOf(),
     private val cheers: MutableList<UserCheer> = mutableListOf()
 ) : UpdateStatistics {
     val numberOfFollow: Int get() = newFollows.size
@@ -15,27 +15,27 @@ class Statistics(
     val numberMessages: Int get() = userMessages.count()
     val numberOfChatters: Int get() = userMessages.map(UserMessage::user).distinct().count()
 
-    val lastFollows: List<User> get() = newFollows
-    val lastSubs: List<User> get() = newSubs
+    val lastFollows: List<UserName> get() = newFollows
+    val lastSubs: List<UserName> get() = newSubs
     val lastCheers: List<UserCheer> get() = cheers
 
     override fun addMessage(userMessage: UserMessage) {
         userMessages.add(userMessage)
     }
 
-    override fun newFollow(newFollow: User) {
+    override fun newFollow(newFollow: UserName) {
         if(!this.newFollows.contains(newFollow)) {
             this.newFollows.add(0, newFollow)
         }
     }
 
-    override fun newSub(newSub: User) {
+    override fun newSub(newSub: UserName) {
         if(!this.newSubs.contains(newSub)) {
             this.newSubs.add(0, newSub)
         }
     }
 
-    override fun newCheer(cheerer: User?, bits: Long) {
+    override fun newCheer(cheerer: UserName?, bits: Long) {
         this.cheers.add(0, UserCheer(cheerer, bits))
     }
 }

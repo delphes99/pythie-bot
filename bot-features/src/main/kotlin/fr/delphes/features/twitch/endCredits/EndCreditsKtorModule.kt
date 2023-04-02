@@ -11,7 +11,7 @@ import com.kennycason.kumo.palette.ColorPalette
 import fr.delphes.bot.state.StreamStatistics
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.connector.twitch.TwitchConnector
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -73,7 +73,7 @@ private fun StreamStatistics.wordFrequencies(numberOfWords: Int): List<WordFrequ
         return emptyList()
     }
 
-    val occurrences = messages.map(UserMessage::user).groupingBy(User::name).eachCount()
+    val occurrences = messages.map(UserMessage::user).groupingBy(UserName::name).eachCount()
 
     return occurrences.map { entry ->
         WordFrequency(

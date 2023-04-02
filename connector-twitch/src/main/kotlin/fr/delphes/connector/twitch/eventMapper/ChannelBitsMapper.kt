@@ -4,7 +4,7 @@ import fr.delphes.connector.twitch.incomingEvent.BitCheered
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelCheer.payload.ChannelCheerEventPayload
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 
 class ChannelBitsMapper : TwitchIncomingEventMapper<ChannelCheerEventPayload> {
     override suspend fun handle(
@@ -15,7 +15,7 @@ class ChannelBitsMapper : TwitchIncomingEventMapper<ChannelCheerEventPayload> {
         return listOf(
             BitCheered(
                 channel,
-                twitchEvent.user_name?.let(::User),
+                twitchEvent.user_name?.let(::UserName),
                 twitchEvent.bits,
                 twitchEvent.message
             )

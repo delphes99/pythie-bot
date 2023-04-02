@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.voth
 
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -34,9 +34,9 @@ class VOTHStateTest : ShouldSpec({
     }
 
     should("get top 3") {
-        val user1 = User("user1")
-        val user2 = User("user2")
-        val user3 = User("user3")
+        val user1 = UserName("user1")
+        val user2 = UserName("user2")
+        val user3 = UserName("user3")
 
         val currentReign = VOTHWinner(user1, NOW.minusMinutes(15), 25)
         val previousReignForUser1 = listOf(
@@ -139,7 +139,7 @@ class VOTHStateTest : ShouldSpec({
 
     should("last reigns") {
         val previousReign1 = VOTHReign(USER, Duration.ofMinutes(5), 50)
-        val previousReign2 = VOTHReign(User("user2"), Duration.ofMinutes(5), 50)
+        val previousReign2 = VOTHReign(UserName("user2"), Duration.ofMinutes(5), 50)
         val previousReign3 = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), 25)
 
@@ -163,6 +163,6 @@ class VOTHStateTest : ShouldSpec({
 }) {
     companion object {
         private val NOW = LocalDateTime.of(2020, 7, 1, 10, 0)
-        private val USER = User("user")
+        private val USER = UserName("user")
     }
 }

@@ -4,7 +4,7 @@ import fr.delphes.connector.twitch.incomingEvent.IncomingRaid
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelRaid.payload.ChannelRaidPayload
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 
 class IncomingRaidMapper : TwitchIncomingEventMapper<ChannelRaidPayload> {
     override suspend fun handle(twitchEvent: ChannelRaidPayload): List<TwitchIncomingEvent> {
@@ -13,7 +13,7 @@ class IncomingRaidMapper : TwitchIncomingEventMapper<ChannelRaidPayload> {
         return listOf(
             IncomingRaid(
                 channel,
-                User(twitchEvent.from_broadcaster_user_name),
+                UserName(twitchEvent.from_broadcaster_user_name),
                 twitchEvent.viewers
             )
         )

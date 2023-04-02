@@ -1,12 +1,12 @@
 package fr.delphes.connector.twitch.incomingEvent
 
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.irc.IrcChannelMessage
 
 data class MessageReceived(
     override val channel: TwitchChannel,
-    val user: User,
+    val user: UserName,
     val text: String
 ) : TwitchIncomingEvent {
     constructor(
@@ -18,5 +18,5 @@ data class MessageReceived(
         channel: TwitchChannel,
         user: String,
         text: String
-    ) : this(channel, User(user), text)
+    ) : this(channel, UserName(user), text)
 }

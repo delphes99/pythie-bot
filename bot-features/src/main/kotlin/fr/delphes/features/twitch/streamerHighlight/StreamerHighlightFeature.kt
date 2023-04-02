@@ -13,7 +13,7 @@ import fr.delphes.feature.NonEditableFeature
 import fr.delphes.feature.StateManagerWithRepository
 import fr.delphes.feature.WithStateManager
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import java.time.Duration
@@ -57,13 +57,13 @@ class StreamerHighlightFeature(
             }
         }
 
-        private fun User.isHighlighted() =
+        private fun UserName.isHighlighted() =
             state.isAlreadyHighlighted(this) { cacheTime ->
                 cacheTime.plus(highlightExpiration).isAfter(clock.now())
             }
     }
 
-    private suspend fun highlight(user: User) {
+    private suspend fun highlight(user: UserName) {
         newState(state.highlight(user, clock.now()))
     }
 }

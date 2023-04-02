@@ -10,7 +10,7 @@ data class StreamOnline(
     val id: String,
     val title: String,
     val start: LocalDateTime,
-    val game: Game,
+    val game: Game?,
     val thumbnailUrl: ThumbnailUrl
 ) : TwitchIncomingEvent {
     constructor(
@@ -18,7 +18,7 @@ data class StreamOnline(
         id: String,
         title: String,
         start: LocalDateTime,
-        game: Game,
+        game: Game?,
         thumbnailUrl: String
     ) : this(
         channel,

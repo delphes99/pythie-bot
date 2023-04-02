@@ -2,11 +2,11 @@ package fr.delphes.connector.twitch.incomingEvent
 
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 
 data class CommandAsked(
     override val channel: TwitchChannel,
     val command: Command,
-    val by: User,
+    val by: UserName,
     val parameters: List<String> = emptyList(),
 ) : TwitchIncomingEvent

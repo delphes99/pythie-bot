@@ -9,7 +9,7 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.WithGameId
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
@@ -33,7 +33,7 @@ class GameDescriptionTest : ShouldSpec({
     should("describe the current") {
         val feature = GameDescription(channel, "!tufekoi", GAME_ID to "description")
         `current game is`(GAME)
-        val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
+        val commandAsked = CommandAsked(channel, Command("!tufekoi"), UserName("user"))
 
         val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 
@@ -43,7 +43,7 @@ class GameDescriptionTest : ShouldSpec({
     should("describe the current (with other gameId implementation)") {
         val feature = GameDescription(channel, "!tufekoi", GameEnum.GAME to "description")
         `current game is`(GAME)
-        val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
+        val commandAsked = CommandAsked(channel, Command("!tufekoi"), UserName("user"))
 
         val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 
@@ -53,7 +53,7 @@ class GameDescriptionTest : ShouldSpec({
     should("do nothing when no description") {
         val feature = GameDescription(channel, "!tufekoi", GAME_ID to "description")
         `current game is`(OTHER_GAME)
-        val commandAsked = CommandAsked(channel, Command("!tufekoi"), User("user"))
+        val commandAsked = CommandAsked(channel, Command("!tufekoi"), UserName("user"))
 
         val outgoingEvents = feature.handleIncomingEvent(commandAsked, bot)
 

@@ -4,7 +4,7 @@ import fr.delphes.connector.twitch.incomingEvent.NewFollow
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelFollow.payload.ChannelFollowEventPayload
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 
 class NewFollowMapper : TwitchIncomingEventMapper<ChannelFollowEventPayload> {
     override suspend fun handle(
@@ -13,7 +13,7 @@ class NewFollowMapper : TwitchIncomingEventMapper<ChannelFollowEventPayload> {
         val channel = TwitchChannel(twitchEvent.broadcaster_user_name)
 
         return listOf(
-            NewFollow(channel, User(twitchEvent.user_name))
+            NewFollow(channel, UserName(twitchEvent.user_name))
         )
     }
 }

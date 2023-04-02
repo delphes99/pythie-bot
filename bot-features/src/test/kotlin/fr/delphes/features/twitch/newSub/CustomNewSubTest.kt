@@ -3,7 +3,7 @@ package fr.delphes.features.twitch.newSub
 import fr.delphes.connector.twitch.incomingEvent.NewSub
 import fr.delphes.features.hasReceived
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 
@@ -18,7 +18,7 @@ class CustomNewSubTest : ShouldSpec({
         customNewSub.hasReceived(
             NewSub(
                 CHANNEL,
-                User("user")
+                UserName("user")
             )
         )
 
@@ -34,7 +34,7 @@ class CustomNewSubTest : ShouldSpec({
         customNewSub.hasReceived(
             NewSub(
                 TwitchChannel("otherchannel"),
-                User("user")
+                UserName("user")
             )
         )
 

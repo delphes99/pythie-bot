@@ -18,7 +18,7 @@ import fr.delphes.feature.HavePersistantState
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.feature.StateRepository
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.runBlocking
@@ -73,7 +73,7 @@ class VOTH(
                 val removeAllVips = bot.featuresManager.stateManager
                     .getState(GetVipState.ID)
                     ?.getVipOf(channel)
-                    ?.map { RemoveVIP(User(it.name), channel) }
+                    ?.map { RemoveVIP(UserName(it.name), channel) }
                     ?: emptyList()
 
                 val promoteVIP = PromoteVIP(redeemUser, channel)

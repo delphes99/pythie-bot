@@ -4,7 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.utils.time.Clock
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -40,7 +40,7 @@ class SimpleCommandHandlerTest : ShouldSpec({
                 listOf(SendMessage("response", channel))
             }
         )
-        val event = CommandAsked(channel, command, User("user"))
+        val event = CommandAsked(channel, command, UserName("user"))
 
         simpleCommand.handle(event, bot).shouldContainExactly(
             SendMessage("response", channel)
@@ -58,7 +58,7 @@ class SimpleCommandHandlerTest : ShouldSpec({
                 listOf(SendMessage("response", channel))
             }
         )
-        val event = CommandAsked(channel, command, User("user"))
+        val event = CommandAsked(channel, command, UserName("user"))
 
         `given now`(now)
         simpleCommand.handle(event, bot).shouldNotBeEmpty()
@@ -78,7 +78,7 @@ class SimpleCommandHandlerTest : ShouldSpec({
                 listOf(SendMessage("response", channel))
             }
         )
-        val event = CommandAsked(channel, command, User("user"))
+        val event = CommandAsked(channel, command, UserName("user"))
 
         `given now`(now)
         simpleCommand.handle(event, bot).shouldNotBeEmpty()

@@ -1,10 +1,10 @@
 package fr.delphes.bot.state
 
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserMessage(
-    val user: User,
+    val user: UserName,
     val text: String
 )

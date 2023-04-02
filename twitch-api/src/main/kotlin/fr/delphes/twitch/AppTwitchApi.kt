@@ -2,7 +2,7 @@ package fr.delphes.twitch
 
 import fr.delphes.twitch.api.channel.ChannelInformation
 import fr.delphes.twitch.api.user.TwitchUser
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.api.video.ChannelVideo
 import fr.delphes.twitch.api.video.payload.ChannelVideoType
@@ -13,11 +13,11 @@ interface AppTwitchApi {
 
     suspend fun removeAllSubscriptions()
 
-    suspend fun getUserByName(user: User): TwitchUser?
+    suspend fun getUserByName(userName: UserName): TwitchUser?
 
     suspend fun getUserById(userId: UserId): TwitchUser?
 
-    suspend fun getChannelInformation(user: User): ChannelInformation?
+    suspend fun getChannelInformation(userId: UserId): ChannelInformation?
 
-    suspend fun getVideosOf(channelId: String, channelVideoType: ChannelVideoType): List<ChannelVideo>
+    suspend fun getVideosOf(userId: UserId, channelVideoType: ChannelVideoType): List<ChannelVideo>
 }

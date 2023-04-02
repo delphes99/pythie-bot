@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.channelPointsCustomRewardRedemption
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionCondition
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionEventPayload
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.SubscribechannelPointsCustomRewardRedemption
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -18,7 +19,7 @@ class CustomRewardRedemptionEventSubConfiguration :
     ) {
 
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribechannelPointsCustomRewardRedemption(
         ChannelPointsCustomRewardRedemptionCondition(userId),

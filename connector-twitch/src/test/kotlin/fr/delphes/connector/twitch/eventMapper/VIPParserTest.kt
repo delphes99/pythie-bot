@@ -1,6 +1,6 @@
 package fr.delphes.connector.twitch.eventMapper
 
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
@@ -14,17 +14,17 @@ class VIPParserTest : ShouldSpec({
     should("vip list with one name") {
         val extractVips = VIPParser.extractVips("The VIPs of this channel are: glacios_.")
 
-        (extractVips as VIPParser.VIPResult.VIPList).users.shouldContainExactly(User("glacios_"))
+        (extractVips as VIPParser.VIPResult.VIPList).users.shouldContainExactly(UserName("glacios_"))
     }
 
     should("vip list with several names") {
         val extractVips = VIPParser.extractVips("The VIPs of this channel are: glacios_, crazymeal, ghostcatfr, jimmy_fr_60.")
 
         (extractVips as VIPParser.VIPResult.VIPList).users.shouldContainExactly(
-            User("glacios_"),
-            User("crazymeal"),
-            User("ghostcatfr"),
-            User("jimmy_fr_60")
+            UserName("glacios_"),
+            UserName("crazymeal"),
+            UserName("ghostcatfr"),
+            UserName("jimmy_fr_60")
         )
     }
 

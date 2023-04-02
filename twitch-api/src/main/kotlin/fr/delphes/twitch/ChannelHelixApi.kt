@@ -4,6 +4,7 @@ import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardRedemptio
 import fr.delphes.twitch.api.channelPoll.CreatePoll
 import fr.delphes.twitch.api.channelPoll.payload.CreatePollDataPayload
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
+import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.RedemptionStatusForUpdate
@@ -11,13 +12,14 @@ import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
 import fr.delphes.twitch.api.user.TwitchUser
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.api.vip.payload.VIPPayload
 import java.time.LocalDateTime
 
 interface ChannelHelixApi {
     suspend fun getGameByName(name: String): GetGamesDataPayload?
 
-    suspend fun getGameById(id: String): GetGamesDataPayload?
+    suspend fun getGameById(id: GameId): GetGamesDataPayload?
 
     suspend fun getStream(): StreamInfos?
 
@@ -35,9 +37,9 @@ interface ChannelHelixApi {
 
     suspend fun getVIPs(): List<VIPPayload>
 
-    suspend fun removeVip(user: TwitchUser)
+    suspend fun removeVip(userId: UserId)
 
-    suspend fun promoteVip(user: TwitchUser)
+    suspend fun promoteVip(userId: UserId)
 
-    suspend fun sendShoutout(user: TwitchUser)
+    suspend fun sendShoutout(userId: UserId)
 }

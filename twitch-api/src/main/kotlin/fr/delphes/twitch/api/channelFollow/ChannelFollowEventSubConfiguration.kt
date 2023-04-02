@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.channelFollow
 import fr.delphes.twitch.api.channelFollow.payload.ChannelFollowCondition
 import fr.delphes.twitch.api.channelFollow.payload.ChannelFollowEventPayload
 import fr.delphes.twitch.api.channelFollow.payload.SubscribeChannelFollow
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -15,7 +16,7 @@ class ChannelFollowEventSubConfiguration :
         EventSubTopic.NEW_FOLLOW
     ) {
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribeChannelFollow(
         ChannelFollowCondition(userId),

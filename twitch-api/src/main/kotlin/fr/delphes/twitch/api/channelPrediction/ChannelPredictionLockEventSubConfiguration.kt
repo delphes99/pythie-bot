@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.channelPrediction
 import fr.delphes.twitch.api.channelPrediction.payload.ChannelPredictionLockCondition
 import fr.delphes.twitch.api.channelPrediction.payload.ChannelPredictionLockPayload
 import fr.delphes.twitch.api.channelPrediction.payload.SubscribeChannelPredictionLock
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -15,7 +16,7 @@ class ChannelPredictionLockEventSubConfiguration :
         EventSubTopic.CHANNEL_PREDICTION_LOCK
     ) {
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribeChannelPredictionLock(
         ChannelPredictionLockCondition(

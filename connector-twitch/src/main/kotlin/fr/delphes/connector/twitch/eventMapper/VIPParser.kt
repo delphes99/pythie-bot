@@ -1,11 +1,11 @@
 package fr.delphes.connector.twitch.eventMapper
 
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import java.util.regex.Pattern
 
 object VIPParser {
     sealed class VIPResult {
-        data class VIPList(val users: List<User>) : VIPResult()
+        data class VIPList(val users: List<UserName>) : VIPResult()
         object NotVIPResult : VIPResult()
     }
 
@@ -16,7 +16,7 @@ object VIPParser {
                 matcher.group(1)
                     .split(",")
                     .map(String::trim)
-                    .map(::User)
+                    .map(::UserName)
             )
         }
 

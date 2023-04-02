@@ -1,10 +1,10 @@
 package fr.delphes.twitch.api.channelRaid
 
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 
 data class IncomingRaid(
     val channel: TwitchChannel,
-    val from: User,
+    val from: UserName,
     val viewers: Long
 )

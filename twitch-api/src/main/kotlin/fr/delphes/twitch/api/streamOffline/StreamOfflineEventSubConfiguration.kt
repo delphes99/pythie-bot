@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.streamOffline
 import fr.delphes.twitch.api.streamOffline.payload.StreamOfflineCondition
 import fr.delphes.twitch.api.streamOffline.payload.StreamOfflineEventPayload
 import fr.delphes.twitch.api.streamOffline.payload.SubscribeStreamOffline
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -15,7 +16,7 @@ class StreamOfflineEventSubConfiguration :
         EventSubTopic.STREAM_OFFLINE
     ) {
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribeStreamOffline(
         StreamOfflineCondition(userId),

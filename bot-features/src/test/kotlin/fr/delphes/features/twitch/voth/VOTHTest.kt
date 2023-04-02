@@ -16,7 +16,7 @@ import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.RewardId
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -83,7 +83,7 @@ class VOTHTest : ShouldSpec({
 
     should("display top 3") {
         val state = mockk<VOTHState>(relaxed = true)
-        every { state.top3(any()) } returns listOf(Stats(User("user1")), Stats(User("user2")), Stats(User("user3")))
+        every { state.top3(any()) } returns listOf(Stats(UserName("user1")), Stats(UserName("user2")), Stats(UserName("user3")))
 
         val voth = VOTH(
             channel,
@@ -101,7 +101,7 @@ class VOTHTest : ShouldSpec({
         val bot = mockk<Bot>()
         every { bot.connectors } returns listOf(mockk<TwitchConnector>())
 
-        val events = voth.handleIncomingEvent(CommandAsked(channel, Command("!top3"), User("user")), bot)
+        val events = voth.handleIncomingEvent(CommandAsked(channel, Command("!top3"), UserName("user")), bot)
 
         events.shouldContain(SendMessage("user1, user2, user3", channel))
     }

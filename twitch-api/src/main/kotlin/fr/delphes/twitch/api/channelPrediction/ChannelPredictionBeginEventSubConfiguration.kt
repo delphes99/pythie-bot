@@ -3,6 +3,7 @@ package fr.delphes.twitch.api.channelPrediction
 import fr.delphes.twitch.api.channelPrediction.payload.ChannelPredictionBeginCondition
 import fr.delphes.twitch.api.channelPrediction.payload.ChannelPredictionBeginPayload
 import fr.delphes.twitch.api.channelPrediction.payload.SubscribeChannelPredictionBegin
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.EventSubTopic
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
@@ -15,7 +16,7 @@ class ChannelPredictionBeginEventSubConfiguration :
         EventSubTopic.CHANNEL_PREDICTION_BEGIN
     ) {
     override fun subscribePayload(
-        userId: String,
+        userId: UserId,
         transport: SubscribeTransport
     ) = SubscribeChannelPredictionBegin(
         ChannelPredictionBeginCondition(

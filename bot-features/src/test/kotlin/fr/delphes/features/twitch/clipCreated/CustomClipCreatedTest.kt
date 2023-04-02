@@ -5,7 +5,7 @@ import fr.delphes.features.hasReceived
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.streams.ThumbnailUrl
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
@@ -23,7 +23,7 @@ class CustomClipCreatedTest : ShouldSpec({
                 CHANNEL,
                 Clip(
                     "url",
-                    User("user"),
+                    UserName("user"),
                     "gameId",
                     "title",
                     LocalDateTime.of(2021, 1, 1, 0, 0),
@@ -46,7 +46,7 @@ class CustomClipCreatedTest : ShouldSpec({
                 TwitchChannel("otherchannel"),
                 Clip(
                     "url",
-                    User("user"),
+                    UserName("user"),
                     "gameId",
                     "title",
                     LocalDateTime.of(2021, 1, 1, 0, 0),

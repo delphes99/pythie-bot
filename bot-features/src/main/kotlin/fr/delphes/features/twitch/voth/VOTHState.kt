@@ -2,7 +2,7 @@ package fr.delphes.features.twitch.voth
 
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.feature.State
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
 import kotlinx.serialization.Serializable
 import java.time.Duration
 import java.time.LocalDateTime
@@ -43,7 +43,7 @@ class VOTHState(
         this.currentVip = this.currentVip?.copy(since = now)
     }
 
-    fun getReignsFor(user: User, now: LocalDateTime): Stats {
+    fun getReignsFor(user: UserName, now: LocalDateTime): Stats {
         val currentVip = currentVip
         val previousReigns = previousReigns.filter { reign -> reign.voth == user }
 
@@ -61,7 +61,7 @@ class VOTHState(
         return allWinners().map { getReignsFor(it, now) }.sortedByDescending { it.totalTime }.take(3)
     }
 
-    private fun allWinners(): List<User> {
+    private fun allWinners(): List<UserName> {
         return previousReigns.map { reign -> reign.voth }.plus(currentVip?.user).filterNotNull().distinct()
     }
 

@@ -53,10 +53,8 @@ class ChannelTwitchClient(
         return Stream(stream.id, stream.title, stream.started_at, game, ThumbnailUrl(stream.thumbnail_url))
     }
 
-    override suspend fun getGame(id: GameId): Game {
-        val game = helixApi.getGameById(id.id)
-
-        return Game(GameId(game!!.id), game.name)
+    override suspend fun getGame(id: GameId): Game? {
+        return helixApi.getGameById(id)?.let { game -> Game(id, game.name) }
     }
 
     override suspend fun deactivateReward(reward: RewardConfiguration) {
@@ -88,16 +86,16 @@ class ChannelTwitchClient(
         }
     }
 
-    override suspend fun removeVip(user: TwitchUser) {
-        helixApi.removeVip(user)
+    override suspend fun removeVip(userId: UserId) {
+        helixApi.removeVip(userId)
     }
 
-    override suspend fun promoteVip(user: TwitchUser) {
-        helixApi.promoteVip(user)
+    override suspend fun promoteVip(userId: UserId) {
+        helixApi.promoteVip(userId)
     }
 
-    override suspend fun sendShoutout(user: TwitchUser) {
-        helixApi.sendShoutout(user)
+    override suspend fun sendShoutout(userId: UserId) {
+        helixApi.sendShoutout(userId)
     }
 
     companion object {
@@ -247,7 +245,6 @@ class ChannelTwitchClient(
         }
 
         fun build(): ChannelTwitchClient {
-
             val helixApi = ChannelHelixClient(channel, clientId, credentialsManager, user.id)
 
             val webhookApi = WebhookClient(

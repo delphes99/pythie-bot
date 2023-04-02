@@ -16,7 +16,8 @@ import fr.delphes.connector.twitch.webservice.WebhookModule
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.api.channel.ChannelInformation
-import fr.delphes.twitch.api.user.User
+import fr.delphes.twitch.api.user.UserName
+import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.utils.cache.InMemoryCache
 import fr.delphes.utils.time.SystemClock
@@ -103,7 +104,7 @@ class TwitchConnector(
         retrieve = { user ->
             connectionManager.whenRunning(
                 whenRunning = {
-                    getUserInfos(User(user), clientBot.twitchApi)
+                    getUserInfos(UserName(user), clientBot.twitchApi)
                 },
                 //TODO do not set cache value if not connected
                 whenNotRunning = {
@@ -113,7 +114,7 @@ class TwitchConnector(
         }
     )
 
-    private val channelInformationCache = InMemoryCache<User, ChannelInformation>(
+    private val channelInformationCache = InMemoryCache<UserId, ChannelInformation>(
         expirationDuration = Duration.ofMinutes(5),
         clock = SystemClock,
         retrieve = { user ->
@@ -128,11 +129,11 @@ class TwitchConnector(
         }
     )
 
-    suspend fun getUser(user: User): UserInfos? {
+    suspend fun getUser(user: UserName): UserInfos? {
         return userCache.getValue(user.normalizeName)
     }
 
-    suspend fun getChannelInformation(user: User): ChannelInformation? {
+    suspend fun getChannelInformation(user: UserId): ChannelInformation? {
         return channelInformationCache.getValue(user)
     }
 
