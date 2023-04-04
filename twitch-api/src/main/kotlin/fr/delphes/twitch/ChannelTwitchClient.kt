@@ -94,6 +94,14 @@ class ChannelTwitchClient(
         helixApi.promoteVip(userId)
     }
 
+    override suspend fun removeModerator(userId: UserId) {
+        helixApi.removeModerator(userId)
+    }
+
+    override suspend fun promoteModerator(userId: UserId) {
+        helixApi.promoteModerator(userId)
+    }
+
     override suspend fun sendShoutout(userId: UserId) {
         helixApi.sendShoutout(userId)
     }

@@ -41,5 +41,9 @@ interface ChannelHelixApi {
 
     suspend fun promoteVip(userId: UserId)
 
+    suspend fun removeModerator(userId: UserId)
+
+    suspend fun promoteModerator(userId: UserId)
+
     suspend fun sendShoutout(userId: UserId)
 }

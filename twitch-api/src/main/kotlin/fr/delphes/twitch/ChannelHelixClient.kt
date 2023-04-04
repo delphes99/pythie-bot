@@ -133,6 +133,20 @@ internal class ChannelHelixClient(
         )
     }
 
+    override suspend fun removeModerator(userId: UserId) {
+        "https://api.twitch.tv/helix/moderation/moderators".delete<HttpResponse>(
+            "broadcaster_id" to broadcasterId.id,
+            "user_id" to userId.id
+        )
+    }
+
+    override suspend fun promoteModerator(userId: UserId) {
+        "POST https://api.twitch.tv/helix/moderation/moderators".post<HttpResponse>(
+            "broadcaster_id" to broadcasterId,
+            "user_id" to userId.id
+        )
+    }
+
     override suspend fun sendShoutout(userId: UserId) {
         "https://api.twitch.tv/helix/chat/shoutouts".post<HttpResponse>(
             "from_broadcaster_id" to broadcasterId.id,
