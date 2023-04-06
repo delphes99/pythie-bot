@@ -1,10 +1,12 @@
 package fr.delphes.bot.connector
 
 class InMemoryConfigurationManager<T : ConnectorConfiguration>(
-    override var configuration: T? = null
+    private var _configuration: T? = null
 ) : ConfigurationManager<T> {
 
-    override suspend fun configure(configuration: T) {
-        this.configuration = configuration
+    override suspend fun configure(newConfiguration: T) {
+        _configuration = newConfiguration
     }
+
+    override val configuration: T? get() = _configuration
 }

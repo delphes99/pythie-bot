@@ -1,7 +1,7 @@
 package fr.delphes.bot.connector
 
 interface ConfigurationManager<CONFIGURATION : ConnectorConfiguration> {
-    var configuration: CONFIGURATION?
+    val configuration: CONFIGURATION?
 
-    suspend fun configure(configuration: CONFIGURATION)
+    suspend fun configure(newConfiguration: CONFIGURATION)
 }

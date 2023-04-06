@@ -6,24 +6,18 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.twitch.auth.AuthTokenRepository
 import fr.delphes.twitch.auth.CredentialsManager
-import kotlinx.coroutines.runBlocking
 
 class TwitchConfigurationManager(
     repository: TwitchConfigurationRepository
 ) : ConfigurationManager<TwitchConfiguration>, AuthTokenRepository {
     private val configurationManager = SimpleConfigurationManager(repository)
 
-    override suspend fun configure(configuration: TwitchConfiguration) {
-        configurationManager.configure(configuration)
+    override suspend fun configure(newConfiguration: TwitchConfiguration) {
+        configurationManager.configure(newConfiguration)
     }
 
-    override var configuration: TwitchConfiguration?
+    override val configuration: TwitchConfiguration?
         get() = configurationManager.configuration
-        set(value) {
-            value?.also {
-                runBlocking { configurationManager.configure(value) }
-            }
-        }
 
     val currentConfiguration get() = configurationManager.configuration ?: TwitchConfiguration.empty
 
