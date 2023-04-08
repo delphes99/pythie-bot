@@ -1,6 +1,7 @@
 package fr.delphes.connector.twitch
 
 import fr.delphes.bot.Bot
+import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.TwitchChannel
@@ -14,8 +15,7 @@ import kotlinx.coroutines.runBlocking
 class ClientBot(
     private val configuration: TwitchConfiguration,
     internal val connector: TwitchConnector,
-    private val publicUrl: String,
-    val configFilepath: String,
+    val botConfiguration: BotConfiguration,
     val bot: Bot,
     private val credentialsManager: CredentialsManager,
 ) {
@@ -35,7 +35,7 @@ class ClientBot(
     }
 
     fun channelApiBuilder(
-        configFilepath: String,
+        botConfiguration: BotConfiguration,
         rewards: List<RewardConfiguration>,
         channel: TwitchChannel,
     ): ChannelTwitchClient.Builder {
@@ -48,8 +48,8 @@ class ClientBot(
             configuration.clientId,
             credentialsManager,
             user,
-            publicUrl,
-            configFilepath,
+            botConfiguration.publicUrl,
+            botConfiguration.configFilepath,
             webhookSecret,
             rewards
         )

@@ -20,7 +20,7 @@ class Channel(
 
         //TODO subscribe only when feature requires
         twitchApi =
-            bot.channelApiBuilder(bot.configFilepath, configuration?.rewards ?: emptyList(), channel)
+            bot.channelApiBuilder(bot.botConfiguration, configuration?.rewards ?: emptyList(), channel)
                 .listenToReward()
                 .listenToNewFollow()
                 .listenToNewSub()

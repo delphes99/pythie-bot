@@ -34,7 +34,7 @@ class WebServer(
             }
             AdminModule(bot)
             AlertModule(bot)
-            MediaModule(MediasService(bot))
+            MediaModule(MediasService(bot.configuration))
             Overlays(bot)
             ConnectorsModule(bot)
 

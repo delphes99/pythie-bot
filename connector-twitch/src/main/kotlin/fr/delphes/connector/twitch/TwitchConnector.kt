@@ -1,6 +1,7 @@
 package fr.delphes.connector.twitch
 
 import fr.delphes.bot.Bot
+import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
@@ -26,8 +27,8 @@ import java.time.Duration
 
 class TwitchConnector(
     val bot: Bot,
-    override val configFilepath: String,
-    val channels: List<ChannelConfiguration>
+    override val botConfiguration: BotConfiguration,
+    val channels: List<ChannelConfiguration>,
 ) : Connector<TwitchConfiguration, TwitchLegacyRuntime> {
     override val connectorName = "Twitch"
 
@@ -37,10 +38,10 @@ class TwitchConnector(
     )
 
     override val configurationManager = TwitchConfigurationManager(
-        TwitchConfigurationRepository("${configFilepath}\\twitch\\configuration.json")
+        TwitchConfigurationRepository(botConfiguration.pathOf("twitch", "configuration.json"))
     )
 
-    val statistics = TwitchStatistics(configFilepath)
+    val statistics = TwitchStatistics(botConfiguration)
 
     private val twitchHelixApi = TwitchHelixClient()
 
@@ -50,9 +51,9 @@ class TwitchConnector(
 
     constructor(
         bot: Bot,
-        configFilepath: String,
-        vararg channels: ChannelConfiguration
-    ) : this(bot, configFilepath, listOf(*channels))
+        botConfiguration: BotConfiguration,
+        vararg channels: ChannelConfiguration,
+    ) : this(bot, botConfiguration, listOf(*channels))
 
     override fun internalEndpoints(application: Application) {
         application.ConfigurationModule(this)

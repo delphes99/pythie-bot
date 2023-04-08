@@ -1,5 +1,6 @@
 package fr.delphes.bot
 
+import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
@@ -18,20 +19,31 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import java.io.File
 
 class Bot(
-    val publicUrl: String,
-    val configFilepath: String,
-    val legacyfeatures : List<NonEditableFeature>,
+    val configuration: BotConfiguration,
+    val legacyfeatures: List<NonEditableFeature>,
     val serializer: Json,
-    val featuresManager: FeaturesManager
+    val featuresManager: FeaturesManager,
 ) : IncomingEventHandler, OutgoingEventProcessor {
+    constructor(
+        publicUrl: String,
+        configFilepath: String,
+        legacyfeatures: List<NonEditableFeature>,
+        serializer: Json,
+        featuresManager: FeaturesManager,
+    ) : this(
+        BotConfiguration(configFilepath, publicUrl),
+        legacyfeatures,
+        serializer,
+        featuresManager,
+    )
+
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
 
     internal val overlayRepository =
-        OverlayRepository("${configFilepath}${File.separator}overlays${File.separator}overlays.json")
+        OverlayRepository(configuration.pathOf("overlays", "overlays.json"))
 
     val alerts = Channel<Alert>()
 
@@ -49,7 +61,12 @@ class Bot(
             when (event) {
                 is Alert -> alerts.send(event)
                 is Pause -> delay(event.delay.toMillis())
-                is PlaySound -> alerts.send(Alert("playSound", "mediaName" to event.mediaName)) // TODO move appart from alert
+                is PlaySound -> alerts.send(
+                    Alert(
+                        "playSound",
+                        "mediaName" to event.mediaName,
+                    )
+                ) // TODO move appart from alert
             }.exhaustive()
         } else {
             _connectors.forEach { connector ->

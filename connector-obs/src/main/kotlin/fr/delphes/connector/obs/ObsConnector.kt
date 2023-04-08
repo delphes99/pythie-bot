@@ -1,12 +1,12 @@
 package fr.delphes.connector.obs
 
 import fr.delphes.bot.Bot
+import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.connector.obs.endpoints.ObsModule
-import fr.delphes.state.State
 import io.ktor.server.application.Application
 import kotlinx.serialization.InternalSerializationApi
 import mu.KotlinLogging
@@ -14,14 +14,14 @@ import mu.KotlinLogging
 @InternalSerializationApi
 class ObsConnector(
     val bot: Bot,
-    override val configFilepath: String,
+    override val botConfiguration: BotConfiguration,
 ) : Connector<ObsConfiguration, ObsRunTime> {
     override val connectorName = "Obs"
 
     override val states = emptyList<ConnectorState>()
 
     override val configurationManager = SimpleConfigurationManager(
-        ObsConfigurationRepository("${configFilepath}\\obs\\configuration.json")
+        ObsConfigurationRepository(botConfiguration.pathOf("obs", "configuration.json"))
     )
 
     override val connectionManager = ObsConnectionManager(this)

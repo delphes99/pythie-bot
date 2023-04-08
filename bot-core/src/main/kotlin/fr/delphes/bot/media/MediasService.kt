@@ -1,6 +1,6 @@
 package fr.delphes.bot.media
 
-import fr.delphes.bot.Bot
+import fr.delphes.bot.configuration.BotConfiguration
 import java.io.File.separator
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
@@ -9,10 +9,10 @@ import kotlin.io.path.name
 import kotlin.io.path.writeBytes
 
 class MediasService(
-    private val bot: Bot
+    private val botConfiguration: BotConfiguration
 ) {
     fun path(): String {
-        return "${bot.configFilepath}${separator}medias"
+        return botConfiguration.pathOf("medias")
     }
 
     fun list(): List<Media> {

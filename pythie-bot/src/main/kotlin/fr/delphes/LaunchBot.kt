@@ -52,17 +52,17 @@ fun main() {
     bot.init(
         TwitchConnector(
             bot,
-            configFilepath,
+            bot.configuration,
             delphes99Channel,
             delphestestChannel
         ),
         DiscordConnector(
             bot,
-            configFilepath
+            bot.configuration,
         ),
         ObsConnector(
             bot,
-            configFilepath
+            bot.configuration,
         ),
     )
 }

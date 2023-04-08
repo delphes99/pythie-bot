@@ -1,24 +1,24 @@
 package fr.delphes.connector.discord
 
 import fr.delphes.bot.Bot
+import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.connector.discord.endpoint.DiscordModule
-import fr.delphes.state.State
 import io.ktor.server.application.Application
 
 class DiscordConnector(
     val bot: Bot,
-    override val configFilepath: String
+    override val botConfiguration: BotConfiguration,
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
     override val connectorName = "Discord"
 
     override val states = emptyList<ConnectorState>()
 
     override val configurationManager = SimpleConfigurationManager(
-        DiscordConfigurationRepository("${configFilepath}\\discord\\configuration.json")
+        DiscordConfigurationRepository(botConfiguration.pathOf("discord", "configuration.json"))
     )
 
     override val connectionManager = DiscordConnectionManager(this)

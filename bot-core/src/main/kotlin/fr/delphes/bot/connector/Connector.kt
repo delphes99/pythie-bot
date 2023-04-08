@@ -1,5 +1,6 @@
 package fr.delphes.bot.connector
 
+import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.status.ConnectorStatus
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import io.ktor.server.application.Application
@@ -26,7 +27,7 @@ interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorR
         connectionManager.dispatchTransition(ConnectorCommand.DISCONNECTION_REQUESTED)
     }
 
-    val configFilepath: String
+    val botConfiguration: BotConfiguration
 
     fun internalEndpoints(application: Application)
 

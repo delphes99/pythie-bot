@@ -16,8 +16,7 @@ class TwitchLegacyConnectionManager(
         val clientBot = ClientBot(
             configuration,
             connector,
-            connector.bot.publicUrl,
-            connector.bot.configFilepath,
+            connector.botConfiguration,
             connector.bot,
             credentialsManager
         )

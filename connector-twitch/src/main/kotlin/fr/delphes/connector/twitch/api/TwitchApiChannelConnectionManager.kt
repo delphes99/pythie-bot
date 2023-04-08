@@ -42,8 +42,8 @@ class TwitchApiChannelConnectionManager(
             configuration.clientId,
             credentialsManager,
             user,
-            connector.bot.publicUrl,
-            connector.bot.configFilepath,
+            connector.botConfiguration.publicUrl,
+            connector.botConfiguration.configFilepath,
             webhookSecret,
             legacyChannelConfiguration?.rewards ?: emptyList(),
         )
