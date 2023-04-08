@@ -13,51 +13,49 @@ import kotlinx.serialization.Serializable
 import mu.KotlinLogging
 import java.util.concurrent.TimeUnit
 
-class Ngrok {
-    companion object {
-        const val API_URL = "http://localhost:4040/api"
-        private val LOGGER = KotlinLogging.logger {}
+object Ngrok {
+    const val API_URL = "http://localhost:4040/api"
+    private val LOGGER = KotlinLogging.logger {}
 
-        fun launch(pathToNgrok: String) {
-            var process: Process? = null
-            try {
-                LOGGER.info { "starting ngrok" }
-                process = ProcessBuilder(pathToNgrok, "start", "--none")
-                    .redirectOutput(ProcessBuilder.Redirect.PIPE)
-                    .redirectError(ProcessBuilder.Redirect.PIPE)
-                    .start()
-                if (process.waitFor(1, TimeUnit.SECONDS)) {
-                    throw IllegalStateException("Ngrok early termination")
-                }
-                atShutdown {
-                    process.waitFor(1, TimeUnit.SECONDS)
-                    LOGGER.info { "destroying ngrok" }
-                    process.destroy()
-                }
-            } catch (e: Exception) {
-                val error = process?.errorStream?.bufferedReader()?.readText()?.let { "Error : $it" }
-                val output = process?.inputStream?.bufferedReader()?.readText()?.let { "Output : $it" }
-                val messages = listOfNotNull("Ngrok start failure : ${e.message}", error, output)
-                LOGGER.error(e) { messages.joinToString("\n\n") }
-                throw e
+    fun launch(pathToNgrok: String) {
+        var process: Process? = null
+        try {
+            LOGGER.info { "starting ngrok" }
+            process = ProcessBuilder(pathToNgrok, "start", "--none")
+                .redirectOutput(ProcessBuilder.Redirect.PIPE)
+                .redirectError(ProcessBuilder.Redirect.PIPE)
+                .start()
+            if (process.waitFor(1, TimeUnit.SECONDS)) {
+                throw IllegalStateException("Ngrok early termination")
             }
+            atShutdown {
+                process.waitFor(1, TimeUnit.SECONDS)
+                LOGGER.info { "destroying ngrok" }
+                process.destroy()
+            }
+        } catch (e: Exception) {
+            val error = process?.errorStream?.bufferedReader()?.readText()?.let { "Error : $it" }
+            val output = process?.inputStream?.bufferedReader()?.readText()?.let { "Output : $it" }
+            val messages = listOfNotNull("Ngrok start failure : ${e.message}", error, output)
+            LOGGER.error(e) { messages.joinToString("\n\n") }
+            throw e
         }
+    }
 
-        fun createHttpTunnel(port: Int, name: String): Tunnel {
-            val tunnel = Tunnel(port, name)
-            LOGGER.debug { "Opened ngrok tunnel with public url : ${tunnel.publicUrl}" }
-            atShutdown { runBlocking { tunnel.kill() } }
-            return tunnel
-        }
+    fun createHttpTunnel(port: Int, name: String): Tunnel {
+        val tunnel = Tunnel(port, name)
+        LOGGER.debug { "Opened ngrok tunnel with public url : ${tunnel.publicUrl}" }
+        atShutdown { runBlocking { tunnel.kill() } }
+        return tunnel
+    }
 
-        private fun atShutdown(doStuff: () -> Unit) {
-            Runtime.getRuntime().addShutdownHook(Thread { doStuff() })
-        }
+    private fun atShutdown(doStuff: () -> Unit) {
+        Runtime.getRuntime().addShutdownHook(Thread { doStuff() })
     }
 
     data class Tunnel(
         val port: Int,
-        val name: String
+        val name: String,
     ) {
         val publicUrl: String
 
@@ -94,7 +92,7 @@ class Ngrok {
         }
 
         companion object {
-            private val EXTRACT_PUBLIC_URL = Regex(".*\"public_url\":\"(https://.*\\.ngrok\\.io)\".*")
+            private val EXTRACT_PUBLIC_URL = Regex(".*\"public_url\":\"(https://.*\\.(?:ngrok\\.io|ngrok-free\\.app|ngrok-free\\.dev))\".*")
         }
     }
 
@@ -102,6 +100,6 @@ class Ngrok {
     private data class CreateTunnelBody(
         val addr: String,
         val proto: String,
-        val name: String
+        val name: String,
     )
 }
