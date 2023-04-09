@@ -7,7 +7,6 @@ import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
-import fr.delphes.connector.twitch.outgoingEvent.RetrieveVip
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.features.TestStateRepository
 import fr.delphes.test.TestClock
@@ -49,14 +48,6 @@ class VOTHTest : ShouldSpec({
 
             voth.currentVip shouldBe VOTHWinner("user", now.minusMinutes(1), 50)
             voth.vothChanged.shouldBeFalse()
-        }
-
-        should("redeem launch vip list") {
-            val voth = voth()
-
-            val messages = voth.handleIncomingEvent(rewardRedemption, clientBot)
-
-            messages.shouldContain(RetrieveVip(channel))
         }
     }
 

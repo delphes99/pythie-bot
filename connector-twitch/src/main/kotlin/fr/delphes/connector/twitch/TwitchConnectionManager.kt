@@ -6,7 +6,6 @@ import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.connector.twitch.api.TwitchApiChannelConnectionManager
 import fr.delphes.connector.twitch.api.TwitchApiChannelRuntime
 import fr.delphes.connector.twitch.api.TwitchApiConnectionManager
-import fr.delphes.connector.twitch.irc.TwitchIrcChannelConnectionManager
 import fr.delphes.connector.twitch.irc.TwitchIrcConnectionManager
 import fr.delphes.utils.addNonPresents
 import fr.delphes.utils.removeAll
@@ -19,7 +18,6 @@ class TwitchConnectionManager(
     private val ircBotConnectionManager = TwitchIrcConnectionManager(connector)
     private val apiConnectionManager = TwitchApiConnectionManager(connector)
 
-    private val ircChannelConnectionManagers = mutableMapOf<ConfigurationTwitchAccountName, TwitchIrcChannelConnectionManager>()
     private val apiChannelConnectionManagers = mutableMapOf<ConfigurationTwitchAccountName, TwitchApiChannelConnectionManager>()
 
     suspend fun <T> whenConnected(channelName: ConfigurationTwitchAccountName, doStuff: suspend TwitchApiChannelRuntime.() -> T?) =
@@ -42,12 +40,6 @@ class TwitchConnectionManager(
     }
 
     private fun addNotConnectedConfiguredManager() {
-        ircChannelConnectionManagers.addNonPresents(configuredChannelNames) { channelName ->
-            configuredChannels.find { it.userName == channelName }?.let { channel ->
-                TwitchIrcChannelConnectionManager(channel, connector)
-            } ?: error("Channel $channelName not found")
-        }
-
         apiChannelConnectionManagers.addNonPresents(configuredChannelNames) { channelName ->
             configuredChannels.find { it.userName == channelName }?.let { channel ->
                 TwitchApiChannelConnectionManager(channel, connector)
@@ -56,10 +48,6 @@ class TwitchConnectionManager(
     }
 
     private fun removeNotConfiguredConnections() {
-        ircChannelConnectionManagers.removeAll { connected ->
-            configuredChannelNames
-                .none { configured -> configured == connected }
-        }
         apiChannelConnectionManagers.removeAll { connected ->
             configuredChannelNames
                 .none { configured -> configured == connected }
@@ -76,7 +64,6 @@ class TwitchConnectionManager(
             ircBotConnectionManager,
             apiConnectionManager,
             *apiChannelConnectionManagers.values.toTypedArray(),
-            *ircChannelConnectionManagers.values.toTypedArray(),
         )
 
     //TODO migrate all call to state objects
