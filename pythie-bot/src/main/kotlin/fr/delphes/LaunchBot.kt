@@ -2,6 +2,7 @@ package fr.delphes
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.Ngrok
+import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99CustomFeatures
 import fr.delphes.configuration.channel.delphes99.delphes99Features
@@ -12,10 +13,7 @@ import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
-import fr.delphes.feature.FeaturesManager
-import fr.delphes.rework.feature.FeatureDefinition
-import fr.delphes.state.StateManager
-import fr.delphes.state.state.ClockState
+import fr.delphes.features.featureSerializersModule
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -34,19 +32,23 @@ fun main() {
         isLenient = false
         encodeDefaults = true
         coerceInputValues = true
+        //TODO centralize serialization module
+        serializersModule = featureSerializersModule
     }
 
-    val bot = Bot(
-        tunnel.publicUrl,
+    val configuration = BotConfiguration(
         configFilepath,
+        tunnel.publicUrl,
+    )
+
+    val bot = Bot(
+        configuration,
         listOf(
             delphes99Features,
             delphestestFeatures
         ).flatten(),
         serializer,
-        buildFeatureManager(
-            delphes99CustomFeatures + delphestestCustomFeatures
-        )
+        delphes99CustomFeatures + delphestestCustomFeatures
     )
 
     bot.init(
@@ -65,13 +67,4 @@ fun main() {
             bot.configuration,
         ),
     )
-}
-
-private fun buildFeatureManager(
-    customFeatures: List<FeatureDefinition>
-): FeaturesManager {
-    val stateManager = StateManager()
-        .withState(ClockState())
-
-    return FeaturesManager(stateManager, customFeatures)
 }

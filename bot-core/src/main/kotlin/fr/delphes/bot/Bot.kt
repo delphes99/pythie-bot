@@ -10,8 +10,12 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
+import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
+import fr.delphes.rework.feature.CustomFeature
+import fr.delphes.state.StateManager
+import fr.delphes.state.state.ClockState
 import fr.delphes.utils.exhaustive
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -22,22 +26,12 @@ import kotlinx.serialization.json.Json
 
 class Bot(
     val configuration: BotConfiguration,
+    @Deprecated("Use featuresManager instead")
     val legacyfeatures: List<NonEditableFeature>,
     val serializer: Json,
-    val featuresManager: FeaturesManager,
+    val features: List<CustomFeature>,
 ) : IncomingEventHandler, OutgoingEventProcessor {
-    constructor(
-        publicUrl: String,
-        configFilepath: String,
-        legacyfeatures: List<NonEditableFeature>,
-        serializer: Json,
-        featuresManager: FeaturesManager,
-    ) : this(
-        BotConfiguration(configFilepath, publicUrl),
-        legacyfeatures,
-        serializer,
-        featuresManager,
-    )
+    val featuresManager = buildFeatureManager()
 
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
@@ -101,4 +95,17 @@ class Bot(
 
     fun findConnector(name: String?): Connector<*, *>? = connectors
         .firstOrNull { connector -> connector.connectorName == name }
+
+
+    private fun buildFeatureManager(): FeaturesManager {
+        val stateManager = StateManager()
+            .withState(ClockState())
+
+        val featureConfigurationRepository = FeatureConfigurationRepository(
+            configuration.pathOf("features"),
+            serializer
+        )
+        return FeaturesManager(stateManager, features)
+    }
+
 }
