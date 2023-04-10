@@ -128,7 +128,7 @@ internal class ChannelHelixClient(
 
     override suspend fun promoteVip(userId: UserId) {
         "https://api.twitch.tv/helix/channels/vips".post<HttpResponse>(
-            "broadcaster_id" to broadcasterId,
+            "broadcaster_id" to broadcasterId.id,
             "user_id" to userId.id
         )
     }
@@ -142,7 +142,7 @@ internal class ChannelHelixClient(
 
     override suspend fun promoteModerator(userId: UserId) {
         "POST https://api.twitch.tv/helix/moderation/moderators".post<HttpResponse>(
-            "broadcaster_id" to broadcasterId,
+            "broadcaster_id" to broadcasterId.id,
             "user_id" to userId.id
         )
     }
