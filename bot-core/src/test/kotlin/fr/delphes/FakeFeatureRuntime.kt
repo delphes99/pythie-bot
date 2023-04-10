@@ -6,10 +6,10 @@ import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
 
 data class FakeFeatureRuntime(
-    override val id: FeatureId = FeatureId("id"),
-    val assertable: (IncomingEvent, Bot) -> Unit
+    override val id: FeatureId = FeatureId("id")
 ) : FeatureRuntime {
+    var isHandleIncomingEventCalled = false
     override suspend fun handleIncomingEvent(event: IncomingEvent, bot: Bot) {
-        assertable(event, bot)
+        isHandleIncomingEventCalled = true
     }
 }
