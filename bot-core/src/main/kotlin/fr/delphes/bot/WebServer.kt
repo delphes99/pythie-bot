@@ -6,6 +6,7 @@ import fr.delphes.bot.media.MediasService
 import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.bot.webserver.alert.AlertModule
+import fr.delphes.feature.FeatureAdminModule
 import io.ktor.http.HttpMethod
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -37,6 +38,7 @@ class WebServer(
             MediaModule(MediasService(bot.configuration))
             Overlays(bot)
             ConnectorsModule(bot)
+            FeatureAdminModule(bot)
 
             internalModules.forEach { module -> module(this) }
         }

@@ -105,7 +105,7 @@ class Bot(
             configuration.pathOf("features"),
             serializer
         )
-        return FeaturesManager(stateManager, features)
+        return FeaturesManager(stateManager, features, featureConfigurationRepository)
     }
 
 }

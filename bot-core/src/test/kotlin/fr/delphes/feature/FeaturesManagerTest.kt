@@ -15,7 +15,8 @@ internal class FeaturesManagerTest : ShouldSpec({
             val runtime = mockk<SimpleFeatureRuntime>()
             val featuresManager = FeaturesManager(
                 mockk(),
-                listOf(FakeFeatureDefinition(ID, runtime))
+                listOf(FakeFeatureDefinition(ID, runtime)),
+                mockk()
             )
 
             featuresManager.getRuntime(ID) shouldBe runtime
@@ -31,7 +32,8 @@ internal class FeaturesManagerTest : ShouldSpec({
                 listOf(
                     FakeFeatureDefinition(ID, runtime1),
                     FakeFeatureDefinition(ID, runtime2)
-                )
+                ),
+                mockk()
             )
 
             featuresManager.handle(FakeIncomingEvent(), mockk())

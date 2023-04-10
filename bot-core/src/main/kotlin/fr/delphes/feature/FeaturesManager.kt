@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 
 class FeaturesManager(
     val stateManager: StateManager,
-    private val customFeatures: List<FeatureDefinition> = emptyList()
+    private val customFeatures: List<FeatureDefinition> = emptyList(),
+    private val featureConfigurationRepository: FeatureConfigurationRepository
 ) {
     private val runtimes = customFeatures.associateWith { definition ->
         definition.buildRuntime(stateManager)
@@ -31,5 +32,9 @@ class FeaturesManager(
 
     fun getRuntime(id: FeatureId): FeatureRuntime? {
         return runtimes.filterKeys { it.id == id }.values.firstOrNull()
+    }
+
+    suspend fun getEditableFeature(): List<FeatureConfiguration> {
+        return featureConfigurationRepository.load()
     }
 }

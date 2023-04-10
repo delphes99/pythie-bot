@@ -96,7 +96,17 @@
   },
   "configuration": {
     "features": {
-      "fr-delphes-features-twitch-command-ExperimentalTwitchCommandConfiguration": "Twitch : Commande"
+      "fr": {
+        "delphes": {
+          "features": {
+            "twitch": {
+              "command": {
+                "CustomCommandConfiguration": "Twitch : Commande"
+              }
+            }
+          }
+        }
+      }
     },
     "outgoingEvents": {
       "fr-delphes-connector-twitch-builder-SendMessageBuilder": "Twitch : Chat message"
