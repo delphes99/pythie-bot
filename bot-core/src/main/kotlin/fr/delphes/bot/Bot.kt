@@ -13,7 +13,7 @@ import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
-import fr.delphes.rework.feature.CustomFeature
+import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
 import fr.delphes.utils.exhaustive
@@ -29,7 +29,7 @@ class Bot(
     @Deprecated("Use featuresManager instead")
     val legacyfeatures: List<NonEditableFeature>,
     val serializer: Json,
-    val features: List<CustomFeature>,
+    val features: List<FeatureDefinition>,
 ) : IncomingEventHandler, OutgoingEventProcessor {
     val featuresManager = buildFeatureManager()
 

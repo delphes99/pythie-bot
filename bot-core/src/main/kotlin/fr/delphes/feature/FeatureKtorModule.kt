@@ -1,8 +1,10 @@
 package fr.delphes.feature
 
 import fr.delphes.bot.Bot
+import fr.delphes.rework.feature.FeatureId
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
+import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
@@ -11,7 +13,16 @@ import io.ktor.server.routing.routing
 fun Application.FeatureAdminModule(bot: Bot) {
     routing {
         get("features") {
-            this.context.respond(HttpStatusCode.OK, bot.featuresManager.getEditableFeature())
+            this.context.respond(HttpStatusCode.OK, bot.featuresManager.getEditableFeatures())
+        }
+        get("feature/{id}") {
+            val id = this.call.parameters["id"]
+                ?.let { FeatureId(it) }
+                ?: return@get this.context.respond(HttpStatusCode.BadRequest, "feature id missing")
+            bot.featuresManager.getEditableFeature(id)
+                ?.description()
+                ?.let { description -> this.context.respond(HttpStatusCode.OK, description) }
+                ?: this.context.respond(HttpStatusCode.NotFound, "feature with id ${id.value} not found")
         }
         post("features/reload") {
             bot.featuresManager.loadConfigurableFeatures()

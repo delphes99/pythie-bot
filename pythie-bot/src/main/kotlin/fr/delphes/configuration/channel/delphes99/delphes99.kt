@@ -19,7 +19,6 @@ import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.CreatePoll
 import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.PromoteModerator
-import fr.delphes.connector.twitch.outgoingEvent.PromoteVIP
 import fr.delphes.connector.twitch.outgoingEvent.RemoveModerator
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.outgoingEvent.ShoutOut
@@ -49,8 +48,8 @@ import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightFeature
 import fr.delphes.features.twitch.voth.FileVOTHStateRepository
 import fr.delphes.features.twitch.voth.VOTH
 import fr.delphes.features.twitch.voth.VOTHConfiguration
+import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.api.user.UserName
 import fr.delphes.utils.time.prettyPrint
 import fr.delphes.utils.time.secondsOf
@@ -296,7 +295,7 @@ val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.prope
     )
 }
 
-val delphes99CustomFeatures = listOf(
+val delphes99CustomFeatures = listOf<FeatureDefinition>(
     CustomCommand(
         channel,
         "!discord",

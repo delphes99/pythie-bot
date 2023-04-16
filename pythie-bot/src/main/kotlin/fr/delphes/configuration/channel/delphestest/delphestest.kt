@@ -12,6 +12,7 @@ import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
 import fr.delphes.features.twitch.streamOnline.CustomStreamOnline
 import fr.delphes.features.twitch.streamUpdated.CustomStreamUpdated
+import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.time.secondsOf
 import java.time.Duration
@@ -35,7 +36,7 @@ val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.p
         emptyList()
     )
 }
-val delphestestCustomFeatures = listOf(
+val delphestestCustomFeatures = listOf<FeatureDefinition>(
     CustomCommand(
         channel,
         "!test",

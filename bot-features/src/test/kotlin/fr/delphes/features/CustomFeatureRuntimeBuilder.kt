@@ -1,7 +1,7 @@
 package fr.delphes.features
 
 import fr.delphes.bot.event.incoming.IncomingEvent
-import fr.delphes.rework.feature.CustomFeature
+import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.State
 import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
@@ -12,7 +12,7 @@ import io.mockk.mockk
 import java.time.LocalDateTime
 
 class CustomFeatureRuntimeBuilder(
-    private val feature: CustomFeature
+    private val feature: FeatureDefinition
 ) {
     private var fixedNow: LocalDateTime = NOW
     @PublishedApi
@@ -37,10 +37,10 @@ class CustomFeatureRuntimeBuilder(
     }
 }
 
-fun CustomFeature.atFixedTime(now: LocalDateTime): CustomFeatureRuntimeBuilder {
+fun FeatureDefinition.atFixedTime(now: LocalDateTime): CustomFeatureRuntimeBuilder {
     return CustomFeatureRuntimeBuilder(this).atFixedTime(now)
 }
 
-suspend fun CustomFeature.hasReceived(event: IncomingEvent) {
+suspend fun FeatureDefinition.hasReceived(event: IncomingEvent) {
     CustomFeatureRuntimeBuilder(this).hasReceived(event)
 }

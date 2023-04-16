@@ -53,7 +53,11 @@ class FeaturesManager(
         return compiledRuntimes.filterKeys { it.id == id }.values.firstOrNull()
     }
 
-    suspend fun getEditableFeature(): List<FeatureConfiguration> {
+    suspend fun getEditableFeatures(): List<FeatureConfiguration> {
         return featureConfigurationRepository.load()
+    }
+
+    suspend fun getEditableFeature(id: FeatureId): FeatureConfiguration? {
+        return getEditableFeatures().find { it.id == id }
     }
 }
