@@ -29,16 +29,25 @@ class FeatureConfigurationRepository(
         }
     }
 
+    suspend fun upsert(configuration: FeatureConfiguration) {
+        val newFeatures = load()
+            .filter { it.id != configuration.id }
+            .plus(configuration)
+
+        save(newFeatures)
+    }
+
     override suspend fun load(): List<FeatureConfiguration> {
         return Files.list(path)
-            .filter { file -> file.fileName.toString().startsWith(FILENAME_PREFIX) }
-            .map { file ->
-                serializer.decodeFromString<FeatureConfiguration>(Files.readString(file))
-            }
+            .filter(::isFeatureSaveFile)
+            .map(Files::readString)
+            .map<FeatureConfiguration>(serializer::decodeFromString)
             .toList()
     }
 
     companion object {
         private const val FILENAME_PREFIX = "feature-"
+
+        private fun isFeatureSaveFile(path: Path) = path.fileName.toString().startsWith(FILENAME_PREFIX)
     }
 }

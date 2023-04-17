@@ -1,5 +1,5 @@
-import Feature from "@/features/configurations/Feature"
-import FeatureDescriptionType from "@/features/configurations/FeatureDescriptionType"
+import Feature from "@/features/feature"
+import FeatureDescriptionType from "@/features/FeatureDescriptionType"
 import { DurationFormItem } from "@/features/featureCard/description/DurationFormItem"
 import { OutgoingEventsFormItem } from "@/features/featureCard/description/OutgoingEventsFormItem"
 import { StringFormItem } from "@/features/featureCard/description/StringFormItem"

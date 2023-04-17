@@ -66,6 +66,7 @@ class CustomCommandConfigurationTest : ShouldSpec({
         testSerializer.encodeToString(configuration.description()) shouldEqualJson """
             {
                 "type": "TwitchCustomCommandConfiguration",
+                "id": "some-id",
                 "descriptors": [
                     {
                         "fieldName": "channel",

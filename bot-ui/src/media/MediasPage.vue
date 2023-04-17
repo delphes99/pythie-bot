@@ -48,9 +48,7 @@ import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
 
-const backendUrl = inject("backendUrl") as string
-
-const mediaService = new MediasService(backendUrl)
+const mediaService = inject("media.service") as MediasService
 
 const filename = ref<string>("")
 

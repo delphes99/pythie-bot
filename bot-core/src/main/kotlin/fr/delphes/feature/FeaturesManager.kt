@@ -60,4 +60,9 @@ class FeaturesManager(
     suspend fun getEditableFeature(id: FeatureId): FeatureConfiguration? {
         return getEditableFeatures().find { it.id == id }
     }
+
+    suspend fun upsertFeature(feature: FeatureConfiguration) {
+        featureConfigurationRepository.upsert(feature)
+        loadConfigurableFeatures()
+    }
 }

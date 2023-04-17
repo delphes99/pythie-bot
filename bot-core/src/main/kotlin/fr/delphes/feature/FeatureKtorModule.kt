@@ -5,6 +5,7 @@ import fr.delphes.rework.feature.FeatureId
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
@@ -23,6 +24,20 @@ fun Application.FeatureAdminModule(bot: Bot) {
                 ?.description()
                 ?.let { description -> this.context.respond(HttpStatusCode.OK, description) }
                 ?: this.context.respond(HttpStatusCode.NotFound, "feature with id ${id.value} not found")
+        }
+        post("feature/{id}") {
+            val id = this.call.parameters["id"]
+                ?.let { FeatureId(it) }
+                ?: return@post this.context.respond(HttpStatusCode.BadRequest, "feature id missing")
+
+            val configuration = this.call.receive<FeatureConfiguration>()
+
+            if(configuration.id != id) {
+                return@post this.context.respond(HttpStatusCode.BadRequest, "feature id mismatch")
+            }
+
+            bot.featuresManager.upsertFeature(configuration)
+            this.context.respond(HttpStatusCode.OK)
         }
         post("features/reload") {
             bot.featuresManager.loadConfigurableFeatures()

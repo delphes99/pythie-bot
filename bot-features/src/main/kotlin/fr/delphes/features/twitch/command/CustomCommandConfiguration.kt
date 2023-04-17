@@ -39,6 +39,7 @@ class CustomCommandConfiguration(
     override fun description(): FeatureDescription {
         return FeatureDescription(
             type = "TwitchCustomCommandConfiguration",
+            id = id.value,
             descriptors = listOf(
                 FeatureDescriptor("channel", "Channel name", FeatureDescriptionType.STRING, channel.name),
                 FeatureDescriptor("command", "command", FeatureDescriptionType.STRING, command),

@@ -14,6 +14,7 @@ import TwitchChannelConfiguration from "@/twitch/TwitchChannelConfiguration.vue"
 import TwitchConfiguration from "@/twitch/TwitchConfiguration.vue"
 import TwitchRouter from "@/twitch/TwitchRouter.vue"
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
+import FeatureDetail from "@/features/FeatureDetail.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,6 +26,18 @@ const routes: Array<RouteRecordRaw> = [
     path: "/features",
     name: "features",
     component: FeaturesList,
+  },
+  {
+    path: "/feature",
+    name: "feature",
+    children: [
+        {
+          path: ":featureId",
+          name: "featureDetail",
+          props: true,
+          component: FeatureDetail,
+        }
+    ]
   },
   {
     path: "/overlay",
