@@ -1,6 +1,8 @@
 import {describe, expect, it} from "vitest";
-import FeatureDescription, {FeatureConfiguration, FeatureDescriptor} from "@/features/feature-description";
+import FeatureDescription, {FeatureConfiguration} from "@/features/feature-description";
 import FeatureDescriptionService, {SetValue} from "@/features/feature-description.service";
+import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
+import {FieldDescriptorType} from "@/common/ describableForm/field-descriptor-type";
 
 const descriptionService = new FeatureDescriptionService()
 
@@ -9,22 +11,22 @@ describe("FeatureDescriptionService", () => {
         "type",
         "some-id",
         [
-            new FeatureDescriptor(
+            new FieldDescriptor(
                 "fieldName",
                 "description",
-                "STRING",
+                FieldDescriptorType.STRING,
                 "value for field 1"
             ),
-            new FeatureDescriptor(
+            new FieldDescriptor(
                 "fieldName2",
                 "description",
-                "STRING",
+                FieldDescriptorType.STRING,
                 "value for field 2"
             ),
-            new FeatureDescriptor(
+            new FieldDescriptor(
                 "otherFieldName",
                 "description",
-                "STRING",
+                FieldDescriptorType.STRING,
                 "value for other field"
             )
         ]

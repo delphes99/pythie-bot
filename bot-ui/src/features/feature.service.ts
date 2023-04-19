@@ -1,4 +1,5 @@
 import FeatureDescription, {FeatureConfiguration} from "@/features/feature-description";
+import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
 
 export default class FeatureService {
     constructor(
@@ -8,7 +9,16 @@ export default class FeatureService {
 
     getFeatureDescription(featureId: string): Promise<FeatureDescription> {
         return fetch(`${this.backendUrl}/feature/${featureId}`)
-            .then((response) => response.json());
+            .then((response) => response.json())
+            .then((json) => new FeatureDescription(json.type,
+                json.id,
+                json.descriptors.map((descriptor: FieldDescriptor) => new FieldDescriptor(
+                    descriptor.fieldName,
+                    descriptor.description,
+                    descriptor.type,
+                    descriptor.value
+                ))
+            ));
     }
 
     updateFeature(featureConfiguration: FeatureConfiguration): Promise<boolean> {

@@ -43,7 +43,7 @@ class CustomCommandConfiguration(
             descriptors = listOf(
                 FeatureDescriptor("channel", "Channel name", FeatureDescriptionType.STRING, channel.name),
                 FeatureDescriptor("command", "command", FeatureDescriptionType.STRING, command),
-                FeatureDescriptor("cooldown", "cooldown", FeatureDescriptionType.STRING, cooldown.toString()),
+                FeatureDescriptor("cooldown", "cooldown", FeatureDescriptionType.DURATION, cooldown.toString()),
             )
         )
     }

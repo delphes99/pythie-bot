@@ -1,26 +1,14 @@
+import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
+
 export default class FeatureDescription {
     type: string
     id: string
-    descriptors: FeatureDescriptor[]
+    descriptors: FieldDescriptor[]
 
-    constructor(type: string, id: string, descriptors: FeatureDescriptor[]) {
+    constructor(type: string, id: string, descriptors: FieldDescriptor[]) {
         this.type = type;
         this.id = id;
         this.descriptors = descriptors;
-    }
-}
-
-export class FeatureDescriptor {
-    fieldName: string
-    description: string
-    type: string
-    value: string
-
-    constructor(fieldName: string, description: string, type: string, value: string) {
-        this.fieldName = fieldName;
-        this.description = description;
-        this.type = type;
-        this.value = value;
     }
 }
 

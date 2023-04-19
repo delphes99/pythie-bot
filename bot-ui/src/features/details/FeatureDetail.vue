@@ -1,10 +1,8 @@
 <template>
     <div v-for="descriptor in fieldDescriptors" :key="descriptor.descriptor.fieldName">
-        <ui-textfield
-                :id="descriptor.descriptor.fieldName"
-                :label="descriptor.descriptor.description"
-                v-model="descriptor.currentValue"
-        />
+        <component :is="descriptor.descriptor.viewComponent()"
+                   :descriptor="descriptor.descriptor"
+                   v-model:currentValue="descriptor.currentValue"/>
     </div>
     <ui-button label="common.save" @click="saveDescription"/>
 </template>
@@ -13,16 +11,15 @@
 import {inject} from "vue";
 import {InjectKey} from "@/main";
 import FeatureService from "@/features/feature.service";
-import {FeatureDescriptor} from "@/features/feature-description";
-import UiTextfield from "@/ds/form/textfield/UiTextfield.vue";
 import FeatureDescriptionService, {SetValue} from "@/features/feature-description.service";
 import UiButton from "@/ds/button/UiButton.vue";
+import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
 
-class FieldDescriptor {
-    descriptor: FeatureDescriptor
+class FieldDescriptorValue {
+    descriptor: FieldDescriptor
     currentValue: string
 
-    constructor(descriptor: FeatureDescriptor, currentValue: string) {
+    constructor(descriptor: FieldDescriptor, currentValue: string) {
         this.descriptor = descriptor;
         this.currentValue = currentValue;
     }
@@ -45,14 +42,14 @@ async function loadDescription() {
 }
 
 const fieldDescriptors = featureDescription.descriptors.map(descriptor => {
-    return new FieldDescriptor(descriptor, descriptor.value)
+    return new FieldDescriptorValue(descriptor, descriptor.value)
 })
 
 async function saveDescription() {
     const modifications = fieldDescriptors.map(descriptor => new SetValue(
-            descriptor.descriptor.fieldName,
-            descriptor.currentValue,
-        ));
+        descriptor.descriptor.fieldName,
+        descriptor.currentValue,
+    ));
     const featureConfiguration = featureDescriptionService.buildConfiguration(featureDescription, ...modifications)
 
     await featureService.updateFeature(featureConfiguration)
