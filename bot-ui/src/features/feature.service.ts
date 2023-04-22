@@ -1,5 +1,5 @@
 import FeatureDescription, {FeatureConfiguration} from "@/features/feature-description";
-import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
+import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
 
 export default class FeatureService {
     constructor(

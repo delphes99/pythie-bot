@@ -13,7 +13,7 @@ import {InjectKey} from "@/main";
 import FeatureService from "@/features/feature.service";
 import FeatureDescriptionService, {SetValue} from "@/features/feature-description.service";
 import UiButton from "@/ds/button/UiButton.vue";
-import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
+import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
 
 class FieldDescriptorValue {
     descriptor: FieldDescriptor

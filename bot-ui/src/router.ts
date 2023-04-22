@@ -20,12 +20,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
-    component: HomePage,
+    component: () => import("@/home/HomePage.vue"),
   },
   {
     path: "/features",
     name: "features",
-    component: FeaturesList,
+    component: () => import("@/features/FeaturesList.vue"),
   },
   {
     path: "/feature",
@@ -35,23 +35,22 @@ const routes: Array<RouteRecordRaw> = [
           path: ":featureId",
           name: "featureDetail",
           props: true,
-          component: FeatureDetail,
+          component: () => import("@/features/details/FeatureDetail.vue"),
         }
     ]
   },
   {
     path: "/overlay",
-    component: OverlaysRouter,
     children: [
       {
         path: "",
         name: "overlays",
-        component: OverlaysList,
+        component: () => import("@/overlay/OverlaysList.vue"),
       },
       {
         path: ":overlayId",
         name: "overlay_detail",
-        component: OverlayEditor,
+        component: () => import("@/overlay/editor/OverlayEditor.vue"),
         props: true,
       },
     ],
@@ -59,58 +58,57 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/settings",
     name: "settings",
-    component: SettingsPage,
+    component: () => import("@/settings/SettingsPage.vue"),
   },
   {
     path: "/medias",
     name: "medias",
-    component: MediasPage,
+    component: () => import("@/media/MediasPage.vue"),
   },
   {
     path: "/about",
     name: "about",
-    component: AboutPage,
+    component: ()=> import("@/about/AboutPage.vue"),
   },
   {
     path: "/discord",
     name: "discord",
-    component: DiscordConfiguration,
+    component: () => import("@/discord/DiscordConfiguration.vue"),
   },
   {
     path: "/obs",
     name: "obs",
-    component: ObsConfiguration,
+    component: () => import("@/obs/ObsConfiguration.vue"),
   },
   {
     path: "/twitch",
-    component: TwitchRouter,
+    name: "twitch",
     children: [
       {
         path: "",
-        name: "twitch",
-        component: TwitchConfiguration,
+        component: () => import("@/twitch/TwitchConfiguration.vue"),
       },
       {
         path: ":channelName",
-        component: TwitchChannelConfiguration,
+        component: () => import("@/twitch/TwitchChannelConfiguration.vue"),
         props: true,
         children: [
           {
             path: "features",
             name: "twitch_channel_features",
-            component: TwitchFeature,
+            component: () => import("@/twitch/feature/TwitchFeature.vue"),
             props: true,
           },
           {
             path: "rewards",
             name: "twitch_channel_rewards",
-            component: TwitchReward,
+            component: () => import("@/twitch/reward/TwitchReward.vue"),
             props: true,
           },
           {
             path: "",
             name: "twitch_channel_rewards",
-            component: TwitchReward,
+            component: () => import("@/twitch/reward/TwitchReward.vue"),
             props: true,
           },
         ],

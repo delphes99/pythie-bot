@@ -1,6 +1,6 @@
-import {FieldDescriptorType} from "@/common/ describableForm/field-descriptor-type";
-import FieldStringEditView from "@/common/ describableForm/descriptorView/Field-string-edit-view.vue";
-import FieldDurationEditView from "@/common/ describableForm/descriptorView/Field-duration-edit-view.vue";
+import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
+import FieldStringEditView from "@/common/describable-form/descriptor-view/field-string-edit-view.vue";
+import FieldDurationEditView from "@/common/describable-form/descriptor-view/field-duration-edit-view.vue";
 
 export class FieldDescriptor {
     fieldName: string

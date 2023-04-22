@@ -1,8 +1,8 @@
 import {describe, expect, it} from "vitest";
 import FeatureDescription, {FeatureConfiguration} from "@/features/feature-description";
 import FeatureDescriptionService, {SetValue} from "@/features/feature-description.service";
-import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
-import {FieldDescriptorType} from "@/common/ describableForm/field-descriptor-type";
+import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
+import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
 
 const descriptionService = new FeatureDescriptionService()
 

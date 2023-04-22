@@ -1,4 +1,4 @@
-import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
+import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
 
 export default class FeatureDescription {
     type: string

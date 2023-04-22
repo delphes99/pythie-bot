@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue";
-import {FieldDescriptor} from "@/common/ describableForm/field-descriptor";
+import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
 import {computed, PropType, ref} from "vue";
 import {formatDuration, parseDuration} from "@/common/duration.utils";
 
