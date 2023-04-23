@@ -1,7 +1,9 @@
 package fr.delphes
 
+import fr.delphes.connector.twitch.twitchSerializersModule
 import fr.delphes.features.featureSerializersModule
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 
 val testSerializer = Json {
     ignoreUnknownKeys = true
@@ -9,5 +11,8 @@ val testSerializer = Json {
     encodeDefaults = true
     coerceInputValues = true
     //TODO centralize serialization module
-    serializersModule = featureSerializersModule
+    serializersModule = SerializersModule {
+        include(featureSerializersModule)
+        include(twitchSerializersModule)
+    }
 }

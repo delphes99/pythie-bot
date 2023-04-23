@@ -13,9 +13,11 @@ import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
+import fr.delphes.connector.twitch.twitchSerializersModule
 import fr.delphes.features.featureSerializersModule
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import java.io.File
 
 @InternalSerializationApi
@@ -33,7 +35,10 @@ fun main() {
         encodeDefaults = true
         coerceInputValues = true
         //TODO centralize serialization module
-        serializersModule = featureSerializersModule
+        serializersModule = SerializersModule {
+            include(featureSerializersModule)
+            include(twitchSerializersModule)
+        }
     }
 
     val configuration = BotConfiguration(

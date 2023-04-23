@@ -2,6 +2,7 @@
 
 package fr.delphes.features.twitch.command
 
+import fr.delphes.bot.event.builder.OutgoingEventBuilder
 import fr.delphes.feature.FeatureConfiguration
 import fr.delphes.feature.FeatureDescription
 import fr.delphes.feature.FeatureDescriptionType
@@ -22,6 +23,7 @@ class CustomCommandConfiguration(
     private val command: String,
     override val id: FeatureId,
     private val cooldown: Duration,
+    private val actions: List<OutgoingEventBuilder> = emptyList(),
 ) : FeatureConfiguration {
     override fun buildFeature(): FeatureDefinition {
         return CustomCommand(
@@ -30,8 +32,8 @@ class CustomCommandConfiguration(
             id = id,
             cooldown = cooldown,
             action = {
-                //TODO implement
-                println("Custom command $command executed on channel $channel")
+                val outgoingEvent = actions.map { it.build() }
+                outgoingEvent.forEach { this.executeOutgoingEvent(it) }
             }
         )
     }
