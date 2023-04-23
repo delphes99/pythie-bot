@@ -2,6 +2,8 @@ package fr.delphes.connector.twitch.outgoingEvent
 
 import fr.delphes.bot.event.builder.OutgoingEventBuilder
 import fr.delphes.connector.twitch.TwitchConnector
+import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
@@ -26,5 +28,23 @@ data class SendMessage(
         val channel: TwitchChannel
     ) : OutgoingEventBuilder {
         override fun build() = SendMessage(text, channel)
+
+        override fun description(): OutgoingEventBuilderDescription {
+            return OutgoingEventBuilderDescription(
+                type = "twitch-send-message",
+                descriptors = listOf(
+                    StringFeatureDescriptor(
+                        fieldName = "text",
+                        description = "description of text",
+                        value = text
+                    ),
+                    StringFeatureDescriptor(
+                        fieldName = "channel",
+                        description = "description of channel",
+                        value = channel.name
+                    )
+                )
+            )
+        }
     }
 }

@@ -3,7 +3,7 @@ package fr.delphes.features.twitch.command
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.feature.FeatureConfiguration
 import fr.delphes.rework.feature.FeatureId
-import fr.delphes.testSerializer
+import fr.delphes.serializer
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.ShouldSpec
@@ -15,7 +15,7 @@ import java.time.Duration
 
 class CustomCommandConfigurationTest : ShouldSpec({
     should("create feature") {
-        val feature = testSerializer.decodeFromString<FeatureConfiguration>(
+        val feature = serializer.decodeFromString<FeatureConfiguration>(
             """
                     {
                         "type":"TwitchCustomCommandConfiguration",
@@ -45,12 +45,13 @@ class CustomCommandConfigurationTest : ShouldSpec({
             cooldown = Duration.ofSeconds(60)
         )
 
-        testSerializer.encodeToString(configuration) shouldEqualJson """
+        serializer.encodeToString(configuration) shouldEqualJson """
              {
                 "channel": "test",
                 "command": "!cmd",
                 "id": "some-id",
-                "cooldown": "PT1M"
+                "cooldown": "PT1M",
+                "actions": []
             }
         """
     }
@@ -63,7 +64,7 @@ class CustomCommandConfigurationTest : ShouldSpec({
             cooldown = Duration.ofSeconds(60)
         )
 
-        testSerializer.encodeToString(configuration.description()) shouldEqualJson """
+        serializer.encodeToString(configuration.description()) shouldEqualJson """
             {
                 "type": "TwitchCustomCommandConfiguration",
                 "id": "some-id",
@@ -77,14 +78,20 @@ class CustomCommandConfigurationTest : ShouldSpec({
                     {
                         "fieldName": "command",
                         "type": "STRING",
-                        "description": "command",
+                        "description": "command trigger",
                         "value": "!cmd"
                     },
                     {
                         "fieldName": "cooldown",
-                        "type": "STRING",
+                        "type": "DURATION",
                         "description": "cooldown",
                         "value": "PT1M"
+                    },
+                    {
+                        "fieldName": "actions",
+                        "type": "OUTGOING_EVENTS",
+                        "description": "actions on trigger",
+                        "value": []
                     }
                 ]
             }

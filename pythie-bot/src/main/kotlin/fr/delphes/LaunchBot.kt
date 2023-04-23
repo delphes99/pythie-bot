@@ -3,6 +3,7 @@ package fr.delphes
 import fr.delphes.bot.Bot
 import fr.delphes.bot.Ngrok
 import fr.delphes.bot.configuration.BotConfiguration
+import fr.delphes.bot.coreSerializersModule
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99CustomFeatures
 import fr.delphes.configuration.channel.delphes99.delphes99Features
@@ -36,6 +37,7 @@ fun main() {
         coerceInputValues = true
         //TODO centralize serialization module
         serializersModule = SerializersModule {
+            include(coreSerializersModule)
             include(featureSerializersModule)
             include(twitchSerializersModule)
         }

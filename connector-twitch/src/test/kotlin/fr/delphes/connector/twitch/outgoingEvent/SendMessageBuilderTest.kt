@@ -42,4 +42,30 @@ class SendMessageBuilderTest : ShouldSpec({
             channel shouldBe TwitchChannel("channel")
         }
     }
+
+    should("description") {
+        val builder = SendMessage.Builder("Hello", TwitchChannel("channelName"))
+
+        val json = twitchTestSerializer.encodeToString(builder.description())
+
+        json shouldEqualJson """
+            {
+              "type": "twitch-send-message",
+              "descriptors": [
+                        {
+                            "type": "STRING",
+                            "fieldName": "text",
+                            "description": "description of text",
+                            "value": "Hello"
+                        },
+                        {
+                            "type": "STRING",
+                            "fieldName": "channel",
+                            "description": "description of channel",
+                            "value": "channelName"
+                        }
+                    ]
+            }
+            """
+    }
 })
