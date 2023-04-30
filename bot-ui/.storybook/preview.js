@@ -1,32 +1,46 @@
 import "../src/common/assets/styles/index.css"
 
 const preview = {
-  parameters: {
-    layout: "fullscreen",
-    backgrounds: {
-      default: "light",
+    globalTypes: {
+        theme: {
+            name: "Theme",
+            description: "Theme",
+            defaultValue: "light",
+            toolbar: {
+                icon: "photo",
+                items: ['Light', 'Dark', 'Monochrome'],
+                showName: true,
+                dynamicTitle: true,
+            }
+        }
     },
-    actions: { argTypesRegex: "^on[A-Z].*" },
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/,
-      },
+    parameters: {
+        layout: "centered",
+        actions: {argTypesRegex: "^on[A-Z].*"},
+        controls: {
+            matchers: {
+                color: /(background|color)$/i,
+                date: /Date$/,
+            },
+        },
     },
-  },
-  decorators: [(story) => ({
-    components: { story },
-    template: '<div class="light-theme bg-backgroundColor text-backgroundTextColor p-8"><story /></div>'
-  })],
+    decorators: [(story, context) => ({
+        components: {story},
+        template: `<div class="${themeClass(context.globals.theme)} bg-backgroundColor text-backgroundTextColor w-full"><story /></div>`
+    })],
 };
+
+function themeClass(theme) {
+    return `${theme.toLowerCase()}-theme`
+}
 
 export default preview;
 
-import { setup } from '@storybook/vue3';
-import { createI18n } from 'vue-i18n';
+import {setup} from '@storybook/vue3';
+import {createI18n} from 'vue-i18n';
 
 const i18n = createI18n({});
 
 setup((app) => {
-  app.use(i18n);
+    app.use(i18n);
 });

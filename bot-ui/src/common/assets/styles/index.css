@@ -3,6 +3,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.monochrome-theme {
+    --background: #334155;
+    --background-text-color: #ffffff;
+    --primary-color: #0f172a;
+    --primary-color-hover: #0b2736;
+    --primary-text-color: #d8d2cb;
+    --secondary-color: #1c658c;
+    --title-color: #9ca3af;
+    --input-color: #4b5563;
+    --input-text-color: #dddddd;
+}
+
 .light-theme {
     --background: #ffffff;
     --background-text-color: #000000;
