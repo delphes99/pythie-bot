@@ -4,20 +4,14 @@ module.exports = {
     browser: true,
     node: true,
     es2021: true,
-    "vue/setup-compiler-macros": true,
+    "vue/setup-compiler-macros": true
   },
   plugins: ["vue", "@typescript-eslint"],
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:vue/vue3-recommended",
-    "@vue/typescript/recommended",
-  ],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/eslint-recommended", "plugin:@typescript-eslint/recommended", "plugin:vue/vue3-recommended", "@vue/typescript/recommended", "plugin:storybook/recommended"],
   parserOptions: {
     parser: "@typescript-eslint/parser",
     sourceType: "module",
-    ecmaVersion: 12,
+    ecmaVersion: 12
   },
   rules: {
     "comma-dangle": ["error", "always-multiline"],
@@ -25,6 +19,6 @@ module.exports = {
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "vue/script-setup-uses-vars": "error",
     "vue/no-multiple-template-root": "off",
-    semi: ["error", "never"],
-  },
-}
+    semi: ["error", "never"]
+  }
+};
