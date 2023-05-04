@@ -1,4 +1,6 @@
 import "../src/common/assets/styles/index.css"
+import {setup} from '@storybook/vue3';
+import {createI18n} from 'vue-i18n';
 
 const preview = {
     globalTypes: {
@@ -35,9 +37,6 @@ function themeClass(theme) {
 }
 
 export default preview;
-
-import {setup} from '@storybook/vue3';
-import {createI18n} from 'vue-i18n';
 
 const i18n = createI18n({});
 

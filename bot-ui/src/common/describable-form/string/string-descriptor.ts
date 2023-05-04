@@ -1,7 +1,7 @@
-import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
 import {FieldDescriptor, FieldValue} from "@/common/describable-form/field-descriptor";
-import FieldStringEditView from "@/common/describable-form/string/field-string-edit-view.vue";
+import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
 import {DescriptorJsonType} from "@/common/describable-form/field-descriptor.factory";
+import FieldStringEditView from "@/common/describable-form/string/field-string-edit-view.vue";
 
 export class StringDescriptor implements FieldDescriptor<String> {
     actualValue: String;
@@ -16,7 +16,7 @@ export class StringDescriptor implements FieldDescriptor<String> {
     }
 
     static fromJson(json: DescriptorJsonType): StringDescriptor {
-        if(json.type !== FieldDescriptorType.STRING) {
+        if (json.type !== FieldDescriptorType.STRING) {
             throw new Error(`Cannot deserialize ${json.type} as StringDescriptor`);
         }
 

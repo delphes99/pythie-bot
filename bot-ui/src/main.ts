@@ -1,4 +1,6 @@
 import {LocalStorageItem} from "@/common/LocalStorageItem"
+import FeatureService from "@/features/feature.service";
+import MediasService from "@/media/MediasService";
 import {useStorage} from "@vueuse/core"
 import ElementPlus from "element-plus"
 import "element-plus/dist/index.css"
@@ -7,12 +9,10 @@ import {createApp} from "vue"
 import {createI18n} from "vue-i18n"
 import App from "./App.vue"
 import "./common/assets/styles/index.css"
-import router from "./router"
 
 import en from "./lang/en.json"
 import fr from "./lang/fr.json"
-import MediasService from "@/media/MediasService";
-import FeatureService from "@/features/feature.service";
+import router from "./router"
 
 const messages = {
     en: en,

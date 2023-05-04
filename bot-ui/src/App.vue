@@ -24,11 +24,11 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+import MenuPanel from "@/common/components/common/MenuPanel.vue"
 import StatusBar from "@/common/components/common/StatusBar.vue"
 import {Themes} from "@/common/components/common/theme/Themes"
 import {useApplicationTheme} from "@/common/components/common/theme/UseApplicationTheme"
-import MenuPanel from "@/common/components/common/MenuPanel.vue"
 
 const storedTheme = useApplicationTheme()
 

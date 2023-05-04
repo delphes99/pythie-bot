@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
-    Pythie
-  </div>
+    <div class="home">
+        Pythie
+    </div>
 </template>

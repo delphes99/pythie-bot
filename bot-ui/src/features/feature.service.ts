@@ -3,7 +3,8 @@ import FeatureDescription, {FeatureConfiguration} from "@/features/feature-descr
 export default class FeatureService {
     constructor(
         private backendUrl: string,
-    ) {}
+    ) {
+    }
 
     getFeatureDescription(featureId: string): Promise<FeatureDescription> {
         return fetch(`${this.backendUrl}/feature/${featureId}`)

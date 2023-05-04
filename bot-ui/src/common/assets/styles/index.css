@@ -41,6 +41,6 @@
 
 @layer utilities {
     .min-h-1\/3 {
-        min-height:33.3%
+        min-height: 33.3%
     }
 }

@@ -1,19 +1,19 @@
 <template>
-  <ui-card :title="feature.id">
-    <div>Type : {{ $t("configuration.features." + feature.type) }}</div>
-    <ui-button label="common.edit" :router-link="`/feature/${feature.id}`" />
-  </ui-card>
+    <ui-card :title="feature.id">
+        <div>Type : {{ $t("configuration.features." + feature.type) }}</div>
+        <ui-button :router-link="`/feature/${feature.id}`" label="common.edit"/>
+    </ui-card>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+import UiButton from "@/ds/button/UiButton.vue";
 import UiCard from "@/ds/card/UiCard.vue"
 import Feature from "@/features/feature"
-import UiButton from "@/ds/button/UiButton.vue";
 
 const props = defineProps({
-  feature: {
-    type: Feature,
-    required: true,
-  },
+    feature: {
+        type: Feature,
+        required: true,
+    },
 })
 </script>

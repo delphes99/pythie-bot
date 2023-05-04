@@ -1,5 +1,5 @@
-import {describe, expect, it} from "vitest";
 import {Duration, formatDuration, parseDuration} from "@/common/duration.utils";
+import {describe, expect, it} from "vitest";
 
 describe("DurationUtil", () => {
     it("convert ISO8601 to Duration", () => {

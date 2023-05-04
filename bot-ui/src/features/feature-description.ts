@@ -1,5 +1,5 @@
-import {DescriptorJsonType, fromJsonDescriptor} from "@/common/describable-form/field-descriptor.factory";
 import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
+import {DescriptorJsonType, fromJsonDescriptor} from "@/common/describable-form/field-descriptor.factory";
 
 type FeatureDescriptionJson = {
     type: string,
@@ -12,7 +12,8 @@ export default class FeatureDescription {
         public type: string,
         public id: string,
         public descriptors: FieldDescriptor<any>[]
-    ) {}
+    ) {
+    }
 
     static fromJson(json: FeatureDescriptionJson): FeatureDescription {
         return new FeatureDescription(

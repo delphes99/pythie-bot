@@ -1,5 +1,3 @@
-import {DurationDescriptor} from "@/common/describable-form/duration/duration-descriptor";
-
 export class Duration {
     constructor(
         public hours: number,

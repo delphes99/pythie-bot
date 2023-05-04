@@ -1,15 +1,15 @@
 <template>
     <ui-textfield
             :id="descriptor.fieldName"
-            :label="descriptor.description"
             v-model="descriptor.actualValue"
+            :label="descriptor.description"
     />
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+import {StringDescriptor} from "@/common/describable-form/string/string-descriptor";
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue";
 import {PropType} from "vue";
-import {StringDescriptor} from "@/common/describable-form/string/string-descriptor";
 
 const props = defineProps({
     descriptor: {

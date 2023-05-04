@@ -1,14 +1,14 @@
 <template>
-  <ui-panel title="Features" />
+    <ui-panel title="Features"/>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import UiPanel from "@/ds/panel/UiPanel.vue"
 
 defineProps({
-  channelName: {
-    type: String,
-    required: true,
-  },
+    channelName: {
+        type: String,
+        required: true,
+    },
 })
 </script>

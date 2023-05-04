@@ -2,7 +2,8 @@ export class FieldValue<T> {
     constructor(
         readonly fieldName: String,
         readonly value: T
-    ) {}
+    ) {
+    }
 }
 
 export interface FieldDescriptor<T> {

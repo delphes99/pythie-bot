@@ -1,5 +1,5 @@
 export enum ConnectorEnum {
-  TWITCH = "Twitch",
-  DISCORD = "Discord",
-  OBS = "Obs",
+    TWITCH = "Twitch",
+    DISCORD = "Discord",
+    OBS = "Obs",
 }

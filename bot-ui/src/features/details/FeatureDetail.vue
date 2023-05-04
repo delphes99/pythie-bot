@@ -7,11 +7,12 @@
     <ui-button label="common.save" @click="saveDescription"/>
 </template>
 
-<script setup lang="ts">
-import {inject} from "vue";
-import {InjectKey} from "@/main";
-import FeatureService from "@/features/feature.service";
+<script lang="ts" setup>
 import UiButton from "@/ds/button/UiButton.vue";
+import FeatureService from "@/features/feature.service";
+import {InjectKey} from "@/main";
+import {inject} from "vue";
+
 const props = defineProps({
     featureId: {
         type: String,

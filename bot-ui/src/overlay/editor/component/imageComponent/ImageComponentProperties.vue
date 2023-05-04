@@ -1,25 +1,25 @@
 <template>
-  <div>
+    <div>
+        <ui-textfield
+                v-model="selectedElement.properties.url"
+                label="overlay.editor.image-component.url"
+        />
+    </div>
     <ui-textfield
-      v-model="selectedElement.properties.url"
-      label="overlay.editor.image-component.url"
+            v-model="selectedElement.properties.width"
+            label="overlay.editor.image-component.width"
     />
-  </div>
-  <ui-textfield
-    v-model="selectedElement.properties.width"
-    label="overlay.editor.image-component.width"
-  />
-  <ui-textfield
-    v-model="selectedElement.properties.height"
-    label="overlay.editor.image-component.height"
-  />
+    <ui-textfield
+            v-model="selectedElement.properties.height"
+            label="overlay.editor.image-component.height"
+    />
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
-import { useOverlayEditorStore } from "@/overlay/editor/useOverlayEditorStore"
-import { storeToRefs } from "pinia"
+import {useOverlayEditorStore} from "@/overlay/editor/useOverlayEditorStore"
+import {storeToRefs} from "pinia"
 
 const store = useOverlayEditorStore()
-const { selectedElement } = storeToRefs(store)
+const {selectedElement} = storeToRefs(store)
 </script>

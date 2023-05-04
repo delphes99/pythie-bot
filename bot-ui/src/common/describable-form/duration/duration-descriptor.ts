@@ -1,6 +1,6 @@
-import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
-import {FieldDescriptor, FieldValue} from "@/common/describable-form/field-descriptor";
 import FieldDurationEditView from "@/common/describable-form/duration/field-duration-edit-view.vue";
+import {FieldDescriptor, FieldValue} from "@/common/describable-form/field-descriptor";
+import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
 import {DescriptorJsonType} from "@/common/describable-form/field-descriptor.factory";
 import {Duration, formatDuration, parseDuration} from "@/common/duration.utils";
 

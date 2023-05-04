@@ -12,13 +12,13 @@
     </ui-panel>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
 import UiPanel from "@/ds/panel/UiPanel.vue"
+import Feature from "@/features/feature";
 import FeatureCard from "@/features/featureCard/FeatureCard.vue"
 import {inject, ref} from "vue"
 import {useI18n} from "vue-i18n"
-import Feature from "@/features/feature";
 
 const {t} = useI18n()
 

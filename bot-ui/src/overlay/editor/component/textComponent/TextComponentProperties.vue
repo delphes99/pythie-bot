@@ -1,36 +1,36 @@
 <template>
-  <div>
-    <ui-textfield
-      v-model="selectedElement.properties.text"
-      label="overlay.editor.text-component.text"
-    />
-  </div>
-  <div>
-    <ui-textfield
-      v-model="selectedElement.properties.font"
-      label="overlay.editor.text-component.font"
-    />
-  </div>
-  <div>
-    <ui-textfield
-      v-model="selectedElement.properties.fontSize"
-      label="overlay.editor.text-component.font-size"
-    />
-  </div>
-  <div>
-    <ui-color-picker
-      v-model="selectedElement.properties.color"
-      label="overlay.editor.text-component.color"
-    />
-  </div>
+    <div>
+        <ui-textfield
+                v-model="selectedElement.properties.text"
+                label="overlay.editor.text-component.text"
+        />
+    </div>
+    <div>
+        <ui-textfield
+                v-model="selectedElement.properties.font"
+                label="overlay.editor.text-component.font"
+        />
+    </div>
+    <div>
+        <ui-textfield
+                v-model="selectedElement.properties.fontSize"
+                label="overlay.editor.text-component.font-size"
+        />
+    </div>
+    <div>
+        <ui-color-picker
+                v-model="selectedElement.properties.color"
+                label="overlay.editor.text-component.color"
+        />
+    </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import UiColorPicker from "@/ds/form/colorpicker/UiColorPicker.vue"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
- import { useOverlayEditorStore } from "@/overlay/editor/useOverlayEditorStore"
-import { storeToRefs } from "pinia"
+import {useOverlayEditorStore} from "@/overlay/editor/useOverlayEditorStore"
+import {storeToRefs} from "pinia"
 
-  const store = useOverlayEditorStore()
-const { selectedElement } = storeToRefs(store)
+const store = useOverlayEditorStore()
+const {selectedElement} = storeToRefs(store)
 </script>

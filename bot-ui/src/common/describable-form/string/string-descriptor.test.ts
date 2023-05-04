@@ -1,7 +1,7 @@
-import {describe, expect, it} from "vitest";
-import {StringDescriptor} from "@/common/describable-form/string/string-descriptor";
 import {FieldValue} from "@/common/describable-form/field-descriptor";
 import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
+import {StringDescriptor} from "@/common/describable-form/string/string-descriptor";
+import {describe, expect, it} from "vitest";
 
 describe("String descriptor", () => {
     it("construct from JSON", () => {

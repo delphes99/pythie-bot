@@ -1,9 +1,9 @@
-import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
 import {FieldDescriptor, FieldValue} from "@/common/describable-form/field-descriptor";
-import FieldOutgoingEventsEditView from "@/common/describable-form/outgoingEvents/field-outgoing-events-edit-view.vue";
+import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
 import {DescriptorJsonType} from "@/common/describable-form/field-descriptor.factory";
-import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
+import FieldOutgoingEventsEditView from "@/common/describable-form/outgoingEvents/field-outgoing-events-edit-view.vue";
 import {OutgoingEvent} from "@/features/outgoingevents/outgoing-event";
+import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
 
 export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]> {
     type: FieldDescriptorType = FieldDescriptorType.OUTGOING_EVENTS

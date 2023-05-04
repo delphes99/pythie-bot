@@ -1,8 +1,8 @@
-import {describe, expect, it} from "vitest";
-import {FieldValue} from "@/common/describable-form/field-descriptor";
 import {DurationDescriptor} from "@/common/describable-form/duration/duration-descriptor";
-import {Duration} from "@/common/duration.utils";
+import {FieldValue} from "@/common/describable-form/field-descriptor";
 import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
+import {Duration} from "@/common/duration.utils";
+import {describe, expect, it} from "vitest";
 
 describe("Duration descriptor", () => {
     it("construct from JSON", () => {
