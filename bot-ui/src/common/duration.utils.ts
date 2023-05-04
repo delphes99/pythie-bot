@@ -1,26 +1,24 @@
+import {DurationDescriptor} from "@/common/describable-form/duration/duration-descriptor";
 
-export interface Duration {
-    hours: number;
-    minutes: number;
-    seconds: number;
+export class Duration {
+    constructor(
+        public hours: number,
+        public minutes: number,
+        public seconds: number,
+    ) {
+    }
 }
 
 export function parseDuration(duration: string): Duration {
     const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/g;
     const match = regex.exec(duration);
     if (match) {
-        return {
-            hours: parseInt(match[1]) || 0,
-            minutes: parseInt(match[2]) || 0,
-            seconds: parseInt(match[3]) || 0,
-        }
+        return new Duration(parseInt(match[1]) || 0,
+            parseInt(match[2]) || 0,
+            parseInt(match[3]) || 0);
     }
 
-    return {
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-    }
+    return new Duration(0, 0, 0);
 }
 
 export function formatDuration(duration: Duration): string {
