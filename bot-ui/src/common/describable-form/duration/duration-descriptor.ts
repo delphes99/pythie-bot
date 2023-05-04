@@ -1,7 +1,7 @@
 import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
 import {FieldDescriptor, FieldValue} from "@/common/describable-form/field-descriptor";
 import FieldDurationEditView from "@/common/describable-form/duration/field-duration-edit-view.vue";
-import {DescriptorJsonType} from "@/features/descriptor-factory";
+import {DescriptorJsonType} from "@/common/describable-form/field-descriptor.factory";
 import {Duration, formatDuration, parseDuration} from "@/common/duration.utils";
 
 export class DurationDescriptor implements FieldDescriptor<string> {

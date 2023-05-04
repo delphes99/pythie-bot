@@ -17,9 +17,6 @@ export function fromJsonDescriptor(descriptor: DescriptorJsonType): FieldDescrip
         case FieldDescriptorType.DURATION:
             return DurationDescriptor.fromJson(descriptor);
         case FieldDescriptorType.OUTGOING_EVENTS:
-            return new OutgoingEventsDescriptor(
-                descriptor.fieldName,
-                descriptor.description,
-            );
+            return OutgoingEventsDescriptor.fromJson(descriptor);
     }
 }

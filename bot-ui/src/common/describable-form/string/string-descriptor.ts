@@ -1,7 +1,7 @@
 import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-type";
 import {FieldDescriptor, FieldValue} from "@/common/describable-form/field-descriptor";
 import FieldStringEditView from "@/common/describable-form/string/field-string-edit-view.vue";
-import {DescriptorJsonType} from "@/features/descriptor-factory";
+import {DescriptorJsonType} from "@/common/describable-form/field-descriptor.factory";
 
 export class StringDescriptor implements FieldDescriptor<String> {
     actualValue: String;

@@ -1,22 +1,18 @@
-import {DescriptorJsonType, fromJsonDescriptor} from "@/features/descriptor-factory";
+import {DescriptorJsonType, fromJsonDescriptor} from "@/common/describable-form/field-descriptor.factory";
 import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
 
 type FeatureDescriptionJson = {
     type: string,
     id: string,
-    descriptors: Array<DescriptorJsonType>
+    descriptors: DescriptorJsonType[]
 };
 
 export default class FeatureDescription {
-    type: string
-    id: string
-    descriptors: FieldDescriptor<any>[]
-
-    constructor(type: string, id: string, descriptors: FieldDescriptor<any>[]) {
-        this.type = type;
-        this.id = id;
-        this.descriptors = descriptors;
-    }
+    constructor(
+        public type: string,
+        public id: string,
+        public descriptors: FieldDescriptor<any>[]
+    ) {}
 
     static fromJson(json: FeatureDescriptionJson): FeatureDescription {
         return new FeatureDescription(

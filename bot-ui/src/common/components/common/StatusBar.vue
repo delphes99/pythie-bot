@@ -32,7 +32,7 @@ interface Status {
 }
 
 const backendUrl = inject("backendUrl")
-const statuses = ref<Status[]>()
+const statuses = ref<Status[]>([])
 
 async function getStatus() {
   const response = await fetch(`${backendUrl}/connectors/status`)
