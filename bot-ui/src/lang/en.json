@@ -71,7 +71,8 @@
       "seconds": "seconds",
       "minutes": "minutes",
       "hours": "hours"
-    }
+    },
+    "configuration": "Configuration"
   },
   "settings": {
     "title": "Settings",

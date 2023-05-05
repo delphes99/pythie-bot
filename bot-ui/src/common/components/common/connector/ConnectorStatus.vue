@@ -1,31 +1,45 @@
 <template>
-    <el-dropdown trigger="contextmenu">
-        <div class="relative">
-            <router-link :to="link">
+    <Menu as="div" class="relative inline-block text-left">
+        <MenuButton>
+            <div>
                 <img
                         :alt="connector"
                         :src="image"
                         height="48"
                         width="48"
                 >
-            </router-link>
-            <div
-                    :class="[statusColor]"
-                    class="absolute -bottom-1 -right-1 z-2 rounded-full shadow-lg"
-            />
-        </div>
-        <template #dropdown>
-            <el-dropdown-menu>
-                <el-dropdown-item
-                        v-for="action in actions"
-                        :key="action.label"
-                        @click="doAction(action)"
-                >
+                <div
+                        :class="[statusColor]"
+                        class="absolute -bottom-1 -right-1 z-2 rounded-full shadow-lg"
+                />
+            </div>
+        </MenuButton>
+        <MenuItems
+                class="absolute right-0 mt-2 w-56 origin-top-right divide-y-4 divide-primaryColor bg-primaryColor shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <MenuItem v-slot="{ active }"
+                      v-for="action in actions"
+                      :key="action.label">
+                <router-link :class="[
+                      active ? 'bg-primaryColorHover text-primaryTextColor' : 'bg-backgroundColor text-backgroundTextColor',
+                      'group flex w-full items-center px-2 py-2 text-sm',
+                    ]"
+                             :to="link">
+                    {{ $t("common.configuration") }}
+                </router-link>
+            </MenuItem>
+            <MenuItem v-slot="{ active }"
+                      v-for="action in actions"
+                      :key="action.label">
+                <a :class="[
+                      active ? 'bg-primaryColorHover text-primaryTextColor' : 'bg-backgroundColor text-backgroundTextColor',
+                      'group flex w-full items-center px-2 py-2 text-sm',
+                    ]"
+                   @click="doAction(action)">
                     {{ action.label }}
-                </el-dropdown-item>
-            </el-dropdown-menu>
-        </template>
-    </el-dropdown>
+                </a>
+            </MenuItem>
+        </MenuItems>
+    </Menu>
 </template>
 
 <script lang="ts" setup>
@@ -36,6 +50,7 @@ import {ConnectorEnum} from "@/common/components/common/connector/ConnectorEnum"
 import {ConnectorStatusEnum} from "@/common/components/common/connector/ConnectorStatusEnum"
 import {DropDownAction} from "@/common/components/common/connector/DropDownAction"
 import {StatusColor} from "@/common/components/common/connector/StatusColor"
+import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import axios from "axios"
 import {ElNotification} from "element-plus"
 import {computed, inject} from "vue"

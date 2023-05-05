@@ -1,12 +1,7 @@
-export default class Feature {
-    id: string;
-    type: string;
-
+export class Feature {
     constructor(
-        id: string,
-        type: string,
+        public id: string,
+        public type: string,
     ) {
-        this.id = id
-        this.type = type
     }
 }

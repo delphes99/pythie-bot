@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import UiButton from "@/ds/button/UiButton.vue";
 import UiCard from "@/ds/card/UiCard.vue"
-import Feature from "@/features/feature"
+import {Feature} from "@/features/feature";
 
 const props = defineProps({
     feature: {
