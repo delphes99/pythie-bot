@@ -1,25 +1,34 @@
-import com.github.gradle.node.npm.task.NpmInstallTask
-import com.github.gradle.node.npm.task.NpmTask
+import com.github.gradle.node.pnpm.task.PnpmTask
 
 plugins {
     alias(libs.plugins.node)
 }
 
+node {
+    version.set(libs.versions.node.version)
+    download.set(true)
+    pnpmVersion.set(libs.versions.pnpm.version)
+}
 
-val buildTaskUsingYarn = tasks.register<NpmTask>("buildNpm") {
-    dependsOn(tasks["npmInstall"])
-    dependsOn(NpmInstallTask.NAME)
+tasks.register<PnpmTask>("pnpmBuild") {
+    dependsOn(tasks.pnpmInstall)
 
-    inputs.files(fileTree("node_modules"))
-    inputs.files(fileTree("src"))
-    inputs.files(fileTree("public"))
-    inputs.file("package.json")
-    inputs.file("tailwind.config.js")
-    inputs.file("index.html")
+    args.set(listOf("run", "build"))
+
+    outputs.cacheIf { true }
+
+    inputs.dir("node_modules")
+    inputs.dir("src")
+    inputs.dir("public")
+    inputs.files(
+        "index.html",
+        "package.json",
+        "tailwind.config.js",
+        "tsconfig.json",
+        "vitest.config.ts"
+    )
 
     outputs.dir("dist")
-
-    npmCommand.set(listOf("run", "build"))
 }
 
 description = "bot-ui"

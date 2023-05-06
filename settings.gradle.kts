@@ -1,7 +1,5 @@
 rootProject.name = "pythie-bot"
 
-enableFeaturePreview("VERSION_CATALOGS")
-
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {

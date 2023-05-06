@@ -15,8 +15,9 @@ dependencies {
     testImplementation(project(":utils-test"))
 }
 
-tasks.register<Copy>("copyBotUIToServer") {
-    dependsOn(":bot-ui:buildNpm")
+val copyUiTask = "copyBotUIToServer"
+tasks.register<Copy>(copyUiTask) {
+    dependsOn(":bot-ui:pnpmBuild")
 
     doFirst {
         delete(
@@ -28,8 +29,9 @@ tasks.register<Copy>("copyBotUIToServer") {
     into(layout.buildDirectory.dir("resources/main/admin"))
 }
 
-tasks.register<Copy>("copyOverlayToServer") {
-    dependsOn(":bot-overlay:buildNpm")
+val copyOverlayTask = "copyOverlayToServer"
+tasks.register<Copy>(copyOverlayTask) {
+    dependsOn(":bot-overlay:pnpmBuild")
 
     doFirst {
         delete(
@@ -42,7 +44,7 @@ tasks.register<Copy>("copyOverlayToServer") {
 }
 
 tasks.withType<Jar> {
-    dependsOn("copyBotUIToServer", "copyOverlayToServer")
+    dependsOn(copyUiTask, copyOverlayTask)
 }
 
 description = "bot-core"

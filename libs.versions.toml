@@ -1,12 +1,14 @@
 [versions]
 kotlin-version = "1.7.20"
 kotlinx-coroutines-version = "1.6.4"
-node-gradle-version = "3.5.0"
+node-gradle-version = "3.5.1"
 gradle-shadow-version = "7.1.2"
 ktor-version = "2.1.2"
 kord-version = "0.8.0-M15"
 kitteh-version = "8.0.0"
 kumo-version = "1.27"
+node-version = "18.16.0"
+pnpm-version = "8.2.0"
 
 #test
 mockk-version = "1.13.2"

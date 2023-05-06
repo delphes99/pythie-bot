@@ -26,7 +26,7 @@ fun Application.Overlays(bot: Bot) {
             val id = this.call.parameters["id"]
             val overlay = repository.load().firstOrNull() { it.id == id }
 
-            if(overlay == null) {
+            if (overlay == null) {
                 this.context.respond(HttpStatusCode.BadRequest, "unknown overlay id")
             } else {
                 this.context.respond(HttpStatusCode.OK, overlay)
@@ -45,7 +45,7 @@ fun Application.Overlays(bot: Bot) {
             val oldList = repository.load()
             val newList = oldList.filter { it.id != id }
 
-            if(oldList == newList) {
+            if (oldList == newList) {
                 this.context.respond(HttpStatusCode.BadRequest, "unknown overlay id")
                 return@delete
             }

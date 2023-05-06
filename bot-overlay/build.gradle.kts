@@ -1,24 +1,31 @@
-import com.github.gradle.node.npm.task.NpmInstallTask
-import com.github.gradle.node.npm.task.NpmTask
+import com.github.gradle.node.pnpm.task.PnpmTask
 
 plugins {
     alias(libs.plugins.node)
 }
 
+node {
+    version.set(libs.versions.node.version)
+    download.set(true)
+    pnpmVersion.set(libs.versions.pnpm.version)
+}
 
-val buildTaskUsingYarn = tasks.register<NpmTask>("buildNpm") {
-    dependsOn(tasks["npmInstall"])
-    dependsOn(NpmInstallTask.NAME)
+tasks.register<PnpmTask>("pnpmBuild") {
+    dependsOn(tasks.pnpmInstall)
 
-    inputs.files(fileTree("node_modules"))
-    inputs.files(fileTree("src"))
-    inputs.file("package.json")
-    inputs.file("tailwind.config.js")
-    inputs.file("index.html")
+    args.set(listOf("run", "build"))
+
+    outputs.cacheIf { true }
+
+    inputs.dir("node_modules")
+    inputs.dir("src")
+    inputs.files(
+        "package.json",
+        "tailwind.config.js",
+        "index.html"
+    )
 
     outputs.dir("dist")
-
-    npmCommand.set(listOf("run", "build"))
 }
 
 description = "bot-overlay"
