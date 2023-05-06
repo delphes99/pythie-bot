@@ -1,9 +1,9 @@
 [versions]
-kotlin-version = "1.7.20"
-kotlinx-coroutines-version = "1.6.4"
+kotlin-version = "1.8.21"
+kotlinx-coroutines-version = "1.7.0"
 node-gradle-version = "3.5.1"
 gradle-shadow-version = "7.1.2"
-ktor-version = "2.1.2"
+ktor-version = "2.3.0"
 kord-version = "0.8.0-M15"
 kitteh-version = "8.0.0"
 kumo-version = "1.27"
@@ -51,7 +51,7 @@ kitteh = { module = "org.kitteh.irc:client-lib", version.ref = "kitteh-version" 
 kumo = { module = "com.kennycason:kumo-core", version.ref = "kumo-version" }
 
 [bundles]
-kotlin-common = [ "kotlinx-coroutines" ]
+kotlin-common = ["kotlinx-coroutines"]
 kotlin-test = ["mockk", "bytebuddy", "junit-core", "kotest-assertion-core", "kotest-assertion-json", "kotest-runner"]
 ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-serialization", "ktor-server-content-negotiation", "ktor-server-websockets", "ktor-server-cors"]
 ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-serialization", "ktor-client-content-negotiation", "ktor-client-serialization-jvm"]
