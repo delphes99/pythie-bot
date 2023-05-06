@@ -96,17 +96,19 @@
 <script lang="ts" setup>
 import {ConnectorEnum} from "@/common/components/common/connector/ConnectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
+import {NotificationService} from "@/common/notification/notification.service";
 import UiButton from "@/ds/button/UiButton.vue"
 import UiButtonType from "@/ds/button/UiButtonType"
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
 import UiPanel from "@/ds/panel/UiPanel.vue"
+import {InjectionKeys} from "@/injection.keys";
 import axios from "axios"
-import {ElNotification} from "element-plus"
 import {inject, ref} from "vue"
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n()
-const backendUrl = inject("backendUrl")
+const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
+const notificationService = inject(InjectionKeys.NOTIFICATION_SERVICE) as NotificationService
 
 const clientId = ref("")
 const clientSecret = ref("")
@@ -132,10 +134,7 @@ const saveAppCredential = async () => {
         headers: {"Content-Type": "application/json"},
     })
 
-    ElNotification({
-        title: t("common.success"),
-        type: "success",
-    })
+    notificationService.success(t("common.success"))
 }
 
 const deleteChannel = async (channel: string) => {

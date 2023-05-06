@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 import UiButton from "@/ds/button/UiButton.vue";
 import FeatureService from "@/features/feature.service";
-import {InjectKey} from "@/main";
+import {InjectionKeys} from "@/injection.keys";
 import {inject} from "vue";
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const props = defineProps({
     },
 })
 
-const featureService = inject(InjectKey.FEATURE_SERVICE) as FeatureService
+const featureService = inject(InjectionKeys.FEATURE_SERVICE) as FeatureService
 
 const featureDescription = await loadDescription()
 

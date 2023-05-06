@@ -24,6 +24,7 @@
 import {ConnectorEnum} from "@/common/components/common/connector/ConnectorEnum"
 import ConnectorStatus from "@/common/components/common/connector/ConnectorStatus.vue"
 import {ConnectorStatusEnum} from "@/common/components/common/connector/ConnectorStatusEnum"
+import {InjectionKeys} from "@/injection.keys";
 import {inject, ref} from "vue"
 
 interface Status {
@@ -31,7 +32,7 @@ interface Status {
     status: ConnectorStatusEnum
 }
 
-const backendUrl = inject("backendUrl")
+const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
 const statuses = ref<Status[]>([])
 
 async function getStatus() {

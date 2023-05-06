@@ -11,6 +11,7 @@ import {ConnectorStatusEnum} from "@/common/components/common/connector/connecto
 import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
 import {TableData} from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/UiTable.vue"
+import {InjectionKeys} from "@/injection.keys";
 import {inject, ref} from "vue"
 import {useI18n} from "vue-i18n"
 
@@ -33,7 +34,7 @@ const props = defineProps({
 })
 
 const {t} = useI18n()
-const backendUrl = inject("backendUrl") as string
+const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
 
 const statusesTableData = ref<TableData<SubStatus> | null>(null)
 

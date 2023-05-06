@@ -25,6 +25,7 @@ import UiButton from "@/ds/button/UiButton.vue"
 import UiButtonType from "@/ds/button/UiButtonType"
 import UiCard from "@/ds/card/UiCard.vue"
 import UiPanel from "@/ds/panel/UiPanel.vue"
+import {InjectionKeys} from "@/injection.keys";
 import {inject, ref} from "vue"
 
 const props = defineProps({
@@ -34,7 +35,7 @@ const props = defineProps({
     },
 })
 
-const backendUrl = inject("backendUrl")
+const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
 const rewards = ref([])
 
 async function getRewards() {

@@ -43,6 +43,7 @@
 <script async lang="ts" setup>
 import UiButton from "@/ds/button/UiButton.vue"
 import UiButtonType from "@/ds/button/UiButtonType"
+import {InjectionKeys} from "@/injection.keys";
 import ImageComponent from "@/overlay/editor/component/imageComponent/ImageComponent"
 import TextComponent from "@/overlay/editor/component/textComponent/TextComponent"
 import EditorComponentList from "@/overlay/editor/EditorComponentList.vue"
@@ -63,7 +64,7 @@ const props = defineProps({
     },
 })
 
-const backendUrl = inject("backendUrl") as string
+const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
 const repository = new OverlayRepository(backendUrl)
 
 const overlay = await repository.get(props.overlayId)

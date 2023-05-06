@@ -49,6 +49,7 @@ import UiModal from "@/ds/modal/UiModal.vue"
 import {useModal} from "@/ds/modal/useModal"
 import UiPanel from "@/ds/panel/UiPanel.vue"
 import {UiPanelMenuItem} from "@/ds/panel/UiPanelMenuItem"
+import {InjectionKeys} from "@/injection.keys";
 import OverlayCard from "@/overlay/components/OverlayCard.vue"
 import Overlay from "@/overlay/Overlay"
 import OverlayRepository from "@/overlay/OverlayRepository"
@@ -102,7 +103,7 @@ function useCreateOverlay(repository: OverlayRepository) {
     }
 }
 
-const backendUrl = inject("backendUrl") as string
+const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
 const repository = new OverlayRepository(backendUrl)
 
 const {overlays, getOverlays: refresh} = useOverlayList(repository)

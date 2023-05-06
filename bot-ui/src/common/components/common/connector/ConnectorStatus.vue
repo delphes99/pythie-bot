@@ -50,9 +50,10 @@ import {ConnectorEnum} from "@/common/components/common/connector/ConnectorEnum"
 import {ConnectorStatusEnum} from "@/common/components/common/connector/ConnectorStatusEnum"
 import {DropDownAction} from "@/common/components/common/connector/DropDownAction"
 import {StatusColor} from "@/common/components/common/connector/StatusColor"
+import {NotificationService} from "@/common/notification/notification.service";
+import {InjectionKeys} from "@/injection.keys";
 import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import axios from "axios"
-import {ElNotification} from "element-plus"
 import {computed, inject} from "vue"
 import {useI18n} from "vue-i18n"
 
@@ -68,7 +69,10 @@ const props = defineProps({
 })
 
 const {t} = useI18n()
-const backendUrl = inject("backendUrl") as string
+
+const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
+const notificationService = inject(InjectionKeys.NOTIFICATION_SERVICE) as NotificationService
+
 const statusColor = computed(() => StatusColor.of(props.status))
 const image = computed(() => toImage(props.connector))
 const link = computed(() => toLink(props.connector))
@@ -137,16 +141,10 @@ const doAction = (action: DropDownAction) => {
             headers: {"Content-Type": "application/json"},
         })
         .then(() => {
-            ElNotification({
-                title: t("common.success"),
-                type: "success",
-            })
+            notificationService.success(t("common.success"))
         })
         .catch(() => {
-            ElNotification({
-                title: t("common.error"),
-                type: "error",
-            })
+            notificationService.success(t("common.error"))
         })
 }
 </script>

@@ -44,3 +44,7 @@
         min-height: 33.3%
     }
 }
+
+.Toastify__toast-container--top-right {
+    top: 5rem;
+}
