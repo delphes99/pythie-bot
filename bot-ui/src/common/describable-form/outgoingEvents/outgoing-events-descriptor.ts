@@ -9,8 +9,8 @@ export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]
     type: FieldDescriptorType = FieldDescriptorType.OUTGOING_EVENTS
 
     constructor(
-        readonly fieldName: String,
-        readonly description: String,
+        readonly fieldName: string,
+        readonly description: string,
         public events: OutgoingEventDescription[]
     ) {
         this.fieldName = fieldName;
@@ -28,8 +28,8 @@ export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]
         );
     }
 
-    buildValue() {
-        return new FieldValue(this.fieldName, []);
+    buildValue(): FieldValue<OutgoingEvent[]> {
+        return new FieldValue(this.fieldName, this.events.map(event => event.buildValue()));
     }
 
     viewComponent() {

@@ -3,14 +3,14 @@ import {FieldDescriptorType} from "@/common/describable-form/field-descriptor-ty
 import {DescriptorJsonType} from "@/common/describable-form/field-descriptor.factory";
 import FieldStringEditView from "@/common/describable-form/string/field-string-edit-view.vue";
 
-export class StringDescriptor implements FieldDescriptor<String> {
-    actualValue: String;
+export class StringDescriptor implements FieldDescriptor<string> {
+    actualValue: string;
     type: FieldDescriptorType = FieldDescriptorType.STRING
 
     constructor(
-        readonly description: String,
-        readonly fieldName: String,
-        readonly initialValue: String
+        readonly description: string,
+        readonly fieldName: string,
+        readonly initialValue: string
     ) {
         this.actualValue = initialValue;
     }

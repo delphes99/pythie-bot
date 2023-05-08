@@ -8,10 +8,12 @@
 </template>
 
 <script lang="ts" setup>
+import {NotificationService} from "@/common/notification/notification.service";
 import UiButton from "@/ds/button/UiButton.vue";
 import FeatureService from "@/features/feature.service";
 import {InjectionKeys} from "@/injection.keys";
 import {inject} from "vue";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
     featureId: {
@@ -23,20 +25,21 @@ const props = defineProps({
 const featureService = inject(InjectionKeys.FEATURE_SERVICE) as FeatureService
 
 const featureDescription = await loadDescription()
+const notificationService = inject(InjectionKeys.NOTIFICATION_SERVICE) as NotificationService
+const {t} = useI18n()
 
 async function loadDescription() {
     return featureService.getFeatureDescription(props.featureId);
 }
 
 async function saveDescription() {
-    console.log(featureDescription)
-    /*const modifications = fieldDescriptors.map(descriptor => new SetValue(
-        descriptor.descriptor.fieldName,
-        descriptor.currentValue,
-    ));
-    const featureConfiguration = featureDescriptionService.buildConfiguration(featureDescription, ...modifications)
+    const featureConfiguration = featureDescription.buildValue();
 
-    await featureService.updateFeature(featureConfiguration)*/
+    await featureService.updateFeature(featureConfiguration).then(() => {
+        notificationService.success(t("common.success"))
+    }).catch(() => {
+        notificationService.error(t("common.error"))
+    })
 }
 
 </script>

@@ -1,14 +1,14 @@
 export class FieldValue<T> {
     constructor(
-        readonly fieldName: String,
+        readonly fieldName: string,
         readonly value: T
     ) {
     }
 }
 
 export interface FieldDescriptor<T> {
-    readonly fieldName: String
-    readonly description: String
+    readonly fieldName: string
+    readonly description: string
 
     buildValue(): FieldValue<T>
 
