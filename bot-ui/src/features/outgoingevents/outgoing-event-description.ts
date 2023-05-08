@@ -27,6 +27,20 @@ export class OutgoingEventDescription implements FormDescription<OutgoingEvent> 
         }
     }
 
+    modifyDescriptor(modification: FieldDescriptor<any>) {
+        return new OutgoingEventDescription(
+            this.type,
+            this.descriptors.map((descriptor) => {
+                    if (descriptor.fieldName === modification.fieldName) {
+                        return modification
+                    }
+
+                    return descriptor
+                }
+            )
+        )
+    }
+
     static fromJson(json: jsonFormat): OutgoingEventDescription {
         return new OutgoingEventDescription(
             json.type,

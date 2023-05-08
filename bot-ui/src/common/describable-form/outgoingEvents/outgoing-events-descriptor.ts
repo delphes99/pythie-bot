@@ -25,6 +25,42 @@ export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]
         )
     }
 
+    modifyEvent(event: OutgoingEventDescription, modification: FieldDescriptor<any>): OutgoingEventsDescriptor {
+        return new OutgoingEventsDescriptor(
+            this.fieldName,
+            this.description,
+            this.events.map((e) => {
+                if (e.id === event.id) {
+                    return e.modifyDescriptor(modification)
+                }
+
+                return e
+            })
+        )
+    }
+
+    addEvent(event: OutgoingEventDescription): OutgoingEventsDescriptor {
+        return new OutgoingEventsDescriptor(
+            this.fieldName,
+            this.description,
+            this.events.concat(event)
+        )
+    }
+
+    modifyDescriptor(newDescription: OutgoingEventDescription) {
+        return new OutgoingEventsDescriptor(
+            this.type,
+            this.description,
+            this.events.map((e) => {
+                if (e.id === newDescription.id) {
+                    return newDescription
+                }
+
+                return e
+            })
+        )
+    }
+
     static fromJson(json: DescriptorJsonType): OutgoingEventsDescriptor {
         if (json.type !== FieldDescriptorType.OUTGOING_EVENTS) {
             throw new Error(`Cannot deserialize ${json.type} as OutgoingEventsDescriptor`);

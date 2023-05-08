@@ -12,11 +12,11 @@ import kotlinx.serialization.Serializable
 
 data class SendMessage(
     val text: String,
-    override val channel: TwitchChannel
+    override val channel: TwitchChannel,
 ) : TwitchChatOutgoingEvent {
     override suspend fun executeOnTwitch(
         chat: IrcClient,
-        connector: TwitchConnector
+        connector: TwitchConnector,
     ) {
         chat.sendMessage(IrcChannel.of(channel), text)
     }
@@ -24,8 +24,8 @@ data class SendMessage(
     @Serializable
     @SerialName("twitch-send-message")
     class Builder(
-        val text: String,
-        val channel: TwitchChannel
+        val text: String = "",
+        val channel: TwitchChannel = TwitchChannel(""),
     ) : OutgoingEventBuilder {
         override fun build() = SendMessage(text, channel)
 

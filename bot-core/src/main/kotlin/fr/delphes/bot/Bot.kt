@@ -2,6 +2,7 @@ package fr.delphes.bot
 
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.event.builder.OutgoingEventBuilder
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
@@ -13,6 +14,7 @@ import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
+import fr.delphes.feature.OutgoingEventType
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
@@ -30,6 +32,7 @@ class Bot(
     val legacyfeatures: List<NonEditableFeature>,
     val serializer: Json,
     val features: List<FeatureDefinition>,
+    val outgoingEventsTypes: Map<OutgoingEventType, () -> OutgoingEventBuilder>,
 ) : IncomingEventHandler, OutgoingEventProcessor {
     val featuresManager = buildFeatureManager()
 

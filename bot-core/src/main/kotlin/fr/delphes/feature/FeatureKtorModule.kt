@@ -32,7 +32,7 @@ fun Application.FeatureAdminModule(bot: Bot) {
 
             val configuration = this.call.receive<FeatureConfiguration>()
 
-            if(configuration.id != id) {
+            if (configuration.id != id) {
                 return@post this.context.respond(HttpStatusCode.BadRequest, "feature id mismatch")
             }
 
@@ -42,6 +42,19 @@ fun Application.FeatureAdminModule(bot: Bot) {
         post("features/reload") {
             bot.featuresManager.loadConfigurableFeatures()
             this.context.respond(HttpStatusCode.OK)
+        }
+        get("outgoing-events/types") {
+            this.context.respond(HttpStatusCode.OK, bot.outgoingEventsTypes.keys.map(OutgoingEventType::name))
+        }
+        get("outgoing-events/types/{type}") {
+            val id = this.call.parameters["type"]
+                ?.let { OutgoingEventType(it) }
+                ?: return@get this.context.respond(HttpStatusCode.BadRequest, "outgoing event type missing")
+
+            val eventBuilder = bot.outgoingEventsTypes[id]
+                ?: return@get this.context.respond(HttpStatusCode.BadRequest, "unknown outgoing event type")
+
+            this.context.respond(HttpStatusCode.OK, eventBuilder().description())
         }
     }
 }

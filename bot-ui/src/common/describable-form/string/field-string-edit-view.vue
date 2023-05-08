@@ -27,7 +27,7 @@ const actualValue = computed({
         return props.descriptor.actualValue
     },
     set(newValue) {
-        emits('modifyDescriptor', props.descriptor.withActualValue(newValue))
+        emits('modifyDescriptor', props.descriptor.withValue(newValue))
     }
 })
 </script>
