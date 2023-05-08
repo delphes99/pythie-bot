@@ -5,15 +5,41 @@ import {DescriptorJsonType} from "@/common/describable-form/field-descriptor.fac
 import {Duration, formatDuration, parseDuration} from "@/common/duration.utils";
 
 export class DurationDescriptor implements FieldDescriptor<string> {
-    actualValue: Duration
     readonly type: FieldDescriptorType = FieldDescriptorType.DURATION
 
     constructor(
         readonly description: string,
         readonly fieldName: string,
-        readonly initialValue: Duration
+        readonly initialValue: Duration,
+        readonly actualValue: Duration = initialValue
     ) {
-        this.actualValue = initialValue
+    }
+
+    withHours(hours: number): DurationDescriptor {
+        return new DurationDescriptor(
+            this.description,
+            this.fieldName,
+            this.initialValue,
+            this.actualValue.withHours(hours)
+        );
+    }
+
+    withMinutes(minutes: number): DurationDescriptor {
+        return new DurationDescriptor(
+            this.description,
+            this.fieldName,
+            this.initialValue,
+            this.actualValue.withMinutes(minutes)
+        );
+    }
+
+    withSeconds(seconds: number): DurationDescriptor {
+        return new DurationDescriptor(
+            this.description,
+            this.fieldName,
+            this.initialValue,
+            this.actualValue.withSeconds(seconds)
+        );
     }
 
     static fromJson(json: DescriptorJsonType): DurationDescriptor {

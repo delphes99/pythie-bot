@@ -1,9 +1,21 @@
 export class Duration {
     constructor(
-        public hours: number,
-        public minutes: number,
-        public seconds: number,
+        readonly hours: number,
+        readonly minutes: number,
+        readonly seconds: number,
     ) {
+    }
+
+    withHours(hours: number): Duration {
+        return new Duration(hours, this.minutes, this.seconds);
+    }
+
+    withMinutes(minutes: number): Duration {
+        return new Duration(this.hours, minutes, this.seconds);
+    }
+
+    withSeconds(seconds: number): Duration {
+        return new Duration(this.hours, this.minutes, seconds);
     }
 }
 

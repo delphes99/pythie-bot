@@ -1,51 +1,63 @@
 import {FieldValue} from "@/common/describable-form/field-descriptor";
 import {OutgoingEventsDescriptor} from "@/common/describable-form/outgoingEvents/outgoing-events-descriptor";
-import {TestFieldDescriptor} from "@/common/describable-form/test-field-descriptor.util.test";
+import {TestFieldDescriptor} from "@/common/describable-form/test-field-descriptor.test.utils";
 import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
 import {describe, expect, it} from "vitest";
 
 describe("Outgoing events description", () => {
-    it("build value should return empty array when no events", () => {
-        const description = new OutgoingEventsDescriptor(
-            "fieldName",
-            "description",
-            []
-        );
-        expect(description.buildValue()).toStrictEqual(new FieldValue("fieldName", []));
-    })
+    const event1 = new OutgoingEventDescription(
+        "event type",
+        [
+            new TestFieldDescriptor("fieldName", "first value", "description"),
+            new TestFieldDescriptor("anotherField", "second value", "bla bla"),
+        ]
+    );
+    const event2 = new OutgoingEventDescription(
+        "another event type",
+        [
+            new TestFieldDescriptor("fieldName", "some value", "description")
+        ]
+    );
+    const descriptor = new OutgoingEventsDescriptor(
+        "fieldName",
+        "description",
+        [
+            event1,
+            event2
+        ]
+    );
+
     it("build value should return event payloads in json format", () => {
-        const description = new OutgoingEventsDescriptor(
-            "fieldName",
-            "description",
-            [
-                new OutgoingEventDescription(
-                    "event type",
-                    [
-                        new TestFieldDescriptor("fieldName", "description", "first value"),
-                        new TestFieldDescriptor("anotherField", "bla bla", "second value"),
-                    ]
-                ),
-                new OutgoingEventDescription(
-                    "another event type",
-                    [
-                        new TestFieldDescriptor("fieldName", "description", "some value")
-                    ]
-                )
-            ]
-        );
-        expect(description.buildValue()).toStrictEqual(
-            new FieldValue("fieldName", [
-                {
-                    type: "event type",
-                    fieldName: "first value",
-                    anotherField: "second value",
-                },
-                {
-                    type: "another event type",
-                    fieldName: "some value",
-                }
-            ])
+        expect(descriptor.buildValue()).toStrictEqual(
+            new FieldValue(
+                "fieldName",
+                [
+                    {
+                        type: "event type",
+                        fieldName: "first value",
+                        anotherField: "second value",
+                    },
+                    {
+                        type: "another event type",
+                        fieldName: "some value",
+                    }
+                ]
+            )
         );
     })
+    it("delete event", () => {
+        const newDescriptor = descriptor.deleteEvent(event1);
+        expect(newDescriptor.buildValue()).toStrictEqual(
+            new FieldValue(
+                "fieldName",
+                [
+                    {
+                        type: "another event type",
+                        fieldName: "some value",
+                    }
+                ]
+            )
+        );
+    });
 });
 

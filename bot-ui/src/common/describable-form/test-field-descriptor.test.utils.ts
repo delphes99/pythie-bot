@@ -2,8 +2,8 @@ import {FieldDescriptor, FieldValue} from "@/common/describable-form/field-descr
 
 export class TestFieldDescriptor implements FieldDescriptor<string> {
     constructor(readonly fieldName: string,
-                readonly description: string,
-                readonly value: string) {
+                readonly value: string = "value",
+                readonly description: string = "description") {
     }
 
     buildValue(): FieldValue<string> {

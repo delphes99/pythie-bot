@@ -1,5 +1,5 @@
+import {TestFieldDescriptor} from "@/common/describable-form/test-field-descriptor.test.utils";
 import FeatureDescription from "@/features/feature-description";
-import {TestFieldDescriptor} from "@/common/describable-form/test-field-descriptor.util.test";
 import {describe, expect, it} from "vitest";
 
 describe("Feature description", () => {
@@ -19,8 +19,8 @@ describe("Feature description", () => {
             "type",
             "id",
             [
-                new TestFieldDescriptor("fieldName", "description", "first value"),
-                new TestFieldDescriptor("anotherField", "bla bla", "second value"),
+                new TestFieldDescriptor("fieldName", "first value"),
+                new TestFieldDescriptor("anotherField", "second value"),
             ]
         );
         expect(featureDescription.buildValue()).toStrictEqual({
@@ -30,5 +30,26 @@ describe("Feature description", () => {
             anotherField: "second value",
         });
     })
+    it("modify descriptor", () => {
+        const featureDescription = new FeatureDescription(
+            "type",
+            "id",
+            [
+                new TestFieldDescriptor("fieldName", "first value"),
+                new TestFieldDescriptor("anotherField", "second value"),
+                new TestFieldDescriptor("third", "third value"),
+            ]
+        );
+
+        const newFeatureDescription = featureDescription.modifyDescriptor(new TestFieldDescriptor("anotherField", "new value"))
+
+        expect(newFeatureDescription.buildValue()).toStrictEqual({
+            id: "id",
+            type: "type",
+            fieldName: "first value",
+            anotherField: "new value",
+            third: "third value",
+        });
+    });
 });
 

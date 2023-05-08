@@ -11,10 +11,18 @@ export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]
     constructor(
         readonly fieldName: string,
         readonly description: string,
-        public events: OutgoingEventDescription[]
+        readonly events: OutgoingEventDescription[]
     ) {
         this.fieldName = fieldName;
         this.description = description;
+    }
+
+    deleteEvent(event: OutgoingEventDescription): OutgoingEventsDescriptor {
+        return new OutgoingEventsDescriptor(
+            this.fieldName,
+            this.description,
+            this.events.filter((e) => e.id !== event.id)
+        )
     }
 
     static fromJson(json: DescriptorJsonType): OutgoingEventsDescriptor {

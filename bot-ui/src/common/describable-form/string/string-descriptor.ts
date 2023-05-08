@@ -4,15 +4,23 @@ import {DescriptorJsonType} from "@/common/describable-form/field-descriptor.fac
 import FieldStringEditView from "@/common/describable-form/string/field-string-edit-view.vue";
 
 export class StringDescriptor implements FieldDescriptor<string> {
-    actualValue: string;
     type: FieldDescriptorType = FieldDescriptorType.STRING
 
     constructor(
         readonly description: string,
         readonly fieldName: string,
-        readonly initialValue: string
+        readonly initialValue: string,
+        readonly actualValue: string = initialValue
     ) {
-        this.actualValue = initialValue;
+    }
+
+    withValue(newValue: string): StringDescriptor {
+        return new StringDescriptor(
+            this.description,
+            this.fieldName,
+            this.initialValue,
+            newValue
+        );
     }
 
     static fromJson(json: DescriptorJsonType): StringDescriptor {

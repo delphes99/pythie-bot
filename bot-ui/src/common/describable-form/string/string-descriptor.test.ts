@@ -21,10 +21,17 @@ describe("String descriptor", () => {
         )
     })
     it("build with actual value", () => {
-        const descriptor = new StringDescriptor("description", "fieldName", "value");
-        descriptor.actualValue = "actualValue";
+        const descriptor = new StringDescriptor("description", "fieldName", "actualValue");
 
         const value = descriptor.buildValue();
+
         expect(value).toStrictEqual(new FieldValue("fieldName", "actualValue"));
     })
+    it("copy with new value", () => {
+        const descriptor = new StringDescriptor("description", "fieldName", "actualValue");
+
+        const newDescriptor = descriptor.withValue("newValue").buildValue();
+
+        expect(newDescriptor).toStrictEqual(new FieldValue("fieldName", "newValue"));
+    });
 });

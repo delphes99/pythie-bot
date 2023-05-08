@@ -10,10 +10,24 @@ type FeatureDescriptionJson = {
 
 export default class FeatureDescription implements FormDescription<FeatureConfiguration> {
     constructor(
-        public type: string,
-        public id: string,
-        public descriptors: FieldDescriptor<any>[]
+        readonly type: string,
+        readonly id: string,
+        readonly descriptors: FieldDescriptor<any>[]
     ) {
+    }
+
+    modifyDescriptor(newDescriptor: FieldDescriptor<any>) {
+        return new FeatureDescription(
+            this.type,
+            this.id,
+            this.descriptors.map((d) => {
+                if (d.fieldName === newDescriptor.fieldName) {
+                    return newDescriptor
+                }
+
+                return d
+            })
+        )
     }
 
     buildValue(): FeatureConfiguration {

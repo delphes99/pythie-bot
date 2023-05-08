@@ -1,4 +1,4 @@
-import {TestFieldDescriptor} from "@/common/describable-form/test-field-descriptor.util.test";
+import {TestFieldDescriptor} from "@/common/describable-form/test-field-descriptor.test.utils";
 import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
 import {describe, expect, it} from "vitest";
 
@@ -16,8 +16,8 @@ describe("Outgoing events description", () => {
         const description = new OutgoingEventDescription(
             "type",
             [
-                new TestFieldDescriptor("fieldName", "description", "first value"),
-                new TestFieldDescriptor("anotherField", "bla bla", "second value"),
+                new TestFieldDescriptor("fieldName", "first value", "description"),
+                new TestFieldDescriptor("anotherField", "second value", "bla bla"),
             ]
         );
         expect(description.buildValue()).toStrictEqual({

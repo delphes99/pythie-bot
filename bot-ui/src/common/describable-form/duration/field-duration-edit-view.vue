@@ -2,17 +2,17 @@
   {{ descriptor.description }}
     <ui-textfield
             :id="descriptor.fieldName"
-            v-model.number="descriptor.actualValue.hours"
+            v-model.number="actualHours"
             label="common.duration.hours"
     />
     <ui-textfield
             :id="descriptor.fieldName"
-            v-model.number="descriptor.actualValue.minutes"
+            v-model.number="actualMinutes"
             label="common.duration.minutes"
     />
     <ui-textfield
             :id="descriptor.fieldName"
-            v-model.number="descriptor.actualValue.seconds"
+            v-model.number="actualSeconds"
             label="common.duration.seconds"
     />
 </template>
@@ -20,7 +20,11 @@
 <script lang="ts" setup>
 import {DurationDescriptor} from "@/common/describable-form/duration/duration-descriptor";
 import UiTextfield from "@/ds/form/textfield/UiTextfield.vue";
-import {PropType} from "vue";
+import {computed, PropType} from "vue";
+
+const emits = defineEmits<{
+    (e: 'modifyDescriptor', descriptor: DurationDescriptor): void
+}>()
 
 const props = defineProps({
     descriptor: {
@@ -28,4 +32,32 @@ const props = defineProps({
         required: true,
     }
 })
+
+const actualHours = computed({
+    get() {
+        return props.descriptor.actualValue.hours
+    },
+    set(newValue) {
+        emits('modifyDescriptor', props.descriptor.withHours(newValue))
+    }
+})
+
+const actualMinutes = computed({
+    get() {
+        return props.descriptor.actualValue.minutes
+    },
+    set(newValue) {
+        emits('modifyDescriptor', props.descriptor.withMinutes(newValue))
+    }
+})
+
+const actualSeconds = computed({
+    get() {
+        return props.descriptor.actualValue.seconds
+    },
+    set(newValue) {
+        emits('modifyDescriptor', props.descriptor.withSeconds(newValue))
+    }
+})
+
 </script>
