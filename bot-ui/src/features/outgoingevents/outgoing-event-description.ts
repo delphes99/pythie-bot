@@ -10,11 +10,10 @@ type jsonFormat = {
 };
 
 export class OutgoingEventDescription implements FormDescription<OutgoingEvent> {
-    readonly id: string = uuid();
-
     constructor(
         public type: string,
-        public descriptors: FieldDescriptor<any>[]
+        public descriptors: FieldDescriptor<any>[],
+        readonly id: string = uuid(),
     ) {
     }
 
@@ -37,7 +36,8 @@ export class OutgoingEventDescription implements FormDescription<OutgoingEvent> 
 
                     return descriptor
                 }
-            )
+            ),
+            this.id
         )
     }
 

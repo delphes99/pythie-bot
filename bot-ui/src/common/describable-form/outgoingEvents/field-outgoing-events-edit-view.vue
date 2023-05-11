@@ -42,7 +42,7 @@ import {inject, PropType, ref} from "vue";
 
 
 const emits = defineEmits<{
-    (e: 'modifyDescriptor', descriptor: OutgoingEventsDescriptor): void
+    modifyDescriptor: [descriptor: OutgoingEventsDescriptor]
 }>()
 
 const props = defineProps({

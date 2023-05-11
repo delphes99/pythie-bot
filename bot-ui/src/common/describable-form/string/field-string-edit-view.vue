@@ -12,7 +12,7 @@ import UiTextfield from "@/ds/form/textfield/UiTextfield.vue";
 import {computed, PropType} from "vue";
 
 const emits = defineEmits<{
-    (e: 'modifyDescriptor', descriptor: StringDescriptor): void
+    modifyDescriptor: [descriptor: StringDescriptor]
 }>()
 
 const props = defineProps({

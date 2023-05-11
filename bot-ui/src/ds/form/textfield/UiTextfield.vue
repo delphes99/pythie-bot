@@ -14,8 +14,8 @@
 </template>
 
 <script lang="ts" setup>
+import {useVModel} from "@vueuse/core";
 import {v4 as uuid} from "uuid"
-import {computed} from "vue"
 
 const props = defineProps({
     id: {
@@ -43,17 +43,5 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"])
 
-const model = computed({
-    get() {
-        return props.modelValue
-    },
-
-    set(value) {
-        if (value) {
-            emit("update:modelValue", value)
-        } else {
-            emit("update:modelValue", null)
-        }
-    },
-})
+const model = useVModel(props, 'modelValue', emit)
 </script>

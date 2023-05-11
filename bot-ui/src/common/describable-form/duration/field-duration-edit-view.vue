@@ -23,7 +23,7 @@ import UiTextfield from "@/ds/form/textfield/UiTextfield.vue";
 import {computed, PropType} from "vue";
 
 const emits = defineEmits<{
-    (e: 'modifyDescriptor', descriptor: DurationDescriptor): void
+    modifyDescriptor: [descriptor: DurationDescriptor]
 }>()
 
 const props = defineProps({
