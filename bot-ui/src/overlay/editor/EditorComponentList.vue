@@ -17,7 +17,7 @@
     </ui-accorion-panel>
 </template>
 <script lang="ts" setup>
-import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
+import UiAccorionPanel from "@/common/components/common/accordionPanel/UiAccorionPanel.vue"
 import {useOverlayEditorStore} from "@/overlay/editor/useOverlayEditorStore"
 import OverlayElement from "@/overlay/OverlayElement"
 import {OverlayElementProperties} from "@/overlay/OverlayElementProperties"

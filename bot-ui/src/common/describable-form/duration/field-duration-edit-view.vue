@@ -18,8 +18,8 @@
 </template>
 
 <script lang="ts" setup>
+import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue";
 import {DurationDescriptor} from "@/common/describable-form/duration/duration-descriptor";
-import UiTextfield from "@/ds/form/textfield/UiTextfield.vue";
 import {computed, PropType} from "vue";
 
 const emits = defineEmits<{

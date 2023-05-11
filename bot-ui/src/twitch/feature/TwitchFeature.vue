@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import UiPanel from "@/ds/panel/UiPanel.vue"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 
 defineProps({
     channelName: {

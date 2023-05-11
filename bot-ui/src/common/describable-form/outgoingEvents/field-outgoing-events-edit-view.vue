@@ -27,13 +27,13 @@
 </template>
 
 <script lang="ts" setup>
+import UiButton from "@/common/components/common/button/UiButton.vue";
+import UiButtonType from "@/common/components/common/button/UiButtonType";
+import UiSelect from "@/common/components/common/form/select/UiSelect.vue";
+import UiModal from "@/common/components/common/modal/UiModal.vue";
+import {useModal} from "@/common/components/common/modal/useModal";
 import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
 import {OutgoingEventsDescriptor} from "@/common/describable-form/outgoingEvents/outgoing-events-descriptor";
-import UiButton from "@/ds/button/UiButton.vue";
-import UiButtonType from "@/ds/button/UiButtonType";
-import UiSelect from "@/ds/form/select/UiSelect.vue";
-import UiModal from "@/ds/modal/UiModal.vue";
-import {useModal} from "@/ds/modal/useModal";
 import {OutgoingEventType} from "@/features/outgoingevents/outgoing-event";
 import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
 import {OutgoingEventCreateService} from "@/features/outgoingevents/outgoing-event.create.service";

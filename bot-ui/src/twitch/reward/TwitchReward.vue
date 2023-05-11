@@ -20,11 +20,11 @@
 </template>
 
 <script lang="ts" setup>
+import UiButton from "@/common/components/common/button/UiButton.vue"
+import UiButtonType from "@/common/components/common/button/UiButtonType"
+import UiCard from "@/common/components/common/card/UiCard.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
-import UiButton from "@/ds/button/UiButton.vue"
-import UiButtonType from "@/ds/button/UiButtonType"
-import UiCard from "@/ds/card/UiCard.vue"
-import UiPanel from "@/ds/panel/UiPanel.vue"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import {InjectionKeys} from "@/injection.keys";
 import {inject, ref} from "vue"
 

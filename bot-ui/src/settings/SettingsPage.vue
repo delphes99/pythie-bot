@@ -17,10 +17,10 @@
 <script lang="ts" setup>
 import {Options} from "@/common/components/common/form/radio/Options"
 import UiRadios from "@/common/components/common/form/radio/UiRadios.vue"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import {Themes} from "@/common/components/common/theme/Themes"
 import {useApplicationTheme} from "@/common/components/common/theme/UseApplicationTheme"
 import {LocalStorageItem} from "@/common/LocalStorageItem"
-import UiPanel from "@/ds/panel/UiPanel.vue"
 import {useStorage} from "@vueuse/core"
 import {watch} from "vue"
 import {useI18n} from "vue-i18n"

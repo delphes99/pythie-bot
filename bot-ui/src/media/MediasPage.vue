@@ -35,12 +35,12 @@
 </template>
 
 <script lang="ts" setup>
+import UiButton from "@/common/components/common/button/UiButton.vue"
+import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
 import {TableData} from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/UiTable.vue"
-import UiButton from "@/ds/button/UiButton.vue"
-import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
-import UiPanel from "@/ds/panel/UiPanel.vue"
 import {Media} from "@/media/Media"
 import MediasService from "@/media/MediasService"
 import {inject, ref} from "vue"

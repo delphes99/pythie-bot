@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts" setup>
+import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue";
 import {StringDescriptor} from "@/common/describable-form/string/string-descriptor";
-import UiTextfield from "@/ds/form/textfield/UiTextfield.vue";
 import {computed, PropType} from "vue";
 
 const emits = defineEmits<{

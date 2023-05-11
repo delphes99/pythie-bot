@@ -1,4 +1,4 @@
-import {lorem_ipsum} from "../../../.storybook/constant"
+import {lorem_ipsum} from "../../../../../.storybook/constant"
 import UiPanel from "./UiPanel.vue"
 import {UiPanelMenuItem} from "./UiPanelMenuItem"
 

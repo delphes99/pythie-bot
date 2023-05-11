@@ -1,4 +1,4 @@
-import UiButtonType from "@/ds/button/UiButtonType";
+import UiButtonType from "@/common/components/common/button/UiButtonType";
 import {Meta, StoryObj} from "@storybook/vue3";
 import UiButton from "./UiButton.vue"
 

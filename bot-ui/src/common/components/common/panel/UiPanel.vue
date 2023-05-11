@@ -29,8 +29,8 @@
 </template>
 
 <script lang="ts" setup>
-import UiButton from "@/ds/button/UiButton.vue"
-import {UiPanelMenuItem} from "@/ds/panel/UiPanelMenuItem"
+import UiButton from "@/common/components/common/button/UiButton.vue"
+import {UiPanelMenuItem} from "@/common/components/common/panel/UiPanelMenuItem"
 import {PropType} from "vue"
 
 defineProps({

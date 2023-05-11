@@ -1,6 +1,6 @@
-import {lorem_ipsum} from "../../../.storybook/constant"
+import {lorem_ipsum} from "../../../../../.storybook/constant"
 import UiModal from "./UiModal.vue"
-import UiButton from "./../button/UiButton.vue"
+import UiButton from "../button/UiButton.vue"
 import {useModal} from "./useModal"
 
 export default {

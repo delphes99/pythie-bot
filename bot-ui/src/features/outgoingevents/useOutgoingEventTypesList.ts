@@ -1,4 +1,4 @@
-import {UiSelectOption} from "@/ds/form/select/UiSelectOption";
+import {UiSelectOption} from "@/common/components/common/form/select/UiSelectOption";
 import {OutgoingEventType} from "@/features/outgoingevents/outgoing-event";
 import {OutgoingEventCreateService} from "@/features/outgoingevents/outgoing-event.create.service";
 import {InjectionKeys} from "@/injection.keys";

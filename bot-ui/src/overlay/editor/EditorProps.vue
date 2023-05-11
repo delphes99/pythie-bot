@@ -50,10 +50,10 @@
     </ui-accorion-panel>
 </template>
 <script lang="ts" setup>
-import UiAccorionPanel from "@/ds/accordionPanel/UiAccorionPanel.vue"
-import UiButton from "@/ds/button/UiButton.vue"
-import UiButtonType from "@/ds/button/UiButtonType"
-import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
+import UiAccorionPanel from "@/common/components/common/accordionPanel/UiAccorionPanel.vue"
+import UiButton from "@/common/components/common/button/UiButton.vue"
+import UiButtonType from "@/common/components/common/button/UiButtonType"
+import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
 import {useOverlayEditorStore} from "@/overlay/editor/useOverlayEditorStore"
 import {storeToRefs} from "pinia"
 

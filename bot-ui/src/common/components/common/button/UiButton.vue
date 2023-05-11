@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import {UiButtonType} from "@/ds/button/UiButtonType"
+import {UiButtonType} from "@/common/components/common/button/UiButtonType"
 import {computed} from "vue"
 
 const props = defineProps({

@@ -32,7 +32,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {UiSelectOption} from "@/ds/form/select/UiSelectOption"
+import {UiSelectOption} from "@/common/components/common/form/select/UiSelectOption"
 import {useVModel} from "@vueuse/core"
 import {v4 as uuid} from "uuid"
 import {PropType} from "vue"

@@ -9,9 +9,9 @@
 </template>
 
 <script lang="ts" setup>
+import UiButton from "@/common/components/common/button/UiButton.vue";
 import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
 import {NotificationService} from "@/common/notification/notification.service";
-import UiButton from "@/ds/button/UiButton.vue";
 import FeatureService from "@/features/feature.service";
 import {InjectionKeys} from "@/injection.keys";
 import {inject, ref} from "vue";

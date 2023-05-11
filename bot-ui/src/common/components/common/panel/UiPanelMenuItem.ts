@@ -1,4 +1,4 @@
-import UiButtonType from "@/ds/button/UiButtonType"
+import UiButtonType from "@/common/components/common/button/UiButtonType"
 
 export class UiPanelMenuItem {
     label: string

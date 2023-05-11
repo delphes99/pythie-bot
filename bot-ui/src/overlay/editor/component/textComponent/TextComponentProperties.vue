@@ -26,8 +26,8 @@
 </template>
 
 <script lang="ts" setup>
-import UiColorPicker from "@/ds/form/colorpicker/UiColorPicker.vue"
-import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
+import UiColorPicker from "@/common/components/common/form/colorpicker/UiColorPicker.vue"
+import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
 import {useOverlayEditorStore} from "@/overlay/editor/useOverlayEditorStore"
 import {storeToRefs} from "pinia"
 

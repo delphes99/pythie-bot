@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
+import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
 import {useOverlayEditorStore} from "@/overlay/editor/useOverlayEditorStore"
 import {storeToRefs} from "pinia"
 

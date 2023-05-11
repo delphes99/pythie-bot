@@ -42,13 +42,13 @@
 </template>
 
 <script lang="ts" setup>
+import UiButton from "@/common/components/common/button/UiButton.vue"
 import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
-import UiButton from "@/ds/button/UiButton.vue"
-import UiTextfield from "@/ds/form/textfield/UiTextfield.vue"
-import UiModal from "@/ds/modal/UiModal.vue"
-import {useModal} from "@/ds/modal/useModal"
-import UiPanel from "@/ds/panel/UiPanel.vue"
-import {UiPanelMenuItem} from "@/ds/panel/UiPanelMenuItem"
+import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
+import UiModal from "@/common/components/common/modal/UiModal.vue"
+import {useModal} from "@/common/components/common/modal/useModal"
+import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import {UiPanelMenuItem} from "@/common/components/common/panel/UiPanelMenuItem"
 import {InjectionKeys} from "@/injection.keys";
 import OverlayCard from "@/overlay/components/OverlayCard.vue"
 import Overlay from "@/overlay/Overlay"
