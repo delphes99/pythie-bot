@@ -1,5 +1,5 @@
 <template>
-    <div :class="isDark() ? 'dark-theme' : 'light-theme'">
+    <div :class="themeClass">
         <div class="box-border w-screen h-screen overflow-hidden bg-backgroundColor text-backgroundTextColor">
             <status-bar
                     class="fixed top-0 right-0"
@@ -27,10 +27,7 @@
 <script lang="ts" setup>
 import MenuPanel from "@/common/components/common/MenuPanel.vue"
 import StatusBar from "@/common/components/common/StatusBar.vue"
-import {Themes} from "@/common/components/common/theme/Themes"
-import {useApplicationTheme} from "@/common/components/common/theme/UseApplicationTheme"
+import {useApplicationTheme} from "@/common/components/common/theme/UseApplicationThemeStore"
 
-const storedTheme = useApplicationTheme()
-
-const isDark = () => storedTheme.theme === Themes.DARK
+const {themeClass} = useApplicationTheme()
 </script>

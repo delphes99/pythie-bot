@@ -16,7 +16,7 @@
                        :type="UiButtonType.Warning"/>
         </fieldset>
     </fieldset>
-    <ui-modal title="common.add" :is-open="isAddEventOpened">
+    <ui-modal title="common.add" v-model:is-open="isAddEventOpened">
         <ui-select v-model="selectedType" :options="allTypesAsSelectOptions" label="feature.outgoingEvents">
         </ui-select>
         <ui-button

@@ -84,7 +84,8 @@
     "theme": {
       "label": "Thème",
       "light": "Clair",
-      "dark": "Sombre"
+      "dark": "Sombre",
+      "monochrome": "Monochrome"
     }
   },
   "connector": {

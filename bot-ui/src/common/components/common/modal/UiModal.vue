@@ -1,29 +1,27 @@
 <template>
-    <div
-            v-if="isOpen"
-            class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center"
-            @click="close()"
-    >
-        <div
-                id="modal"
-                class="max-w-screen-4/5 opacity-100 bg-backgroundColor text-backgroundTextColor rounded shadow-lg"
-                @click.stop
-        >
-            <ui-panel
-                    :title="title"
-            >
-                <template #withoutContainer>
-                    <div class="overflow-auto max-h-screen-4/5 p-4">
-                        <slot/>
-                    </div>
-                </template>
-            </ui-panel>
+    <Dialog :open="isOpen" @close="setIsOpen" :class="themeClass">
+
+        <div class="fixed inset-0 bg-black/30" aria-hidden="true"/>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <DialogPanel class="w-full max-w-sm bg-backgroundColor">
+                <ui-panel
+                        :title="title"
+                >
+                    <template #withoutContainer>
+                        <div class="overflow-auto max-h-screen-4/5 p-4">
+                            <slot/>
+                        </div>
+                    </template>
+                </ui-panel>
+            </DialogPanel>
         </div>
-    </div>
+    </Dialog>
 </template>
 
 <script lang="ts" setup>
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import {useApplicationTheme} from "@/common/components/common/theme/UseApplicationThemeStore";
+import {Dialog, DialogPanel,} from '@headlessui/vue'
 
 defineProps({
     isOpen: {
@@ -38,7 +36,9 @@ defineProps({
 
 const emit = defineEmits(["update:isOpen"])
 
-const close = () => {
-    emit("update:isOpen", false)
+function setIsOpen(isOpen: boolean) {
+    emit("update:isOpen", isOpen)
 }
+
+const {themeClass} = useApplicationTheme()
 </script>

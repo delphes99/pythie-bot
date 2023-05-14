@@ -16,9 +16,9 @@
 
 <script lang="ts" setup>
 import {Themes} from "@/common/components/common/theme/Themes"
-import {useApplicationTheme} from "@/common/components/common/theme/UseApplicationTheme"
+import {useApplicationTheme} from "@/common/components/common/theme/UseApplicationThemeStore"
 import {v4 as uuid} from "uuid"
-import {ref, watch} from "vue"
+import {computed, ref, watch} from "vue"
 import {ColorPicker} from "vue-color-kit"
 import "vue-color-kit/dist/vue-color-kit.css"
 
@@ -39,18 +39,18 @@ const props = defineProps({
     },
 })
 
-const storedTheme = useApplicationTheme()
+const {currentTheme} = useApplicationTheme()
 
-function getPickerTheme() {
-    switch (storedTheme.theme) {
+const pickerTheme = computed(() => {
+    switch (currentTheme.theme) {
         case Themes.DARK:
+            return "dark"
+        case Themes.MONOCHROME:
             return "dark"
         default:
             return "light"
     }
-}
-
-const pickerTheme = getPickerTheme()
+})
 
 const colorPicker = ref()
 
