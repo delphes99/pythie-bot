@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.Ngrok
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.coreSerializersModule
+import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99CustomFeatures
 import fr.delphes.configuration.channel.delphes99.delphes99Features
@@ -60,6 +61,7 @@ fun main() {
         delphes99CustomFeatures + delphestestCustomFeatures,
         mapOf(
             OutgoingEventType("twitch-send-message") to { SendMessage.Builder() },
+            OutgoingEventType("core-play-sound") to { PlaySound.Builder() },
         ),
     )
 
