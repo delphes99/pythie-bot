@@ -16,6 +16,7 @@ import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
+import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.twitchSerializersModule
 import fr.delphes.feature.OutgoingEventType
@@ -63,6 +64,7 @@ fun main() {
         mapOf(
             OutgoingEventType("twitch-send-message") to { SendMessage.Builder() },
             OutgoingEventType("twitch-activate-reward") to { ActivateReward.Builder() },
+            OutgoingEventType("twitch-deactivate-reward") to { DeactivateReward.Builder() },
             OutgoingEventType("core-play-sound") to { PlaySound.Builder() },
         ),
     )
