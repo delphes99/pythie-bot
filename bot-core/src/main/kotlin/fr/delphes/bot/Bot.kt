@@ -32,12 +32,20 @@ class Bot(
     val legacyfeatures: List<NonEditableFeature>,
     val serializer: Json,
     val features: List<FeatureDefinition>,
-    val outgoingEventsTypes: Map<OutgoingEventType, () -> OutgoingEventBuilder>,
 ) : IncomingEventHandler, OutgoingEventProcessor {
     val featuresManager = buildFeatureManager()
 
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
+
+    val outgoingEventsTypes: Map<OutgoingEventType, () -> OutgoingEventBuilder>
+        get() = mapOf(
+            OutgoingEventType("core-play-sound") to { PlaySound.Builder() },
+            *connectors
+                .flatMap { connector -> connector.outgoingEventsTypes.entries }
+                .map { it.key to it.value }
+                .toTypedArray()
+        )
 
     internal val overlayRepository =
         OverlayRepository(configuration.pathOf("overlays", "overlays.json"))

@@ -6,7 +6,9 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.connectionstate.Connected
+import fr.delphes.bot.event.builder.OutgoingEventBuilder
 import fr.delphes.connector.discord.endpoint.DiscordModule
+import fr.delphes.feature.OutgoingEventType
 import io.ktor.server.application.Application
 
 class DiscordConnector(
@@ -22,6 +24,7 @@ class DiscordConnector(
     )
 
     override val connectionManager = DiscordConnectionManager(this)
+    override val outgoingEventsTypes: Map<OutgoingEventType, () -> OutgoingEventBuilder> = emptyMap()
 
     override fun internalEndpoints(application: Application) {
         return application.DiscordModule(this)

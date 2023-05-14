@@ -6,7 +6,9 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.connectionstate.Connected
+import fr.delphes.bot.event.builder.OutgoingEventBuilder
 import fr.delphes.connector.obs.endpoints.ObsModule
+import fr.delphes.feature.OutgoingEventType
 import io.ktor.server.application.Application
 import kotlinx.serialization.InternalSerializationApi
 import mu.KotlinLogging
@@ -25,6 +27,7 @@ class ObsConnector(
     )
 
     override val connectionManager = ObsConnectionManager(this)
+    override val outgoingEventsTypes: Map<OutgoingEventType, () -> OutgoingEventBuilder> = emptyMap()
 
     override fun internalEndpoints(application: Application) {
         application.ObsModule(this)

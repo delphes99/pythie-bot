@@ -2,7 +2,9 @@ package fr.delphes.bot.connector
 
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.status.ConnectorStatus
+import fr.delphes.bot.event.builder.OutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.feature.OutgoingEventType
 import io.ktor.server.application.Application
 
 interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> {
@@ -13,6 +15,7 @@ interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorR
 
     val configuration: CONFIGURATION? get() = configurationManager.configuration
     val status: ConnectorStatus get() = connectionManager.status
+    val outgoingEventsTypes: Map<OutgoingEventType, () -> OutgoingEventBuilder>
 
     suspend fun connect() {
         connectionManager.dispatchTransition(ConnectorCommand.CONNECTION_REQUESTED)
