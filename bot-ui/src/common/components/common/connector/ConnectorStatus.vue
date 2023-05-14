@@ -50,7 +50,7 @@ import {ConnectorEnum} from "@/common/components/common/connector/ConnectorEnum"
 import {ConnectorStatusEnum} from "@/common/components/common/connector/ConnectorStatusEnum"
 import {DropDownAction} from "@/common/components/common/connector/DropDownAction"
 import {StatusColor} from "@/common/components/common/connector/StatusColor"
-import {NotificationService} from "@/common/notification/notification.service";
+import {NotificationService} from "@/common/components/common/notification/notification.service";
 import {InjectionKeys} from "@/injection.keys";
 import {Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import axios from "axios"

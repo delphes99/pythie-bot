@@ -10,8 +10,8 @@
 
 <script lang="ts" setup>
 import UiButton from "@/common/components/common/button/UiButton.vue";
+import {NotificationService} from "@/common/components/common/notification/notification.service";
 import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
-import {NotificationService} from "@/common/notification/notification.service";
 import FeatureService from "@/features/feature.service";
 import {InjectionKeys} from "@/injection.keys";
 import {inject, ref} from "vue";

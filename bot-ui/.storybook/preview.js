@@ -1,6 +1,7 @@
 import "../src/common/assets/styles/index.css"
 import {setup} from '@storybook/vue3';
 import {createI18n} from 'vue-i18n';
+import Vue3Toasity from "vue3-toastify";
 
 const preview = {
     globalTypes: {
@@ -28,7 +29,10 @@ const preview = {
     },
     decorators: [(story, context) => ({
         components: {story},
-        template: `<div class="${themeClass(context.globals.theme)} bg-backgroundColor text-backgroundTextColor w-full"><story /></div>`
+        template: `
+          <div class="${themeClass(context.globals.theme)} bg-backgroundColor text-backgroundTextColor w-full">
+          <story/>
+          </div>`
     })],
 };
 
@@ -42,4 +46,5 @@ const i18n = createI18n({});
 
 setup((app) => {
     app.use(i18n);
+    app.use(Vue3Toasity)
 });

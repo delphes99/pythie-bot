@@ -20,7 +20,7 @@ import kotlinx.serialization.json.Json
 class WebServer(
     val bot: Bot,
     internalModules: List<(Application) -> Unit>,
-    publicModules: List<(Application) -> Unit>
+    publicModules: List<(Application) -> Unit>,
 ) {
     init {
         launchServer(80, bot.serializer) {

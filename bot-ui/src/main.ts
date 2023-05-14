@@ -1,5 +1,5 @@
+import {NotificationService} from "@/common/components/common/notification/notification.service";
 import {LocalStorageItem} from "@/common/LocalStorageItem"
-import {NotificationService} from "@/common/notification/notification.service";
 import FeatureService from "@/features/feature.service";
 import {InjectionKeys} from "@/injection.keys";
 import MediasService from "@/media/MediasService";

@@ -30,7 +30,7 @@ export default meta
 type Story = StoryObj<typeof UiButton>;
 
 export const Default: Story = {
-    render: (args) => ({
+    render: (args: any) => ({
         components: {UiButton},
         setup() {
             return {args};
