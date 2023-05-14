@@ -42,7 +42,7 @@ class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
     private val webhookApi: WebhookApi,
     rewardsConfigurations: List<RewardConfiguration>,
-    private val appTwitchApi: AppTwitchApi
+    private val appTwitchApi: AppTwitchApi,
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
     private val rewards = RewardCache(rewardsConfigurations, helixApi)
 
@@ -55,6 +55,10 @@ class ChannelTwitchClient(
 
     override suspend fun getGame(id: GameId): Game? {
         return helixApi.getGameById(id)?.let { game -> Game(id, game.name) }
+    }
+
+    override suspend fun getRewards(): List<RewardConfiguration> {
+        return rewards.getRewards()
     }
 
     override suspend fun deactivateReward(reward: RewardConfiguration) {
@@ -117,7 +121,7 @@ class ChannelTwitchClient(
             publicUrl: String,
             configFilepath: String,
             webhookSecret: String,
-            rewardsConfigurations: List<RewardConfiguration>
+            rewardsConfigurations: List<RewardConfiguration>,
         ): Builder {
             return Builder(
                 appTwitchApi,
@@ -140,7 +144,7 @@ class ChannelTwitchClient(
         private val publicUrl: String,
         private val configFilepath: String,
         private val webhookSecret: String,
-        private val rewardsConfigurations: List<RewardConfiguration>
+        private val rewardsConfigurations: List<RewardConfiguration>,
     ) {
         val channel = TwitchChannel(user.name)
 

@@ -15,6 +15,7 @@ import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
+import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.twitchSerializersModule
 import fr.delphes.feature.OutgoingEventType
@@ -61,6 +62,7 @@ fun main() {
         delphes99CustomFeatures + delphestestCustomFeatures,
         mapOf(
             OutgoingEventType("twitch-send-message") to { SendMessage.Builder() },
+            OutgoingEventType("twitch-activate-reward") to { ActivateReward.Builder() },
             OutgoingEventType("core-play-sound") to { PlaySound.Builder() },
         ),
     )

@@ -15,6 +15,8 @@ interface ChannelTwitchApi : WebhookApi {
 
     suspend fun getGame(id: GameId): Game?
 
+    suspend fun getRewards(): List<RewardConfiguration>
+
     suspend fun deactivateReward(reward: RewardConfiguration)
 
     suspend fun activateReward(reward: RewardConfiguration)

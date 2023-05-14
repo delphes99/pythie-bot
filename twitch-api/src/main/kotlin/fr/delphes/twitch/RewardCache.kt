@@ -10,7 +10,7 @@ import mu.KotlinLogging
 
 class RewardCache(
     private val configurations: List<RewardConfiguration>,
-    private val api: ChannelHelixApi
+    private val api: ChannelHelixApi,
 ) {
     private val map = mutableMapOf<RewardConfiguration, Reward>()
 
@@ -31,7 +31,7 @@ class RewardCache(
                 if (reward != null) {
                     map[configuration] = reward.toReward(configuration)
 
-                    if(reward.isDesynchronized(configuration)) {
+                    if (reward.isDesynchronized(configuration)) {
                         api.updateCustomReward(
                             UpdateCustomReward(
                                 title = configuration.title,
@@ -96,6 +96,10 @@ class RewardCache(
                 configuration.isGlobalCooldownEnabled != null && global_cooldown_setting.is_enabled != configuration.isGlobalCooldownEnabled ||
                 configuration.globalCooldownSeconds != null && global_cooldown_setting.global_cooldown_seconds != configuration.globalCooldownSeconds ||
                 configuration.shouldRedemptionsSkipRequestQueue != null && should_redemptions_skip_request_queue != configuration.shouldRedemptionsSkipRequestQueue
+    }
+
+    fun getRewards(): List<RewardConfiguration> {
+        return map.keys.toList()
     }
 
     companion object {

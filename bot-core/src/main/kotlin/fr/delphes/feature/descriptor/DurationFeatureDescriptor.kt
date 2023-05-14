@@ -7,7 +7,7 @@ import java.time.Duration
 
 @SerialName("DURATION")
 @Serializable
-class DurationFeatureDescriptor(
+data class DurationFeatureDescriptor(
     override val fieldName: String,
     override val description: String,
     @Serializable(with = DurationSerializer::class)

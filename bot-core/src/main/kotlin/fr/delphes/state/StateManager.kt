@@ -2,15 +2,19 @@ package fr.delphes.state
 
 import kotlin.reflect.KClass
 
-class StateManager {
+class StateManager(vararg states: State) {
     @PublishedApi
     internal val map = mutableMapOf<KClass<*>, MutableMap<StateIdQualifier, out State>>()
+
+    init {
+        states.forEach { put(it) }
+    }
 
     inline fun <reified T : State> getState(id: StateId<T>): T? {
         return map[T::class]?.get(id.qualifier) as T?
     }
 
-    fun <T: State> put(state: T): T {
+    fun put(state: State): State {
         val (clazz, qualifier) = state.id
         if (map[clazz] == null) {
             map[clazz] = mutableMapOf()
@@ -23,7 +27,7 @@ class StateManager {
 
     fun <T : State> getOrPut(id: StateId<T>, defaultValue: () -> T): T {
         @Suppress("UNCHECKED_CAST")
-        return map[id.clazz]?.get(id.qualifier) as T? ?: return put(defaultValue())
+        return map[id.clazz]?.get(id.qualifier) as T? ?: return defaultValue().also { put(it) }
     }
 
     fun <U : State> withState(state: U): StateManager {

@@ -2,6 +2,8 @@ package fr.delphes.connector.twitch.outgoingEvent
 
 import fr.delphes.bot.event.builder.OutgoingEventBuilder
 import fr.delphes.connector.twitch.twitchTestSerializer
+import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.ShouldSpec
@@ -46,26 +48,20 @@ class SendMessageBuilderTest : ShouldSpec({
     should("description") {
         val builder = SendMessage.Builder("Hello", TwitchChannel("channelName"))
 
-        val json = twitchTestSerializer.encodeToString(builder.description())
+        val description = builder.description()
 
-        json shouldEqualJson """
-            {
-              "type": "twitch-send-message",
-              "descriptors": [
-                        {
-                            "type": "STRING",
-                            "fieldName": "text",
-                            "description": "description of text",
-                            "value": "Hello"
-                        },
-                        {
-                            "type": "STRING",
-                            "fieldName": "channel",
-                            "description": "description of channel",
-                            "value": "channelName"
-                        }
-                    ]
-            }
-            """
+        description shouldBe OutgoingEventBuilderDescription(
+            "twitch-send-message",
+            StringFeatureDescriptor(
+                "text",
+                "description of text",
+                "Hello"
+            ),
+            StringFeatureDescriptor(
+                "channel",
+                "description of channel",
+                "channelName"
+            )
+        )
     }
 })

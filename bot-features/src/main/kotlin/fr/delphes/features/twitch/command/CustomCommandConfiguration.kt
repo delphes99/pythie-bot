@@ -33,7 +33,7 @@ class CustomCommandConfiguration(
             id = id,
             cooldown = cooldown,
             action = {
-                val outgoingEvent = actions.map { it.build() }
+                val outgoingEvent = actions.map { it.build(stateManager) }
                 outgoingEvent.forEach { this.executeOutgoingEvent(it) }
             }
         )

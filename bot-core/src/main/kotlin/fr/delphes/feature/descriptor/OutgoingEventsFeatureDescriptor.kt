@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @SerialName("OUTGOING_EVENTS")
 @Serializable
-class OutgoingEventsFeatureDescriptor(
+data class OutgoingEventsFeatureDescriptor(
     override val fieldName: String,
     override val description: String,
     override val value: List<OutgoingEventBuilderDescription> = emptyList(),

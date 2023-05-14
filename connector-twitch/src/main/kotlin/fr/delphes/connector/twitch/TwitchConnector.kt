@@ -6,6 +6,7 @@ import fr.delphes.bot.connector.Connector
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
+import fr.delphes.connector.twitch.state.ChannelRewardsState
 import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.connector.twitch.state.GetVipState
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
@@ -17,8 +18,8 @@ import fr.delphes.connector.twitch.webservice.WebhookModule
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.api.channel.ChannelInformation
-import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.api.user.UserId
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.auth.AuthToken
 import fr.delphes.utils.cache.InMemoryCache
 import fr.delphes.utils.time.SystemClock
@@ -32,13 +33,17 @@ class TwitchConnector(
 ) : Connector<TwitchConfiguration, TwitchLegacyRuntime> {
     override val connectorName = "Twitch"
 
-    override val states = listOf(
-        CommandListState(this),
-        GetVipState(this)
-    )
-
     override val configurationManager = TwitchConfigurationManager(
         TwitchConfigurationRepository(botConfiguration.pathOf("twitch", "configuration.json"))
+    )
+
+    override val states = listOf(
+        CommandListState(this),
+        GetVipState(this),
+        //TODO dynamic state (reload the configuration must reload the states)
+        *configurationManager.currentConfiguration.listenedChannels.map {
+            ChannelRewardsState(it.channel, this)
+        }.toTypedArray(),
     )
 
     val statistics = TwitchStatistics(botConfiguration)
