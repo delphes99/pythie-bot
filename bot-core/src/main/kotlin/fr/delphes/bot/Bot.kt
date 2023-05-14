@@ -2,19 +2,18 @@ package fr.delphes.bot
 
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.CoreOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
-import fr.delphes.feature.OutgoingEventType
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
@@ -38,12 +37,11 @@ class Bot(
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
 
-    val outgoingEventsTypes: Map<OutgoingEventType, () -> OutgoingEventBuilder>
-        get() = mapOf(
-            OutgoingEventType("core-play-sound") to { PlaySound.Builder() },
+    val outgoingEventsTypes: List<OutgoingEventBuilderDefinition>
+        get() = listOf(
+            PlaySound.builderDefinition,
             *connectors
-                .flatMap { connector -> connector.outgoingEventsTypes.entries }
-                .map { it.key to it.value }
+                .flatMap(Connector<*, *>::outgoingEventsTypes)
                 .toTypedArray()
         )
 

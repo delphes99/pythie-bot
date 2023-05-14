@@ -1,6 +1,7 @@
 package fr.delphes.feature
 
 import fr.delphes.bot.Bot
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.rework.feature.FeatureId
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -44,17 +45,22 @@ fun Application.FeatureAdminModule(bot: Bot) {
             this.context.respond(HttpStatusCode.OK)
         }
         get("outgoing-events/types") {
-            this.context.respond(HttpStatusCode.OK, bot.outgoingEventsTypes.keys.map(OutgoingEventType::name))
+            this.context.respond(
+                HttpStatusCode.OK, bot.outgoingEventsTypes
+                    .map(OutgoingEventBuilderDefinition::type)
+                    .map(OutgoingEventType::name)
+            )
         }
         get("outgoing-events/types/{type}") {
             val id = this.call.parameters["type"]
                 ?.let { OutgoingEventType(it) }
                 ?: return@get this.context.respond(HttpStatusCode.BadRequest, "outgoing event type missing")
 
-            val eventBuilder = bot.outgoingEventsTypes[id]
+            val definition = bot.outgoingEventsTypes
+                .firstOrNull { it.type == id }
                 ?: return@get this.context.respond(HttpStatusCode.BadRequest, "unknown outgoing event type")
 
-            this.context.respond(HttpStatusCode.OK, eventBuilder().description())
+            this.context.respond(HttpStatusCode.OK, definition.providerEmptyDescription())
         }
     }
 }

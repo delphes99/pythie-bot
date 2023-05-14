@@ -1,8 +1,10 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.WithBuilder
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.OutgoingEventType
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.state.StateManager
 import fr.delphes.twitch.TwitchChannel
@@ -22,18 +24,21 @@ data class SendMessage(
         chat.sendMessage(IrcChannel.of(channel), text)
     }
 
-    @Serializable
-    @SerialName("twitch-send-message")
-    class Builder(
-        val text: String = "",
-        val channel: TwitchChannel = TwitchChannel(""),
-    ) : OutgoingEventBuilder {
-        override suspend fun build(stateManager: StateManager) = SendMessage(text, channel)
+    companion object : WithBuilder {
+        override val type = OutgoingEventType("twitch-send-message")
 
-        override fun description(): OutgoingEventBuilderDescription {
-            return OutgoingEventBuilderDescription(
-                type = "twitch-send-message",
-                descriptors = listOf(
+        override val builderDefinition = buildDefinition(::Builder)
+
+        @Serializable
+        @SerialName("twitch-send-message")
+        class Builder(
+            val text: String = "",
+            val channel: TwitchChannel = TwitchChannel(""),
+        ) : OutgoingEventBuilder {
+            override suspend fun build(stateManager: StateManager) = SendMessage(text, channel)
+
+            override fun description(): OutgoingEventBuilderDescription {
+                return buildDescription(
                     StringFeatureDescriptor(
                         fieldName = "text",
                         description = "description of text",
@@ -45,7 +50,7 @@ data class SendMessage(
                         value = channel.name
                     )
                 )
-            )
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
-package fr.delphes.bot.event.builder
+package fr.delphes.bot.event.outgoing
 
-import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.state.StateManager
 

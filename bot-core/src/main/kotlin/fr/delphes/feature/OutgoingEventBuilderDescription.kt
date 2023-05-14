@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OutgoingEventBuilderDescription(
-    val type: String,
+    val type: OutgoingEventType,
     val descriptors: List<FeatureDescriptor>,
 ) {
     constructor(
-        type: String,
+        type: OutgoingEventType,
         vararg descriptors: FeatureDescriptor,
     ) : this(
         type = type,

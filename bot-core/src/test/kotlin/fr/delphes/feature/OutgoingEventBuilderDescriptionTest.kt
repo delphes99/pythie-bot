@@ -9,7 +9,7 @@ import kotlinx.serialization.encodeToString
 class OutgoingEventBuilderDescriptionTest : ShouldSpec({
     should("serialize") {
         val builder = OutgoingEventBuilderDescription(
-            "someEvent",
+            OutgoingEventType("someEvent"),
             StringFeatureDescriptor(
                 fieldName = "someField",
                 description = "someDescription",

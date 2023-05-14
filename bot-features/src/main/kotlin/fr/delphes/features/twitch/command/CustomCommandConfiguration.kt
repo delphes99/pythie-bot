@@ -2,7 +2,7 @@
 
 package fr.delphes.features.twitch.command
 
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.FeatureConfiguration
 import fr.delphes.feature.FeatureDescription
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor

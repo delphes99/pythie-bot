@@ -1,8 +1,9 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.connector.twitch.twitchTestSerializer
 import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.OutgoingEventType
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.assertions.json.shouldEqualJson
@@ -14,7 +15,7 @@ import kotlinx.serialization.encodeToString
 
 class SendMessageBuilderTest : ShouldSpec({
     should("serialize") {
-        val builder = SendMessage.Builder("Hello", TwitchChannel("channel"))
+        val builder = SendMessage.Companion.Builder("Hello", TwitchChannel("channel"))
 
         val json = twitchTestSerializer.encodeToString<OutgoingEventBuilder>(builder)
 
@@ -39,19 +40,19 @@ class SendMessageBuilderTest : ShouldSpec({
         val builder = twitchTestSerializer.decodeFromString<OutgoingEventBuilder>(json)
 
         with(builder) {
-            this.shouldBeInstanceOf<SendMessage.Builder>()
+            this.shouldBeInstanceOf<SendMessage.Companion.Builder>()
             text shouldBe "Hello"
             channel shouldBe TwitchChannel("channel")
         }
     }
 
     should("description") {
-        val builder = SendMessage.Builder("Hello", TwitchChannel("channelName"))
+        val builder = SendMessage.Companion.Builder("Hello", TwitchChannel("channelName"))
 
         val description = builder.description()
 
         description shouldBe OutgoingEventBuilderDescription(
-            "twitch-send-message",
+            OutgoingEventType("twitch-send-message"),
             StringFeatureDescriptor(
                 "text",
                 "description of text",

@@ -1,6 +1,6 @@
 package fr.delphes.bot
 
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor
 import fr.delphes.feature.descriptor.FeatureDescriptor
@@ -17,6 +17,6 @@ val coreSerializersModule = SerializersModule {
         subclass(OutgoingEventsFeatureDescriptor::class)
     }
     polymorphic(OutgoingEventBuilder::class) {
-        subclass(PlaySound.Builder::class)
+        subclass(PlaySound.Companion.Builder::class)
     }
 }

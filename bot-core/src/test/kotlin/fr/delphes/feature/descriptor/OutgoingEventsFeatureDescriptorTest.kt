@@ -1,7 +1,8 @@
 package fr.delphes.feature.descriptor
 
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.OutgoingEventType
 import fr.delphes.serializer
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.ShouldSpec
@@ -60,7 +61,7 @@ class OutgoingEventsFeatureDescriptorTest : ShouldSpec({
 }) {
     companion object {
         private val DESCRIPTION = OutgoingEventBuilderDescription(
-            type = "SOME_EVENT",
+            type = OutgoingEventType("SOME_EVENT"),
             listOf(
                 StringFeatureDescriptor(
                     fieldName = "stringValue",

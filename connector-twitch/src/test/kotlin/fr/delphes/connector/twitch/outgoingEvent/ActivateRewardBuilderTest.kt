@@ -1,9 +1,10 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.connector.twitch.state.ChannelRewardsState
 import fr.delphes.connector.twitch.twitchTestSerializer
 import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.OutgoingEventType
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.state.StateManager
 import fr.delphes.twitch.TwitchChannel
@@ -19,7 +20,7 @@ import kotlinx.serialization.encodeToString
 
 class ActivateRewardBuilderTest : ShouldSpec({
     should("serialize") {
-        val builder = ActivateReward.Builder("someReward", TwitchChannel("channel"))
+        val builder = ActivateReward.Companion.Builder("someReward", TwitchChannel("channel"))
 
         val json = twitchTestSerializer.encodeToString<OutgoingEventBuilder>(builder)
 
@@ -41,10 +42,10 @@ class ActivateRewardBuilderTest : ShouldSpec({
             }
             """
 
-        val builder = twitchTestSerializer.decodeFromString<ActivateReward.Builder>(json)
+        val builder = twitchTestSerializer.decodeFromString<ActivateReward.Companion.Builder>(json)
 
         with(builder) {
-            this.shouldBeInstanceOf<ActivateReward.Builder>()
+            this.shouldBeInstanceOf<ActivateReward.Companion.Builder>()
             rewardName shouldBe "someReward"
             channel shouldBe TwitchChannel("channel")
         }
@@ -60,7 +61,7 @@ class ActivateRewardBuilderTest : ShouldSpec({
         }
         val stateManager = StateManager(channelRewardsState)
 
-        val activateReward = ActivateReward.Builder(
+        val activateReward = ActivateReward.Companion.Builder(
             rewardName = "reward",
             channel = channel
         ).build(stateManager)
@@ -70,12 +71,12 @@ class ActivateRewardBuilderTest : ShouldSpec({
     }
 
     should("description") {
-        val builder = ActivateReward.Builder("someReward", TwitchChannel("channelName"))
+        val builder = ActivateReward.Companion.Builder("someReward", TwitchChannel("channelName"))
 
         val description = builder.description()
 
         description shouldBe OutgoingEventBuilderDescription(
-            type = "twitch-activate-reward",
+            type = OutgoingEventType("twitch-activate-reward"),
             descriptors = listOf(
                 StringFeatureDescriptor(
                     fieldName = "rewardName",

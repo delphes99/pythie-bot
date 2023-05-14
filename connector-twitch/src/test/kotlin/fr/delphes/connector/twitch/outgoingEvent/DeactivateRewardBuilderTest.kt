@@ -1,9 +1,10 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.connector.twitch.state.ChannelRewardsState
 import fr.delphes.connector.twitch.twitchTestSerializer
 import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.OutgoingEventType
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.state.StateManager
 import fr.delphes.twitch.TwitchChannel
@@ -19,7 +20,7 @@ import kotlinx.serialization.encodeToString
 
 class DeactivateRewardBuilderTest : ShouldSpec({
     should("serialize") {
-        val builder = DeactivateReward.Builder("someReward", TwitchChannel("channel"))
+        val builder = DeactivateReward.Companion.Builder("someReward", TwitchChannel("channel"))
 
         val json = twitchTestSerializer.encodeToString<OutgoingEventBuilder>(builder)
 
@@ -41,10 +42,10 @@ class DeactivateRewardBuilderTest : ShouldSpec({
             }
             """
 
-        val builder = twitchTestSerializer.decodeFromString<DeactivateReward.Builder>(json)
+        val builder = twitchTestSerializer.decodeFromString<DeactivateReward.Companion.Builder>(json)
 
         with(builder) {
-            this.shouldBeInstanceOf<DeactivateReward.Builder>()
+            this.shouldBeInstanceOf<DeactivateReward.Companion.Builder>()
             rewardName shouldBe "someReward"
             channel shouldBe TwitchChannel("channel")
         }
@@ -60,7 +61,7 @@ class DeactivateRewardBuilderTest : ShouldSpec({
         }
         val stateManager = StateManager(channelRewardsState)
 
-        val activateReward = DeactivateReward.Builder(
+        val activateReward = DeactivateReward.Companion.Builder(
             rewardName = "reward",
             channel = channel
         ).build(stateManager)
@@ -70,12 +71,12 @@ class DeactivateRewardBuilderTest : ShouldSpec({
     }
 
     should("description") {
-        val builder = DeactivateReward.Builder("someReward", TwitchChannel("channelName"))
+        val builder = DeactivateReward.Companion.Builder("someReward", TwitchChannel("channelName"))
 
         val description = builder.description()
 
         description shouldBe OutgoingEventBuilderDescription(
-            type = "twitch-deactivate-reward",
+            type = OutgoingEventType("twitch-deactivate-reward"),
             descriptors = listOf(
                 StringFeatureDescriptor(
                     fieldName = "rewardName",

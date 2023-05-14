@@ -3,7 +3,7 @@ package fr.delphes.connector.twitch
 import fr.delphes.bot.Bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
@@ -19,7 +19,6 @@ import fr.delphes.connector.twitch.user.getUserInfos
 import fr.delphes.connector.twitch.webservice.ConfigurationModule
 import fr.delphes.connector.twitch.webservice.RewardKtorModule
 import fr.delphes.connector.twitch.webservice.WebhookModule
-import fr.delphes.feature.OutgoingEventType
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.TwitchHelixClient
 import fr.delphes.twitch.api.channel.ChannelInformation
@@ -57,10 +56,10 @@ class TwitchConnector(
 
     override val connectionManager = TwitchConnectionManager(this)
 
-    override val outgoingEventsTypes: Map<OutgoingEventType, () -> OutgoingEventBuilder> = mapOf(
-        OutgoingEventType("twitch-send-message") to { SendMessage.Builder() },
-        OutgoingEventType("twitch-activate-reward") to { ActivateReward.Builder() },
-        OutgoingEventType("twitch-deactivate-reward") to { DeactivateReward.Builder() },
+    override val outgoingEventsTypes: List<OutgoingEventBuilderDefinition> = listOf(
+        SendMessage.builderDefinition,
+        ActivateReward.builderDefinition,
+        DeactivateReward.builderDefinition,
     )
 
     private val internalHandler = TwitchConnectorHandler(this)

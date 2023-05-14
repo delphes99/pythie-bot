@@ -1,9 +1,11 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
-import fr.delphes.bot.event.builder.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.WithBuilder
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.state.ChannelRewardsState
 import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.OutgoingEventType
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.state.StateManager
 import fr.delphes.twitch.ChannelTwitchApi
@@ -23,26 +25,29 @@ data class DeactivateReward(
         twitchApi.deactivateReward(reward.rewardConfiguration)
     }
 
-    @Serializable
-    @SerialName("twitch-deactivate-reward")
-    class Builder(
-        val rewardName: String = "",
-        val channel: TwitchChannel = TwitchChannel(""),
-    ) : OutgoingEventBuilder {
-        override suspend fun build(stateManager: StateManager): DeactivateReward {
-            val channelRewardsState = stateManager.getState(ChannelRewardsState.id(channel))
-                ?: error("No state for channel $channel")
+    companion object : WithBuilder {
+        override val type = OutgoingEventType("twitch-deactivate-reward")
 
-            val reward = channelRewardsState.getReward(rewardName)
-                ?: error("No reward $rewardName for channel $channel")
+        override val builderDefinition = buildDefinition(::Builder)
 
-            return DeactivateReward(reward, channel)
-        }
+        @Serializable
+        @SerialName("twitch-deactivate-reward")
+        class Builder(
+            val rewardName: String = "",
+            val channel: TwitchChannel = TwitchChannel(""),
+        ) : OutgoingEventBuilder {
+            override suspend fun build(stateManager: StateManager): DeactivateReward {
+                val channelRewardsState = stateManager.getState(ChannelRewardsState.id(channel))
+                    ?: error("No state for channel $channel")
 
-        override fun description(): OutgoingEventBuilderDescription {
-            return OutgoingEventBuilderDescription(
-                type = "twitch-deactivate-reward",
-                descriptors = listOf(
+                val reward = channelRewardsState.getReward(rewardName)
+                    ?: error("No reward $rewardName for channel $channel")
+
+                return DeactivateReward(reward, channel)
+            }
+
+            override fun description(): OutgoingEventBuilderDescription {
+                return buildDescription(
                     StringFeatureDescriptor(
                         fieldName = "rewardName",
                         description = "Reward to deactivate",
@@ -54,7 +59,7 @@ data class DeactivateReward(
                         value = channel.name
                     )
                 )
-            )
+            }
         }
     }
 }
