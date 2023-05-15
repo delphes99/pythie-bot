@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.streamOnline
 
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
-import fr.delphes.features.hasReceived
+import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -17,7 +17,7 @@ class CustomStreamOnlineTest : ShouldSpec({
             isCalled = true
         }
 
-        customStreamOnline.hasReceived(
+        customStreamOnline.testRuntime().hasReceived(
             streamOnlineFor(CHANNEL)
         )
 
@@ -30,7 +30,7 @@ class CustomStreamOnlineTest : ShouldSpec({
             isCalled = true
         }
 
-        customStreamOnline.hasReceived(
+        customStreamOnline.testRuntime().hasReceived(
             streamOnlineFor(TwitchChannel("otherchannel"))
         )
 

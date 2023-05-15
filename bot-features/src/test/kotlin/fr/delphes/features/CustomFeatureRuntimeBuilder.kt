@@ -12,20 +12,19 @@ import io.mockk.mockk
 import java.time.LocalDateTime
 
 class CustomFeatureRuntimeBuilder(
-    private val feature: FeatureDefinition
+    private val feature: FeatureDefinition,
 ) {
     private var fixedNow: LocalDateTime = NOW
+
     @PublishedApi
     internal val stateManager = StateManager()
 
-    fun atFixedTime(now: LocalDateTime): CustomFeatureRuntimeBuilder {
+    fun atFixedTime(now: LocalDateTime) {
         fixedNow = now
-        return this
     }
 
-    inline fun <reified U : State> withState(state: U): CustomFeatureRuntimeBuilder {
+    inline fun <reified U : State> withState(state: U) {
         stateManager.withState(state)
-        return this
     }
 
     suspend fun hasReceived(event: IncomingEvent) {
@@ -37,10 +36,6 @@ class CustomFeatureRuntimeBuilder(
     }
 }
 
-fun FeatureDefinition.atFixedTime(now: LocalDateTime): CustomFeatureRuntimeBuilder {
-    return CustomFeatureRuntimeBuilder(this).atFixedTime(now)
-}
-
-suspend fun FeatureDefinition.hasReceived(event: IncomingEvent) {
-    CustomFeatureRuntimeBuilder(this).hasReceived(event)
+fun FeatureDefinition.testRuntime(builder: CustomFeatureRuntimeBuilder.() -> Unit = {}): CustomFeatureRuntimeBuilder {
+    return CustomFeatureRuntimeBuilder(this).apply(builder)
 }

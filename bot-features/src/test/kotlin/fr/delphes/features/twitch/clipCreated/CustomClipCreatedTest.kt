@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.clipCreated
 
 import fr.delphes.connector.twitch.incomingEvent.ClipCreated
-import fr.delphes.features.hasReceived
+import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.streams.ThumbnailUrl
@@ -18,7 +18,7 @@ class CustomClipCreatedTest : ShouldSpec({
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
+        customNewFollow.testRuntime().hasReceived(
             ClipCreated(
                 CHANNEL,
                 Clip(
@@ -41,7 +41,7 @@ class CustomClipCreatedTest : ShouldSpec({
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
+        customNewFollow.testRuntime().hasReceived(
             ClipCreated(
                 TwitchChannel("otherchannel"),
                 Clip(

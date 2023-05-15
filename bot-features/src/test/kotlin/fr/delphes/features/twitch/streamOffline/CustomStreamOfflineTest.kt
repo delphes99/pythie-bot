@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.streamOffline
 
-import fr.delphes.features.hasReceived
+import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
@@ -14,7 +14,7 @@ class CustomStreamOfflineTest : ShouldSpec({
             isCalled = true
         }
 
-        customStreamOffline.hasReceived(
+        customStreamOffline.testRuntime().hasReceived(
             StreamOfflineEvent(
                 CHANNEL
             )
@@ -29,7 +29,7 @@ class CustomStreamOfflineTest : ShouldSpec({
             isCalled = true
         }
 
-        customStreamOffline.hasReceived(
+        customStreamOffline.testRuntime().hasReceived(
             StreamOfflineEvent(
                 TwitchChannel("otherchannel")
             )

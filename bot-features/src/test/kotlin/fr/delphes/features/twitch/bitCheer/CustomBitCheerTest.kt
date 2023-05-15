@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.bitCheer
 
 import fr.delphes.connector.twitch.incomingEvent.BitCheered
-import fr.delphes.features.hasReceived
+import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
@@ -15,7 +15,7 @@ class CustomBitCheerTest : ShouldSpec({
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
+        customNewFollow.testRuntime().hasReceived(
             BitCheered(
                 CHANNEL,
                 UserName("user"),
@@ -33,7 +33,7 @@ class CustomBitCheerTest : ShouldSpec({
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
+        customNewFollow.testRuntime().hasReceived(
             BitCheered(
                 TwitchChannel("otherchannel"),
                 UserName("user"),

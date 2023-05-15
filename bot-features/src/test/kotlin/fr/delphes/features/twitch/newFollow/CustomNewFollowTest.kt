@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.newFollow
 
 import fr.delphes.connector.twitch.incomingEvent.NewFollow
-import fr.delphes.features.hasReceived
+import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
@@ -15,13 +15,12 @@ class CustomNewFollowTest : ShouldSpec({
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
+        customNewFollow.testRuntime().hasReceived(
             NewFollow(
                 CHANNEL,
                 UserName("user")
             )
         )
-
         isCalled shouldBe true
     }
     should("not execute action if channel doesn't match") {
@@ -31,7 +30,7 @@ class CustomNewFollowTest : ShouldSpec({
             isCalled = true
         }
 
-        customNewFollow.hasReceived(
+        customNewFollow.testRuntime().hasReceived(
             NewFollow(
                 TwitchChannel("otherchannel"),
                 UserName("user")

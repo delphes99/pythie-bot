@@ -2,8 +2,7 @@ package fr.delphes.features.twitch.command
 
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
-import fr.delphes.features.atFixedTime
-import fr.delphes.features.hasReceived
+import fr.delphes.features.testRuntime
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.state.state.TimeState
 import fr.delphes.test.TestClock
@@ -20,7 +19,7 @@ class CustomCommandTest : ShouldSpec({
 
         val command = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
 
-        command.hasReceived(
+        command.testRuntime().hasReceived(
             CommandAsked(
                 CHANNEL,
                 Command("!trigger"),
@@ -37,7 +36,7 @@ class CustomCommandTest : ShouldSpec({
 
         val command = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
 
-        command.hasReceived(
+        command.testRuntime().hasReceived(
             CommandAsked(
                 CHANNEL,
                 Command("!othertrigger"),
@@ -52,7 +51,7 @@ class CustomCommandTest : ShouldSpec({
         var isCalled = false
         val command = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
 
-        command.hasReceived(
+        command.testRuntime().hasReceived(
             CommandAsked(
                 TwitchChannel("otherchannel"),
                 Command("!trigger"),
@@ -74,8 +73,10 @@ class CustomCommandTest : ShouldSpec({
         ) { isCalled = true }
 
         command
-            .atFixedTime(NOW)
-            .withState(TimeState(command.lastCallStateId.qualifier, NOW.minusMinutes(1), TestClock(NOW)))
+            .testRuntime {
+                atFixedTime(NOW)
+                withState(TimeState(command.lastCallStateId.qualifier, NOW.minusMinutes(1), TestClock(NOW)))
+            }
             .hasReceived(
                 CommandAsked(
                     CHANNEL,
@@ -98,8 +99,10 @@ class CustomCommandTest : ShouldSpec({
         ) { isCalled = true }
 
         command
-            .atFixedTime(NOW)
-            .withState(TimeState(command.lastCallStateId.qualifier, NOW.minusMinutes(3), TestClock(NOW)))
+            .testRuntime {
+                atFixedTime(NOW)
+                withState(TimeState(command.lastCallStateId.qualifier, NOW.minusMinutes(3), TestClock(NOW)))
+            }
             .hasReceived(
                 CommandAsked(
                     CHANNEL,

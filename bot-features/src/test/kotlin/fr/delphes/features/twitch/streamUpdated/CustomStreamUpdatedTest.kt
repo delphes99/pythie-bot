@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.streamUpdated
 
 import fr.delphes.connector.twitch.incomingEvent.StreamChanged
-import fr.delphes.features.hasReceived
+import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
@@ -14,7 +14,7 @@ class CustomStreamUpdatedTest : ShouldSpec({
             isCalled = true
         }
 
-        customStreamUpdated.hasReceived(
+        customStreamUpdated.testRuntime().hasReceived(
             StreamChanged(
                 CHANNEL
             )
@@ -29,7 +29,7 @@ class CustomStreamUpdatedTest : ShouldSpec({
             isCalled = true
         }
 
-        customStreamUpdated.hasReceived(
+        customStreamUpdated.testRuntime().hasReceived(
             StreamChanged(
                 TwitchChannel("otherchannel")
             )
