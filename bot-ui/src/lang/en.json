@@ -49,6 +49,7 @@
   },
   "about": "About",
   "feature": {
+    "id": "Id",
     "name": "Name",
     "type": "Type",
     "outgoingEvents": "Outgoing events",

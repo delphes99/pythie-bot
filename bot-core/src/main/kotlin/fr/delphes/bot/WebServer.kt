@@ -32,6 +32,7 @@ class WebServer(
                 anyHost()
                 allowNonSimpleContentTypes = true
                 allowMethod(HttpMethod.Delete)
+                allowMethod(HttpMethod.Put)
             }
             AdminModule(bot)
             AlertModule(bot)

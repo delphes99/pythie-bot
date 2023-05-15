@@ -11,6 +11,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
+import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
@@ -31,6 +32,7 @@ class Bot(
     val legacyfeatures: List<NonEditableFeature>,
     val serializer: Json,
     val features: List<FeatureDefinition>,
+    val featureConfigurationsType: List<FeatureConfigurationBuilderRegistry>,
 ) : IncomingEventHandler, OutgoingEventProcessor {
     val featuresManager = buildFeatureManager()
 

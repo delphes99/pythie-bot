@@ -20,10 +20,10 @@ import java.time.Duration
 @Serializable
 @SerialName("TwitchCustomCommandConfiguration")
 class CustomCommandConfiguration(
-    private val channel: TwitchChannel,
-    private val command: String,
-    override val id: FeatureId,
-    private val cooldown: Duration,
+    private val channel: TwitchChannel = TwitchChannel(""),
+    private val command: String = "",
+    override val id: FeatureId = FeatureId(),
+    private val cooldown: Duration = Duration.ZERO,
     private val actions: List<OutgoingEventBuilder> = emptyList(),
 ) : FeatureConfiguration {
     override fun buildFeature(): FeatureDefinition {

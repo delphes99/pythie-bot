@@ -49,6 +49,7 @@
   },
   "about": "À propos",
   "feature": {
+    "id": "Id",
     "name": "Nom",
     "type": "Type",
     "outgoingEvents": "Evénements sortants",

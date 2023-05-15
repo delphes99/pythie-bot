@@ -10,7 +10,9 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.routing
+import kotlinx.serialization.Serializable
 
 fun Application.FeatureAdminModule(bot: Bot) {
     routing {
@@ -26,19 +28,38 @@ fun Application.FeatureAdminModule(bot: Bot) {
                 ?.let { description -> this.context.respond(HttpStatusCode.OK, description) }
                 ?: this.context.respond(HttpStatusCode.NotFound, "feature with id ${id.value} not found")
         }
+
+        put("feature/{id}") {
+            val id = this.call.parameters["id"]
+                ?.let { FeatureId(it) }
+                ?: return@put this.context.respond(HttpStatusCode.BadRequest, "feature id missing")
+
+            val configuration = this.call.receive<FeatureConfiguration>()
+
+            if (configuration.id != id) {
+                return@put this.context.respond(HttpStatusCode.BadRequest, "feature id mismatch")
+            }
+
+            bot.featuresManager.upsertFeature(configuration)
+            this.context.respond(HttpStatusCode.OK)
+        }
         post("feature/{id}") {
             val id = this.call.parameters["id"]
                 ?.let { FeatureId(it) }
                 ?: return@post this.context.respond(HttpStatusCode.BadRequest, "feature id missing")
 
-            val configuration = this.call.receive<FeatureConfiguration>()
-
-            if (configuration.id != id) {
-                return@post this.context.respond(HttpStatusCode.BadRequest, "feature id mismatch")
+            if (bot.featuresManager.getEditableFeature(id) != null) {
+                return@post this.context.respond(HttpStatusCode.Conflict, "feature id already exists")
             }
 
-            bot.featuresManager.upsertFeature(configuration)
-            this.context.respond(HttpStatusCode.OK)
+            val request = this.call.receive<CreateFeatureRequest>()
+            val definition = bot.featureConfigurationsType
+                .firstOrNull { it.type == request.type }
+                ?: return@post this.context.respond(HttpStatusCode.BadRequest, "feature type not found")
+
+            val newConfiguration = definition.provideNewConfiguration(id)
+            bot.featuresManager.upsertFeature(newConfiguration)
+            this.context.respond(HttpStatusCode.OK, newConfiguration)
         }
         post("features/reload") {
             bot.featuresManager.loadConfigurableFeatures()
@@ -49,6 +70,12 @@ fun Application.FeatureAdminModule(bot: Bot) {
                 HttpStatusCode.OK, bot.outgoingEventsTypes
                     .map(OutgoingEventBuilderDefinition::type)
                     .map(OutgoingEventType::name)
+            )
+        }
+        get("features/types") {
+            this.context.respond(
+                HttpStatusCode.OK, bot.featureConfigurationsType
+                    .map(FeatureConfigurationBuilderRegistry::type)
             )
         }
         get("outgoing-events/types/{type}") {
@@ -64,3 +91,8 @@ fun Application.FeatureAdminModule(bot: Bot) {
         }
     }
 }
+
+@Serializable
+private class CreateFeatureRequest(
+    val type: FeatureConfigurationType,
+)

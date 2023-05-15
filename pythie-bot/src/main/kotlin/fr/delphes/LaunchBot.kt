@@ -15,7 +15,10 @@ import fr.delphes.connector.discord.DiscordConnector
 import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.twitchSerializersModule
+import fr.delphes.feature.FeatureConfigurationBuilderRegistry
+import fr.delphes.feature.FeatureConfigurationType
 import fr.delphes.features.featureSerializersModule
+import fr.delphes.features.twitch.command.CustomCommandConfiguration
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -55,7 +58,14 @@ fun main() {
             delphestestFeatures
         ).flatten(),
         serializer,
-        delphes99CustomFeatures + delphestestCustomFeatures
+        delphes99CustomFeatures + delphestestCustomFeatures,
+        listOf(
+            FeatureConfigurationBuilderRegistry(
+                FeatureConfigurationType("TwitchCustomCommandConfiguration")
+            ) { featureId ->
+                CustomCommandConfiguration(id = featureId)
+            },
+        ),
     )
 
     bot.init(
