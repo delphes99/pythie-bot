@@ -1,5 +1,6 @@
 package fr.delphes.feature
 
-interface HaveState<T: State> {
-    val state : T
+@Deprecated("migrate to fr.delphes.state.State")
+interface HaveState<T : State> {
+    val state: T
 }

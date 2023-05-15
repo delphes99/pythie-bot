@@ -5,6 +5,7 @@ import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 
+@Deprecated("migrate to fr.delphes.rework.FeatureDefinition")
 interface Feature {
     val eventHandlers: LegacyEventHandlers
 
