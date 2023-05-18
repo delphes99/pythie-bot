@@ -30,8 +30,8 @@ class StreamerHighlightFeatureTest : ShouldSpec({
         }
 
         command.testRuntime {
-            withState(GetUserInfos(mockk {
-                coEvery { getUser(any()) } returns UserInfos(
+            withMockedState(GetUserInfos.ID) {
+                coEvery { getUserInfos(USER) } returns UserInfos(
                     "user",
                     UserId("userId"),
                     BroadcasterType.AFFILIATE,
@@ -39,7 +39,7 @@ class StreamerHighlightFeatureTest : ShouldSpec({
                     "last stream title",
                     NOW.minusMinutes(10)
                 )
-            }))
+            }
             atFixedTime(NOW)
         }.hasReceived(
             MessageReceived(
@@ -64,8 +64,8 @@ class StreamerHighlightFeatureTest : ShouldSpec({
         }
 
         command.testRuntime {
-            withState(GetUserInfos(mockk {
-                coEvery { getUser(any()) } returns UserInfos(
+            withMockedState(GetUserInfos.ID) {
+                coEvery { getUserInfos(USER) } returns UserInfos(
                     "user",
                     UserId("userId"),
                     BroadcasterType.AFFILIATE,
@@ -73,7 +73,7 @@ class StreamerHighlightFeatureTest : ShouldSpec({
                     "last stream title",
                     NOW.minusMonths(10)
                 )
-            }))
+            }
             atFixedTime(NOW)
         }.hasReceived(
             MessageReceived(
@@ -98,14 +98,14 @@ class StreamerHighlightFeatureTest : ShouldSpec({
         }
 
         command.testRuntime {
-            withState(GetUserInfos(mockk {
-                coEvery { getUser(any()) } returns UserInfos(
+            withMockedState(GetUserInfos.ID) {
+                coEvery { getUserInfos(USER) } returns UserInfos(
                     "user",
                     UserId("userId"),
                     BroadcasterType.DEFAULT,
                     0
                 )
-            }))
+            }
             atFixedTime(NOW)
         }.hasReceived(
             MessageReceived(
@@ -130,8 +130,8 @@ class StreamerHighlightFeatureTest : ShouldSpec({
         }
 
         command.testRuntime {
-            withState(GetUserInfos(mockk {
-                coEvery { getUser(any()) } returns UserInfos(
+            withMockedState(GetUserInfos.ID) {
+                coEvery { getUserInfos(USER) } returns UserInfos(
                     "user",
                     UserId("userId"),
                     BroadcasterType.AFFILIATE,
@@ -139,7 +139,7 @@ class StreamerHighlightFeatureTest : ShouldSpec({
                     "last stream title",
                     NOW.minusMinutes(10)
                 )
-            }))
+            }
             atFixedTime(NOW)
             withState(
                 StreamerHighlightState(
