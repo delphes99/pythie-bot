@@ -45,6 +45,7 @@ class StreamerHighlightFeature(
                     cacheTime.plus(highlightExpiration).isAfter(now)
                 }
             ) {
+                highlightState.highlight(user, now)
                 shoutOut(event, userInfos)?.also {
                     executeOutgoingEvent(it)
                 }

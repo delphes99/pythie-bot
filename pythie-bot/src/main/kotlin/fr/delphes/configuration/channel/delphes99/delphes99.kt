@@ -23,7 +23,6 @@ import fr.delphes.connector.twitch.outgoingEvent.RemoveModerator
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.outgoingEvent.ShoutOut
 import fr.delphes.connector.twitch.state.CommandListState
-import fr.delphes.feature.StateManagerWithRepository
 import fr.delphes.features.core.botStarted.BotStarted
 import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.obs.SceneChanged
@@ -35,7 +34,7 @@ import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.endCredits.EndCredits
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.gameReward.GameReward
-import fr.delphes.features.twitch.incomingRaid.IncomingRaid
+import fr.delphes.features.twitch.incomingRaid.IncomingRaidFeature
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
 import fr.delphes.features.twitch.newSub.CustomNewSub
 import fr.delphes.features.twitch.rewardRedeem.RewardRedeem
@@ -43,7 +42,6 @@ import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
 import fr.delphes.features.twitch.streamOnline.CustomStreamOnline
 import fr.delphes.features.twitch.streamUpdated.CustomStreamUpdated
-import fr.delphes.features.twitch.streamerHighlight.FileStreamerHighlightRepository
 import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightFeature
 import fr.delphes.features.twitch.voth.FileVOTHStateRepository
 import fr.delphes.features.twitch.voth.VOTH
@@ -70,13 +68,6 @@ val blackAndWhiteFilter = SourceFilter("main_capture", "black_and_white")
 const val discordInvitationLink = "https://discord.com/invite/SAdBhbu"
 
 val moderators = listOf("delphes99", "vivalinux", "gnu_coding_cafe")
-
-//TODO shared state between features ?
-private val highlightStateManager = StateManagerWithRepository(
-    FileStreamerHighlightRepository(
-        "A:\\pythiebot\\feature\\streamer_highlight.json"
-    )
-)
 
 fun buildShoutOut(user: UserName): ShoutOut {
     return ShoutOut(
@@ -244,28 +235,6 @@ val delphes99Features = listOf(
             )
         )
     },
-    IncomingRaid(
-        channel = channel,
-        stateManagerWithRepository = highlightStateManager,
-        incomingRaidResponse = { incomingRaid ->
-            listOf(
-                SendMessage(
-                    "\uD83E\uDDED ${incomingRaid.leader.name} explore twitch et fait escale ici avec ses ${incomingRaid.numberOfRaiders} acolytes.",
-                    channel
-                ),
-                buildShoutOut(incomingRaid.leader),
-                CreatePoll(
-                    channel,
-                    "Une présentation ?",
-                    Duration.ofMinutes(1),
-                    "Qui es-tu ?",
-                    "Que fais-tu ?",
-                    "La totale !",
-                    "On te connait (ou OSEF)"
-                ),
-            )
-        }
-    ),
     SceneChanged { sceneChanged ->
         if (sceneChanged.newScene == "End credits") {
             listOf(SendMessage("Ca sent la fin", channel))
@@ -527,4 +496,25 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
             buildShoutOut(messageReceived.user)
         }
     ),
+    IncomingRaidFeature(
+        channel = channel,
+    ) { incomingRaid ->
+        listOf(
+            Pause(Duration.ofSeconds(30)),
+            SendMessage(
+                "\uD83E\uDDED ${incomingRaid.leader.name} explore twitch et fait escale ici avec ses ${incomingRaid.numberOfRaiders} acolytes.",
+                channel
+            ),
+            buildShoutOut(incomingRaid.leader),
+            CreatePoll(
+                channel,
+                "Une présentation ?",
+                Duration.ofMinutes(1),
+                "Qui es-tu ?",
+                "Que fais-tu ?",
+                "La totale !",
+                "On te connait (ou OSEF)"
+            ),
+        )
+    },
 )
