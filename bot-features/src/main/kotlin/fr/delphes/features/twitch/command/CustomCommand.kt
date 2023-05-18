@@ -18,8 +18,8 @@ import java.time.Duration
 class CustomCommand(
     override val channel: TwitchChannel,
     val triggerCommand: Command,
-    override val id: FeatureId = FeatureId(uuid()),
     val cooldown: Duration = Duration.ZERO,
+    override val id: FeatureId = FeatureId(),
     private val action: suspend TwitchEventParameters<CommandAsked>.() -> Unit,
     //TODO merge TwitchFeature and FeatureDefinition
 ) : TwitchFeature, FeatureDefinition {
@@ -29,7 +29,7 @@ class CustomCommand(
         id: FeatureId = FeatureId(uuid()),
         cooldown: Duration = Duration.ZERO,
         action: suspend TwitchEventParameters<CommandAsked>.() -> Unit,
-    ) : this(channel, Command(trigger), id, cooldown, action)
+    ) : this(channel, Command(trigger), cooldown, id, action)
 
     override val commands = setOf(triggerCommand)
 

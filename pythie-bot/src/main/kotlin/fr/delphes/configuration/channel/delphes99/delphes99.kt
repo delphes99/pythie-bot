@@ -182,7 +182,12 @@ val delphes99Features = listOf(
     ) {
         listOf(
             SendMessage("-> test dev 3", channel),
-            ChangeItemPosition(WEBCAM_ID, nextDouble(0.0, (1920.0 - 486.0)), nextDouble(0.0, (1080.0 - 273.0)), "in_game"),
+            ChangeItemPosition(
+                WEBCAM_ID,
+                nextDouble(0.0, (1920.0 - 486.0)),
+                nextDouble(0.0, (1080.0 - 273.0)),
+                "in_game"
+            ),
         )
     },
     RewardRedeem(
@@ -239,16 +244,6 @@ val delphes99Features = listOf(
             )
         )
     },
-    StreamerHighlightFeature(
-        channel = channel,
-        highlightExpiration = Duration.ofHours(2),
-        activeStreamer = Duration.ofDays(30),
-        stateManagerWithRepository = highlightStateManager,
-        excludedUserNames = listOf("streamlabs"),
-        shoutOut = { messageReceived, _ ->
-            buildShoutOut(messageReceived.user)
-        }
-    ),
     IncomingRaid(
         channel = channel,
         stateManagerWithRepository = highlightStateManager,
@@ -523,4 +518,13 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
             )
         )
     },
+    StreamerHighlightFeature(
+        channel = channel,
+        highlightExpiration = Duration.ofHours(2),
+        activeStreamer = Duration.ofDays(30),
+        excludedUserNames = listOf(UserName("streamlabs")),
+        shoutOut = { messageReceived, _ ->
+            buildShoutOut(messageReceived.user)
+        }
+    ),
 )

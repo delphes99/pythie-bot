@@ -5,9 +5,9 @@ import fr.delphes.utils.serialization.Serializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 
-class FileStreamerHighlightRepository(filePath: String) : FileStateRepository<StreamerHighlightState>(
+class FileStreamerHighlightRepository(filePath: String) : FileStateRepository<LegacyStreamerHighlightState>(
     filePath = filePath,
-    initializer = { StreamerHighlightState() },
+    initializer = { LegacyStreamerHighlightState() },
     serializer = { Serializer.encodeToString(it) },
     deserializer = { Serializer.decodeFromString(it) }
 )

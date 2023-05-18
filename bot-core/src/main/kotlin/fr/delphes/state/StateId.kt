@@ -4,7 +4,7 @@ import kotlin.reflect.KClass
 
 data class StateId<T : State>(
     val clazz: KClass<T>,
-    val qualifier: StateIdQualifier
+    val qualifier: StateIdQualifier,
 ) {
     companion object {
         inline fun <reified T : State> from(id: StateIdQualifier) = StateId(T::class, id)

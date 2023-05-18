@@ -14,7 +14,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 class CustomCommandTest : ShouldSpec({
-    should("should register a command message handler") {
+    should("should call action when trigger match") {
         var isCalled = false
 
         val command = CustomCommand(CHANNEL, "!trigger") { isCalled = true }

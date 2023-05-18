@@ -12,6 +12,7 @@ import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.state.ChannelRewardsState
 import fr.delphes.connector.twitch.state.CommandListState
+import fr.delphes.connector.twitch.state.GetUserInfos
 import fr.delphes.connector.twitch.state.GetVipState
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
 import fr.delphes.connector.twitch.user.UserInfos
@@ -44,6 +45,7 @@ class TwitchConnector(
     override val states = listOf(
         CommandListState(this),
         GetVipState(this),
+        GetUserInfos(this),
         //TODO dynamic state (reload the configuration must reload the states)
         *configurationManager.currentConfiguration.listenedChannels.map {
             ChannelRewardsState(it.channel, this)
