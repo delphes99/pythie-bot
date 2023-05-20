@@ -1,21 +1,20 @@
-package fr.delphes.features.twitch
+package fr.delphes.bot.event.eventHandler
 
 import fr.delphes.bot.OutgoingEventProcessor
+import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.state.State
-import fr.delphes.state.StateManager
 import fr.delphes.state.StateId
+import fr.delphes.state.StateManager
 
-class TwitchEventParameters<T: TwitchIncomingEvent>(
+class EventHandlerParameters<T : IncomingEvent>(
     private val outgoingEventProcessor: OutgoingEventProcessor,
     val event: T,
-    @PublishedApi
-    internal val stateManager: StateManager
+    val stateManager: StateManager,
 ) {
     suspend fun executeOutgoingEvent(event: OutgoingEvent) {
         outgoingEventProcessor.processOutgoingEvent(event)
     }
 
-    inline fun <reified T: State> state(stateId: StateId<T>) = stateManager.getState(stateId)
+    inline fun <reified T : State> state(stateId: StateId<T>) = stateManager.getState(stateId)
 }

@@ -4,9 +4,7 @@ import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.obs.toObs.request.GetSceneItemList
 import fr.delphes.obs.toObs.request.SetSceneItemEnabled
 import kotlinx.coroutines.delay
-import kotlinx.serialization.InternalSerializationApi
 
-@InternalSerializationApi
 data class RefreshSource(
     val sceneName: String,
     //TODO item name > item id

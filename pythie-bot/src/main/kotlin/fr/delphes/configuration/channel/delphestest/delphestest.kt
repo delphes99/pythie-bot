@@ -5,6 +5,7 @@ import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.state.CommandListState
+import fr.delphes.feature.NonEditableFeature
 import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.gameDescription.GameDescription
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
@@ -21,7 +22,7 @@ import java.time.Duration
  * Example for delphestest channel : https://www.twitch.tv/delphestest
  */
 val channel = TwitchChannel("delphestest")
-val delphestestFeatures = listOf(
+val delphestestFeatures = listOf<NonEditableFeature>(
     Statistics(channel),
     GameDescription(
         channel,

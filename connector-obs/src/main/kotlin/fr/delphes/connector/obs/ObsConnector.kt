@@ -9,10 +9,8 @@ import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.connector.obs.endpoints.ObsModule
 import io.ktor.server.application.Application
-import kotlinx.serialization.InternalSerializationApi
 import mu.KotlinLogging
 
-@InternalSerializationApi
 class ObsConnector(
     val bot: Bot,
     override val botConfiguration: BotConfiguration,

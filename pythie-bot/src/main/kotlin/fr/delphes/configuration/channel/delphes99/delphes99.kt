@@ -23,6 +23,7 @@ import fr.delphes.connector.twitch.outgoingEvent.RemoveModerator
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.outgoingEvent.ShoutOut
 import fr.delphes.connector.twitch.state.CommandListState
+import fr.delphes.feature.NonEditableFeature
 import fr.delphes.features.core.botStarted.BotStarted
 import fr.delphes.features.discord.NewGuildMember
 import fr.delphes.features.obs.SceneChanged
@@ -86,7 +87,7 @@ private const val RAIN_ITEM_ID = 3L
 private const val WEBCAM_ID = 8L
 
 @InternalSerializationApi
-val delphes99Features = listOf(
+val delphes99Features = listOf<NonEditableFeature>(
     VOTH(
         channel,
         VOTHConfiguration(
@@ -241,14 +242,6 @@ val delphes99Features = listOf(
         } else {
             emptyList()
         }
-    },
-    BotStarted {
-        val overlayItemId = 4L
-        listOf(
-            Pause(Duration.ofSeconds(5)), //Waiting for connectors connections
-            RefreshSource("in_game", overlayItemId),
-            SendMessage("Ready to go", channel)
-        )
     }
 )
 
@@ -498,14 +491,16 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ),
     IncomingRaidFeature(
         channel = channel,
-    ) { incomingRaid ->
-        listOf(
-            Pause(Duration.ofSeconds(30)),
+    ) {
+        executeOutgoingEvent(Pause(Duration.ofSeconds(30)))
+        executeOutgoingEvent(
             SendMessage(
-                "\uD83E\uDDED ${incomingRaid.leader.name} explore twitch et fait escale ici avec ses ${incomingRaid.numberOfRaiders} acolytes.",
+                "\uD83E\uDDED ${event.leader.name} explore twitch et fait escale ici avec ses ${event.numberOfRaiders} acolytes.",
                 channel
-            ),
-            buildShoutOut(incomingRaid.leader),
+            )
+        )
+        executeOutgoingEvent(buildShoutOut(event.leader))
+        executeOutgoingEvent(
             CreatePoll(
                 channel,
                 "Une présentation ?",
@@ -514,7 +509,14 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
                 "Que fais-tu ?",
                 "La totale !",
                 "On te connait (ou OSEF)"
-            ),
+            )
         )
     },
+    BotStarted {
+        val overlayItemId = 4L //TODO
+
+        executeOutgoingEvent(Pause(Duration.ofSeconds(5))) //Waiting for connectors connections
+        executeOutgoingEvent(RefreshSource("in_game", overlayItemId))
+        executeOutgoingEvent(SendMessage("Ready to go", channel))
+    }
 )

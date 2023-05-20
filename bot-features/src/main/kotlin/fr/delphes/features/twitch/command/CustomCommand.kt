@@ -1,9 +1,9 @@
 package fr.delphes.features.twitch.command
 
+import fr.delphes.bot.event.eventHandler.EventHandlerContext
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
-import fr.delphes.features.twitch.TwitchEventParameters
 import fr.delphes.features.twitch.handlerFor
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
@@ -20,7 +20,7 @@ class CustomCommand(
     val triggerCommand: Command,
     val cooldown: Duration = Duration.ZERO,
     override val id: FeatureId = FeatureId(),
-    private val action: suspend TwitchEventParameters<CommandAsked>.() -> Unit,
+    private val action: EventHandlerContext<CommandAsked>,
     //TODO merge TwitchFeature and FeatureDefinition
 ) : TwitchFeature, FeatureDefinition {
     constructor(
@@ -28,7 +28,7 @@ class CustomCommand(
         trigger: String,
         id: FeatureId = FeatureId(uuid()),
         cooldown: Duration = Duration.ZERO,
-        action: suspend TwitchEventParameters<CommandAsked>.() -> Unit,
+        action: EventHandlerContext<CommandAsked>,
     ) : this(channel, Command(trigger), cooldown, id, action)
 
     override val commands = setOf(triggerCommand)

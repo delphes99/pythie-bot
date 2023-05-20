@@ -1,22 +1,21 @@
 package fr.delphes.features.core.botStarted
 
-import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.LegacyEventHandler
-import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
+import fr.delphes.bot.event.eventHandler.EventHandlerContext
+import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.BotStarted
-import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.feature.NonEditableFeature
+import fr.delphes.rework.feature.FeatureDefinition
+import fr.delphes.rework.feature.FeatureId
+import fr.delphes.rework.feature.FeatureRuntime
+import fr.delphes.rework.feature.SimpleFeatureRuntime
+import fr.delphes.state.StateManager
 
 class BotStarted(
-    val listener: () -> List<OutgoingEvent>
-) : NonEditableFeature {
-    override val eventHandlers = LegacyEventHandlers
-        .builder()
-        .addHandler(BotStartedHandler())
-        .build()
+    override val id: FeatureId = FeatureId(),
+    private val listener: EventHandlerContext<BotStarted>,
+) : FeatureDefinition {
+    override fun buildRuntime(stateManager: StateManager): FeatureRuntime {
+        val eventHandlers = EventHandlers.of<BotStarted>(listener)
 
-    inner class BotStartedHandler : LegacyEventHandler<BotStarted> {
-        override suspend fun handle(event: BotStarted, bot: Bot): List<OutgoingEvent> =
-            listener()
+        return SimpleFeatureRuntime(eventHandlers, id)
     }
 }

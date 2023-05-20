@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.incomingRaid
 
-import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.eventHandler.EventHandlerContext
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.IncomingRaid
 import fr.delphes.features.twitch.handlerFor
@@ -16,7 +16,7 @@ import fr.delphes.twitch.TwitchChannel
 class IncomingRaidFeature(
     override val channel: TwitchChannel,
     override val id: FeatureId = FeatureId(),
-    val incomingRaidResponse: (IncomingRaid) -> List<OutgoingEvent>,
+    val incomingRaidResponse: EventHandlerContext<IncomingRaid>,
 ) : TwitchFeature, FeatureDefinition {
     override fun buildRuntime(stateManager: StateManager): FeatureRuntime {
         val eventHandlers = channel.handlerFor<IncomingRaid> {
@@ -27,9 +27,7 @@ class IncomingRaidFeature(
             }
 
             highlightState.highlight(user, now)
-            incomingRaidResponse(event).forEach { outgoingEvent ->
-                executeOutgoingEvent(outgoingEvent)
-            }
+            incomingRaidResponse()
         }
 
         return SimpleFeatureRuntime(eventHandlers, id)

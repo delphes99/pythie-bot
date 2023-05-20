@@ -8,7 +8,7 @@ import mu.KotlinLogging
 import kotlin.reflect.KClass
 
 class EventHandlers(
-    val eventHandlers: Map<KClass<*>, List<EventHandler<*>>>
+    val eventHandlers: Map<KClass<*>, List<EventHandler<*>>>,
 ) {
     companion object {
         private val LOGGER = KotlinLogging.logger {}
@@ -16,9 +16,11 @@ class EventHandlers(
         val Empty = EventHandlers(emptyMap())
 
         @Suppress("UNCHECKED_CAST")
-        inline fun <reified U : IncomingEvent> of(handler: EventHandler<U>) = builder().addHandler(handler).build()
+        inline fun <reified U : IncomingEvent> of(noinline handler: EventHandlerContext<U>) =
+            builder().addHandler(EventHandler.of(handler)).build()
 
-        fun <U : IncomingEvent> of(clazz: KClass<U>, handler: EventHandler<U>) = builder().addHandler(clazz, handler).build()
+        fun <U : IncomingEvent> of(clazz: KClass<U>, handler: EventHandler<U>) =
+            builder().addHandler(clazz, handler).build()
 
         fun builder() = Builder()
 

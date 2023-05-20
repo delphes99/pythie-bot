@@ -10,10 +10,8 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.Serializable
 
-@InternalSerializationApi
 fun Application.ObsModule(connector: ObsConnector) {
     routing {
         get("/obs/configuration") {
