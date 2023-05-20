@@ -1,0 +1,10 @@
+{
+  "d": {
+    "eventData": {
+      "studioModeEnabled": true
+    },
+    "eventIntent": 1024,
+    "eventType": "StudioModeStateChanged"
+  },
+  "op": 5
+}

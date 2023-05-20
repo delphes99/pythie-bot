@@ -1,0 +1,13 @@
+{
+  "d": {
+    "eventData": {
+      "sceneItemId": 17,
+      "sceneItemIndex": 6,
+      "sceneName": "in_game",
+      "sourceName": "newItem"
+    },
+    "eventIntent": 128,
+    "eventType": "SceneItemCreated"
+  },
+  "op": 5
+}
