@@ -7,7 +7,7 @@ import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.features.twitch.command.CustomCommand
-import fr.delphes.features.twitch.gameDescription.GameDescription
+import fr.delphes.features.twitch.gameDescription.GameDescriptionFeature
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
 import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
@@ -24,12 +24,6 @@ import java.time.Duration
 val channel = TwitchChannel("delphestest")
 val delphestestFeatures = listOf<NonEditableFeature>(
     Statistics(channel),
-    GameDescription(
-        channel,
-        "!tufekoi",
-        Games.SCIENCE_TECHNOLOGY to "development",
-        Games.JUST_CHATTING to "just chatting"
-    ),
 )
 val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.properties") { properties ->
     ChannelConfiguration(
@@ -100,4 +94,10 @@ val delphestestCustomFeatures = listOf<FeatureDefinition>(
             )
         )
     },
+    GameDescriptionFeature(
+        channel,
+        "!tufekoi",
+        Games.SCIENCE_TECHNOLOGY to "development",
+        Games.JUST_CHATTING to "just chatting"
+    ),
 )

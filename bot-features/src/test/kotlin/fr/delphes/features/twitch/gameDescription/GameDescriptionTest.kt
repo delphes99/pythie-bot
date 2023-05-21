@@ -31,7 +31,7 @@ class GameDescriptionTest : ShouldSpec({
     }
 
     should("describe the current") {
-        val feature = GameDescription(channel, "!tufekoi", GAME_ID to "description")
+        val feature = GameDescriptionFeature(channel, "!tufekoi", GAME_ID to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), UserName("user"))
 
@@ -41,7 +41,7 @@ class GameDescriptionTest : ShouldSpec({
     }
 
     should("describe the current (with other gameId implementation)") {
-        val feature = GameDescription(channel, "!tufekoi", GameEnum.GAME to "description")
+        val feature = GameDescriptionFeature(channel, "!tufekoi", GameEnum.GAME to "description")
         `current game is`(GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), UserName("user"))
 
@@ -51,7 +51,7 @@ class GameDescriptionTest : ShouldSpec({
     }
 
     should("do nothing when no description") {
-        val feature = GameDescription(channel, "!tufekoi", GAME_ID to "description")
+        val feature = GameDescriptionFeature(channel, "!tufekoi", GAME_ID to "description")
         `current game is`(OTHER_GAME)
         val commandAsked = CommandAsked(channel, Command("!tufekoi"), UserName("user"))
 

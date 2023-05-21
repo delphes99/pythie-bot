@@ -33,7 +33,7 @@ import fr.delphes.features.twitch.bitCheer.CustomBitCheer
 import fr.delphes.features.twitch.clipCreated.CustomClipCreated
 import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.endCredits.EndCredits
-import fr.delphes.features.twitch.gameDescription.GameDescription
+import fr.delphes.features.twitch.gameDescription.GameDescriptionFeature
 import fr.delphes.features.twitch.gameReward.GameReward
 import fr.delphes.features.twitch.incomingRaid.IncomingRaidFeature
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
@@ -138,16 +138,6 @@ val delphes99Features = listOf<NonEditableFeature>(
     Statistics(channel),
     EndCredits(),
     Overlay(channel),
-    GameDescription(
-        channel,
-        "!tufekoi",
-        Games.SOFTWARE_DEVELOPMENT to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
-        Games.JUST_CHATTING to "\uD83D\uDDE3️ bla bla bla",
-        Games.SATISFACTORY to "Pionnier, vous êtes envoyé colonniser Jeu de construction d'usine \uD83C\uDFED en première personne, automatisation, optimisation, exploration !",
-        Games.PATH_OF_EXILE to "Vous êtes un exilé errant sur Wraeclast, cherchant à vous venger de ceux qui vous ont banni. ⚔️Hack'n slash free to play, avec un système de ligue de quelques mois. Constellation de talent, lien entre gemmes, craft, mécaniques... complexe mais passionnant",
-        Games.GEOGUESSR to "Vous entrez dans un streetview dans un lieu aléatoire, vous devez vous retrouver sur une carte \uD83D\uDDFA️",
-        Games.GHOSTRUNNER to "Mara, le Maître des clés règne sur la Tour du Dharma, le dernier refuge de l'humanité. Grimpez la Tour et prennez votre revanche. \uD83C\uDFC3 Runner en première personne dans un environnement cyberpunk.",
-    ),
     GameReward(
         channel,
         DelphesReward.DEV_TEST to Games.SOFTWARE_DEVELOPMENT,
@@ -517,4 +507,14 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         executeOutgoingEvent(ActivateFilter(blackAndWhiteFilter))
         executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, true, "main_capture"))
     },
+    GameDescriptionFeature(
+        channel,
+        "!tufekoi",
+        Games.SOFTWARE_DEVELOPMENT to "Développement d'un bot \uD83E\uDD16 twitch en kotlin : https://github.com/delphes99/pythie-bot",
+        Games.JUST_CHATTING to "\uD83D\uDDE3️ bla bla bla",
+        Games.SATISFACTORY to "Pionnier, vous êtes envoyé colonniser Jeu de construction d'usine \uD83C\uDFED en première personne, automatisation, optimisation, exploration !",
+        Games.PATH_OF_EXILE to "Vous êtes un exilé errant sur Wraeclast, cherchant à vous venger de ceux qui vous ont banni. ⚔️Hack'n slash free to play, avec un système de ligue de quelques mois. Constellation de talent, lien entre gemmes, craft, mécaniques... complexe mais passionnant",
+        Games.GEOGUESSR to "Vous entrez dans un streetview dans un lieu aléatoire, vous devez vous retrouver sur une carte \uD83D\uDDFA️",
+        Games.GHOSTRUNNER to "Mara, le Maître des clés règne sur la Tour du Dharma, le dernier refuge de l'humanité. Grimpez la Tour et prennez votre revanche. \uD83C\uDFC3 Runner en première personne dans un environnement cyberpunk.",
+    ),
 )
