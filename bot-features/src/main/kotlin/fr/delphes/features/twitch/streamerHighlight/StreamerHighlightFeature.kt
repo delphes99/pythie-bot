@@ -5,7 +5,7 @@ import fr.delphes.connector.twitch.incomingEvent.MessageReceived
 import fr.delphes.connector.twitch.outgoingEvent.ShoutOut
 import fr.delphes.connector.twitch.state.GetUserInfos
 import fr.delphes.connector.twitch.user.UserInfos
-import fr.delphes.features.twitch.handlerFor
+import fr.delphes.features.twitch.handlersFor
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
@@ -31,13 +31,13 @@ class StreamerHighlightFeature(
     private val stateId = StreamerHighlightState.idFor(channel)
 
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
-        val eventHandlers = channel.handlerFor<MessageReceived> {
+        val eventHandlers = channel.handlersFor<MessageReceived> {
             val user = event.user
             if (normalizedExcludedUserNames.contains(user.normalizeName)) {
-                return@handlerFor
+                return@handlersFor
             }
 
-            val userInfos = stateManager.getState(GetUserInfos.ID).getUserInfos(user) ?: return@handlerFor
+            val userInfos = stateManager.getState(GetUserInfos.ID).getUserInfos(user) ?: return@handlersFor
             val now = stateManager.getState(ClockState.ID).getValue()
             val highlightState = stateManager.getState(stateId)
 

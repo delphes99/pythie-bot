@@ -1,16 +1,20 @@
 package fr.delphes.features.twitch.gameReward
 
-import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
+import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
-import fr.delphes.feature.NonEditableFeature
+import fr.delphes.features.twitch.handlerFor
+import fr.delphes.rework.feature.FeatureDefinition
+import fr.delphes.rework.feature.FeatureId
+import fr.delphes.rework.feature.FeatureRuntime
+import fr.delphes.rework.feature.SimpleFeatureRuntime
+import fr.delphes.state.State
+import fr.delphes.state.StateProvider
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
@@ -20,53 +24,54 @@ import fr.delphes.twitch.api.reward.WithRewardConfiguration
 
 class GameReward(
     override val channel: TwitchChannel,
-    private val gameRewards: Map<GameId, List<RewardConfiguration>>
-) : NonEditableFeature, TwitchFeature {
+    private val gameRewards: Map<GameId, List<RewardConfiguration>>,
+    override val id: FeatureId = FeatureId(),
+) : TwitchFeature, FeatureDefinition {
     constructor(
         channel: TwitchChannel,
-        vararg gameRewards: Pair<WithRewardConfiguration, WithGameId>
+        vararg gameRewards: Pair<WithGameId, WithRewardConfiguration>,
     ) : this(
         channel,
         gameRewards.groupBy(
-            keySelector = { t -> t.second.gameId },
-            valueTransform = { t -> t.first.rewardConfiguration }
-        )
+            keySelector = { (game, reward) -> game.gameId },
+            valueTransform = { (game, reward) -> reward.rewardConfiguration }
+        ),
     )
-
-    //TODO change visibility on start of the bot when the stream is already started
-    override val eventHandlers =
-        LegacyEventHandlers
-            .builder()
-            .addHandler(StreamOnlineHandler())
-            .addHandler(StreamChangedHandler())
-            .build()
-
-    inner class StreamOnlineHandler : TwitchEventHandler<StreamOnline>(channel) {
-        override suspend fun handleIfGoodChannel(event: StreamOnline, bot: Bot): List<OutgoingEvent> {
-            return deactivateFeaturesNotAssociateWith(event.game?.id) + activateFeaturesAssociateWith(event.game?.id)
-        }
-    }
-
-    inner class StreamChangedHandler : TwitchEventHandler<StreamChanged>(channel) {
-        override suspend fun handleIfGoodChannel(event: StreamChanged, bot: Bot): List<OutgoingEvent> {
-            return event.changes
-                .filterIsInstance<StreamChanges.Game>()
-                .firstOrNull()
-                ?.let(StreamChanges.Game::newGame)
-                ?.let(Game::id)
-                ?.let { gameId ->
-                    deactivateFeaturesNotAssociateWith(gameId) + activateFeaturesAssociateWith(gameId)
-                }
-                ?: emptyList()
-        }
-    }
 
     //TODO cache if the feature is already enabled / disabled
     private fun deactivateFeaturesNotAssociateWith(game: GameId?): List<OutgoingEvent> {
-        return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten().map { DeactivateReward(it, channel) }
+        return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten()
+            .map { DeactivateReward(it, channel) }
     }
 
     private fun activateFeaturesAssociateWith(game: GameId?): List<OutgoingEvent> {
         return gameRewards[game]?.map { ActivateReward(it, channel) } ?: emptyList()
     }
+
+    override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
+        val eventHandlers = EventHandlers.builder()
+            .addHandler(channel.handlerFor<StreamOnline> {
+                event.game
+                    ?.id
+                    ?.let(::eventFor)
+                    ?.forEach { event -> executeOutgoingEvent(event) }
+            })
+            .addHandler(channel.handlerFor<StreamChanged> {
+                event.changes
+                    .filterIsInstance<StreamChanges.Game>()
+                    .firstOrNull()
+                    ?.let(StreamChanges.Game::newGame)
+                    ?.let(Game::id)
+                    ?.let(::eventFor)
+                    ?.forEach { event -> executeOutgoingEvent(event) }
+            })
+            .build()
+        return SimpleFeatureRuntime(eventHandlers, id)
+    }
+
+    private fun eventFor(gameId: GameId): List<OutgoingEvent> {
+        return deactivateFeaturesNotAssociateWith(gameId) + activateFeaturesAssociateWith(gameId)
+    }
+
+    override fun getSpecificStates(stateProvider: StateProvider): List<State> = emptyList()
 }

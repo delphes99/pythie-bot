@@ -13,14 +13,11 @@ class EventHandlers(
     companion object {
         private val LOGGER = KotlinLogging.logger {}
 
-        val Empty = EventHandlers(emptyMap())
-
-        @Suppress("UNCHECKED_CAST")
         inline fun <reified U : IncomingEvent> of(noinline action: EventHandlerContext<U>) =
             builder().addHandler(EventHandler.of(action)).build()
 
-        fun <U : IncomingEvent> of(clazz: KClass<U>, handler: EventHandler<U>) =
-            builder().addHandler(clazz, handler).build()
+        inline fun <reified U : IncomingEvent> of(handler: EventHandler<U>) =
+            builder().addHandler(handler).build()
 
         fun builder() = Builder()
 
@@ -31,6 +28,12 @@ class EventHandlers(
             inline fun <reified U : IncomingEvent> addHandler(handler: EventHandler<U>): Builder {
                 map.putIfAbsent(U::class, mutableListOf())
                 map[U::class]!!.add(handler)
+                return this
+            }
+
+            inline fun <reified U : IncomingEvent> addHandler(noinline handler: EventHandlerContext<U>): Builder {
+                map.putIfAbsent(U::class, mutableListOf())
+                map[U::class]!!.add(EventHandler.of(handler))
                 return this
             }
 

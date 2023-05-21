@@ -21,7 +21,7 @@ abstract class SimpleTwitchEventFeature<EVENT : TwitchIncomingEvent>(
     abstract override val channel: TwitchChannel
 
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
-        val eventHandlers = channel.handlerFor(eventClass, action)
+        val eventHandlers = channel.handlersFor(eventClass, action)
 
         return SimpleFeatureRuntime(eventHandlers, id)
     }

@@ -138,13 +138,6 @@ val delphes99Features = listOf<NonEditableFeature>(
     Statistics(channel),
     EndCredits(),
     Overlay(channel),
-    GameReward(
-        channel,
-        DelphesReward.DEV_TEST to Games.SOFTWARE_DEVELOPMENT,
-        DelphesReward.DEV_TEST2 to Games.SOFTWARE_DEVELOPMENT,
-        DelphesReward.DEV_TEST3 to Games.SOFTWARE_DEVELOPMENT,
-        DelphesReward.SATISFACTORY_COLOR to Games.SATISFACTORY
-    ),
 )
 
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
@@ -516,5 +509,12 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         Games.PATH_OF_EXILE to "Vous êtes un exilé errant sur Wraeclast, cherchant à vous venger de ceux qui vous ont banni. ⚔️Hack'n slash free to play, avec un système de ligue de quelques mois. Constellation de talent, lien entre gemmes, craft, mécaniques... complexe mais passionnant",
         Games.GEOGUESSR to "Vous entrez dans un streetview dans un lieu aléatoire, vous devez vous retrouver sur une carte \uD83D\uDDFA️",
         Games.GHOSTRUNNER to "Mara, le Maître des clés règne sur la Tour du Dharma, le dernier refuge de l'humanité. Grimpez la Tour et prennez votre revanche. \uD83C\uDFC3 Runner en première personne dans un environnement cyberpunk.",
+    ),
+    GameReward(
+        channel = channel,
+        Games.SOFTWARE_DEVELOPMENT to DelphesReward.DEV_TEST,
+        Games.SOFTWARE_DEVELOPMENT to DelphesReward.DEV_TEST2,
+        Games.SOFTWARE_DEVELOPMENT to DelphesReward.DEV_TEST3,
+        Games.SATISFACTORY to DelphesReward.SATISFACTORY_COLOR,
     ),
 )

@@ -5,7 +5,7 @@ import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.state.GetCurrentStreamState
-import fr.delphes.features.twitch.handlerFor
+import fr.delphes.features.twitch.handlersFor
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.SimpleFeatureRuntime
@@ -41,7 +41,7 @@ class GameDescriptionFeature(
     }
 
     override fun buildRuntime(stateManager: StateProvider): SimpleFeatureRuntime {
-        val eventHandlers = channel.handlerFor<CommandAsked> {
+        val eventHandlers = channel.handlersFor<CommandAsked> {
             if (event.command == command) {
                 stateManager
                     .getState<GetCurrentStreamState>(GetCurrentStreamState.ID)

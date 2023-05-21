@@ -4,7 +4,7 @@ import fr.delphes.bot.event.eventHandler.EventHandlerContext
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
-import fr.delphes.features.twitch.handlerFor
+import fr.delphes.features.twitch.handlersFor
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.SimpleFeatureRuntime
@@ -36,7 +36,7 @@ class CustomCommand(
     val lastCallStateId = TimeState.id("cooldown-${id.value}")
 
     override fun buildRuntime(stateManager: StateProvider): SimpleFeatureRuntime {
-        val eventHandlers = channel.handlerFor<CommandAsked> {
+        val eventHandlers = channel.handlersFor<CommandAsked> {
             val lastCallState = stateManager.getState(lastCallStateId)
             if (event.command == triggerCommand && lastCallState.hasMoreThan(cooldown)) {
                 lastCallState.putNow()

@@ -3,7 +3,7 @@ package fr.delphes.features.twitch.incomingRaid
 import fr.delphes.bot.event.eventHandler.EventHandlerContext
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.IncomingRaid
-import fr.delphes.features.twitch.handlerFor
+import fr.delphes.features.twitch.handlersFor
 import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightState
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
@@ -22,7 +22,7 @@ class IncomingRaidFeature(
     private val stateId = StreamerHighlightState.idFor(channel)
 
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
-        val eventHandlers = channel.handlerFor<IncomingRaid> {
+        val eventHandlers = channel.handlersFor<IncomingRaid> {
             val user = event.leader
             val now = stateManager.getState(ClockState.ID).getValue()
             val highlightState = stateManager.getState(stateId)
