@@ -148,46 +148,6 @@ val delphes99Features = listOf<NonEditableFeature>(
         Games.GEOGUESSR to "Vous entrez dans un streetview dans un lieu aléatoire, vous devez vous retrouver sur une carte \uD83D\uDDFA️",
         Games.GHOSTRUNNER to "Mara, le Maître des clés règne sur la Tour du Dharma, le dernier refuge de l'humanité. Grimpez la Tour et prennez votre revanche. \uD83C\uDFC3 Runner en première personne dans un environnement cyberpunk.",
     ),
-    RewardRedeem(
-        channel,
-        DelphesReward.DEV_TEST
-    ) {
-        listOf(
-            Alert("test"),
-            PlaySound(listOf("kill-1.mp3", "kill-2.mp3", "kill-3.mp3", "kill-4.mp3", "kill-5.mp3").random())
-        )
-    },
-    RewardRedeem(
-        channel,
-        DelphesReward.DEV_TEST2
-    ) {
-        listOf(
-            SendMessage("-> test dev 2", channel),
-            ChangeItemPosition(WEBCAM_ID, 1425.0, 691.0, "in_game"),
-        )
-    },
-    RewardRedeem(
-        channel,
-        DelphesReward.DEV_TEST3
-    ) {
-        listOf(
-            SendMessage("-> test dev 3", channel),
-            ChangeItemPosition(
-                WEBCAM_ID,
-                nextDouble(0.0, (1920.0 - 486.0)),
-                nextDouble(0.0, (1080.0 - 273.0)),
-                "in_game"
-            ),
-        )
-    },
-    RewardRedeem(
-        channel,
-        DelphesReward.ENTER_THE_MATRIX
-    ) {
-        listOf(
-            ActivateFilter(matrixFilter),
-        )
-    },
     GameReward(
         channel,
         DelphesReward.DEV_TEST to Games.SOFTWARE_DEVELOPMENT,
@@ -195,16 +155,6 @@ val delphes99Features = listOf<NonEditableFeature>(
         DelphesReward.DEV_TEST3 to Games.SOFTWARE_DEVELOPMENT,
         DelphesReward.SATISFACTORY_COLOR to Games.SATISFACTORY
     ),
-    RewardRedeem(
-        channel,
-        DelphesReward.RIP,
-    ) {
-        listOf(
-            PlaySound("sad.mp3"),
-            ActivateFilter(blackAndWhiteFilter),
-            ChangeItemVisibility(RAIN_ITEM_ID, true, "main_capture")
-        )
-    },
 )
 
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
@@ -507,5 +457,64 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
             executeOutgoingEvent(DeactivateFilter(blackAndWhiteFilter))
             executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, false, "main_capture"))
         }
+    },
+    RewardRedeem(
+        channel,
+        DelphesReward.DEV_TEST
+    ) {
+        executeOutgoingEvent(Alert("test"))
+        executeOutgoingEvent(
+            PlaySound(
+                listOf(
+                    "kill-1.mp3",
+                    "kill-2.mp3",
+                    "kill-3.mp3",
+                    "kill-4.mp3",
+                    "kill-5.mp3"
+                ).random()
+            )
+        )
+    },
+    RewardRedeem(
+        channel,
+        DelphesReward.DEV_TEST2
+    ) {
+        executeOutgoingEvent(SendMessage("-> test dev 2", channel))
+        executeOutgoingEvent(
+            ChangeItemPosition(
+                WEBCAM_ID,
+                1425.0,
+                691.0,
+                "in_game"
+            )
+        )
+    },
+    RewardRedeem(
+        channel,
+        DelphesReward.DEV_TEST3
+    ) {
+        executeOutgoingEvent(SendMessage("-> test dev 3", channel))
+        executeOutgoingEvent(
+            ChangeItemPosition(
+                WEBCAM_ID,
+                nextDouble(0.0, (1920.0 - 486.0)),
+                nextDouble(0.0, (1080.0 - 273.0)),
+                "in_game"
+            )
+        )
+    },
+    RewardRedeem(
+        channel,
+        DelphesReward.ENTER_THE_MATRIX
+    ) {
+        executeOutgoingEvent(ActivateFilter(matrixFilter))
+    },
+    RewardRedeem(
+        channel,
+        DelphesReward.RIP,
+    ) {
+        executeOutgoingEvent(PlaySound("sad.mp3"))
+        executeOutgoingEvent(ActivateFilter(blackAndWhiteFilter))
+        executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, true, "main_capture"))
     },
 )
