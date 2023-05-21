@@ -8,8 +8,8 @@ import fr.delphes.features.twitch.handlerFor
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.SimpleFeatureRuntime
-import fr.delphes.state.StateIdQualifier
-import fr.delphes.state.StateManager
+import fr.delphes.state.State
+import fr.delphes.state.StateProvider
 import fr.delphes.state.state.TimeState
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.uuid.uuid
@@ -35,12 +35,9 @@ class CustomCommand(
 
     val lastCallStateId = TimeState.id("cooldown-${id.value}")
 
-    override fun buildRuntime(stateManager: StateManager): SimpleFeatureRuntime {
-        val lastCallState =
-            stateManager.getOrPut(lastCallStateId) { TimeState.withClockFrom(stateManager, StateIdQualifier(id.value)) }
-
+    override fun buildRuntime(stateManager: StateProvider): SimpleFeatureRuntime {
         val eventHandlers = channel.handlerFor<CommandAsked> {
-            //TODO use statemanager to retrieve state
+            val lastCallState = stateManager.getState(lastCallStateId)
             if (event.command == triggerCommand && lastCallState.hasMoreThan(cooldown)) {
                 lastCallState.putNow()
 
@@ -49,5 +46,9 @@ class CustomCommand(
         }
 
         return SimpleFeatureRuntime(eventHandlers, id)
+    }
+
+    override fun getSpecificStates(stateProvider: StateProvider): List<State> {
+        return listOf(TimeState.withClockFrom(stateProvider, lastCallStateId.qualifier))
     }
 }

@@ -9,7 +9,8 @@ import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
 import fr.delphes.rework.feature.SimpleFeatureRuntime
-import fr.delphes.state.StateManager
+import fr.delphes.state.State
+import fr.delphes.state.StateProvider
 import fr.delphes.state.state.ClockState
 import fr.delphes.twitch.TwitchChannel
 
@@ -18,18 +19,24 @@ class IncomingRaidFeature(
     override val id: FeatureId = FeatureId(),
     val incomingRaidResponse: EventHandlerContext<IncomingRaid>,
 ) : TwitchFeature, FeatureDefinition {
-    override fun buildRuntime(stateManager: StateManager): FeatureRuntime {
+    private val stateId = StreamerHighlightState.idFor(channel)
+
+    override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
         val eventHandlers = channel.handlerFor<IncomingRaid> {
             val user = event.leader
-            val now = stateManager.getStateOrNull(ClockState.ID)?.getValue() ?: return@handlerFor
-            val highlightState = stateManager.getOrPut(StreamerHighlightState.idFor(channel)) {
-                StreamerHighlightState(channel)
-            }
+            val now = stateManager.getState(ClockState.ID).getValue()
+            val highlightState = stateManager.getState(stateId)
 
             highlightState.highlight(user, now)
             incomingRaidResponse()
         }
 
         return SimpleFeatureRuntime(eventHandlers, id)
+    }
+
+    override fun getSpecificStates(stateProvider: StateProvider): List<State> {
+        return listOf(
+            StreamerHighlightState(channel)
+        )
     }
 }

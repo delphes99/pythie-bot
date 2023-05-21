@@ -16,7 +16,7 @@ class FeaturesManager(
     private val featureConfigurationRepository: FeatureConfigurationRepository,
 ) {
     private val compiledRuntimes = customFeatures.associateWith { definition ->
-        definition.buildRuntime(stateManager)
+        registerSpecificStatesAndBuildRuntimeOf(definition)
     }
 
     private var configurableRunTimes = emptyMap<FeatureDefinition, FeatureRuntime>()
@@ -31,9 +31,17 @@ class FeaturesManager(
                 .map { configuration ->
                     configuration.buildFeature()
                 }.associateWith { definition ->
-                    definition.buildRuntime(stateManager)
+                    registerSpecificStatesAndBuildRuntimeOf(definition)
                 }
         }
+    }
+
+    private fun registerSpecificStatesAndBuildRuntimeOf(definition: FeatureDefinition): FeatureRuntime {
+        //TODO unsubscribe old specific states
+        definition.getSpecificStates(stateManager.readOnly).forEach {
+            stateManager.put(it)
+        }
+        return definition.buildRuntime(stateManager.readOnly)
     }
 
     suspend fun handle(event: IncomingEvent, bot: Bot) {

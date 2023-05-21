@@ -20,6 +20,15 @@ class CustomFeatureRuntimeBuilder(
     @PublishedApi
     internal val stateManager = StateManager()
 
+    init {
+        //TODO better default bot state with init feature
+        stateManager
+            .withState(ClockState(TestClock(fixedNow)))
+        feature.getSpecificStates(stateManager.readOnly).forEach {
+            stateManager.put(it)
+        }
+    }
+
     fun atFixedTime(now: LocalDateTime) {
         fixedNow = now
     }
@@ -39,6 +48,7 @@ class CustomFeatureRuntimeBuilder(
         val runtime = feature.buildRuntime(
             stateManager
                 .withState(ClockState(TestClock(fixedNow)))
+                .readOnly
         )
         runtime.handleIncomingEvent(event, mockk { every { featuresManager.stateManager } returns stateManager })
     }

@@ -3,6 +3,8 @@ package fr.delphes.state
 import kotlin.reflect.KClass
 
 class StateManager(vararg states: State) {
+    val readOnly = StateProvider(this)
+
     @PublishedApi
     internal val map = mutableMapOf<KClass<*>, MutableMap<StateIdQualifier, out State>>()
 

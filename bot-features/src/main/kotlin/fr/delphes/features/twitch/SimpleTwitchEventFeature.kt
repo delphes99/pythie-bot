@@ -7,7 +7,7 @@ import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
 import fr.delphes.rework.feature.SimpleFeatureRuntime
-import fr.delphes.state.StateManager
+import fr.delphes.state.StateProvider
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.uuid.uuid
 import kotlin.reflect.KClass
@@ -20,7 +20,7 @@ abstract class SimpleTwitchEventFeature<EVENT : TwitchIncomingEvent>(
 ) : TwitchFeature, FeatureDefinition {
     abstract override val channel: TwitchChannel
 
-    override fun buildRuntime(stateManager: StateManager): FeatureRuntime {
+    override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
         val eventHandlers = channel.handlerFor(eventClass, action)
 
         return SimpleFeatureRuntime(eventHandlers, id)

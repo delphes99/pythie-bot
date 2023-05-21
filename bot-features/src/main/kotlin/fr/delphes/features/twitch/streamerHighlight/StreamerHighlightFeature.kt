@@ -10,7 +10,8 @@ import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
 import fr.delphes.rework.feature.SimpleFeatureRuntime
-import fr.delphes.state.StateManager
+import fr.delphes.state.State
+import fr.delphes.state.StateProvider
 import fr.delphes.state.state.ClockState
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
@@ -26,18 +27,19 @@ class StreamerHighlightFeature(
 ) : TwitchFeature, FeatureDefinition {
     private val normalizedExcludedUserNames = excludedUserNames.map(UserName::normalizeName) + channel.normalizeName
 
-    override fun buildRuntime(stateManager: StateManager): FeatureRuntime {
+    //TODO shared state with IncomingRaid : User defined state
+    private val stateId = StreamerHighlightState.idFor(channel)
+
+    override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
         val eventHandlers = channel.handlerFor<MessageReceived> {
             val user = event.user
             if (normalizedExcludedUserNames.contains(user.normalizeName)) {
                 return@handlerFor
             }
 
-            val userInfos = stateManager.getStateOrNull(GetUserInfos.ID)?.getUserInfos(user) ?: return@handlerFor
-            val now = stateManager.getStateOrNull(ClockState.ID)?.getValue() ?: return@handlerFor
-            val highlightState = stateManager.getOrPut(StreamerHighlightState.idFor(channel)) {
-                StreamerHighlightState(channel)
-            }
+            val userInfos = stateManager.getState(GetUserInfos.ID).getUserInfos(user) ?: return@handlerFor
+            val now = stateManager.getState(ClockState.ID).getValue()
+            val highlightState = stateManager.getState(stateId)
 
             if (userInfos.isStreamer()
                 && userInfos.hasStreamedSince(now.minus(activeStreamer))
@@ -53,5 +55,11 @@ class StreamerHighlightFeature(
         }
 
         return SimpleFeatureRuntime(eventHandlers, id)
+    }
+
+    override fun getSpecificStates(stateProvider: StateProvider): List<State> {
+        return listOf(
+            StreamerHighlightState(channel)
+        )
     }
 }
