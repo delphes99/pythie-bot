@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.rewardRedeem
 
-import fr.delphes.bot.event.eventHandler.EventHandlerContext
+import fr.delphes.bot.event.eventHandler.EventHandlerAction
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.features.twitch.handlersFor
@@ -17,7 +17,7 @@ class RewardRedeem(
     override val channel: TwitchChannel,
     private val rewardConfiguration: WithRewardConfiguration,
     override val id: FeatureId = FeatureId(),
-    private val action: EventHandlerContext<RewardRedemption>,
+    private val action: EventHandlerAction<RewardRedemption>,
 ) : TwitchFeature, FeatureDefinition {
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
         val eventHandlers = channel.handlersFor(RewardRedemption::class) {

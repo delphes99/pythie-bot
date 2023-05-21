@@ -1,6 +1,6 @@
 package fr.delphes.features.obs
 
-import fr.delphes.bot.event.eventHandler.EventHandlerContext
+import fr.delphes.bot.event.eventHandler.EventHandlerAction
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
@@ -11,7 +11,7 @@ import fr.delphes.connector.obs.incomingEvent.SourceFilterDeactivated as ObsSour
 
 class SourceFilterDeactivatedFeature(
     override val id: FeatureId = FeatureId(),
-    val action: EventHandlerContext<ObsSourceFilterDeactivated>,
+    val action: EventHandlerAction<ObsSourceFilterDeactivated>,
 ) : FeatureDefinition {
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime =
         SimpleFeatureRuntime.whichHandle(id, action)

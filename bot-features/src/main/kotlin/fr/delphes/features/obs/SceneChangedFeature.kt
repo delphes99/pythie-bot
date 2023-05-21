@@ -1,6 +1,6 @@
 package fr.delphes.features.obs
 
-import fr.delphes.bot.event.eventHandler.EventHandlerContext
+import fr.delphes.bot.event.eventHandler.EventHandlerAction
 import fr.delphes.connector.obs.incomingEvent.SceneChanged
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
@@ -11,7 +11,7 @@ import fr.delphes.state.StateProvider
 
 class SceneChangedFeature(
     override val id: FeatureId = FeatureId(),
-    val action: EventHandlerContext<SceneChanged>,
+    val action: EventHandlerAction<SceneChanged>,
 ) : FeatureDefinition {
 
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime =

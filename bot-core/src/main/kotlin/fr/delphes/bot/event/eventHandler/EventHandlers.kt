@@ -13,7 +13,7 @@ class EventHandlers(
     companion object {
         private val LOGGER = KotlinLogging.logger {}
 
-        inline fun <reified U : IncomingEvent> of(noinline action: EventHandlerContext<U>) =
+        inline fun <reified U : IncomingEvent> of(noinline action: EventHandlerAction<U>) =
             builder().addHandler(EventHandler.of(action)).build()
 
         inline fun <reified U : IncomingEvent> of(handler: EventHandler<U>) =
@@ -31,7 +31,7 @@ class EventHandlers(
                 return this
             }
 
-            inline fun <reified U : IncomingEvent> addHandler(noinline handler: EventHandlerContext<U>): Builder {
+            inline fun <reified U : IncomingEvent> addHandler(noinline handler: EventHandlerAction<U>): Builder {
                 map.putIfAbsent(U::class, mutableListOf())
                 map[U::class]!!.add(EventHandler.of(handler))
                 return this

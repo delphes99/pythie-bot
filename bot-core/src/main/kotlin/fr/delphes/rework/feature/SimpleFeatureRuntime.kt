@@ -1,7 +1,7 @@
 package fr.delphes.rework.feature
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.eventHandler.EventHandlerContext
+import fr.delphes.bot.event.eventHandler.EventHandlerAction
 import fr.delphes.bot.event.eventHandler.EventHandlers
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.utils.uuid.uuid
@@ -17,7 +17,7 @@ data class SimpleFeatureRuntime(
     companion object {
         inline fun <reified T : IncomingEvent> whichHandle(
             id: FeatureId = FeatureId(uuid()),
-            noinline action: EventHandlerContext<T>,
+            noinline action: EventHandlerAction<T>,
         ): SimpleFeatureRuntime {
             val eventHandlers = EventHandlers.of<T>(action)
 

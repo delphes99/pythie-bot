@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch
 
-import fr.delphes.bot.event.eventHandler.EventHandlerContext
+import fr.delphes.bot.event.eventHandler.EventHandlerAction
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
 import fr.delphes.rework.feature.FeatureDefinition
@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 abstract class SimpleTwitchEventFeature<EVENT : TwitchIncomingEvent>(
     private val eventClass: KClass<EVENT>,
     override val id: FeatureId = FeatureId(uuid()),
-    private val action: EventHandlerContext<EVENT>,
+    private val action: EventHandlerAction<EVENT>,
     //TODO merge TwitchFeature and FeatureDefinition
 ) : TwitchFeature, FeatureDefinition {
     abstract override val channel: TwitchChannel

@@ -1,6 +1,6 @@
 package fr.delphes.features.discord
 
-import fr.delphes.bot.event.eventHandler.EventHandlerContext
+import fr.delphes.bot.event.eventHandler.EventHandlerAction
 import fr.delphes.connector.discord.incomingEvent.NewGuildMember
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
@@ -11,7 +11,7 @@ import fr.delphes.state.StateProvider
 
 class NewGuildMemberFeature(
     override val id: FeatureId = FeatureId(),
-    val action: EventHandlerContext<NewGuildMember>,
+    val action: EventHandlerAction<NewGuildMember>,
 ) : FeatureDefinition {
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime =
         SimpleFeatureRuntime.whichHandle(id, action)

@@ -1,3 +1,20 @@
 package fr.delphes.bot.event.eventHandler
 
-typealias EventHandlerContext<T> = suspend EventHandlerParameters<T>.() -> Unit
+import fr.delphes.bot.OutgoingEventProcessor
+import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.state.State
+import fr.delphes.state.StateId
+import fr.delphes.state.StateManager
+
+class EventHandlerContext<T : IncomingEvent>(
+    private val outgoingEventProcessor: OutgoingEventProcessor,
+    val event: T,
+    val stateManager: StateManager,
+) {
+    suspend fun executeOutgoingEvent(event: OutgoingEvent) {
+        outgoingEventProcessor.processOutgoingEvent(event)
+    }
+
+    inline fun <reified T : State> state(stateId: StateId<T>) = stateManager.getStateOrNull(stateId)
+}
