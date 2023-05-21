@@ -4,9 +4,7 @@ import fr.delphes.connector.obs.ObsConnector
 import fr.delphes.obs.toObs.request.GetSceneItemList
 import fr.delphes.obs.toObs.request.SceneItemTransform
 import fr.delphes.obs.toObs.request.SetSceneItemTransform
-import kotlinx.serialization.InternalSerializationApi
 
-@InternalSerializationApi
 data class ChangeItemPosition(
     //TODO item name > item id
     val itemName: Long,

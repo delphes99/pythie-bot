@@ -24,10 +24,10 @@ import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.outgoingEvent.ShoutOut
 import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.feature.NonEditableFeature
-import fr.delphes.features.core.botStarted.BotStarted
-import fr.delphes.features.discord.NewGuildMember
-import fr.delphes.features.obs.SceneChanged
-import fr.delphes.features.obs.SourceFilterActivated
+import fr.delphes.features.core.botStarted.BotStartedFeature
+import fr.delphes.features.discord.NewGuildMemberFeature
+import fr.delphes.features.obs.SceneChangedFeature
+import fr.delphes.features.obs.SourceFilterActivatedFeature
 import fr.delphes.features.overlay.Overlay
 import fr.delphes.features.twitch.bitCheer.CustomBitCheer
 import fr.delphes.features.twitch.clipCreated.CustomClipCreated
@@ -52,7 +52,6 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
 import fr.delphes.utils.time.prettyPrint
 import fr.delphes.utils.time.secondsOf
-import kotlinx.serialization.InternalSerializationApi
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -86,7 +85,6 @@ fun buildShoutOut(user: UserName): ShoutOut {
 private const val RAIN_ITEM_ID = 3L
 private const val WEBCAM_ID = 8L
 
-@InternalSerializationApi
 val delphes99Features = listOf<NonEditableFeature>(
     VOTH(
         channel,
@@ -190,16 +188,6 @@ val delphes99Features = listOf<NonEditableFeature>(
             ActivateFilter(matrixFilter),
         )
     },
-    SourceFilterActivated { sourceFilterActivated ->
-        if (sourceFilterActivated.filter == matrixFilter) {
-            listOf(
-                Pause(secondsOf(30)),
-                DeactivateFilter(matrixFilter),
-            )
-        } else {
-            emptyList()
-        }
-    },
     GameReward(
         channel,
         DelphesReward.DEV_TEST to Games.SOFTWARE_DEVELOPMENT,
@@ -217,32 +205,6 @@ val delphes99Features = listOf<NonEditableFeature>(
             ChangeItemVisibility(RAIN_ITEM_ID, true, "main_capture")
         )
     },
-    SourceFilterActivated { sourceFilterActivated ->
-        if (sourceFilterActivated.filter == blackAndWhiteFilter) {
-            listOf(
-                Pause(Duration.ofMillis(9700)),
-                DeactivateFilter(blackAndWhiteFilter),
-                ChangeItemVisibility(RAIN_ITEM_ID, false, "main_capture")
-            )
-        } else {
-            emptyList()
-        }
-    },
-    NewGuildMember { newGuildMember ->
-        listOf(
-            SendMessage(
-                "${newGuildMember.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même ➡ $discordInvitationLink !",
-                channel
-            )
-        )
-    },
-    SceneChanged { sceneChanged ->
-        if (sceneChanged.newScene == "End credits") {
-            listOf(SendMessage("Ca sent la fin", channel))
-        } else {
-            emptyList()
-        }
-    }
 )
 
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
@@ -512,11 +474,38 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
             )
         )
     },
-    BotStarted {
+    BotStartedFeature {
         val overlayItemId = 4L //TODO
 
         executeOutgoingEvent(Pause(Duration.ofSeconds(5))) //Waiting for connectors connections
         executeOutgoingEvent(RefreshSource("in_game", overlayItemId))
         executeOutgoingEvent(SendMessage("Ready to go", channel))
-    }
+    },
+    NewGuildMemberFeature {
+        executeOutgoingEvent(
+            SendMessage(
+                "${event.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même ➡ $discordInvitationLink !",
+                channel
+            )
+        )
+    },
+    SceneChangedFeature {
+        if (event.newScene == "End credits") {
+            executeOutgoingEvent(SendMessage("Ca sent la fin", channel))
+        }
+    },
+    //TODO : handle pause/async event differently : eventsub timeout
+    SourceFilterActivatedFeature {
+        if (event.filter == matrixFilter) {
+            executeOutgoingEvent(Pause(secondsOf(30)))
+            executeOutgoingEvent(DeactivateFilter(matrixFilter))
+        }
+    },
+    SourceFilterActivatedFeature {
+        if (event.filter == blackAndWhiteFilter) {
+            executeOutgoingEvent(Pause(Duration.ofMillis(9700)))
+            executeOutgoingEvent(DeactivateFilter(blackAndWhiteFilter))
+            executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, false, "main_capture"))
+        }
+    },
 )

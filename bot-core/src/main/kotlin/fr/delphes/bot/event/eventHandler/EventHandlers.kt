@@ -16,8 +16,8 @@ class EventHandlers(
         val Empty = EventHandlers(emptyMap())
 
         @Suppress("UNCHECKED_CAST")
-        inline fun <reified U : IncomingEvent> of(noinline handler: EventHandlerContext<U>) =
-            builder().addHandler(EventHandler.of(handler)).build()
+        inline fun <reified U : IncomingEvent> of(noinline action: EventHandlerContext<U>) =
+            builder().addHandler(EventHandler.of(action)).build()
 
         fun <U : IncomingEvent> of(clazz: KClass<U>, handler: EventHandler<U>) =
             builder().addHandler(clazz, handler).build()

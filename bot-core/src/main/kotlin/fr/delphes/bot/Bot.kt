@@ -118,5 +118,4 @@ class Bot(
         )
         return FeaturesManager(stateManager, features, featureConfigurationRepository)
     }
-
 }
