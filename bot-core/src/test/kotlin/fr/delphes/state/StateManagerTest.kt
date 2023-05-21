@@ -8,7 +8,7 @@ class StateManagerTest : ShouldSpec({
     should("should return null if state does not exist") {
         val stateManager = StateManager()
 
-        stateManager.getState(stateId).shouldBeNull()
+        stateManager.getStateOrNull(stateId).shouldBeNull()
     }
     should("should put value according to type and id bis") {
         val stateManager = StateManager()
@@ -16,7 +16,7 @@ class StateManagerTest : ShouldSpec({
         val addedState = TestState(stateId)
         stateManager.put(addedState)
 
-        stateManager.getState(stateId) shouldBe addedState
+        stateManager.getStateOrNull(stateId) shouldBe addedState
     }
     should("should put value according to type and id") {
         val stateManager = StateManager()
@@ -26,7 +26,7 @@ class StateManagerTest : ShouldSpec({
         val anotherAddedState = TestState(anotherStateId)
         stateManager.put(anotherAddedState)
 
-        stateManager.getState(stateId) shouldBe addedState
+        stateManager.getStateOrNull(stateId) shouldBe addedState
     }
     should("should put default value if no state found") {
         val stateManager = StateManager()
@@ -34,7 +34,7 @@ class StateManagerTest : ShouldSpec({
         val addedState = TestState(stateId)
         stateManager.getOrPut(stateId) { addedState }
 
-        stateManager.getState(stateId) shouldBe addedState
+        stateManager.getStateOrNull(stateId) shouldBe addedState
     }
 }) {
     companion object {
@@ -42,7 +42,7 @@ class StateManagerTest : ShouldSpec({
         private val anotherStateId = StateId.from<TestState>("other test id")
 
         private class TestState(
-            override val id: StateId<TestState> = stateId
+            override val id: StateId<TestState> = stateId,
         ) : State
     }
 }

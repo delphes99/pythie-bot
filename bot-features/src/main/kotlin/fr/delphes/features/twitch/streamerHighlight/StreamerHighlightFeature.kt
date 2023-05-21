@@ -33,8 +33,8 @@ class StreamerHighlightFeature(
                 return@handlerFor
             }
 
-            val userInfos = stateManager.getState(GetUserInfos.ID)?.getUserInfos(user) ?: return@handlerFor
-            val now = stateManager.getState(ClockState.ID)?.getValue() ?: return@handlerFor
+            val userInfos = stateManager.getStateOrNull(GetUserInfos.ID)?.getUserInfos(user) ?: return@handlerFor
+            val now = stateManager.getStateOrNull(ClockState.ID)?.getValue() ?: return@handlerFor
             val highlightState = stateManager.getOrPut(StreamerHighlightState.idFor(channel)) {
                 StreamerHighlightState(channel)
             }

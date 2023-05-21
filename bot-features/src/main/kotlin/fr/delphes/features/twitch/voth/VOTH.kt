@@ -28,7 +28,7 @@ class VOTH(
     private val configuration: VOTHConfiguration,
     override val stateRepository: StateRepository<VOTHState>,
     override val state: VOTHState = runBlocking { stateRepository.load() },
-    private val clock: Clock = SystemClock
+    private val clock: Clock = SystemClock,
 ) : NonEditableFeature, TwitchFeature, HavePersistantState<VOTHState> {
     private val statsCommand = Command(configuration.statsCommand)
     private val top3Command = Command(configuration.top3Command)
@@ -71,7 +71,7 @@ class VOTH(
                 val newVOTH = state.newVOTH(event, clock.now())
 
                 val removeAllVips = bot.featuresManager.stateManager
-                    .getState(GetVipState.ID)
+                    .getStateOrNull(GetVipState.ID)
                     ?.getVipOf(channel)
                     ?.map { RemoveVIP(UserName(it.name), channel) }
                     ?: emptyList()

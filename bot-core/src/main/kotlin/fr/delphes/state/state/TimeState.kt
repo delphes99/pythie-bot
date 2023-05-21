@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 class TimeState(
     qualifier: StateIdQualifier = StateIdQualifier(),
     private var currentValue: LocalDateTime? = null,
-    private val clock: Clock = SystemClock
+    private val clock: Clock = SystemClock,
 ) : State {
     override val id = StateId.from<TimeState>(qualifier)
 
@@ -38,9 +38,9 @@ class TimeState(
         fun withClockFrom(
             stateManager: StateManager,
             id: StateIdQualifier = StateIdQualifier(),
-            currentValue: LocalDateTime? = null
+            currentValue: LocalDateTime? = null,
         ): TimeState {
-            val clock = stateManager.getState(ClockState.ID)?.clock
+            val clock = stateManager.getStateOrNull(ClockState.ID)?.clock
                 ?: throw IllegalStateException("Clock state required")
             return TimeState(
                 qualifier = id,

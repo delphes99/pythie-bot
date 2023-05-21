@@ -21,7 +21,7 @@ class IncomingRaidFeature(
     override fun buildRuntime(stateManager: StateManager): FeatureRuntime {
         val eventHandlers = channel.handlerFor<IncomingRaid> {
             val user = event.leader
-            val now = stateManager.getState(ClockState.ID)?.getValue() ?: return@handlerFor
+            val now = stateManager.getStateOrNull(ClockState.ID)?.getValue() ?: return@handlerFor
             val highlightState = stateManager.getOrPut(StreamerHighlightState.idFor(channel)) {
                 StreamerHighlightState(channel)
             }

@@ -37,7 +37,7 @@ data class DeactivateReward(
             val channel: TwitchChannel = TwitchChannel(""),
         ) : OutgoingEventBuilder {
             override suspend fun build(stateManager: StateManager): DeactivateReward {
-                val channelRewardsState = stateManager.getState(ChannelRewardsState.id(channel))
+                val channelRewardsState = stateManager.getStateOrNull(ChannelRewardsState.id(channel))
                     ?: error("No state for channel $channel")
 
                 val reward = channelRewardsState.getReward(rewardName)

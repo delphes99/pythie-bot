@@ -10,7 +10,11 @@ class StateManager(vararg states: State) {
         states.forEach { put(it) }
     }
 
-    inline fun <reified T : State> getState(id: StateId<T>): T? {
+    inline fun <reified T : State> getState(id: StateId<T>): T {
+        return getStateOrNull(id) ?: throw IllegalStateException("State $id not found")
+    }
+
+    inline fun <reified T : State> getStateOrNull(id: StateId<T>): T? {
         return map[T::class]?.get(id.qualifier) as T?
     }
 

@@ -16,5 +16,5 @@ class EventHandlerParameters<T : IncomingEvent>(
         outgoingEventProcessor.processOutgoingEvent(event)
     }
 
-    inline fun <reified T : State> state(stateId: StateId<T>) = stateManager.getState(stateId)
+    inline fun <reified T : State> state(stateId: StateId<T>) = stateManager.getStateOrNull(stateId)
 }
