@@ -1,19 +1,17 @@
 package fr.delphes.features.twitch.newFollow
 
 import fr.delphes.connector.twitch.incomingEvent.NewFollow
+import fr.delphes.features.TestEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
 
 class CustomNewFollowTest : ShouldSpec({
     should("execute action if channel match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<NewFollow>()
 
-        val customNewFollow = CustomNewFollow(CHANNEL) {
-            isCalled = true
-        }
+        val customNewFollow = CustomNewFollow(CHANNEL, action = testEventHandler)
 
         customNewFollow.testRuntime().hasReceived(
             NewFollow(
@@ -21,14 +19,13 @@ class CustomNewFollowTest : ShouldSpec({
                 UserName("user")
             )
         )
-        isCalled shouldBe true
+
+        testEventHandler.shouldHaveBeenCalled()
     }
     should("not execute action if channel doesn't match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<NewFollow>()
 
-        val customNewFollow = CustomNewFollow(CHANNEL) {
-            isCalled = true
-        }
+        val customNewFollow = CustomNewFollow(CHANNEL, action = testEventHandler)
 
         customNewFollow.testRuntime().hasReceived(
             NewFollow(
@@ -37,9 +34,8 @@ class CustomNewFollowTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe false
+        testEventHandler.shouldNotHaveBeenCalled()
     }
-
 }) {
     companion object {
         private val CHANNEL = TwitchChannel("channel")

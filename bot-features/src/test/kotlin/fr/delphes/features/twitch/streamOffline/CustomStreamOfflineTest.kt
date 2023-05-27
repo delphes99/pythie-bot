@@ -1,18 +1,16 @@
 package fr.delphes.features.twitch.streamOffline
 
+import fr.delphes.features.TestEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline as StreamOfflineEvent
 
 class CustomStreamOfflineTest : ShouldSpec({
     should("execute action if channel match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<StreamOfflineEvent>()
 
-        val customStreamOffline = CustomStreamOffline(CHANNEL) {
-            isCalled = true
-        }
+        val customStreamOffline = CustomStreamOffline(CHANNEL, action = testEventHandler)
 
         customStreamOffline.testRuntime().hasReceived(
             StreamOfflineEvent(
@@ -20,14 +18,12 @@ class CustomStreamOfflineTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe true
+        testEventHandler.shouldHaveBeenCalled()
     }
     should("not execute action if channel doesn't match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<StreamOfflineEvent>()
 
-        val customStreamOffline = CustomStreamOffline(CHANNEL) {
-            isCalled = true
-        }
+        val customStreamOffline = CustomStreamOffline(CHANNEL, action = testEventHandler)
 
         customStreamOffline.testRuntime().hasReceived(
             StreamOfflineEvent(
@@ -35,9 +31,8 @@ class CustomStreamOfflineTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe false
+        testEventHandler.shouldNotHaveBeenCalled()
     }
-
 }) {
     companion object {
         private val CHANNEL = TwitchChannel("channel")

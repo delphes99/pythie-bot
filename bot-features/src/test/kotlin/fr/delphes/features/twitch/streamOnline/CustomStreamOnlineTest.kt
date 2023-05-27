@@ -1,42 +1,37 @@
 package fr.delphes.features.twitch.streamOnline
 
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
+import fr.delphes.features.TestEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 
 class CustomStreamOnlineTest : ShouldSpec({
     should("execute action if channel match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<StreamOnline>()
 
-        val customStreamOnline = CustomStreamOnline(CHANNEL) {
-            isCalled = true
-        }
+        val customStreamOnline = CustomStreamOnline(CHANNEL, action = testEventHandler)
 
         customStreamOnline.testRuntime().hasReceived(
             streamOnlineFor(CHANNEL)
         )
 
-        isCalled shouldBe true
+        testEventHandler.shouldHaveBeenCalled()
     }
     should("not execute action if channel doesn't match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<StreamOnline>()
 
-        val customStreamOnline = CustomStreamOnline(CHANNEL) {
-            isCalled = true
-        }
+        val customStreamOnline = CustomStreamOnline(CHANNEL, action = testEventHandler)
 
         customStreamOnline.testRuntime().hasReceived(
             streamOnlineFor(TwitchChannel("otherchannel"))
         )
 
-        isCalled shouldBe false
+        testEventHandler.shouldNotHaveBeenCalled()
     }
-
 }) {
     companion object {
         private val CHANNEL = TwitchChannel("channel")

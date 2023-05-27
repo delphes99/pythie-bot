@@ -2,6 +2,7 @@ package fr.delphes.features.twitch.command
 
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
+import fr.delphes.features.TestEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.state.state.TimeState
@@ -9,15 +10,14 @@ import fr.delphes.test.TestClock
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
 import java.time.Duration
 import java.time.LocalDateTime
 
 class CustomCommandTest : ShouldSpec({
     should("should call action when trigger match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<CommandAsked>()
 
-        val command = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
+        val command = CustomCommand(CHANNEL, "!trigger", action = testEventHandler)
 
         command.testRuntime().hasReceived(
             CommandAsked(
@@ -27,14 +27,13 @@ class CustomCommandTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe true
+        testEventHandler.shouldHaveBeenCalled()
     }
 
     should("not call action if trigger does not match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<CommandAsked>()
 
-
-        val command = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
+        val command = CustomCommand(CHANNEL, "!trigger", action = testEventHandler)
 
         command.testRuntime().hasReceived(
             CommandAsked(
@@ -44,12 +43,13 @@ class CustomCommandTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe false
+        testEventHandler.shouldNotHaveBeenCalled()
     }
 
     should("not call action if channel does not match") {
-        var isCalled = false
-        val command = CustomCommand(CHANNEL, "!trigger") { isCalled = true }
+        val testEventHandler = TestEventHandlerAction<CommandAsked>()
+
+        val command = CustomCommand(CHANNEL, "!trigger", action = testEventHandler)
 
         command.testRuntime().hasReceived(
             CommandAsked(
@@ -59,18 +59,19 @@ class CustomCommandTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe false
+        testEventHandler.shouldNotHaveBeenCalled()
     }
 
     should("not call action if previous call is too recent") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<CommandAsked>()
 
         val command = CustomCommand(
             CHANNEL,
             "!trigger",
             FeatureId(FEATURE_ID),
-            Duration.ofMinutes(2)
-        ) { isCalled = true }
+            Duration.ofMinutes(2),
+            action = testEventHandler
+        )
 
         command
             .testRuntime {
@@ -85,18 +86,19 @@ class CustomCommandTest : ShouldSpec({
                 )
             )
 
-        isCalled shouldBe false
+        testEventHandler.shouldNotHaveBeenCalled()
     }
 
     should("call action if the cooldown is over") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<CommandAsked>()
 
         val command = CustomCommand(
             CHANNEL,
             "!trigger",
             FeatureId(FEATURE_ID),
-            Duration.ofMinutes(2)
-        ) { isCalled = true }
+            Duration.ofMinutes(2),
+            action = testEventHandler
+        )
 
         command
             .testRuntime {
@@ -111,7 +113,7 @@ class CustomCommandTest : ShouldSpec({
                 )
             )
 
-        isCalled shouldBe true
+        testEventHandler.shouldHaveBeenCalled()
     }
 }) {
     companion object {

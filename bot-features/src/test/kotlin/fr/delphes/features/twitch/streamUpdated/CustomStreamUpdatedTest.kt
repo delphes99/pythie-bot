@@ -1,18 +1,16 @@
 package fr.delphes.features.twitch.streamUpdated
 
 import fr.delphes.connector.twitch.incomingEvent.StreamChanged
+import fr.delphes.features.TestEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
 
 class CustomStreamUpdatedTest : ShouldSpec({
     should("execute action if channel match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<StreamChanged>()
 
-        val customStreamUpdated = CustomStreamUpdated(CHANNEL) {
-            isCalled = true
-        }
+        val customStreamUpdated = CustomStreamUpdated(CHANNEL, action = testEventHandler)
 
         customStreamUpdated.testRuntime().hasReceived(
             StreamChanged(
@@ -20,14 +18,12 @@ class CustomStreamUpdatedTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe true
+        testEventHandler.shouldHaveBeenCalled()
     }
     should("not execute action if channel doesn't match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<StreamChanged>()
 
-        val customStreamUpdated = CustomStreamUpdated(CHANNEL) {
-            isCalled = true
-        }
+        val customStreamUpdated = CustomStreamUpdated(CHANNEL, action = testEventHandler)
 
         customStreamUpdated.testRuntime().hasReceived(
             StreamChanged(
@@ -35,9 +31,8 @@ class CustomStreamUpdatedTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe false
+        testEventHandler.shouldNotHaveBeenCalled()
     }
-
 }) {
     companion object {
         private val CHANNEL = TwitchChannel("channel")

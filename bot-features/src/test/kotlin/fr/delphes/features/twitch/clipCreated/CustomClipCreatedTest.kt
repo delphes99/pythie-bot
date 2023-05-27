@@ -1,22 +1,20 @@
 package fr.delphes.features.twitch.clipCreated
 
 import fr.delphes.connector.twitch.incomingEvent.ClipCreated
+import fr.delphes.features.TestEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.streams.ThumbnailUrl
 import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 
 class CustomClipCreatedTest : ShouldSpec({
     should("execute action if channel match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<ClipCreated>()
 
-        val customNewFollow = CustomClipCreated(CHANNEL) {
-            isCalled = true
-        }
+        val customNewFollow = CustomClipCreated(CHANNEL, action = testEventHandler)
 
         customNewFollow.testRuntime().hasReceived(
             ClipCreated(
@@ -32,14 +30,12 @@ class CustomClipCreatedTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe true
+        testEventHandler.shouldHaveBeenCalled()
     }
     should("not execute action if channel doesn't match") {
-        var isCalled = false
+        val testEventHandler = TestEventHandlerAction<ClipCreated>()
 
-        val customNewFollow = CustomClipCreated(CHANNEL) {
-            isCalled = true
-        }
+        val customNewFollow = CustomClipCreated(CHANNEL, action = testEventHandler)
 
         customNewFollow.testRuntime().hasReceived(
             ClipCreated(
@@ -55,7 +51,7 @@ class CustomClipCreatedTest : ShouldSpec({
             )
         )
 
-        isCalled shouldBe false
+        testEventHandler.shouldNotHaveBeenCalled()
     }
 
 }) {

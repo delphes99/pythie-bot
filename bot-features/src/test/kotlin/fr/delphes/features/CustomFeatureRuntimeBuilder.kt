@@ -44,13 +44,17 @@ class CustomFeatureRuntimeBuilder(
         stateManager.put(state)
     }
 
-    suspend fun hasReceived(event: IncomingEvent) {
+    suspend fun hasReceived(event: IncomingEvent): TestFeatureReturnExecutionContext {
         val runtime = feature.buildRuntime(
             stateManager
                 .withState(ClockState(TestClock(fixedNow)))
                 .readOnly
         )
-        runtime.handleIncomingEvent(event, mockk { every { featuresManager.stateManager } returns stateManager })
+        val executionContext = TestFeatureReturnExecutionContext(stateManager)
+
+        runtime.handleIncomingEvent(event, executionContext.bot)
+
+        return executionContext
     }
 }
 
