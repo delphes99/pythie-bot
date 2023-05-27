@@ -413,6 +413,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
 
         executeOutgoingEvent(Pause(Duration.ofSeconds(5))) //Waiting for connectors connections
         executeOutgoingEvent(RefreshSource("in_game", overlayItemId))
+        executeOutgoingEvent(Pause(Duration.ofSeconds(1)))
+        executeOutgoingEvent(PlaySound("msn-start.mp3"))
         executeOutgoingEvent(SendMessage("Ready to go", channel))
     },
     NewGuildMemberFeature {
