@@ -8,43 +8,41 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 @Serializable
-data class VOTHState(
-    val currentVip: VOTHWinner? = null,
-    val previousReigns: List<VOTHReign> = listOf(),
+class LegacyVOTHState(
+    var currentVip: VOTHWinner? = null,
+    val previousReigns: MutableList<VOTHReign> = mutableListOf(),
 ) : State {
-    fun newVOTH(newVOTH: RewardRedemption, now: LocalDateTime): VOTHState {
+    fun newVOTH(newVOTH: RewardRedemption, now: LocalDateTime): VOTHWinner {
         val currentVip = this.currentVip
-        val reigns = if (currentVip != null) {
-            previousReigns + VOTHReign(currentVip.user, currentVip.duration(now), currentVip.cost)
-        } else {
-            previousReigns
+        if (currentVip != null) {
+            val reign = VOTHReign(currentVip.user, currentVip.duration(now), currentVip.cost)
+            previousReigns.add(reign)
         }
 
+        val vothWinner = VOTHWinner(newVOTH.user, now, newVOTH.cost)
 
-        return VOTHState(VOTHWinner(newVOTH.user, now, newVOTH.cost), reigns)
+        this.currentVip = vothWinner
+
+        return vothWinner
     }
 
-    fun pause(now: LocalDateTime): VOTHState {
-        return if (currentVip?.since != null) {
+    fun pause(now: LocalDateTime) {
+        val currentVip = currentVip
+        if (currentVip?.since != null) {
             val currentPeriod = Duration.between(currentVip.since, now)
-            copy(
-                currentVip = currentVip.copy(
-                    since = null,
-                    previousPeriods = currentVip.previousPeriods.plus(currentPeriod)
-                )
+            this.currentVip = currentVip.copy(
+                since = null,
+                previousPeriods = currentVip.previousPeriods.plus(currentPeriod)
             )
-        } else {
-            this
         }
     }
 
-    fun unpause(now: LocalDateTime): VOTHState {
-        return copy(
-            currentVip = currentVip?.copy(since = currentVip.since ?: now)
-        )
+    fun unpause(now: LocalDateTime) {
+        this.currentVip = this.currentVip?.copy(since = now)
     }
 
     fun getReignsFor(user: UserName, now: LocalDateTime): Stats {
+        val currentVip = currentVip
         val previousReigns = previousReigns.filter { reign -> reign.voth == user }
 
         val reigns = if (currentVip?.user == user) {

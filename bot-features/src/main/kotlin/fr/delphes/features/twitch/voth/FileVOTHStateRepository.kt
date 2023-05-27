@@ -5,9 +5,9 @@ import fr.delphes.utils.serialization.Serializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 
-class FileVOTHStateRepository(filePath: String) : FileStateRepository<VOTHState>(
+class FileVOTHStateRepository(filePath: String) : FileStateRepository<LegacyVOTHState>(
     filePath = filePath,
-    initializer =  { VOTHState() },
+    initializer = { LegacyVOTHState() },
     serializer = { Serializer.encodeToString(it) },
     deserializer = { Serializer.decodeFromString(it) }
 )

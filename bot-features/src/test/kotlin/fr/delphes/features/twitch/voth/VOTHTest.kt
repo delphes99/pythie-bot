@@ -17,8 +17,6 @@ import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.RewardId
 import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.booleans.shouldBeFalse
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
@@ -32,27 +30,25 @@ class VOTHTest : ShouldSpec({
 
     context("RewardRedemption") {
         should("promote vip") {
-            val voth = voth(VOTHState())
+            val voth = voth(LegacyVOTHState())
 
             voth.handleIncomingEvent(rewardRedemption, clientBot)
 
             voth.currentVip shouldBe VOTHWinner("user", now, 50)
-            voth.vothChanged.shouldBeTrue()
         }
 
         should("don't promote vip if already VOTH") {
-            val state = VOTHState(currentVip = VOTHWinner("user", now.minusMinutes(1), 50))
+            val state = LegacyVOTHState(currentVip = VOTHWinner("user", now.minusMinutes(1), 50))
             val voth = voth(state)
 
             voth.handleIncomingEvent(rewardRedemption, clientBot)
 
             voth.currentVip shouldBe VOTHWinner("user", now.minusMinutes(1), 50)
-            voth.vothChanged.shouldBeFalse()
         }
     }
 
     should("pause when stream goes offline") {
-        val state = mockk<VOTHState>(relaxed = true)
+        val state = mockk<LegacyVOTHState>(relaxed = true)
         val voth = voth(state)
 
         val messages = voth.handleIncomingEvent(StreamOffline(channel), clientBot)
@@ -62,10 +58,11 @@ class VOTHTest : ShouldSpec({
     }
 
     should("unpause when stream goes online") {
-        val state = mockk<VOTHState>(relaxed = true)
+        val state = mockk<LegacyVOTHState>(relaxed = true)
         val voth = voth(state)
 
-        val incomingEvent = StreamOnline(channel, "id", "title", now, Game(GameId("gameId"), "game title"), "thumbnailUrl")
+        val incomingEvent =
+            StreamOnline(channel, "id", "title", now, Game(GameId("gameId"), "game title"), "thumbnailUrl")
         val messages = voth.handleIncomingEvent(incomingEvent, clientBot)
 
         verify(exactly = 1) { state.unpause(any()) }
@@ -73,8 +70,12 @@ class VOTHTest : ShouldSpec({
     }
 
     should("display top 3") {
-        val state = mockk<VOTHState>(relaxed = true)
-        every { state.top3(any()) } returns listOf(Stats(UserName("user1")), Stats(UserName("user2")), Stats(UserName("user3")))
+        val state = mockk<LegacyVOTHState>(relaxed = true)
+        every { state.top3(any()) } returns listOf(
+            Stats(UserName("user1")),
+            Stats(UserName("user2")),
+            Stats(UserName("user3"))
+        )
 
         val voth = VOTH(
             channel,
@@ -84,7 +85,14 @@ class VOTHTest : ShouldSpec({
                 "!cmdstats",
                 { emptyList() },
                 "!top3",
-                { top1, top2, top3 -> listOf(SendMessage("${top1?.user?.name}, ${top2?.user?.name}, ${top3?.user?.name}", channel)) }),
+                { top1, top2, top3 ->
+                    listOf(
+                        SendMessage(
+                            "${top1?.user?.name}, ${top2?.user?.name}, ${top3?.user?.name}",
+                            channel
+                        )
+                    )
+                }),
             stateRepository = TestStateRepository { state },
             state = state,
             clock = clock
@@ -103,7 +111,7 @@ class VOTHTest : ShouldSpec({
         private val reward = RewardConfiguration(rewardName, 100)
         private val rewardRedemption = RewardRedemption(channel, RewardId("id", rewardName), "user", 50)
         private val now = LocalDateTime.of(2020, 1, 1, 0, 0)
-        private val defaultState = VOTHState(true, VOTHWinner("oldVip", now.minusMinutes(5), 50))
+        private val defaultState = LegacyVOTHState(VOTHWinner("oldVip", now.minusMinutes(5), 50))
         private val clock = TestClock(now)
         private val configuration = VOTHConfiguration(
             reward,
@@ -113,7 +121,7 @@ class VOTHTest : ShouldSpec({
             "!top3",
             { _, _, _ -> emptyList() })
 
-        private fun voth(state: VOTHState = defaultState): VOTH {
+        private fun voth(state: LegacyVOTHState = defaultState): VOTH {
             return VOTH(
                 channel,
                 configuration,

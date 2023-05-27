@@ -26,10 +26,10 @@ import kotlinx.coroutines.runBlocking
 class VOTH(
     override val channel: TwitchChannel,
     private val configuration: VOTHConfiguration,
-    override val stateRepository: StateRepository<VOTHState>,
-    override val state: VOTHState = runBlocking { stateRepository.load() },
+    override val stateRepository: StateRepository<LegacyVOTHState>,
+    override val state: LegacyVOTHState = runBlocking { stateRepository.load() },
     private val clock: Clock = SystemClock,
-) : NonEditableFeature, TwitchFeature, HavePersistantState<VOTHState> {
+) : NonEditableFeature, TwitchFeature, HavePersistantState<LegacyVOTHState> {
     private val statsCommand = Command(configuration.statsCommand)
     private val top3Command = Command(configuration.top3Command)
 
@@ -61,7 +61,6 @@ class VOTH(
     override val commands: Iterable<Command> = listOf(statsCommand, top3Command)
 
     internal val currentVip get() = state.currentVip
-    internal val vothChanged get() = state.vothChanged
 
     internal inner class VOTHRewardRedemptionHandler : TwitchEventHandler<RewardRedemption>(channel) {
         override suspend fun handleIfGoodChannel(event: RewardRedemption, bot: Bot): List<OutgoingEvent> {
@@ -69,6 +68,7 @@ class VOTH(
             return if (configuration.reward.rewardConfiguration.match(event.reward) && currentVip?.user != redeemUser) {
                 val oldVOTH = currentVip
                 val newVOTH = state.newVOTH(event, clock.now())
+                save()
 
                 val removeAllVips = bot.featuresManager.stateManager
                     .getStateOrNull(GetVipState.ID)
@@ -102,6 +102,7 @@ class VOTH(
     internal inner class StreamOnlineHandler : TwitchEventHandler<StreamOnline>(channel) {
         override suspend fun handleIfGoodChannel(event: StreamOnline, bot: Bot): List<OutgoingEvent> {
             state.unpause(clock.now())
+            save()
             return emptyList()
         }
     }
