@@ -64,6 +64,7 @@ val channel = TwitchChannel("delphes99")
 
 val matrixFilter = SourceFilter("webcam", "matrix")
 val blackAndWhiteFilter = SourceFilter("main_capture", "black_and_white")
+val wizzFilter = SourceFilter("in_game", "Wizz")
 
 const val discordInvitationLink = "https://discord.com/invite/SAdBhbu"
 
@@ -427,20 +428,6 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
             executeOutgoingEvent(SendMessage("Ca sent la fin", channel))
         }
     },
-    //TODO : handle pause/async event differently : eventsub timeout
-    SourceFilterActivatedFeature {
-        if (event.filter == matrixFilter) {
-            executeOutgoingEvent(Pause(secondsOf(30)))
-            executeOutgoingEvent(DeactivateFilter(matrixFilter))
-        }
-    },
-    SourceFilterActivatedFeature {
-        if (event.filter == blackAndWhiteFilter) {
-            executeOutgoingEvent(Pause(Duration.ofMillis(9700)))
-            executeOutgoingEvent(DeactivateFilter(blackAndWhiteFilter))
-            executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, false, "main_capture"))
-        }
-    },
     RewardRedeem(
         channel,
         DelphesReward.DEV_TEST
@@ -492,6 +479,13 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(ActivateFilter(matrixFilter))
     },
+    //TODO : handle pause/async event differently : eventsub timeout
+    SourceFilterActivatedFeature {
+        if (event.filter == matrixFilter) {
+            executeOutgoingEvent(Pause(secondsOf(30)))
+            executeOutgoingEvent(DeactivateFilter(matrixFilter))
+        }
+    },
     RewardRedeem(
         channel,
         DelphesReward.RIP,
@@ -499,6 +493,22 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         executeOutgoingEvent(PlaySound("sad.mp3"))
         executeOutgoingEvent(ActivateFilter(blackAndWhiteFilter))
         executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, true, "main_capture"))
+    },
+    SourceFilterActivatedFeature {
+        if (event.filter == blackAndWhiteFilter) {
+            executeOutgoingEvent(Pause(Duration.ofMillis(9700)))
+            executeOutgoingEvent(DeactivateFilter(blackAndWhiteFilter))
+            executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, false, "main_capture"))
+        }
+    },
+    RewardRedeem(
+        channel,
+        DelphesReward.WIZZ,
+    ) {
+        executeOutgoingEvent(PlaySound("wizz.mp3"))
+        executeOutgoingEvent(ActivateFilter(wizzFilter))
+        executeOutgoingEvent(Pause(Duration.ofMillis(800)))
+        executeOutgoingEvent(DeactivateFilter(wizzFilter))
     },
     GameDescriptionFeature(
         channel,

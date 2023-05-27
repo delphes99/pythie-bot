@@ -4,14 +4,15 @@ import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 import java.time.Duration
 
-enum class DelphesReward(override val rewardConfiguration: RewardConfiguration): WithRewardConfiguration {
+enum class DelphesReward(override val rewardConfiguration: RewardConfiguration) : WithRewardConfiguration {
     VOTH(vothReward),
     ENTER_THE_MATRIX(enterTheMatrix),
     DEV_TEST(testDev),
     DEV_TEST2(testDev2),
     DEV_TEST3(testDev3),
     SATISFACTORY_COLOR(satisfactoryBaseColor),
-    RIP(rip);
+    RIP(rip),
+    WIZZ(wizz);
 
     companion object {
         fun toRewardList() = values().map(DelphesReward::rewardConfiguration).toList()
@@ -57,6 +58,13 @@ private val rip = RewardConfiguration(
     "R.I.P.",
     350,
     "Rest in peace",
+    isGlobalCooldownEnabled = true,
+    globalCooldownSeconds = Duration.ofSeconds(30).toSeconds()
+)
+private val wizz = RewardConfiguration(
+    "Wizz",
+    150,
+    "Ok boomer",
     isGlobalCooldownEnabled = true,
     globalCooldownSeconds = Duration.ofSeconds(30).toSeconds()
 )
