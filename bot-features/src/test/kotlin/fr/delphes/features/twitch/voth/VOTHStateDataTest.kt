@@ -7,11 +7,11 @@ import io.kotest.matchers.shouldBe
 import java.time.Duration
 import java.time.LocalDateTime
 
-class LegacyVOTHStateTest : ShouldSpec({
+class VOTHStateDataTest : ShouldSpec({
     should("list previous reigns for user") {
         val reign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val state =
-            LegacyVOTHState(previousReigns = mutableListOf(reign))
+            VOTHStateData(previousReigns = listOf(reign))
 
         state.getReignsFor(USER, NOW) shouldBe Stats(USER, reign)
     }
@@ -20,9 +20,9 @@ class LegacyVOTHStateTest : ShouldSpec({
         val previousReign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), 25)
         val state =
-            LegacyVOTHState(
+            VOTHStateData(
                 currentVip = currentReign,
-                previousReigns = mutableListOf(previousReign)
+                previousReigns = listOf(previousReign)
             )
 
         state.getReignsFor(USER, NOW) shouldBe Stats(
@@ -50,13 +50,12 @@ class LegacyVOTHStateTest : ShouldSpec({
             VOTHReign(user3, Duration.ofMinutes(25), 50)
         )
         val state =
-            LegacyVOTHState(
+            VOTHStateData(
                 currentVip = currentReign,
                 previousReigns = previousReignForUser1.plus(previousReignForUser2).plus(previousReignForUser3)
-                    .toMutableList()
             )
 
-        state.top3(NOW) shouldBe listOf(
+        state.topVip(3, NOW) shouldBe listOf(
             Stats(
                 user1,
                 *previousReignForUser1.toTypedArray(),
@@ -78,14 +77,14 @@ class LegacyVOTHStateTest : ShouldSpec({
         val currentReignCost = 25L
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), currentReignCost)
         val state =
-            LegacyVOTHState(
+            VOTHStateData(
                 currentVip = currentReign,
-                previousReigns = mutableListOf(previousReign)
+                previousReigns = listOf(previousReign)
             )
 
-        state.pause(NOW)
+        val newState = state.pause(NOW)
 
-        state.currentVip shouldBe VOTHWinner("user", null, currentReignCost, listOf(Duration.ofMinutes(15)))
+        newState.currentVip shouldBe VOTHWinner("user", null, currentReignCost, listOf(Duration.ofMinutes(15)))
     }
 
     should("restart current reign from now when unpause") {
@@ -93,15 +92,14 @@ class LegacyVOTHStateTest : ShouldSpec({
         val currentReignCost = 25L
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), currentReignCost)
         val state =
-            LegacyVOTHState(
+            VOTHStateData(
                 currentVip = currentReign,
-                previousReigns = mutableListOf(previousReign)
-            )
+                previousReigns = listOf(previousReign)
+            ).pause(NOW)
 
-        state.pause(NOW)
-        state.unpause(NOW.plusMinutes(5))
+        val newState = state.unpause(NOW.plusMinutes(5))
 
-        state.currentVip shouldBe VOTHWinner(
+        newState.currentVip shouldBe VOTHWinner(
             "user",
             NOW.plusMinutes(5),
             currentReignCost,
@@ -115,16 +113,16 @@ class LegacyVOTHStateTest : ShouldSpec({
         val previousReign = VOTHReign(USER, Duration.ofMinutes(5), 50)
         val currentReignCost = 25L
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), currentReignCost)
-        val state =
-            LegacyVOTHState(
+        var state =
+            VOTHStateData(
                 currentVip = currentReign,
-                previousReigns = mutableListOf(previousReign)
+                previousReigns = listOf(previousReign)
             )
 
-        state.pause(NOW)
-        state.unpause(NOW.plusMinutes(5))
-        state.pause(NOW.plusMinutes(65))
-        state.unpause(NOW.plusMinutes(245))
+        state = state.pause(NOW)
+        state = state.unpause(NOW.plusMinutes(5))
+        state = state.pause(NOW.plusMinutes(65))
+        state = state.unpause(NOW.plusMinutes(245))
 
         state.currentVip shouldBe VOTHWinner(
             "user",
@@ -144,9 +142,9 @@ class LegacyVOTHStateTest : ShouldSpec({
         val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), 25)
 
         val state =
-            LegacyVOTHState(
+            VOTHStateData(
                 currentVip = currentReign,
-                previousReigns = mutableListOf(
+                previousReigns = listOf(
                     previousReign1,
                     previousReign2,
                     previousReign3,
@@ -159,6 +157,21 @@ class LegacyVOTHStateTest : ShouldSpec({
             previousReign2,
             previousReign1
         )
+    }
+
+    should("no change if new VIP is the current vip") {
+        val reign = VOTHReign(USER, Duration.ofMinutes(5), 50)
+        val currentReign = VOTHWinner(USER, NOW.minusMinutes(15), 25)
+
+        val state =
+            VOTHStateData(
+                currentVip = currentReign,
+                previousReigns = listOf(
+                    reign
+                )
+            )
+
+        state.newVOTH(USER, 25, NOW) shouldBe state
     }
 }) {
     companion object {

@@ -1,48 +1,52 @@
 package fr.delphes.features.twitch.voth
 
-import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
-import fr.delphes.feature.State
+import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.RewardCost
 import fr.delphes.twitch.api.user.UserName
 import kotlinx.serialization.Serializable
 import java.time.Duration
 import java.time.LocalDateTime
 
 @Serializable
-class LegacyVOTHState(
-    var currentVip: VOTHWinner? = null,
-    val previousReigns: MutableList<VOTHReign> = mutableListOf(),
-) : State {
-    fun newVOTH(newVOTH: RewardRedemption, now: LocalDateTime): VOTHWinner {
+data class VOTHStateData(
+    val currentVip: VOTHWinner? = null,
+    val previousReigns: List<VOTHReign> = listOf(),
+) {
+    fun newVOTH(newVOTH: UserName, cost: RewardCost, now: LocalDateTime): VOTHStateData {
         val currentVip = this.currentVip
-        if (currentVip != null) {
-            val reign = VOTHReign(currentVip.user, currentVip.duration(now), currentVip.cost)
-            previousReigns.add(reign)
+        if (currentVip?.user == newVOTH) {
+            return this
         }
 
-        val vothWinner = VOTHWinner(newVOTH.user, now, newVOTH.cost)
+        val reigns = if (currentVip != null) {
+            previousReigns + VOTHReign(currentVip.user, currentVip.duration(now), currentVip.cost)
+        } else {
+            previousReigns
+        }
 
-        this.currentVip = vothWinner
-
-        return vothWinner
+        return VOTHStateData(VOTHWinner(newVOTH, now, cost), reigns)
     }
 
-    fun pause(now: LocalDateTime) {
-        val currentVip = currentVip
-        if (currentVip?.since != null) {
+    fun pause(now: LocalDateTime): VOTHStateData {
+        return if (currentVip?.since != null) {
             val currentPeriod = Duration.between(currentVip.since, now)
-            this.currentVip = currentVip.copy(
-                since = null,
-                previousPeriods = currentVip.previousPeriods.plus(currentPeriod)
+            copy(
+                currentVip = currentVip.copy(
+                    since = null,
+                    previousPeriods = currentVip.previousPeriods.plus(currentPeriod)
+                )
             )
+        } else {
+            this
         }
     }
 
-    fun unpause(now: LocalDateTime) {
-        this.currentVip = this.currentVip?.copy(since = now)
+    fun unpause(now: LocalDateTime): VOTHStateData {
+        return copy(
+            currentVip = currentVip?.copy(since = currentVip.since ?: now)
+        )
     }
 
     fun getReignsFor(user: UserName, now: LocalDateTime): Stats {
-        val currentVip = currentVip
         val previousReigns = previousReigns.filter { reign -> reign.voth == user }
 
         val reigns = if (currentVip?.user == user) {
@@ -55,8 +59,8 @@ class LegacyVOTHState(
         return Stats(user, reigns)
     }
 
-    fun top3(now: LocalDateTime): List<Stats> {
-        return allWinners().map { getReignsFor(it, now) }.sortedByDescending { it.totalTime }.take(3)
+    fun topVip(numberOfVip: Int, now: LocalDateTime): List<Stats> {
+        return allWinners().map { getReignsFor(it, now) }.sortedByDescending { it.totalTime }.take(numberOfVip)
     }
 
     private fun allWinners(): List<UserName> {

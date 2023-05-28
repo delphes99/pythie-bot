@@ -44,9 +44,9 @@ import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
 import fr.delphes.features.twitch.streamOnline.CustomStreamOnline
 import fr.delphes.features.twitch.streamUpdated.CustomStreamUpdated
 import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightFeature
-import fr.delphes.features.twitch.voth.FileVOTHStateRepository
+import fr.delphes.features.twitch.voth.Stats
 import fr.delphes.features.twitch.voth.VOTH
-import fr.delphes.features.twitch.voth.VOTHConfiguration
+import fr.delphes.features.twitch.voth.VOTHState
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
@@ -87,55 +87,6 @@ private const val RAIN_ITEM_ID = 3L
 private const val WEBCAM_ID = 8L
 
 val delphes99Features = listOf<NonEditableFeature>(
-    VOTH(
-        channel,
-        VOTHConfiguration(
-            reward = DelphesReward.VOTH,
-            newVipAnnouncer = { announce ->
-                listOf(
-                    SendMessage(
-                        listOfNotNull(
-                            "\uD83D\uDC51 ${announce.rewardRedemption.user.name} devient notre VIP. \uD83D\uDC51",
-                            announce.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP ${oldVOTH.user} [règne : ${announce.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
-                        ).joinToString(" "),
-                        channel
-                    ),
-                    PlaySound(listOf("kill-1.mp3", "kill-2.mp3", "kill-3.mp3", "kill-4.mp3", "kill-5.mp3").random()),
-                )
-            },
-            statsCommand = "!vothstats",
-            statsResponse = { stats ->
-                listOf(
-                    SendMessage(
-                        "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +
-                                "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
-                                "\uD83D\uDCB8 Dépensés : ${stats.totalCost}",
-                        channel
-                    )
-                )
-            },
-            top3Command = "!vothtop",
-            top3Response = { top1, top2, top3 ->
-                if (top1 == null) {
-                    emptyList()
-                } else {
-                    listOf(
-                        SendMessage(
-                            listOfNotNull(
-                                top1.let { "\uD83E\uDD47 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
-                                top2?.let { "\uD83E\uDD48 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
-                                top3?.let { "\uD83E\uDD49 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
-                            ).joinToString(" "),
-                            channel
-                        )
-                    )
-                }
-            }
-        ),
-        stateRepository = FileVOTHStateRepository(
-            "A:\\pythiebot\\feature\\voth.json"
-        )
-    ),
     Statistics(channel),
     EndCredits(),
     Overlay(channel),
@@ -529,4 +480,61 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         Games.SOFTWARE_DEVELOPMENT to DelphesReward.DEV_TEST3,
         Games.SATISFACTORY to DelphesReward.SATISFACTORY_COLOR,
     ),
+    VOTH(
+        channel,
+        reward = DelphesReward.VOTH,
+        newVipAnnouncer = {
+            executeOutgoingEvent(
+                SendMessage(
+                    listOfNotNull(
+                        "\uD83D\uDC51 ${event.rewardRedemption.user.name} devient notre VIP. \uD83D\uDC51",
+                        event.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP ${oldVOTH.user} [règne : ${event.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
+                    ).joinToString(" "),
+                    channel
+                )
+            )
+            executeOutgoingEvent(
+                PlaySound(listOf("kill-1.mp3", "kill-2.mp3", "kill-3.mp3", "kill-4.mp3", "kill-5.mp3").random()),
+            )
+        },
+        saveStatePath = "A:\\pythiebot\\feature\\voth.json"
+    ),
+    CustomCommand(
+        channel,
+        "!vothstats",
+    ) {
+        state(VOTHState.idFor(channel))?.getReignsFor(event.by)?.also { stats ->
+            executeOutgoingEvent(
+                SendMessage(
+                    "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +
+                            "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
+                            "\uD83D\uDCB8 Dépensés : ${stats.totalCost}",
+                    channel
+                )
+            )
+        }
+    },
+    CustomCommand(
+        channel,
+        "!vothtop",
+    ) {
+        state(VOTHState.idFor(channel))
+            ?.getTopVip(3)
+            ?.takeIf(List<Stats>::isNotEmpty)
+            ?.also { stats ->
+                val top1 = stats.getOrNull(0)
+                val top2 = stats.getOrNull(1)
+                val top3 = stats.getOrNull(2)
+                executeOutgoingEvent(
+                    SendMessage(
+                        listOfNotNull(
+                            top1?.let { "\uD83E\uDD47 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
+                            top2?.let { "\uD83E\uDD48 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
+                            top3?.let { "\uD83E\uDD49 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
+                        ).joinToString(" "),
+                        channel
+                    )
+                )
+            }
+    },
 )

@@ -1,78 +1,57 @@
 package fr.delphes.features.twitch.voth
 
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
-import fr.delphes.feature.State
+import fr.delphes.state.State
+import fr.delphes.state.StateId
+import fr.delphes.state.state.ClockState
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
-import kotlinx.serialization.Serializable
-import java.time.Duration
-import java.time.LocalDateTime
+import kotlinx.coroutines.runBlocking
 
-@Serializable
-data class VOTHState(
-    val currentVip: VOTHWinner? = null,
-    val previousReigns: List<VOTHReign> = listOf(),
+class VOTHState(
+    val channel: TwitchChannel,
+    savePath: String? = null,
+    private val clock: ClockState,
 ) : State {
-    fun newVOTH(newVOTH: RewardRedemption, now: LocalDateTime): VOTHState {
-        val currentVip = this.currentVip
-        val reigns = if (currentVip != null) {
-            previousReigns + VOTHReign(currentVip.user, currentVip.duration(now), currentVip.cost)
-        } else {
-            previousReigns
-        }
+    override val id = idFor(channel)
+    private val stateRepository = savePath?.let(::FileVOTHStateRepository)
 
+    //TODO Externalize persistence / protect
+    var state: VOTHStateData =
+        stateRepository?.let { runBlocking { stateRepository.load() } } ?: VOTHStateData()
 
-        return VOTHState(VOTHWinner(newVOTH.user, now, newVOTH.cost), reigns)
+    internal val data get() = state
+
+    val currentVip get() = state.currentVip
+
+    suspend fun pause() {
+        state = state.pause(clock.getValue())
+        stateRepository?.save(state)
     }
 
-    fun pause(now: LocalDateTime): VOTHState {
-        return if (currentVip?.since != null) {
-            val currentPeriod = Duration.between(currentVip.since, now)
-            copy(
-                currentVip = currentVip.copy(
-                    since = null,
-                    previousPeriods = currentVip.previousPeriods.plus(currentPeriod)
-                )
-            )
-        } else {
-            this
-        }
+    suspend fun unpause() {
+        state = state.unpause(clock.getValue())
+        stateRepository?.save(state)
     }
 
-    fun unpause(now: LocalDateTime): VOTHState {
-        return copy(
-            currentVip = currentVip?.copy(since = currentVip.since ?: now)
-        )
+    suspend fun newVOTH(newVOTH: RewardRedemption) {
+        state = state.newVOTH(newVOTH.user, newVOTH.cost, clock.getValue())
+        stateRepository?.save(state)
     }
 
-    fun getReignsFor(user: UserName, now: LocalDateTime): Stats {
-        val previousReigns = previousReigns.filter { reign -> reign.voth == user }
-
-        val reigns = if (currentVip?.user == user) {
-            val currentReign = VOTHReign(user, currentVip.duration(now), currentVip.cost)
-            previousReigns + currentReign
-        } else {
-            previousReigns
-        }
-
-        return Stats(user, reigns)
+    fun getReignsFor(user: UserName): Stats {
+        return state.getReignsFor(user, clock.getValue())
     }
 
-    fun top3(now: LocalDateTime): List<Stats> {
-        return allWinners().map { getReignsFor(it, now) }.sortedByDescending { it.totalTime }.take(3)
+    fun getTopVip(numberOfTopVip: Int): List<Stats> {
+        return state.topVip(numberOfTopVip, clock.getValue())
     }
 
-    private fun allWinners(): List<UserName> {
-        return previousReigns.map { reign -> reign.voth }.plus(currentVip?.user).filterNotNull().distinct()
+    fun lastReigns(): List<VOTHReign> {
+        return state.lastReigns(clock.getValue())
     }
 
-    fun lastReigns(now: LocalDateTime): List<VOTHReign> {
-        val currentVip = currentVip
-
-        return if (currentVip != null) {
-            val currentReign = VOTHReign(currentVip.user, currentVip.duration(now), currentVip.cost)
-            previousReigns + currentReign
-        } else {
-            previousReigns
-        }.reversed()
+    companion object {
+        fun idFor(channel: TwitchChannel) = StateId.from<VOTHState>("voth-${channel.name}")
     }
 }
