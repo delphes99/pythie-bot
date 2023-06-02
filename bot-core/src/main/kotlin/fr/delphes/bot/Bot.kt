@@ -3,8 +3,6 @@ package fr.delphes.bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorType
-import fr.delphes.bot.connector.statistics.FileStatisticEventRepository
-import fr.delphes.bot.connector.statistics.StatisticEventRepository
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
@@ -14,6 +12,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.overlay.OverlayRepository
+import fr.delphes.bot.statistics.StatisticIncomingEventHandler
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
@@ -37,13 +36,10 @@ class Bot(
     val features: List<FeatureDefinition>,
     val featureConfigurationsType: List<FeatureConfigurationBuilderRegistry>,
 ) : IncomingEventHandler,
-    OutgoingEventProcessor,
-    StatisticEventRepository by FileStatisticEventRepository(
-        configuration.pathOf("statistics", "statistics.json"),
-        serializer
-    ) {
-        
+    OutgoingEventProcessor {
+
     val featuresManager = buildFeatureManager()
+    private val statisticsHandler = StatisticIncomingEventHandler(configuration, serializer)
 
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
@@ -66,7 +62,7 @@ class Bot(
             .flatten()
             .flatMap { feature -> feature.handleIncomingEvent(incomingEvent, this) }
             .forEach { event -> processOutgoingEvent(event) }
-
+        statisticsHandler.handle(incomingEvent)
         featuresManager.handle(incomingEvent, this)
     }
 

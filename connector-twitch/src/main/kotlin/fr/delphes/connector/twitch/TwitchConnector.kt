@@ -55,6 +55,7 @@ class TwitchConnector(
         }.toTypedArray(),
     )
 
+    @Deprecated("use generic statistics")
     val statistics = TwitchStatistics(botConfiguration)
 
     private val twitchHelixApi = TwitchHelixClient()

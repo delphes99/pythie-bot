@@ -12,7 +12,9 @@ import fr.delphes.configuration.channel.delphestest.delphestestCustomFeatures
 import fr.delphes.configuration.channel.delphestest.delphestestFeatures
 import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordConnector
+import fr.delphes.connector.discord.discordSerializerModule
 import fr.delphes.connector.obs.ObsConnector
+import fr.delphes.connector.obs.obsSerializerModule
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.twitchSerializersModule
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
@@ -42,6 +44,8 @@ fun main() {
         serializersModule = SerializersModule {
             include(coreSerializersModule)
             include(featureSerializersModule)
+            include(discordSerializerModule)
+            include(obsSerializerModule)
             include(twitchSerializersModule)
         }
     }
@@ -68,6 +72,7 @@ fun main() {
         ),
     )
 
+    //TODO connector configuration to regroup serializer + connector initialization
     bot.init(
         TwitchConnector(
             bot,

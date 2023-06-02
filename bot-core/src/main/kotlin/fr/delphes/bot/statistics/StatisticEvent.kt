@@ -1,18 +1,14 @@
 @file:UseSerializers(LocalDateTimeSerializer::class)
 
-package fr.delphes.bot.connector.statistics
+package fr.delphes.bot.statistics
 
-import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.utils.serialization.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import java.time.LocalDateTime
 
 @Serializable
-class StatEvent<DATA : StatisticEventData>(
-    val connector: ConnectorType,
+class StatisticEvent<DATA : StatisticData>(
     val date: LocalDateTime,
     val event: DATA,
 )
-
-interface StatisticEventData
