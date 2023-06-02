@@ -70,12 +70,6 @@ class TwitchConnector(
 
     private val internalHandler = TwitchConnectorHandler(this)
 
-    constructor(
-        bot: Bot,
-        botConfiguration: BotConfiguration,
-        vararg channels: ChannelConfiguration,
-    ) : this(bot, botConfiguration, listOf(*channels))
-
     override fun internalEndpoints(application: Application) {
         application.ConfigurationModule(this)
         application.RewardKtorModule(this)

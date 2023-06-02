@@ -1,12 +1,7 @@
 package fr.delphes.connector.twitch
 
-import kotlinx.serialization.json.Json
+import fr.delphes.bot.buildSerializer
 
-val twitchTestSerializer = Json {
-    ignoreUnknownKeys = true
-    isLenient = false
-    encodeDefaults = true
-    coerceInputValues = true
-    //TODO centralize serialization module
-    serializersModule = twitchSerializersModule
-}
+val twitchTestSerializer = buildSerializer(
+    TwitchInitializer()
+)

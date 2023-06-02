@@ -2,6 +2,7 @@ package fr.delphes.bot
 
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorInitializer
 import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
@@ -26,17 +27,43 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 
 class Bot(
     val configuration: BotConfiguration,
     @Deprecated("Use featuresManager instead")
     val legacyfeatures: List<NonEditableFeature>,
-    val serializer: Json,
     val features: List<FeatureDefinition>,
     val featureConfigurationsType: List<FeatureConfigurationBuilderRegistry>,
+    private val connectorInitializers: List<ConnectorInitializer>,
+    featureSerializersModule: SerializersModule,
 ) : IncomingEventHandler,
     OutgoingEventProcessor {
+
+    companion object {
+        //TODO split bot responsability to inject eventHandling so we can inject that in the connector build in init
+        fun launchBot(
+            configuration: BotConfiguration,
+            connectors: List<ConnectorInitializer>,
+            nonEditableFeatures: List<NonEditableFeature>,
+            featureDefinitions: List<FeatureDefinition>,
+            featureConfigurationBuilderRegistries: List<FeatureConfigurationBuilderRegistry>,
+            featureSerializerModule: SerializersModule,
+        ) {
+            val bot = Bot(
+                configuration,
+                nonEditableFeatures,
+                featureDefinitions,
+                featureConfigurationBuilderRegistries,
+                connectors,
+                featureSerializerModule
+            )
+
+            bot.init()
+        }
+    }
+
+    val serializer = buildSerializer(featureSerializersModule, connectorInitializers)
 
     val featuresManager = buildFeatureManager()
     private val statisticsHandler = StatisticIncomingEventHandler(configuration, serializer)
@@ -85,8 +112,10 @@ class Bot(
         }
     }
 
-    fun init(vararg connectorsToAdd: Connector<*, *>) {
-        _connectors.addAll(connectorsToAdd)
+    fun init() {
+        _connectors.addAll(connectorInitializers
+            .map { connector -> connector.buildConnector(this) }
+        )
 
         WebServer(
             bot = this,
