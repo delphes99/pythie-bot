@@ -8,14 +8,14 @@ data class Stream(
     val title: String,
     val start: LocalDateTime,
     val game: Game?,
-    val thumbnailUrl: ThumbnailUrl
+    val thumbnailUrl: ThumbnailUrl,
 ) {
     constructor(
         id: String,
         title: String,
         start: LocalDateTime,
         game: Game?,
-        thumbnailUrl: String
+        thumbnailUrl: String,
     ) : this(
         id,
         title,

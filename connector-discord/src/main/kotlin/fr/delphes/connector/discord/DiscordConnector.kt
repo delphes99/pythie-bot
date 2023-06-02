@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorState
+import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
@@ -14,7 +15,7 @@ class DiscordConnector(
     val bot: Bot,
     override val botConfiguration: BotConfiguration,
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
-    override val connectorName = "Discord"
+    override val connectorType = ConnectorType("Discord")
 
     override val states = emptyList<ConnectorState>()
 

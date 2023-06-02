@@ -2,6 +2,7 @@ package fr.delphes.bot.state
 
 import fr.delphes.twitch.api.streams.Stream
 
+@Deprecated("twitch specific statistics")
 interface StatisticsRepository {
     suspend fun globalStatistics(): Statistics
 

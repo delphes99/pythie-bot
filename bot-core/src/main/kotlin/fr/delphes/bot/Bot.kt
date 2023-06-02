@@ -2,6 +2,9 @@ package fr.delphes.bot
 
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorType
+import fr.delphes.bot.connector.statistics.FileStatisticEventRepository
+import fr.delphes.bot.connector.statistics.StatisticEventRepository
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.Alert
@@ -33,7 +36,13 @@ class Bot(
     val serializer: Json,
     val features: List<FeatureDefinition>,
     val featureConfigurationsType: List<FeatureConfigurationBuilderRegistry>,
-) : IncomingEventHandler, OutgoingEventProcessor {
+) : IncomingEventHandler,
+    OutgoingEventProcessor,
+    StatisticEventRepository by FileStatisticEventRepository(
+        configuration.pathOf("statistics", "statistics.json"),
+        serializer
+    ) {
+        
     val featuresManager = buildFeatureManager()
 
     private val _connectors = mutableListOf<Connector<*, *>>()
@@ -104,8 +113,8 @@ class Bot(
         return connectors.filterIsInstance<T>().firstOrNull()
     }
 
-    fun findConnector(name: String?): Connector<*, *>? = connectors
-        .firstOrNull { connector -> connector.connectorName == name }
+    fun findConnector(name: ConnectorType): Connector<*, *>? = connectors
+        .firstOrNull { connector -> connector.connectorType == name }
 
 
     private fun buildFeatureManager(): FeaturesManager {

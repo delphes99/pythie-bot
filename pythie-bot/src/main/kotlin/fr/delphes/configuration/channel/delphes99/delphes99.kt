@@ -339,7 +339,6 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     IncomingRaidFeature(
         channel = channel,
     ) {
-        executeOutgoingEvent(Pause(Duration.ofSeconds(30)))
         executeOutgoingEvent(
             SendMessage(
                 "\uD83E\uDDED ${event.leader.name} explore twitch et fait escale ici avec ses ${event.numberOfRaiders} acolytes.",

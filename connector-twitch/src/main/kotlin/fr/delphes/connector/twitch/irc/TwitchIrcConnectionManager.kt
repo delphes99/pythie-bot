@@ -20,14 +20,15 @@ class TwitchIrcConnectionManager(
     override val connectionName = "Irc - Bot"
 
     override suspend fun doConnection(configuration: TwitchConfiguration): ConnectionSuccessful<TwitchConfiguration, TwitchIrcRuntime> {
-        val credentialsManager = connector.configurationManager.buildCredentialsManager() ?: error("Connection with no configuration")
+        val credentialsManager =
+            connector.configurationManager.buildCredentialsManager() ?: error("Connection with no configuration")
 
         val ircClient = IrcClient.builder(configuration.botIdentity?.channel!!, credentialsManager)
             .withOnChannelMessage { message ->
                 runBlocking {
                     ChannelMessageMapper(message.channel.toTwitchChannel(), connector)
                         .handle(message)
-                        .forEach { connector.bot.handle(it) }
+                        .forEach { connector.handleIncomingEvent(it) }
                 }
             }
             .build()

@@ -1,5 +1,6 @@
 package fr.delphes.connector.twitch
 
+import fr.delphes.bot.connector.statistics.StatEvent
 import fr.delphes.bot.state.UserMessage
 import fr.delphes.connector.twitch.incomingEvent.BitCheered
 import fr.delphes.connector.twitch.incomingEvent.ClipCreated
@@ -16,35 +17,52 @@ import fr.delphes.connector.twitch.incomingEvent.StreamChanged
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
+import fr.delphes.connector.twitch.statistics.event.CommandAskTwitchStatistic
+import fr.delphes.connector.twitch.statistics.event.MessageReceivedTwitchStatistic
+import fr.delphes.connector.twitch.statistics.event.TwitchStatisticEventData
+import fr.delphes.connector.twitch.statistics.event.UserFollowTwitchStatistic
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.utils.exhaustive
+import fr.delphes.utils.time.Clock
+import fr.delphes.utils.time.SystemClock
 
 //TODO State + Reducer
 class TwitchConnectorHandler(
     private val connector: TwitchConnector,
+    private val clock: Clock = SystemClock,
 ) {
     suspend fun handle(event: TwitchIncomingEvent) {
         when (event) {
             is BitCheered -> {
                 connector.statistics.of(event.channel).newCheer(event.cheerer, event.bitsUsed)
             }
+
             is ClipCreated -> Nothing
-            is CommandAsked -> Nothing
+            is CommandAsked -> {
+                save(CommandAskTwitchStatistic(event.by, event.command))
+            }
+
             is IncomingRaid -> Nothing
             is MessageReceived -> {
                 connector.statistics.of(event.channel).addMessage(UserMessage(event.user, event.text))
+                save(MessageReceivedTwitchStatistic(event.user, event.text))
             }
+
             is NewFollow -> {
                 connector.statistics.of(event.channel).newFollow(event.follower)
+                save(UserFollowTwitchStatistic(event.follower))
             }
+
             is NewSub -> {
                 connector.statistics.of(event.channel).newSub(event.sub)
             }
+
             is RewardRedemption -> Nothing
             is StreamChanged -> Nothing
             is StreamOffline -> {
                 connector.statistics.of(event.channel).changeCurrentStream(null)
             }
+
             is StreamOnline -> {
                 connector.statistics.of(event.channel).changeCurrentStream(
                     Stream(
@@ -56,10 +74,21 @@ class TwitchConnectorHandler(
                     )
                 )
             }
+
             is NewPoll -> Nothing
             is PollUpdated -> Nothing
             is PollClosed -> Nothing
         }.exhaustive()
+    }
+
+    private suspend fun save(eventData: TwitchStatisticEventData) {
+        connector.bot.save(
+            StatEvent(
+                connector.connectorType,
+                clock.now(),
+                eventData
+            )
+        )
     }
 }
 

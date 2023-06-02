@@ -2,7 +2,8 @@ package fr.delphes.connector.twitch.command
 
 import kotlinx.serialization.Serializable
 
+@JvmInline
 @Serializable
-data class Command(
-    val triggerMessage: String
+value class Command(
+    val triggerMessage: String,
 )

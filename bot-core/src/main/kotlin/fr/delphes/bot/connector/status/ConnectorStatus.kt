@@ -4,24 +4,30 @@ import fr.delphes.bot.connector.connectionstate.endpoint.ConnectorStatusEnum
 import fr.delphes.bot.connector.connectionstate.endpoint.ConnectorStatusOutput
 
 data class ConnectorStatus(
-    val subStatus: Map<ConnectorConnectionName, ConnectorConnectionStatus>
+    val subStatus: Map<ConnectorConnectionName, ConnectorConnectionStatus>,
 ) {
     constructor(vararg subStatus: Pair<ConnectorConnectionName, ConnectorConnectionStatus>) : this(mapOf(*subStatus))
 
-    val status: ConnectorConnectionStatus get() {
-        return if(subStatus.values.distinct().size == 1) {
-            subStatus.values.first()
-        } else {
-            ConnectorConnectionStatus.Mixed
+    val status: ConnectorConnectionStatus
+        get() {
+            return if (subStatus.values.distinct().size == 1) {
+                subStatus.values.first()
+            } else {
+                ConnectorConnectionStatus.Mixed
+            }
         }
-    }
 }
 
 fun toOutput(connectorName: String, connectorStatus: ConnectorStatus): ConnectorStatusOutput {
     return ConnectorStatusOutput(
         connectorName,
         connectorStatus.status.toConnectorStatusEnum(),
-        connectorStatus.subStatus.map { (connectionName, status) -> ConnectorStatusOutput(connectionName, status.toConnectorStatusEnum()) }
+        connectorStatus.subStatus.map { (connectionName, status) ->
+            ConnectorStatusOutput(
+                connectionName,
+                status.toConnectorStatusEnum()
+            )
+        }
     )
 }
 

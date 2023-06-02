@@ -3,6 +3,7 @@ package fr.delphes.connector.twitch
 import fr.delphes.bot.Bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
@@ -37,7 +38,7 @@ class TwitchConnector(
     override val botConfiguration: BotConfiguration,
     val channels: List<ChannelConfiguration>,
 ) : Connector<TwitchConfiguration, TwitchLegacyRuntime> {
-    override val connectorName = "Twitch"
+    override val connectorType = ConnectorType("Twitch")
 
     override val configurationManager = TwitchConfigurationManager(
         TwitchConfigurationRepository(botConfiguration.pathOf("twitch", "configuration.json"))

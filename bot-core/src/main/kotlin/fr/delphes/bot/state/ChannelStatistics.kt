@@ -7,9 +7,10 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+@Deprecated("twitch specific statistics")
 class ChannelStatistics(
     private val statisticsRepository: StatisticsRepository,
-    currentStream: Stream? = null
+    currentStream: Stream? = null,
 ) : ChannelChangeState {
     val statistics = runBlocking {
         statisticsRepository.globalStatistics()

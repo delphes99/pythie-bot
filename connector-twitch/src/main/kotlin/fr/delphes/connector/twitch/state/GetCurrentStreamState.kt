@@ -10,7 +10,6 @@ class GetCurrentStreamState(
 ) : ConnectorState {
     override val id = ID
 
-    //TODO
     fun getStreamInfosOf(channel: TwitchChannel) =
         twitchConnector.statistics.of(channel).currentStream
 

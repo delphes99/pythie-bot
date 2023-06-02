@@ -2,6 +2,7 @@ package fr.delphes.bot.connector.connectionstate.endpoint
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.connector.status.toOutput
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -16,7 +17,7 @@ fun Application.ConnectorsModule(bot: Bot) {
     routing {
         get("/connectors/status") {
             this.context.respond(
-                bot.connectors.map { toOutput(it.connectorName, it.status) }
+                bot.connectors.map { toOutput(it.connectorType.name, it.status) }
             )
         }
         actionsOnConnector(
@@ -29,15 +30,19 @@ fun Application.ConnectorsModule(bot: Bot) {
 
 private fun Routing.actionsOnConnector(
     bot: Bot,
-    vararg actions: Pair<String, ActionOnConnector>
+    vararg actions: Pair<String, ActionOnConnector>,
 ) {
     actions.forEach { (url, actionOnConnector) ->
         post(url) {
             call.respond(
-                bot
-                    .findConnector(call.parameters["connector"])
-                    ?.also { it.actionOnConnector() }
-                    ?.let { HttpStatusCode.OK }
+                call.parameters["connector"]
+                    ?.let(::ConnectorType)
+                    ?.let { type ->
+                        bot
+                            .findConnector(type)
+                            ?.also { it.actionOnConnector() }
+                            ?.let { HttpStatusCode.OK }
+                    }
                     ?: HttpStatusCode.NotFound
             )
         }

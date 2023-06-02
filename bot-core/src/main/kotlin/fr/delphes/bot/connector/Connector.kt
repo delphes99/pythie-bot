@@ -7,7 +7,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import io.ktor.server.application.Application
 
 interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> {
-    val connectorName: String
+    val connectorType: ConnectorType
     val states: List<ConnectorState>
     val configurationManager: ConfigurationManager<CONFIGURATION>
     val connectionManager: ConnectionManager<CONFIGURATION>

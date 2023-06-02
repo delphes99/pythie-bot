@@ -1,11 +1,9 @@
-package fr.delphes.bot.state
+package fr.delphes.connector.twitch.statistics.event
 
 import fr.delphes.twitch.api.user.UserName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Deprecated("twitch specific statistics")
-data class UserMessage(
+data class UserFollowTwitchStatistic(
     val user: UserName,
-    val text: String,
-)
+) : TwitchStatisticEventData

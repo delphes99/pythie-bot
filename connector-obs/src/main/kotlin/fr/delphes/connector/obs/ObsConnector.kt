@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorState
+import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
@@ -15,7 +16,7 @@ class ObsConnector(
     val bot: Bot,
     override val botConfiguration: BotConfiguration,
 ) : Connector<ObsConfiguration, ObsRunTime> {
-    override val connectorName = "Obs"
+    override val connectorType = ConnectorType("Obs")
 
     override val states = emptyList<ConnectorState>()
 
