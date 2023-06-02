@@ -1,8 +1,86 @@
 {
-  "home": "Home",
+  "about": "About",
+  "common": {
+    "actions": "Actions",
+    "add": "Add",
+    "back": "Back",
+    "configuration": "Configuration",
+    "connect": "Connect",
+    "delete": "Delete",
+    "disconnect": "Disconnect",
+    "duration": {
+      "seconds": "seconds",
+      "minutes": "minutes",
+      "hours": "hours"
+    },
+    "edit": "Edit",
+    "emptyField": "Empty field",
+    "error": "Error",
+    "noData": "No data",
+    "save": "Save",
+    "success": "Success",
+    "validate": "Validate",
+    "view": "View"
+  },
+  "configuration": {
+    "features": {
+      "TwitchCustomCommandConfiguration": "Twitch : Command"
+    },
+    "outgoingEvents": {
+      "fr-delphes-connector-twitch-builder-SendMessageBuilder": "Twitch : Chat message"
+    }
+  },
+  "connector": {
+    "connectionName": "Connection",
+    "connectionStatus": "Status",
+    "status": {
+      "unconfigured": "Unconfigured",
+      "configured": "Configured",
+      "inError": "Error",
+      "connected": "Connected",
+      "connecting": "Connecting",
+      "disconnecting": "Disconnecting",
+      "mixed": "Mixed"
+    }
+  },
+  "discord": {
+    "configuration": {
+      "authToken": "OAuth bot token"
+    }
+  },
+  "feature": {
+    "id": "Id",
+    "name": "Name",
+    "type": "Type",
+    "outgoingEvents": "Outgoing events",
+    "noOutgoingEvents": "No outgoing events."
+  },
   "features": {
     "title": "Features",
     "addFeature": "Add feature"
+  },
+  "home": "Home",
+  "medias": {
+    "title": "Medias",
+    "add": "Add media",
+    "list": "Medias",
+    "file": "File",
+    "filename": "Filename",
+    "noFiles": "No media files."
+  },
+  "monitoring": {
+    "title": "Monitoring",
+    "events": {
+      "title": "Events",
+      "type": "Type"
+    }
+  },
+  "obs": {
+    "configuration": {
+      "host": "Obs-websocket : Host",
+      "port": "Obs-websocket : Port",
+      "password": "Obs-websocket password (leave empty if no password)"
+    }
   },
   "overlay": {
     "title": "Overlay",
@@ -39,42 +117,6 @@
       }
     }
   },
-  "medias": {
-    "title": "Medias",
-    "add": "Add media",
-    "list": "Medias",
-    "file": "File",
-    "filename": "Filename",
-    "noFiles": "No media files."
-  },
-  "about": "About",
-  "feature": {
-    "id": "Id",
-    "name": "Name",
-    "type": "Type",
-    "outgoingEvents": "Outgoing events",
-    "noOutgoingEvents": "No outgoing events."
-  },
-  "common": {
-    "save": "Save",
-    "edit": "Edit",
-    "validate": "Validate",
-    "add": "Add",
-    "delete": "Delete",
-    "connect": "Connect",
-    "disconnect": "Disconnect",
-    "success": "Success",
-    "error": "Error",
-    "noData": "No data",
-    "emptyField": "Empty field",
-    "back": "Back",
-    "duration": {
-      "seconds": "seconds",
-      "minutes": "minutes",
-      "hours": "hours"
-    },
-    "configuration": "Configuration"
-  },
   "settings": {
     "title": "Settings",
     "language": {
@@ -89,34 +131,6 @@
       "monochrome": "Monochrome"
     }
   },
-  "connector": {
-    "connectionName": "Connection",
-    "connectionStatus": "Status",
-    "status": {
-      "unconfigured": "Unconfigured",
-      "configured": "Configured",
-      "inError": "Error",
-      "connected": "Connected",
-      "connecting": "Connecting",
-      "disconnecting": "Disconnecting",
-      "mixed": "Mixed"
-    }
-  },
-  "configuration": {
-    "features": {
-      "TwitchCustomCommandConfiguration": "Twitch : Command"
-    },
-    "outgoingEvents": {
-      "fr-delphes-connector-twitch-builder-SendMessageBuilder": "Twitch : Chat message"
-    }
-  },
-  "obs": {
-    "configuration": {
-      "host": "Obs-websocket : Host",
-      "port": "Obs-websocket : Port",
-      "password": "Obs-websocket password (leave empty if no password)"
-    }
-  },
   "twitch": {
     "channels": "Channels",
     "configuration": {
@@ -125,11 +139,6 @@
       "changeBotAccount": "Change bot account",
       "selectBotAccount": "Connect bot account",
       "addChannel": "Add channel"
-    }
-  },
-  "discord": {
-    "configuration": {
-      "authToken": "OAuth bot token"
     }
   }
 }

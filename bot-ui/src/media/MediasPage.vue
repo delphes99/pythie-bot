@@ -1,37 +1,37 @@
 <template>
-    <ui-panel title="medias.add">
-        <form>
-            <label
-                    class="block text-titleColor text-sm font-semibold mb-2"
-                    for="file"
-            >
-                {{ $t("medias.file") }}
-            </label>
-            <input
-                    id="file"
-                    ref=""
-                    name="file"
-                    type="file"
-                    @change="selectFile"
-            >
-            <ui-textfield
-                    id="filename"
-                    v-model="filename"
-                    label="medias.filename"
-            />
-            <br>
-            <ui-button
-                    label="common.validate"
-                    @on-click="upload"
-            />
-        </form>
-    </ui-panel>
-    <ui-panel title="medias.list">
-        <ui-table
-                :data="fileListData"
-                :empty-message="$t('medias.noFiles')"
-        />
-    </ui-panel>
+  <ui-panel title="medias.add">
+    <form>
+      <label
+          class="block text-titleColor text-sm font-semibold mb-2"
+          for="file"
+      >
+        {{ $t("medias.file") }}
+      </label>
+      <input
+          id="file"
+          ref=""
+          name="file"
+          type="file"
+          @change="selectFile"
+      >
+      <ui-textfield
+          id="filename"
+          v-model="filename"
+          label="medias.filename"
+      />
+      <br>
+      <ui-button
+          label="common.validate"
+          @on-click="upload"
+      />
+    </form>
+  </ui-panel>
+  <ui-panel title="medias.list">
+    <ui-table
+        :data="fileListData"
+        :empty-message="$t('medias.noFiles')"
+    />
+  </ui-panel>
 </template>
 
 <script lang="ts" setup>
@@ -40,7 +40,7 @@ import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.v
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
 import {TableData} from "@/common/components/common/table/TableData"
-import UiTable from "@/common/components/common/table/UiTable.vue"
+import UiTable from "@/common/components/common/table/ui-table.vue"
 import {Media} from "@/media/Media"
 import MediasService from "@/media/MediasService"
 import {inject, ref} from "vue"
@@ -54,21 +54,21 @@ const filename = ref<string>("")
 
 const selectedFile = ref()
 const selectFile = (event: any) => {
-    let file = event.target.files[0]
-    selectedFile.value = file
+  let file = event.target.files[0]
+  selectedFile.value = file
 
-    filename.value = file.name
+  filename.value = file.name
 }
 
 const upload = () => {
-    mediaService.upload(filename.value, selectedFile.value)
+  mediaService.upload(filename.value, selectedFile.value)
 }
 
 const fileListData = ref<TableData<Media> | null>(null)
 
 mediaService.list().then((medias) => {
-    fileListData.value = new TableData(medias, [
-        new ColumnDefinition<Media>(t("medias.filename"), (data: Media) => data.fileName),
-    ])
+  fileListData.value = new TableData(medias, [
+    new ColumnDefinition<Media>(t("medias.filename"), (data: Media) => data.fileName),
+  ])
 })
 </script>

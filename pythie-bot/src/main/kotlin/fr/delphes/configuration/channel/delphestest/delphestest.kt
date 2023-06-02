@@ -5,11 +5,9 @@ import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.state.CommandListState
-import fr.delphes.feature.NonEditableFeature
 import fr.delphes.features.twitch.command.CustomCommand
 import fr.delphes.features.twitch.gameDescription.GameDescriptionFeature
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
-import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
 import fr.delphes.features.twitch.streamOnline.CustomStreamOnline
 import fr.delphes.features.twitch.streamUpdated.CustomStreamUpdated
@@ -22,9 +20,6 @@ import java.time.Duration
  * Example for delphestest channel : https://www.twitch.tv/delphestest
  */
 val channel = TwitchChannel("delphestest")
-val delphestestFeatures = listOf<NonEditableFeature>(
-    Statistics(channel),
-)
 val delphestestChannel = ChannelConfiguration.build("configuration-delphestest.properties") { properties ->
     ChannelConfiguration(
         TwitchChannel(properties.getProperty("channel.name")),

@@ -1,4 +1,4 @@
-package fr.delphes.bot.statistics
+package fr.delphes.bot.monitoring
 
 import fr.delphes.utils.FileRepository
 import kotlinx.serialization.decodeFromString
@@ -19,5 +19,9 @@ class FileStatisticEventRepository(
     override suspend fun save(event: StatisticEvent<out StatisticData>) {
         val currentValue = fileRepository.load()
         fileRepository.save(currentValue.plus(event))
+    }
+
+    override suspend fun getEvents(): List<StatisticEvent<out StatisticData>> {
+        return fileRepository.load()
     }
 }

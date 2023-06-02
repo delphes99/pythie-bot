@@ -39,7 +39,6 @@ import fr.delphes.features.twitch.incomingRaid.IncomingRaidFeature
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
 import fr.delphes.features.twitch.newSub.CustomNewSub
 import fr.delphes.features.twitch.rewardRedeem.RewardRedeem
-import fr.delphes.features.twitch.statistics.Statistics
 import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
 import fr.delphes.features.twitch.streamOnline.CustomStreamOnline
 import fr.delphes.features.twitch.streamUpdated.CustomStreamUpdated
@@ -87,7 +86,6 @@ private const val RAIN_ITEM_ID = 3L
 private const val WEBCAM_ID = 8L
 
 val delphes99Features = listOf<NonEditableFeature>(
-    Statistics(channel),
     EndCredits(),
     Overlay(channel),
 )

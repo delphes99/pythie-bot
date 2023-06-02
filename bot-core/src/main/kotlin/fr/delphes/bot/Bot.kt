@@ -12,8 +12,8 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.bot.event.outgoing.Pause
 import fr.delphes.bot.event.outgoing.PlaySound
+import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
-import fr.delphes.bot.statistics.StatisticIncomingEventHandler
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
@@ -66,7 +66,8 @@ class Bot(
     val serializer = buildSerializer(featureSerializersModule, connectorInitializers)
 
     val featuresManager = buildFeatureManager()
-    private val statisticsHandler = StatisticIncomingEventHandler(configuration, serializer)
+
+    val statisticService = StatisticService(configuration, serializer)
 
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
@@ -89,7 +90,7 @@ class Bot(
             .flatten()
             .flatMap { feature -> feature.handleIncomingEvent(incomingEvent, this) }
             .forEach { event -> processOutgoingEvent(event) }
-        statisticsHandler.handle(incomingEvent)
+        statisticService.handle(incomingEvent)
         featuresManager.handle(incomingEvent, this)
     }
 

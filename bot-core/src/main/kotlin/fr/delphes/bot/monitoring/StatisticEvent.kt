@@ -1,6 +1,6 @@
 @file:UseSerializers(LocalDateTimeSerializer::class)
 
-package fr.delphes.bot.statistics
+package fr.delphes.bot.monitoring
 
 import fr.delphes.utils.serialization.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable

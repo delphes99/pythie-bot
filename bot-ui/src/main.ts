@@ -1,13 +1,16 @@
 import {NotificationService} from "@/common/components/common/notification/notification.service";
 import {LocalStorageItem} from "@/common/LocalStorageItem"
-import FeatureService from "@/features/feature.service";
-import {InjectionKeys} from "@/injection.keys";
-import MediasService from "@/media/MediasService";
+import FeatureService from "@/features/feature.service"
+import {InjectionKeys} from "@/injection.keys"
+import MediasService from "@/media/MediasService"
+import {MonitoringService} from "@/monitoring/monitoringService"
 import {useStorage} from "@vueuse/core"
 import {createPinia} from "pinia"
 import {createApp} from "vue"
 import {createI18n} from "vue-i18n"
-import Vue3Toasity from "vue3-toastify";
+// @ts-ignore
+import JsonViewer from "vue-json-viewer"
+import Vue3Toasity from "vue3-toastify"
 
 import 'vue3-toastify/dist/index.css';
 import App from "./App.vue"
@@ -40,8 +43,10 @@ createApp(App)
         autoClose: 3000,
         position: "top-right",
     })
+    .use(JsonViewer)
     .provide(InjectionKeys.BACKEND_URL, backendUrl)
     .provide(InjectionKeys.MEDIA_SERVICE, new MediasService(backendUrl))
     .provide(InjectionKeys.FEATURE_SERVICE, new FeatureService(backendUrl))
     .provide(InjectionKeys.NOTIFICATION_SERVICE, new NotificationService())
+    .provide(InjectionKeys.STATISTICS_SERVICE, new MonitoringService(backendUrl))
     .mount("#app")

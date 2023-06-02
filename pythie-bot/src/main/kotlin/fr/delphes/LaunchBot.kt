@@ -8,7 +8,6 @@ import fr.delphes.configuration.channel.delphes99.delphes99CustomFeatures
 import fr.delphes.configuration.channel.delphes99.delphes99Features
 import fr.delphes.configuration.channel.delphestest.delphestestChannel
 import fr.delphes.configuration.channel.delphestest.delphestestCustomFeatures
-import fr.delphes.configuration.channel.delphestest.delphestestFeatures
 import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordInitializer
 import fr.delphes.connector.obs.ObsInitializer
@@ -48,7 +47,6 @@ fun main() {
         connectors,
         listOf(
             delphes99Features,
-            delphestestFeatures
         ).flatten(),
         delphes99CustomFeatures + delphestestCustomFeatures,
         listOf(

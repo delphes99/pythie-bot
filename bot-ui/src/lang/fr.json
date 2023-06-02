@@ -1,8 +1,86 @@
 {
-  "home": "Accueil",
+  "about": "À propos",
+  "common": {
+    "actions": "Actions",
+    "add": "Ajouter",
+    "back": "Retour",
+    "configuration": "Configuration",
+    "connect": "Connexion",
+    "delete": "Supprimer",
+    "disconnect": "Déconnexion",
+    "duration": {
+      "seconds": "secondes",
+      "minutes": "minutes",
+      "hours": "heures"
+    },
+    "edit": "Éditer",
+    "emptyField": "Champs vide",
+    "error": "Erreur",
+    "noData": "Aucune donnée",
+    "save": "Sauvegarder",
+    "success": "Succès",
+    "validate": "Valider",
+    "view": "Voir"
+  },
+  "configuration": {
+    "features": {
+      "TwitchCustomCommandConfiguration": "Twitch : Commande"
+    },
+    "outgoingEvents": {
+      "fr-delphes-connector-twitch-builder-SendMessageBuilder": "Twitch : Chat message"
+    }
+  },
+  "connector": {
+    "connectionName": "Connexion",
+    "connectionStatus": "Status",
+    "status": {
+      "unconfigured": "Non configuré",
+      "configured": "Configuré",
+      "inError": "Erreur",
+      "connected": "Connecté",
+      "connecting": "Connexion en cours",
+      "disconnecting": "Déconnexion en cours",
+      "mixed": "Mixte"
+    }
+  },
+  "discord": {
+    "configuration": {
+      "authToken": "Token OAuth"
+    }
+  },
+  "feature": {
+    "id": "Id",
+    "name": "Nom",
+    "type": "Type",
+    "outgoingEvents": "Evénements sortants",
+    "noOutgoingEvents": "Aucun événements sortants."
+  },
   "features": {
     "title": "Fonctionnalités",
     "addFeature": "Ajouter une fonctionnalité"
+  },
+  "home": "Accueil",
+  "medias": {
+    "title": "Médias",
+    "add": "Ajouter un média",
+    "list": "Médias",
+    "file": "Fichier",
+    "filename": "Nom de fichier",
+    "noFiles": "Aucun fichier trouvé."
+  },
+  "monitoring": {
+    "title": "Monitoring",
+    "events": {
+      "title": "Evénements",
+      "type": "Type"
+    }
+  },
+  "obs": {
+    "configuration": {
+      "host": "Obs-websocket : Hôte",
+      "port": "Obs-websocket : Port",
+      "password": "Obs-websocket : Mot de passe (laisser vide si aucun mot de passe)"
+    }
   },
   "overlay": {
     "title": "Overlay",
@@ -39,42 +117,6 @@
       }
     }
   },
-  "medias": {
-    "title": "Médias",
-    "add": "Ajouter un média",
-    "list": "Médias",
-    "file": "Fichier",
-    "filename": "Nom de fichier",
-    "noFiles": "Aucun fichier trouvé."
-  },
-  "about": "À propos",
-  "feature": {
-    "id": "Id",
-    "name": "Nom",
-    "type": "Type",
-    "outgoingEvents": "Evénements sortants",
-    "noOutgoingEvents": "Aucun événements sortants."
-  },
-  "common": {
-    "save": "Sauvegarder",
-    "edit": "Éditer",
-    "validate": "Valider",
-    "add": "Ajouter",
-    "delete": "Supprimer",
-    "connect": "Connexion",
-    "disconnect": "Déconnexion",
-    "success": "Succès",
-    "error": "Erreur",
-    "noData": "Aucune donnée",
-    "emptyField": "Champs vide",
-    "back": "Retour",
-    "duration": {
-      "seconds": "secondes",
-      "minutes": "minutes",
-      "hours": "heures"
-    },
-    "configuration": "Configuration"
-  },
   "settings": {
     "title": "Paramètres",
     "language": {
@@ -89,34 +131,6 @@
       "monochrome": "Monochrome"
     }
   },
-  "connector": {
-    "connectionName": "Connexion",
-    "connectionStatus": "Status",
-    "status": {
-      "unconfigured": "Non configuré",
-      "configured": "Configuré",
-      "inError": "Erreur",
-      "connected": "Connecté",
-      "connecting": "Connexion en cours",
-      "disconnecting": "Déconnexion en cours",
-      "mixed": "Mixte"
-    }
-  },
-  "configuration": {
-    "features": {
-      "TwitchCustomCommandConfiguration": "Twitch : Commande"
-    },
-    "outgoingEvents": {
-      "fr-delphes-connector-twitch-builder-SendMessageBuilder": "Twitch : Chat message"
-    }
-  },
-  "obs": {
-    "configuration": {
-      "host": "Obs-websocket : Hôte",
-      "port": "Obs-websocket : Port",
-      "password": "Obs-websocket : Mot de passe (laisser vide si aucun mot de passe)"
-    }
-  },
   "twitch": {
     "channels": "Chaines",
     "configuration": {
@@ -125,11 +139,6 @@
       "changeBotAccount": "Changer l'identité du bot",
       "selectBotAccount": "Sélectionner l'idendité du bot",
       "addChannel": "Ajouter une chaîne"
-    }
-  },
-  "discord": {
-    "configuration": {
-      "authToken": "Token OAuth"
     }
   }
 }

@@ -3,6 +3,7 @@ package fr.delphes.bot
 import fr.delphes.bot.connector.connectionstate.endpoint.ConnectorsModule
 import fr.delphes.bot.media.MediaModule
 import fr.delphes.bot.media.MediasService
+import fr.delphes.bot.monitoring.Monitoring
 import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.bot.webserver.alert.AlertModule
@@ -40,6 +41,7 @@ class WebServer(
             Overlays(bot)
             ConnectorsModule(bot)
             FeatureAdminModule(bot)
+            Monitoring(bot)
 
             internalModules.forEach { module -> module(this) }
         }
