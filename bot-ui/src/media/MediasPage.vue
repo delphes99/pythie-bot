@@ -35,20 +35,21 @@
 </template>
 
 <script lang="ts" setup>
+import {AppInjectionKeys} from "@/app.injection.keys";
 import UiButton from "@/common/components/common/button/UiButton.vue"
 import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
 import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
 import {TableData} from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/ui-table.vue"
+import {autowired} from "@/common/utils/injection.util";
 import {Media} from "@/media/Media"
-import MediasService from "@/media/MediasService"
-import {inject, ref} from "vue"
+import {ref} from "vue"
 import {useI18n} from "vue-i18n"
 
 const {t} = useI18n()
 
-const mediaService = inject("media.service") as MediasService
+const mediaService = autowired(AppInjectionKeys.MEDIA_SERVICE)
 
 const filename = ref<string>("")
 

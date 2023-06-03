@@ -6,13 +6,14 @@
 </template>
 
 <script lang="ts" setup>
+import {AppInjectionKeys} from "@/app.injection.keys";
 import {ConnectorEnum} from "@/common/components/common/connector/connectorEnum"
 import {ConnectorStatusEnum} from "@/common/components/common/connector/connectorStatusEnum"
 import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
 import {TableData} from "@/common/components/common/table/TableData"
 import UiTable from "@/common/components/common/table/ui-table.vue"
-import {InjectionKeys} from "@/injection.keys";
-import {inject, ref} from "vue"
+import {autowired} from "@/common/utils/injection.util";
+import {ref} from "vue"
 import {useI18n} from "vue-i18n"
 
 interface Status {
@@ -34,7 +35,7 @@ const props = defineProps({
 })
 
 const {t} = useI18n()
-const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
+const backendUrl = autowired(AppInjectionKeys.BACKEND_URL)
 
 const statusesTableData = ref<TableData<SubStatus> | null>(null)
 

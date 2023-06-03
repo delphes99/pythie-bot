@@ -4,29 +4,30 @@
   </div>
   <div v-else>
     <div
-      v-for="element in overlay.elements"
-      :key="element.id"
-      class="absolute"
-      :style="{
+        v-for="element in overlay.elements"
+        :key="element.id"
+        class="absolute"
+        :style="{
         left: element.general.left + 'px',
         top: element.general.top + 'px',
         'z-index': element.general.sortOrder,
       }"
     >
       <component
-        :is="element.properties.renderComponent()"
-        :component="element"
+          :is="element.properties.renderComponent()"
+          :component="element"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {AppInjectionKeys} from "@/main";
 import Overlay from "@/overlay/Overlay"
-import { fromJson } from "@/overlay/OverlayElement"
-import { inject, ref } from "vue"
+import {fromJson} from "@/overlay/OverlayElement"
+import {inject, ref} from "vue"
 
-const backendUrl = inject("backendUrl")
+const backendUrl = inject(AppInjectionKeys.BACKEND_URL)
 
 const overlay = ref<Overlay>()
 const overlayNotFound = ref(true)
@@ -49,12 +50,12 @@ async function fetchOverlay(overlayId: string): Promise<Overlay> {
   if (response.ok) {
     return response.json().then(data => {
       return new Overlay(
-        data.id,
-        data.name,
-        data.resolution,
-        data.elements
-          .map((e: any) => fromJson(e))
-          .filter((e: any) => e),
+          data.id,
+          data.name,
+          data.resolution,
+          data.elements
+              .map((e: any) => fromJson(e))
+              .filter((e: any) => e),
       )
     })
   } else {

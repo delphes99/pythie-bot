@@ -1,11 +1,12 @@
+import {AppInjectionKeys} from "@/app.injection.keys";
 import {UiSelectOption} from "@/common/components/common/form/select/UiSelectOption";
+import {autowired} from "@/common/utils/injection.util";
 import FeatureService, {FeatureType} from "@/features/feature.service";
-import {InjectionKeys} from "@/injection.keys";
-import {computed, inject, ref} from "vue";
+import {computed, ref} from "vue";
 
 
 export function useGetFeatureTypes() {
-    const backendUrl = inject(InjectionKeys.BACKEND_URL) as string
+    const backendUrl = autowired(AppInjectionKeys.BACKEND_URL)
     const service = new FeatureService(backendUrl);
 
     function refreshAllTypes() {

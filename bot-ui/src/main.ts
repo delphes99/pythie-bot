@@ -1,7 +1,7 @@
+import {AppInjectionKeys} from "@/app.injection.keys"
 import {NotificationService} from "@/common/components/common/notification/notification.service";
 import {LocalStorageItem} from "@/common/LocalStorageItem"
 import FeatureService from "@/features/feature.service"
-import {InjectionKeys} from "@/injection.keys"
 import MediasService from "@/media/MediasService"
 import {MonitoringService} from "@/monitoring/monitoringService"
 import {useStorage} from "@vueuse/core"
@@ -44,9 +44,9 @@ createApp(App)
         position: "top-right",
     })
     .use(JsonViewer)
-    .provide(InjectionKeys.BACKEND_URL, backendUrl)
-    .provide(InjectionKeys.MEDIA_SERVICE, new MediasService(backendUrl))
-    .provide(InjectionKeys.FEATURE_SERVICE, new FeatureService(backendUrl))
-    .provide(InjectionKeys.NOTIFICATION_SERVICE, new NotificationService())
-    .provide(InjectionKeys.STATISTICS_SERVICE, new MonitoringService(backendUrl))
+    .provide(AppInjectionKeys.BACKEND_URL, backendUrl)
+    .provide(AppInjectionKeys.MEDIA_SERVICE, new MediasService(backendUrl))
+    .provide(AppInjectionKeys.FEATURE_SERVICE, new FeatureService(backendUrl))
+    .provide(AppInjectionKeys.NOTIFICATION_SERVICE, new NotificationService())
+    .provide(AppInjectionKeys.MONITORING_SERVICE, new MonitoringService(backendUrl))
     .mount("#app")

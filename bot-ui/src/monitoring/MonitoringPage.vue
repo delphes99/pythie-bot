@@ -31,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import {AppInjectionKeys} from "@/app.injection.keys";
 import UiButton from "@/common/components/common/button/UiButton.vue";
 import UiModal from "@/common/components/common/modal/UiModal.vue";
 import {useModal} from "@/common/components/common/modal/useModal";
@@ -38,9 +39,9 @@ import UiPanel from "@/common/components/common/panel/UiPanel.vue";
 import {TableData} from "@/common/components/common/table/TableData";
 import UiTableColumn from "@/common/components/common/table/ui-table-column.vue";
 import UiTable from "@/common/components/common/table/ui-table.vue";
-import {InjectionKeys} from "@/injection.keys";
-import {MonitoringEvent, MonitoringService} from "@/monitoring/monitoringService";
-import {inject, ref} from "vue";
+import {autowired} from "@/common/utils/injection.util";
+import {MonitoringEvent} from "@/monitoring/monitoringService";
+import {ref} from "vue";
 
 const itemToDisplay = ref<MonitoringEvent | null>(null)
 
@@ -49,7 +50,7 @@ function display(item: MonitoringEvent) {
   open()
 }
 
-const statisticService = inject(InjectionKeys.STATISTICS_SERVICE) as MonitoringService
+const statisticService = autowired(AppInjectionKeys.MONITORING_SERVICE)
 
 const tableData = new TableData(
     await statisticService.getStatistics(),
