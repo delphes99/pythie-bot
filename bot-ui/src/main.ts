@@ -3,7 +3,7 @@ import {NotificationService} from "@/common/designSystem/notification/notificati
 
 import en from "@/common/lang/en.json"
 import fr from "@/common/lang/fr.json"
-import {LocalStorageItem} from "@/common/LocalStorageItem"
+import {LocalStorageItem} from "@/common/utils/local.storage.item"
 import FeatureService from "@/features/feature.service"
 import MediaService from "@/media/media.service"
 import {MonitoringService} from "@/monitoring/monitoring.service"
