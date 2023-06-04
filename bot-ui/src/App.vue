@@ -25,9 +25,9 @@
 </template>
 
 <script lang="ts" setup>
-import MenuPanel from "@/common/designSystem/menu/MenuPanel.vue"
+import MenuPanel from "@/common/designSystem/menu/menu-panel.vue"
 import {useApplicationTheme} from "@/common/utils/theme/UseApplicationThemeStore"
-import StatusBar from "@/connector/common/StatusBar.vue"
+import StatusBar from "@/connector/common/connector-status-bar.vue"
 
 const {themeClass} = useApplicationTheme()
 </script>

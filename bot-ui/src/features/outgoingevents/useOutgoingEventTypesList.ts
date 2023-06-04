@@ -1,5 +1,5 @@
 import {AppInjectionKeys} from "@/app.injection.keys";
-import {UiSelectOption} from "@/common/designSystem/form/select/UiSelectOption";
+import {UiSelectOption} from "@/common/designSystem/form/select/ui-select.option";
 import {autowired} from "@/common/utils/injection.util";
 import {OutgoingEventType} from "@/features/outgoingevents/outgoing-event";
 import {OutgoingEventCreateService} from "@/features/outgoingevents/outgoing-event.create.service";

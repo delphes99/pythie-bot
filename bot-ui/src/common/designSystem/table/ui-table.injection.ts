@@ -1,9 +1,9 @@
-import {ColumnDefinition} from "@/common/designSystem/table/ColumnDefinition";
+import {UiTabbleColumnDefinition} from "@/common/designSystem/table/ui-tabble.column.definition";
 import {InjectionKey} from "vue";
 
 export const UiTableInjectionKeys = {
     COLUMN_REGISTRATION: Symbol() as InjectionKey<{
-        registerColumn: (column: ColumnDefinition) => void,
+        registerColumn: (column: UiTabbleColumnDefinition) => void,
         unregisterColumn: (columnId: string) => void,
     }>
 }

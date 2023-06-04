@@ -1,6 +1,6 @@
-import UiButtonType from "@/common/designSystem/button/UiButtonType";
+import UiButtonType from "@/common/designSystem/button/ui-button.type";
 import {Meta, StoryObj} from "@storybook/vue3";
-import UiButton from "./UiButton.vue"
+import UiButton from "./ui-button.vue"
 
 const meta: Meta<typeof UiButton> = {
     title: "Design System/Button",

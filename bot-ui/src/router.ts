@@ -4,17 +4,17 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: "/",
         name: "Home",
-        component: () => import("@/home/HomePage.vue"),
+        component: () => import("@/home/home-page.vue"),
     },
     {
         path: "/monitoring",
         name: "Monitoring",
-        component: () => import("@/monitoring/MonitoringPage.vue"),
+        component: () => import("@/monitoring/monitoring-page.vue"),
     },
     {
         path: "/features",
         name: "features",
-        component: () => import("@/features/FeaturesList.vue"),
+        component: () => import("@/features/features-list.vue"),
     },
     {
         path: "/feature",
@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
                 path: ":featureId",
                 name: "featureDetail",
                 props: true,
-                component: () => import("@/features/details/FeatureDetail.vue"),
+                component: () => import("@/features/details/feature-detail.vue"),
             }
         ]
     },
@@ -34,12 +34,12 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: "",
                 name: "overlays",
-                component: () => import("@/overlay/OverlaysList.vue"),
+                component: () => import("@/overlay/overlays-list.vue"),
             },
             {
                 path: ":overlayId",
                 name: "overlay_detail",
-                component: () => import("@/overlay/editor/OverlayEditor.vue"),
+                component: () => import("@/overlay/editor/overlay-editor.vue"),
                 props: true,
             },
         ],
@@ -47,27 +47,27 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: "/settings",
         name: "settings",
-        component: () => import("@/settings/SettingsPage.vue"),
+        component: () => import("@/settings/settings-page.vue"),
     },
     {
         path: "/medias",
         name: "medias",
-        component: () => import("@/media/MediasPage.vue"),
+        component: () => import("@/media/medias-page.vue"),
     },
     {
         path: "/about",
         name: "about",
-        component: () => import("@/about/AboutPage.vue"),
+        component: () => import("@/about/about-page.vue"),
     },
     {
         path: "/discord",
         name: "discord",
-        component: () => import("@/connector/discord/DiscordConfiguration.vue"),
+        component: () => import("@/connector/discord/discord-configuration.vue"),
     },
     {
         path: "/obs",
         name: "obs",
-        component: () => import("@/connector/obs/ObsConfiguration.vue"),
+        component: () => import("@/connector/obs/obs-configuration.vue"),
     },
     {
         path: "/twitch",
@@ -75,29 +75,29 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: "",
-                component: () => import("@/connector/twitch/TwitchConfiguration.vue"),
+                component: () => import("@/connector/twitch/twitch-configuration.vue"),
             },
             {
                 path: ":channelName",
-                component: () => import("@/connector/twitch/TwitchChannelConfiguration.vue"),
+                component: () => import("@/connector/twitch/twitch-channel-configuration.vue"),
                 props: true,
                 children: [
                     {
                         path: "features",
                         name: "twitch_channel_features",
-                        component: () => import("@/connector/twitch/feature/TwitchFeature.vue"),
+                        component: () => import("@/connector/twitch/feature/twitch-feature.vue"),
                         props: true,
                     },
                     {
                         path: "rewards",
                         name: "twitch_channel_rewards",
-                        component: () => import("@/connector/twitch/reward/TwitchReward.vue"),
+                        component: () => import("@/connector/twitch/reward/twitch-reward.vue"),
                         props: true,
                     },
                     {
                         path: "",
                         name: "twitch_channel_rewards",
-                        component: () => import("@/connector/twitch/reward/TwitchReward.vue"),
+                        component: () => import("@/connector/twitch/reward/twitch-reward.vue"),
                         props: true,
                     },
                 ],

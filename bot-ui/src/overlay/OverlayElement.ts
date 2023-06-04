@@ -1,5 +1,5 @@
-import ImageComponent from "@/overlay/editor/component/imageComponent/ImageComponent"
-import TextComponent from "@/overlay/editor/component/textComponent/TextComponent"
+import ImageComponent from "@/overlay/editor/component/imageComponent/image-component"
+import TextComponent from "@/overlay/editor/component/textComponent/text-component"
 import {OverlayElementGeneralProperties} from "@/overlay/OverlayElementGeneralProperties"
 import {OverlayElementProperties} from "@/overlay/OverlayElementProperties"
 

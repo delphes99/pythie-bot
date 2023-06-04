@@ -5,8 +5,8 @@ import en from "@/common/lang/en.json"
 import fr from "@/common/lang/fr.json"
 import {LocalStorageItem} from "@/common/LocalStorageItem"
 import FeatureService from "@/features/feature.service"
-import MediasService from "@/media/MediasService"
-import {MonitoringService} from "@/monitoring/monitoringService"
+import MediaService from "@/media/media.service"
+import {MonitoringService} from "@/monitoring/monitoring.service"
 import {useStorage} from "@vueuse/core"
 import {createPinia} from "pinia"
 import {createApp} from "vue"
@@ -45,7 +45,7 @@ createApp(App)
     })
     .use(JsonViewer)
     .provide(AppInjectionKeys.BACKEND_URL, backendUrl)
-    .provide(AppInjectionKeys.MEDIA_SERVICE, new MediasService(backendUrl))
+    .provide(AppInjectionKeys.MEDIA_SERVICE, new MediaService(backendUrl))
     .provide(AppInjectionKeys.FEATURE_SERVICE, new FeatureService(backendUrl))
     .provide(AppInjectionKeys.NOTIFICATION_SERVICE, new NotificationService())
     .provide(AppInjectionKeys.MONITORING_SERVICE, new MonitoringService(backendUrl))

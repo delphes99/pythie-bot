@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T">
-import {ColumnDefinition} from "@/common/designSystem/table/ColumnDefinition";
+import {UiTabbleColumnDefinition} from "@/common/designSystem/table/ui-tabble.column.definition";
 import {UiTableInjectionKeys} from "@/common/designSystem/table/ui-table.injection";
 import {PropType, provide, ref} from "vue"
 
@@ -18,9 +18,9 @@ defineSlots<{
   default: (props: { item?: T }) => any;
 }>();
 
-const columns = ref<(ColumnDefinition)[]>([]);
+const columns = ref<(UiTabbleColumnDefinition)[]>([]);
 
-function registerColumn(column: ColumnDefinition) {
+function registerColumn(column: UiTabbleColumnDefinition) {
   columns.value.push(column)
 }
 

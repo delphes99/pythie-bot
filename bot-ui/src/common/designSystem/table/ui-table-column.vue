@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import {ColumnDefinition} from "@/common/designSystem/table/ColumnDefinition";
+import {UiTabbleColumnDefinition} from "@/common/designSystem/table/ui-tabble.column.definition";
 import {UiTableInjectionKeys} from "@/common/designSystem/table/ui-table.injection";
 import {autowired} from "@/common/utils/injection.util";
 import {getCurrentInstance, onBeforeUnmount} from "vue";
@@ -21,7 +21,7 @@ defineSlots<{
   default: (props: { item?: T }) => any;
 }>();
 
-const columnDefinition = new ColumnDefinition(
+const columnDefinition = new UiTabbleColumnDefinition(
     props.headerName,
     getCurrentInstance()!.slots.default,
     props.propertyName,
