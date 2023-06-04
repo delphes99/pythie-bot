@@ -31,9 +31,7 @@ class Statistics(
     }
 
     override fun newSub(newSub: UserName) {
-        if (!this.newSubs.contains(newSub)) {
-            this.newSubs.add(0, newSub)
-        }
+        this.newSubs.add(0, newSub)
     }
 
     override fun newCheer(cheerer: UserName?, bits: Long) {
