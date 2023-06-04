@@ -1,7 +1,7 @@
 <script lang="ts" setup generic="T">
-import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
-import {TableData} from "@/common/components/common/table/TableData"
-import {computed, PropType} from "vue"
+import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition";
+import {UiTableInjectionKeys} from "@/common/components/common/table/ui-table.injection";
+import {PropType, provide, ref} from "vue"
 
 const props = defineProps({
   emptyMessage: {
@@ -9,79 +9,71 @@ const props = defineProps({
     default: null,
   },
   data: {
-    type: Object as PropType<TableData<unknown>>,
-    default: null,
+    type: Array as PropType<T[]>,
+    default: () => [],
   },
-  columns: {
-    type: Array,
-    default: []
-  }
 })
 
 defineSlots<{
-  default: (props: { item: T }) => void;
+  default: (props: { item?: T }) => any;
 }>();
 
-const header = computed(
-    () =>
-        props.data?.columns?.map(
-            (definition: ColumnDefinition<unknown>) => definition.name,
-        ) || [],
-)
-const rows = computed(() => {
-  if (props.data) {
-    const data = props.data
-    return data.data.map((item, index) => {
-      return {
-        row: index,
-        value: data.columns.map((column, index) => {
-          return {
-            key: index,
-            value: column.display(item),
-          }
-        }),
-        item: item,
-      }
-    })
-  } else {
-    return []
-  }
+const columns = ref<(ColumnDefinition)[]>([]);
+
+function registerColumn(column: ColumnDefinition) {
+  columns.value.push(column)
+}
+
+function unregisterColumn(columnId: string) {
+  columns.value = columns.value.filter(column => column.id !== columnId)
+}
+
+provide(UiTableInjectionKeys.COLUMN_REGISTRATION, {
+  registerColumn,
+  unregisterColumn
 })
 </script>
 
 <template>
   <div class="w-full">
-    <div v-if="!props.data">
+    <div v-if="!data || data.length === 0">
       {{ emptyMessage || $t("common.noData") }}
     </div>
     <div v-else>
       <table class="w-full">
         <tr
-            class="border-b border-gray-200"
+            class="border-b border-primaryColor"
         >
           <th
-              v-for="columnName in columns"
-              :key="columnName"
-              class="font-bold text-left text-titleColor"
+              v-for="column in columns"
+              :key="column.id"
+              class="font-bold text-left text-backgroundTextColor"
           >
-            {{ columnName }}
+            {{ $t(column.headerName) }}
           </th>
         </tr>
         <tr
-            v-for="row in rows"
-            :key="row.key"
-            class="border-b border-gray-200 text-backgroundTextColor"
+            v-for="(item, index) in data"
+            :key="index"
+            class="border-b border-primaryColor text-backgroundTextColor"
         >
           <td
-              v-for="cell in row.value"
-              :key="cell.key"
-              class="py-4"
+              v-for="column in columns"
+              :key="column.id"
+              class="p-2 font-bold text-left text-backgroundTextColor"
           >
-            {{ cell.value }}
+            <template v-if="column.render">
+              <component :is="column.render" :item="item"></component>
+            </template>
+            <template v-else-if="column.propertyName">
+              {{ item[column.propertyName] }}
+            </template>
           </td>
-          <slot :item="row.item"></slot>
         </tr>
       </table>
+      <template v-show="false">
+        <slot></slot>
+      </template>
     </div>
   </div>
 </template>

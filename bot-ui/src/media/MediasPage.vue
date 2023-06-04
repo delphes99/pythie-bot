@@ -28,9 +28,11 @@
   </ui-panel>
   <ui-panel title="medias.list">
     <ui-table
-        :data="fileListData"
+        :data="files"
         :empty-message="$t('medias.noFiles')"
-    />
+    >
+      <ui-table-column header-name="medias.filename" property-name="fileName"/>
+    </ui-table>
   </ui-panel>
 </template>
 
@@ -39,11 +41,9 @@ import {AppInjectionKeys} from "@/app.injection.keys";
 import UiButton from "@/common/components/common/button/UiButton.vue"
 import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
-import {ColumnDefinition} from "@/common/components/common/table/ColumnDefinition"
-import {TableData} from "@/common/components/common/table/TableData"
+import UiTableColumn from "@/common/components/common/table/ui-table-column.vue";
 import UiTable from "@/common/components/common/table/ui-table.vue"
 import {autowired} from "@/common/utils/injection.util";
-import {Media} from "@/media/Media"
 import {ref} from "vue"
 import {useI18n} from "vue-i18n"
 
@@ -65,11 +65,5 @@ const upload = () => {
   mediaService.upload(filename.value, selectedFile.value)
 }
 
-const fileListData = ref<TableData<Media> | null>(null)
-
-mediaService.list().then((medias) => {
-  fileListData.value = new TableData(medias, [
-    new ColumnDefinition<Media>(t("medias.filename"), (data: Media) => data.fileName),
-  ])
-})
+const files = ref(await mediaService.list())
 </script>

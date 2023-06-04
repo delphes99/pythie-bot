@@ -1,26 +1,15 @@
 <template>
   <ui-panel title="monitoring.title">
     <ui-table
-        :data="tableData"
-        :columns="[$t('common.date'), $t('monitoring.events.type'), $t('common.actions')]"
+        :data="events"
     >
-      <template #default="{item}">
-        <ui-table-column :item="item">
-          <template #default="{item}">
-            {{ item.date }}
-          </template>
-        </ui-table-column>
-        <ui-table-column :item="item">
-          <template #default="{item}">
-            {{ item.event.event.type }}
-          </template>
-        </ui-table-column>
-        <ui-table-column :item="item">
-          <template #default="{item}">
-            <ui-button label="common.view" @on-click="display(item)"></ui-button>
-          </template>
-        </ui-table-column>
-      </template>
+      <ui-table-column header-name="common.date" property-name="date"></ui-table-column>
+      <ui-table-column header-name="monitoring.events.type" v-slot="{item}">
+        {{ item?.event?.event?.type }}
+      </ui-table-column>
+      <ui-table-column header-name="common.actions" v-slot="{item}">
+        <ui-button label="common.view" @on-click="display(item)"></ui-button>
+      </ui-table-column>
     </ui-table>
   </ui-panel>
   <ui-modal title="monitoring.events.title" v-model:is-open="isOpen">
@@ -36,7 +25,6 @@ import UiButton from "@/common/components/common/button/UiButton.vue";
 import UiModal from "@/common/components/common/modal/UiModal.vue";
 import {useModal} from "@/common/components/common/modal/useModal";
 import UiPanel from "@/common/components/common/panel/UiPanel.vue";
-import {TableData} from "@/common/components/common/table/TableData";
 import UiTableColumn from "@/common/components/common/table/ui-table-column.vue";
 import UiTable from "@/common/components/common/table/ui-table.vue";
 import {autowired} from "@/common/utils/injection.util";
@@ -51,11 +39,7 @@ function display(item: MonitoringEvent) {
 }
 
 const statisticService = autowired(AppInjectionKeys.MONITORING_SERVICE)
-
-const tableData = new TableData(
-    await statisticService.getStatistics(),
-    []
-)
+const events = await statisticService.getStatistics()
 
 const {isOpen, open} = useModal()
 </script>

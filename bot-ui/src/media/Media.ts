@@ -1,8 +1,7 @@
 export class Media {
-    fileName: string
-
-    constructor(fileName: string) {
-        this.fileName = fileName
+    constructor(
+        readonly fileName: string
+    ) {
     }
 
     static of(fileName: string): Media {

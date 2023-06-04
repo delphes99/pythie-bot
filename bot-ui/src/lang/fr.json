@@ -6,6 +6,7 @@
     "back": "Retour",
     "configuration": "Configuration",
     "connect": "Connexion",
+    "date": "Date",
     "delete": "Supprimer",
     "disconnect": "Déconnexion",
     "duration": {
@@ -133,6 +134,7 @@
   },
   "twitch": {
     "channels": "Chaines",
+    "channel": "Chaine",
     "configuration": {
       "clientId": "Client Id",
       "clientSecret": "Client Secret",

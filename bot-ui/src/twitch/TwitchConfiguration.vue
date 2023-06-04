@@ -45,51 +45,23 @@
       />
     </div>
   </ui-panel>
-  <ui-panel title="twitch.channels">
-    <ui-button
-        :link="buildAddChannelUrl()"
-        label="twitch.configuration.addChannel"
-    />
-    <div class="w-11/12 mx-auto">
-      <div class="bg-white shadow-md rounded my-6">
-        <table class="text-left w-full border-collapse">
-          <thead>
-          <tr>
-            <th
-                class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
-            >
-              Channel
-            </th>
-            <th
-                class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light"
-            >
-              Actions
-            </th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr
-              v-for="channel in channels"
-              :key="channel"
-              class="hover:bg-grey-lighter"
-          >
-            <td class="py-4 px-6 border-b border-grey-light">
-              <router-link :to="`/twitch/${channel}`">
-                {{ channel }}
-              </router-link>
-            </td>
-            <td class="py-4 px-6 border-b border-grey-light">
-              <ui-button
-                  :type="UiButtonType.Warning"
-                  label="common.delete"
-                  @on-click="deleteChannel(channel)"
-              />
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <ui-panel title="twitch.channels" :menu="[UiPanelMenuItem.of('twitch.configuration.addChannel', addChannel)]">
+    <ui-table
+        :data="channels"
+    >
+      <ui-table-column header-name="twitch.channel" v-slot="{item:channel}">
+        <router-link :to="`/twitch/${channel}`">
+          {{ channel }}
+        </router-link>
+      </ui-table-column>
+      <ui-table-column header-name="common.actions" v-slot="{item}">
+        <ui-button
+            :type="UiButtonType.Warning"
+            label="common.delete"
+            @on-click="deleteChannel(item)"
+        />
+      </ui-table-column>
+    </ui-table>
   </ui-panel>
 </template>
 
@@ -101,6 +73,9 @@ import {ConnectorEnum} from "@/common/components/common/connector/ConnectorEnum"
 import DetailedConnectorStatus from "@/common/components/common/connector/DetailedConnectorStatus.vue"
 import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
 import UiPanel from "@/common/components/common/panel/UiPanel.vue"
+import {UiPanelMenuItem} from "@/common/components/common/panel/UiPanelMenuItem";
+import UiTableColumn from "@/common/components/common/table/ui-table-column.vue";
+import UiTable from "@/common/components/common/table/ui-table.vue";
 import {autowired} from "@/common/utils/injection.util";
 import axios from "axios"
 import {ref} from "vue"
@@ -158,6 +133,10 @@ const buildGetAuthUrl = (state: string) => () => {
 }
 
 const buildBotIdentityUrl = buildGetAuthUrl("botConfiguration")
-const buildAddChannelUrl = buildGetAuthUrl("addChannel")
+
+function addChannel() {
+  window.open(buildGetAuthUrl("addChannel")())
+}
+
 const connector = ConnectorEnum.TWITCH
 </script>
