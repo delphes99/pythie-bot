@@ -42,7 +42,7 @@ class GameDescriptionFeature(
 
     override fun buildRuntime(stateManager: StateProvider): SimpleFeatureRuntime {
         val eventHandlers = channel.handlersFor<CommandAsked> {
-            if (event.command == command) {
+            if (event.data.command == command) {
                 stateManager
                     .getState<GetCurrentStreamState>(GetCurrentStreamState.ID)
                     .getDescription()

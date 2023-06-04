@@ -1,6 +1,6 @@
 package fr.delphes.features.core.botStarted
 
-import fr.delphes.bot.event.eventHandler.EventHandlerAction
+import fr.delphes.bot.event.eventHandler.IncomingEventHandlerAction
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
@@ -11,7 +11,7 @@ import fr.delphes.state.StateProvider
 
 class BotStartedFeature(
     override val id: FeatureId = FeatureId(),
-    private val action: EventHandlerAction<BotStarted>,
+    private val action: IncomingEventHandlerAction<BotStarted>,
 ) : FeatureDefinition {
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime =
         SimpleFeatureRuntime.whichHandle(id, action)

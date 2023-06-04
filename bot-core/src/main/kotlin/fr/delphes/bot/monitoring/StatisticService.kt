@@ -1,7 +1,7 @@
 package fr.delphes.bot.monitoring
 
 import fr.delphes.bot.configuration.BotConfiguration
-import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import kotlinx.serialization.json.Json
@@ -17,7 +17,7 @@ class StatisticService(
         serializer
     )
 
-    suspend fun handle(event: IncomingEvent) {
+    suspend fun handle(event: IncomingEventWrapper<*>) {
         try {
             val eventData = StatisticEvent(clock.now(), StatisticIncomingEventData(event))
             repository.save(eventData)

@@ -2,6 +2,7 @@ package fr.delphes.feature
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
@@ -44,7 +45,7 @@ class FeaturesManager(
         return definition.buildRuntime(stateManager.readOnly)
     }
 
-    suspend fun handle(event: IncomingEvent, bot: Bot) {
+    suspend fun handle(event: IncomingEventWrapper<out IncomingEvent>, bot: Bot) {
         val runtimes = compiledRuntimes.values + configurableRunTimes.values
         coroutineScope {
             runtimes.forEach { runtime ->

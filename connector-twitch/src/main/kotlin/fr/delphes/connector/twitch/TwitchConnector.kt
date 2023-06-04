@@ -4,6 +4,7 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorType
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
@@ -154,8 +155,9 @@ class TwitchConnector(
     }
 
     internal suspend fun handleIncomingEvent(event: TwitchIncomingEvent) {
-        internalHandler.handle(event)
-        bot.handle(event)
+        val incomingEvent = IncomingEventWrapper(event, bot.clock.now())
+        internalHandler.handle(incomingEvent)
+        bot.handle(incomingEvent)
     }
 
     val botAccount: TwitchChannel?

@@ -10,7 +10,7 @@ import mu.KotlinLogging
 import kotlin.reflect.KClass
 
 class LegacyEventHandlers(
-    val eventHandlers: Map<KClass<*>, List<LegacyEventHandler<*>>>
+    val eventHandlers: Map<KClass<*>, List<LegacyEventHandler<*>>>,
 ) {
     companion object {
         private val LOGGER = KotlinLogging.logger {}

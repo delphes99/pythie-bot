@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.clipCreated
 
 import fr.delphes.connector.twitch.incomingEvent.ClipCreated
-import fr.delphes.features.TestEventHandlerAction
+import fr.delphes.features.TestIncomingEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.clips.Clip
@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 
 class CustomClipCreatedTest : ShouldSpec({
     should("execute action if channel match") {
-        val testEventHandler = TestEventHandlerAction<ClipCreated>()
+        val testEventHandler = TestIncomingEventHandlerAction<ClipCreated>()
 
         val customNewFollow = CustomClipCreated(CHANNEL, action = testEventHandler)
 
@@ -33,7 +33,7 @@ class CustomClipCreatedTest : ShouldSpec({
         testEventHandler.shouldHaveBeenCalled()
     }
     should("not execute action if channel doesn't match") {
-        val testEventHandler = TestEventHandlerAction<ClipCreated>()
+        val testEventHandler = TestIncomingEventHandlerAction<ClipCreated>()
 
         val customNewFollow = CustomClipCreated(CHANNEL, action = testEventHandler)
 

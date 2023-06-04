@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.newFollow
 
-import fr.delphes.bot.event.eventHandler.EventHandlerAction
+import fr.delphes.bot.event.eventHandler.IncomingEventHandlerAction
 import fr.delphes.connector.twitch.incomingEvent.NewFollow
 import fr.delphes.features.twitch.SimpleTwitchEventFeature
 import fr.delphes.rework.feature.FeatureId
@@ -12,7 +12,7 @@ import fr.delphes.utils.uuid.uuid
 class CustomNewFollow(
     override val channel: TwitchChannel,
     override val id: FeatureId = FeatureId(uuid()),
-    action: EventHandlerAction<NewFollow>,
+    action: IncomingEventHandlerAction<NewFollow>,
 ) : SimpleTwitchEventFeature<NewFollow>(NewFollow::class, id, action) {
     override fun getSpecificStates(stateProvider: StateProvider) = emptyList<State>()
 }

@@ -59,7 +59,7 @@ val delphestestCustomFeatures = listOf<FeatureDefinition>(
     CustomNewFollow(
         channel
     ) {
-        executeOutgoingEvent(SendMessage("Merci du follow ${event.follower.name}", channel))
+        executeOutgoingEvent(SendMessage("Merci du follow ${event.data.follower.name}", channel))
     },
     CustomStreamOffline(channel) {
         executeOutgoingEvent(SendMessage("Le stream est fini, au revoir !", channel))
@@ -74,7 +74,7 @@ val delphestestCustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                event.changes.joinToString(" | ") { change ->
+                event.data.changes.joinToString(" | ") { change ->
                     when (change) {
                         is StreamChanges.Title -> {
                             "Nouveau titre : ${change.newTitle}"

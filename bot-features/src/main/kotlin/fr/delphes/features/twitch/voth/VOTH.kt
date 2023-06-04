@@ -35,10 +35,10 @@ class VOTH(
             .builder()
             .addHandler(
                 channel.handlerFor<RewardRedemption> {
-                    if (reward.rewardConfiguration.match(event.reward)) {
+                    if (reward.rewardConfiguration.match(event.data.reward)) {
                         val state = state(VOTHState.idFor(channel)) ?: error("No state for VOTH")
                         val oldVOTH = state.data.currentVip
-                        state.newVOTH(event)
+                        state.newVOTH(event.data)
                         val newVOTH = state.data.currentVip
                         if (newVOTH != null && newVOTH != oldVOTH) {
                             val removeAllVips = state(GetVipState.ID)
@@ -46,14 +46,14 @@ class VOTH(
                                 ?.map { RemoveVIP(UserName(it.name), channel) }
                                 ?: emptyList()
 
-                            val promoteVIP = PromoteVIP(event.user, channel)
+                            val promoteVIP = PromoteVIP(event.data.user, channel)
 
                             val alert = Alert("newVip", "newVip" to (newVOTH.user.name))
 
                             NewVOTHAnnounced(
                                 oldVOTH,
                                 newVOTH,
-                                event
+                                event.data
                             )
                                 .newActionContext()
                                 .newVipAnnouncer()

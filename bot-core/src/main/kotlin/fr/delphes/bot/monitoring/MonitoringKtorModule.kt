@@ -2,6 +2,8 @@ package fr.delphes.bot.monitoring
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.incoming.IncomingEventId
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
@@ -17,8 +19,14 @@ fun Application.Monitoring(bot: Bot) {
             call.respond(statisticService.getEvents())
         }
         post("/monitoring/replay") {
-            val event = call.receive<IncomingEvent>()
-            bot.handle(event)
+            val event = call.receive<IncomingEventWrapper<IncomingEvent>>()
+            val newIncomingEvent = IncomingEventWrapper(
+                data = event.data,
+                replay = event.id,
+                id = IncomingEventId()
+            )
+
+            bot.handle(newIncomingEvent)
             call.respond("OK")
         }
     }

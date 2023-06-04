@@ -4,24 +4,31 @@
         :data="events"
     >
       <ui-table-column header-name="common.date" property-name="date"></ui-table-column>
+      <ui-table-column header-name="monitoring.events.id" v-slot="{item}">
+        {{ item?.event?.incomingEvent?.id }}
+      </ui-table-column>
       <ui-table-column header-name="monitoring.events.type" v-slot="{item}">
-        {{ item?.event?.event?.type }}
+        {{ item?.event?.incomingEvent?.data?.type }}
+      </ui-table-column>
+      <ui-table-column header-name="monitoring.events.isReplay" v-slot="{item}">
+        {{ item?.event?.incomingEvent?.replay !== null }}
       </ui-table-column>
       <ui-table-column header-name="common.actions" v-slot="{item}">
         <ui-button label="common.view" @on-click="display(item)"></ui-button>
-        <ui-button label="monitoring.events.replay" @on-click="replay(item)"></ui-button>
+        <ui-button label="monitoring.events.replay" :type="UiButtonType.Warning" @on-click="replay(item)"></ui-button>
       </ui-table-column>
     </ui-table>
   </ui-panel>
   <ui-modal title="monitoring.events.title" v-model:is-open="isOpen">
     <div v-if="itemToDisplay">
-      <json-viewer :value="itemToDisplay.event.event"></json-viewer>
+      <json-viewer :value="itemToDisplay.event.incomingEvent"></json-viewer>
     </div>
   </ui-modal>
 </template>
 
 <script setup lang="ts">
 import {AppInjectionKeys} from "@/app.injection.keys";
+import UiButtonType from "@/common/designSystem/button/ui-button.type";
 import UiButton from "@/common/designSystem/button/ui-button.vue";
 import UiModal from "@/common/designSystem/modal/ui-modal.vue";
 import {useModal} from "@/common/designSystem/modal/useModal";

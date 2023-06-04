@@ -2,6 +2,7 @@ package fr.delphes.bot.event.eventHandler
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import mu.KotlinLogging
@@ -13,7 +14,7 @@ class EventHandlers(
     companion object {
         private val LOGGER = KotlinLogging.logger {}
 
-        inline fun <reified U : IncomingEvent> of(noinline action: EventHandlerAction<U>) =
+        inline fun <reified U : IncomingEvent> of(noinline action: IncomingEventHandlerAction<U>) =
             builder().addHandler(EventHandler.of(action)).build()
 
         inline fun <reified U : IncomingEvent> of(handler: EventHandler<U>) =
@@ -31,7 +32,7 @@ class EventHandlers(
                 return this
             }
 
-            inline fun <reified U : IncomingEvent> addHandler(noinline handler: EventHandlerAction<U>): Builder {
+            inline fun <reified U : IncomingEvent> addHandler(noinline handler: IncomingEventHandlerAction<U>): Builder {
                 map.putIfAbsent(U::class, mutableListOf())
                 map[U::class]!!.add(EventHandler.of(handler))
                 return this
@@ -54,14 +55,15 @@ class EventHandlers(
     }
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun handleEvent(event: IncomingEvent, bot: Bot) {
+    suspend fun handleEvent(event: IncomingEventWrapper<out IncomingEvent>, bot: Bot) {
+        val incomingEvent = event.data
         return coroutineScope {
-            eventHandlers[event::class]
+            eventHandlers[incomingEvent::class]
                 ?.map { it as EventHandler<IncomingEvent> }
                 ?.forEach { handler ->
                     launch {
                         try {
-                            handler.handle(event, bot)
+                            handler.handle(event as IncomingEventWrapper<IncomingEvent>, bot)
                         } catch (e: Exception) {
                             LOGGER.error(e) { "Skip ${handler::class.simpleName} : Error while handling event" }
                         }

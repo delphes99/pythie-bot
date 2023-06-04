@@ -2,14 +2,15 @@ package fr.delphes
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
 
 data class FakeFeatureRuntime(
-    override val id: FeatureId = FeatureId("id")
+    override val id: FeatureId = FeatureId("id"),
 ) : FeatureRuntime {
     var isHandleIncomingEventCalled = false
-    override suspend fun handleIncomingEvent(event: IncomingEvent, bot: Bot) {
+    override suspend fun handleIncomingEvent(event: IncomingEventWrapper<out IncomingEvent>, bot: Bot) {
         isHandleIncomingEventCalled = true
     }
 }

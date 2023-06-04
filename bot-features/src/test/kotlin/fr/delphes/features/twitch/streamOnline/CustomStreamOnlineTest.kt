@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.streamOnline
 
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
-import fr.delphes.features.TestEventHandlerAction
+import fr.delphes.features.TestIncomingEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 
 class CustomStreamOnlineTest : ShouldSpec({
     should("execute action if channel match") {
-        val testEventHandler = TestEventHandlerAction<StreamOnline>()
+        val testEventHandler = TestIncomingEventHandlerAction<StreamOnline>()
 
         val customStreamOnline = CustomStreamOnline(CHANNEL, action = testEventHandler)
 
@@ -22,7 +22,7 @@ class CustomStreamOnlineTest : ShouldSpec({
         testEventHandler.shouldHaveBeenCalled()
     }
     should("not execute action if channel doesn't match") {
-        val testEventHandler = TestEventHandlerAction<StreamOnline>()
+        val testEventHandler = TestIncomingEventHandlerAction<StreamOnline>()
 
         val customStreamOnline = CustomStreamOnline(CHANNEL, action = testEventHandler)
 

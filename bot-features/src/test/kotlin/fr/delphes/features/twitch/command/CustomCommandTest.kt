@@ -2,7 +2,7 @@ package fr.delphes.features.twitch.command
 
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.CommandAsked
-import fr.delphes.features.TestEventHandlerAction
+import fr.delphes.features.TestIncomingEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.state.state.TimeState
@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 
 class CustomCommandTest : ShouldSpec({
     should("should call action when trigger match") {
-        val testEventHandler = TestEventHandlerAction<CommandAsked>()
+        val testEventHandler = TestIncomingEventHandlerAction<CommandAsked>()
 
         val command = CustomCommand(CHANNEL, "!trigger", action = testEventHandler)
 
@@ -31,7 +31,7 @@ class CustomCommandTest : ShouldSpec({
     }
 
     should("not call action if trigger does not match") {
-        val testEventHandler = TestEventHandlerAction<CommandAsked>()
+        val testEventHandler = TestIncomingEventHandlerAction<CommandAsked>()
 
         val command = CustomCommand(CHANNEL, "!trigger", action = testEventHandler)
 
@@ -47,7 +47,7 @@ class CustomCommandTest : ShouldSpec({
     }
 
     should("not call action if channel does not match") {
-        val testEventHandler = TestEventHandlerAction<CommandAsked>()
+        val testEventHandler = TestIncomingEventHandlerAction<CommandAsked>()
 
         val command = CustomCommand(CHANNEL, "!trigger", action = testEventHandler)
 
@@ -63,7 +63,7 @@ class CustomCommandTest : ShouldSpec({
     }
 
     should("not call action if previous call is too recent") {
-        val testEventHandler = TestEventHandlerAction<CommandAsked>()
+        val testEventHandler = TestIncomingEventHandlerAction<CommandAsked>()
 
         val command = CustomCommand(
             CHANNEL,
@@ -90,7 +90,7 @@ class CustomCommandTest : ShouldSpec({
     }
 
     should("call action if the cooldown is over") {
-        val testEventHandler = TestEventHandlerAction<CommandAsked>()
+        val testEventHandler = TestIncomingEventHandlerAction<CommandAsked>()
 
         val command = CustomCommand(
             CHANNEL,

@@ -1,7 +1,7 @@
 package fr.delphes.features.twitch.bitCheer
 
 import fr.delphes.connector.twitch.incomingEvent.BitCheered
-import fr.delphes.features.TestEventHandlerAction
+import fr.delphes.features.TestIncomingEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
@@ -9,7 +9,7 @@ import io.kotest.core.spec.style.ShouldSpec
 
 class CustomBitCheerTest : ShouldSpec({
     should("execute action if channel match") {
-        val testEventHandler = TestEventHandlerAction<BitCheered>()
+        val testEventHandler = TestIncomingEventHandlerAction<BitCheered>()
 
         val customNewFollow = CustomBitCheer(CHANNEL, action = testEventHandler)
 
@@ -25,7 +25,7 @@ class CustomBitCheerTest : ShouldSpec({
         testEventHandler.shouldHaveBeenCalled()
     }
     should("not execute action if channel doesn't match") {
-        val testEventHandler = TestEventHandlerAction<BitCheered>()
+        val testEventHandler = TestIncomingEventHandlerAction<BitCheered>()
 
         val customNewFollow = CustomBitCheer(CHANNEL, action = testEventHandler)
 

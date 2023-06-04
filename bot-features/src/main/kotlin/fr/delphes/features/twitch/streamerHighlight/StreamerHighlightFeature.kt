@@ -32,7 +32,7 @@ class StreamerHighlightFeature(
 
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
         val eventHandlers = channel.handlersFor<MessageReceived> {
-            val user = event.user
+            val user = event.data.user
             if (normalizedExcludedUserNames.contains(user.normalizeName)) {
                 return@handlersFor
             }
@@ -48,7 +48,7 @@ class StreamerHighlightFeature(
                 }
             ) {
                 highlightState.highlight(user, now)
-                shoutOut(event, userInfos)?.also {
+                shoutOut(event.data, userInfos)?.also {
                     executeOutgoingEvent(it)
                 }
             }

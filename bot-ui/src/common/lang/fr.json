@@ -74,7 +74,9 @@
     "events": {
       "title": "Evénements",
       "type": "Type",
-      "replay": "Rejouer"
+      "replay": "Rejouer",
+      "isReplay": "Rejoué",
+      "id": "Id"
     }
   },
   "obs": {

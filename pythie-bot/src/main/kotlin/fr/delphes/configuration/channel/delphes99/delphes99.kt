@@ -123,8 +123,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel,
         "!so"
     ) {
-        if (moderators.contains(event.by.normalizeName)) {
-            event.parameters.firstOrNull()?.also { promotedUser ->
+        if (moderators.contains(event.data.by.normalizeName)) {
+            event.data.parameters.firstOrNull()?.also { promotedUser ->
                 executeOutgoingEvent(buildShoutOut(UserName(promotedUser)))
             }
         }
@@ -157,16 +157,16 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel,
         "!mod"
     ) {
-        if (moderators.contains(event.by.normalizeName)) {
-            executeOutgoingEvent(PromoteModerator(event.by, event.channel))
+        if (moderators.contains(event.data.by.normalizeName)) {
+            executeOutgoingEvent(PromoteModerator(event.data.by, event.data.channel))
         }
     },
     CustomCommand(
         channel,
         "!unmod"
     ) {
-        if (moderators.contains(event.by.normalizeName)) {
-            executeOutgoingEvent(RemoveModerator(event.by, event.channel))
+        if (moderators.contains(event.data.by.normalizeName)) {
+            executeOutgoingEvent(RemoveModerator(event.data.by, event.data.channel))
         }
     },
     CustomCommand(
@@ -211,7 +211,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         cooldown = secondsOf(10)
     ) {
         executeOutgoingEvent(
-            SendMessage("Coucou ${event.by.name} !", channel)
+            SendMessage("Coucou ${event.data.by.name} !", channel)
         )
     },
     CustomCommand(
@@ -231,7 +231,12 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     CustomNewFollow(
         channel
     ) {
-        executeOutgoingEvent(SendMessage("\uD83D\uDC9C Merci du follow ${event.follower.name} \uD83D\uDE4F", channel))
+        executeOutgoingEvent(
+            SendMessage(
+                "\uD83D\uDC9C Merci du follow ${event.data.follower.name} \uD83D\uDE4F",
+                channel
+            )
+        )
         executeOutgoingEvent(PlaySound("welcome.mp3"))
     },
     CustomBitCheer(
@@ -239,7 +244,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                "💎 ${event.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${event.bitsUsed} bits. Merci beaucoup ! 💎",
+                "💎 ${event.data.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${event.data.bitsUsed} bits. Merci beaucoup ! 💎",
                 channel
             )
         )
@@ -248,7 +253,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel
     ) {
         executeOutgoingEvent(
-            SendMessage("⭐ Merci pour le sub ${event.sub.name} \uD83D\uDE4F", channel)
+            SendMessage("⭐ Merci pour le sub ${event.data.sub.name} \uD83D\uDE4F", channel)
         )
         executeOutgoingEvent(
             PlaySound("thank-you.mp3")
@@ -260,16 +265,16 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         executeOutgoingEvent(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !", channel))
         executeOutgoingEvent(
             DiscordEmbeddedMessage(
-                event.title,
+                event.data.title,
                 "https://www.twitch.tv/delphes99",
-                "${event.thumbnailUrl.withResolution(320, 160)}?r=${
+                "${event.data.thumbnailUrl.withResolution(320, 160)}?r=${
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
                 }",
                 708949759725010984,
                 "Delphes99",
                 "https://www.twitch.tv/delphes99",
                 "https://static-cdn.jtvnw.net/jtv_user_pictures/9bda888d-167b-4e12-83d3-d8519fa45bcd-profile_image-300x300.png",
-                "Catégorie" to (event.game?.label ?: "Sans catégorie"),
+                "Catégorie" to (event.data.game?.label ?: "Sans catégorie"),
             )
         )
     },
@@ -285,7 +290,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                event.changes.joinToString(" | ") { change ->
+                event.data.changes.joinToString(" | ") { change ->
                     when (change) {
                         is StreamChanges.Title -> {
                             "\uD83D\uDCDD ${change.newTitle}"
@@ -303,7 +308,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     CustomClipCreated(
         channel
     ) {
-        val clip = event.clip
+        val clip = event.data.clip
         executeOutgoingEvent(
             SendMessage(
                 "\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}",
@@ -339,11 +344,11 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                "\uD83E\uDDED ${event.leader.name} explore twitch et fait escale ici avec ses ${event.numberOfRaiders} acolytes.",
+                "\uD83E\uDDED ${event.data.leader.name} explore twitch et fait escale ici avec ses ${event.data.numberOfRaiders} acolytes.",
                 channel
             )
         )
-        executeOutgoingEvent(buildShoutOut(event.leader))
+        executeOutgoingEvent(buildShoutOut(event.data.leader))
         executeOutgoingEvent(
             CreatePoll(
                 channel,
@@ -368,13 +373,13 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     NewGuildMemberFeature {
         executeOutgoingEvent(
             SendMessage(
-                "${event.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même ➡ $discordInvitationLink !",
+                "${event.data.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même ➡ $discordInvitationLink !",
                 channel
             )
         )
     },
     SceneChangedFeature {
-        if (event.newScene == "End credits") {
+        if (event.data.newScene == "End credits") {
             executeOutgoingEvent(SendMessage("Ca sent la fin", channel))
         }
     },
@@ -431,7 +436,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     },
     //TODO : handle pause/async event differently : eventsub timeout
     SourceFilterActivatedFeature {
-        if (event.filter == matrixFilter) {
+        if (event.data.filter == matrixFilter) {
             executeOutgoingEvent(Pause(secondsOf(30)))
             executeOutgoingEvent(DeactivateFilter(matrixFilter))
         }
@@ -445,7 +450,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, true, "main_capture"))
     },
     SourceFilterActivatedFeature {
-        if (event.filter == blackAndWhiteFilter) {
+        if (event.data.filter == blackAndWhiteFilter) {
             executeOutgoingEvent(Pause(Duration.ofMillis(9700)))
             executeOutgoingEvent(DeactivateFilter(blackAndWhiteFilter))
             executeOutgoingEvent(ChangeItemVisibility(RAIN_ITEM_ID, false, "main_capture"))
@@ -500,7 +505,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel,
         "!vothstats",
     ) {
-        state(VOTHState.idFor(channel))?.getReignsFor(event.by)?.also { stats ->
+        state(VOTHState.idFor(channel))?.getReignsFor(event.data.by)?.also { stats ->
             executeOutgoingEvent(
                 SendMessage(
                     "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +

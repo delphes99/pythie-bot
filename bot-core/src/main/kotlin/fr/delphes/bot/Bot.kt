@@ -6,6 +6,7 @@ import fr.delphes.bot.connector.ConnectorInitializer
 import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.CoreOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -22,6 +23,8 @@ import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
 import fr.delphes.utils.exhaustive
+import fr.delphes.utils.time.Clock
+import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
@@ -37,6 +40,7 @@ class Bot(
     val featureConfigurationsType: List<FeatureConfigurationBuilderRegistry>,
     private val connectorInitializers: List<ConnectorInitializer>,
     featureSerializersModule: SerializersModule,
+    val clock: Clock = SystemClock,
 ) : IncomingEventHandler,
     OutgoingEventProcessor {
 
@@ -85,10 +89,10 @@ class Bot(
 
     val alerts = Channel<Alert>()
 
-    override suspend fun handle(incomingEvent: IncomingEvent) {
+    override suspend fun handle(incomingEvent: IncomingEventWrapper<out IncomingEvent>) {
         listOf(legacyfeatures)
             .flatten()
-            .flatMap { feature -> feature.handleIncomingEvent(incomingEvent, this) }
+            .flatMap { feature -> feature.handleIncomingEvent(incomingEvent.data, this) }
             .forEach { event -> processOutgoingEvent(event) }
         statisticService.handle(incomingEvent)
         featuresManager.handle(incomingEvent, this)
@@ -131,7 +135,7 @@ class Bot(
                 featuresManager.stateManager.put(state)
             }
 
-            handle(BotStarted)
+            handle(IncomingEventWrapper(BotStarted, clock.now()))
         }
     }
 

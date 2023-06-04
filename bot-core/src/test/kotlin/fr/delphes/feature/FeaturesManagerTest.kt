@@ -3,6 +3,7 @@ package fr.delphes.feature
 import fr.delphes.FakeFeatureDefinition
 import fr.delphes.FakeFeatureRuntime
 import fr.delphes.FakeIncomingEvent
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.SimpleFeatureRuntime
 import io.kotest.core.spec.style.ShouldSpec
@@ -10,6 +11,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import java.time.LocalDateTime
 
 internal class FeaturesManagerTest : ShouldSpec({
     context("handle incoming message") {
@@ -55,7 +57,10 @@ internal class FeaturesManagerTest : ShouldSpec({
                 featureConfigurationRepository
             )
 
-            featuresManager.handle(FakeIncomingEvent(), mockk())
+            featuresManager.handle(
+                IncomingEventWrapper(FakeIncomingEvent(), LocalDateTime.of(2020, 1, 2, 12, 0)),
+                mockk()
+            )
 
             runtimeForCompiledFeature.isHandleIncomingEventCalled shouldBe true
             runtimeForAnotherCompiledFeature.isHandleIncomingEventCalled shouldBe true

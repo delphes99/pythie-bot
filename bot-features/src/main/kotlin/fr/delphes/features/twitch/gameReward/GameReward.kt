@@ -51,13 +51,13 @@ class GameReward(
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
         val eventHandlers = EventHandlers.builder()
             .addHandler(channel.handlerFor<StreamOnline> {
-                event.game
+                event.data.game
                     ?.id
                     ?.let(::eventFor)
                     ?.forEach { event -> executeOutgoingEvent(event) }
             })
             .addHandler(channel.handlerFor<StreamChanged> {
-                event.changes
+                event.data.changes
                     .filterIsInstance<StreamChanges.Game>()
                     .firstOrNull()
                     ?.let(StreamChanges.Game::newGame)

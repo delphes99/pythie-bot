@@ -5,8 +5,10 @@ import fr.delphes.bot.connector.connectionstate.ConnectionSuccessful
 import fr.delphes.bot.connector.connectionstate.ConnectorTransition
 import fr.delphes.bot.connector.connectionstate.DisconnectionRequested
 import fr.delphes.bot.connector.connectionstate.ErrorOccurred
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.obs.business.SourceFilter
+import fr.delphes.connector.obs.incomingEvent.ObsIncomingEvent
 import fr.delphes.connector.obs.incomingEvent.SceneChanged
 import fr.delphes.connector.obs.incomingEvent.SourceFilterActivated
 import fr.delphes.connector.obs.incomingEvent.SourceFilterDeactivated
@@ -14,12 +16,13 @@ import fr.delphes.connector.obs.outgoingEvent.ObsOutgoingEvent
 import fr.delphes.obs.Configuration
 import fr.delphes.obs.ObsClient
 import fr.delphes.obs.ObsListener
-import kotlinx.serialization.InternalSerializationApi
+import fr.delphes.utils.time.Clock
+import fr.delphes.utils.time.SystemClock
 import mu.KotlinLogging
 
-@OptIn(InternalSerializationApi::class)
 class ObsConnectionManager(
-    private val connector: ObsConnector
+    private val connector: ObsConnector,
+    private val clock: Clock = SystemClock,
 ) : StandAloneConnectionManager<ObsConfiguration, ObsRunTime>(connector.configurationManager) {
     override val connectionName = "OBS Websocket"
 
@@ -28,7 +31,7 @@ class ObsConnectionManager(
             //TODO move listener build
             val listeners = ObsListener(
                 onSwitchScene = {
-                    connector.bot.handle(SceneChanged(it.eventData.sceneName))
+                    handle(SceneChanged(it.eventData.sceneName))
                 },
                 onSourceFilterEnableStateChanged = {
                     val filter = SourceFilter(it.eventData.sourceName, it.eventData.filterName)
@@ -37,7 +40,7 @@ class ObsConnectionManager(
                     } else {
                         SourceFilterDeactivated(filter)
                     }
-                    connector.bot.handle(event)
+                    handle(event)
                 },
                 onError = { message ->
                     LOGGER.error { "Obs client error : $message" }
@@ -53,6 +56,10 @@ class ObsConnectionManager(
         } catch (e: Exception) {
             ErrorOccurred(configuration, "Connection error : ${e.message}")
         }
+    }
+
+    private suspend fun handle(event: ObsIncomingEvent) {
+        connector.bot.handle(IncomingEventWrapper(event, clock.now()))
     }
 
     private fun ObsConfiguration.toObsConfiguration() = Configuration(host, port, password)

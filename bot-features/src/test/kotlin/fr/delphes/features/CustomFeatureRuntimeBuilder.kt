@@ -1,6 +1,7 @@
 package fr.delphes.features
 
 import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.State
 import fr.delphes.state.StateId
@@ -52,7 +53,7 @@ class CustomFeatureRuntimeBuilder(
         )
         val executionContext = TestFeatureReturnExecutionContext(stateManager)
 
-        runtime.handleIncomingEvent(event, executionContext.bot)
+        runtime.handleIncomingEvent(IncomingEventWrapper(event, NOW), executionContext.bot)
 
         return executionContext
     }

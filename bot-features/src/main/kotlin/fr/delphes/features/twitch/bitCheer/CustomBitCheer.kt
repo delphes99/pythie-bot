@@ -1,6 +1,6 @@
 package fr.delphes.features.twitch.bitCheer
 
-import fr.delphes.bot.event.eventHandler.EventHandlerAction
+import fr.delphes.bot.event.eventHandler.IncomingEventHandlerAction
 import fr.delphes.connector.twitch.incomingEvent.BitCheered
 import fr.delphes.features.twitch.SimpleTwitchEventFeature
 import fr.delphes.rework.feature.FeatureId
@@ -12,7 +12,7 @@ import fr.delphes.utils.uuid.uuid
 class CustomBitCheer(
     override val channel: TwitchChannel,
     override val id: FeatureId = FeatureId(uuid()),
-    action: EventHandlerAction<BitCheered>,
+    action: IncomingEventHandlerAction<BitCheered>,
 ) : SimpleTwitchEventFeature<BitCheered>(BitCheered::class, id, action) {
     override fun getSpecificStates(stateProvider: StateProvider) = emptyList<State>()
 }

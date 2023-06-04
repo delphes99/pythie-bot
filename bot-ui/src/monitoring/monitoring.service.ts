@@ -15,7 +15,7 @@ export class MonitoringService {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(item.event.event),
+            body: JSON.stringify(item.event.incomingEvent),
         })
     }
 }
@@ -27,9 +27,12 @@ export interface MonitoringEvent {
 
 export interface EventPayload {
     type: string,
-    event: IncomingEventPayload
+    incomingEvent: IncomingEventPayload
 }
 
 export interface IncomingEventPayload {
     type: string
+    id: string
+    replay?: string,
+    date: Date
 }
