@@ -8,6 +8,16 @@ export class MonitoringService {
         return fetch(`${this.backendUrl}/monitoring/events`)
             .then(response => response.json())
     }
+
+    replay(item: MonitoringEvent) {
+        return fetch(`${this.backendUrl}/monitoring/replay`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(item.event.event),
+        })
+    }
 }
 
 export interface MonitoringEvent {

@@ -73,7 +73,8 @@
     "title": "Monitoring",
     "events": {
       "title": "Events",
-      "type": "Type"
+      "type": "Type",
+      "replay": "Replay"
     }
   },
   "obs": {

@@ -9,6 +9,7 @@
       </ui-table-column>
       <ui-table-column header-name="common.actions" v-slot="{item}">
         <ui-button label="common.view" @on-click="display(item)"></ui-button>
+        <ui-button label="monitoring.events.replay" @on-click="replay(item)"></ui-button>
       </ui-table-column>
     </ui-table>
   </ui-panel>
@@ -31,6 +32,8 @@ import {autowired} from "@/common/utils/injection.util";
 import {MonitoringEvent} from "@/monitoring/monitoring.service";
 import {ref} from "vue";
 
+const monitoringService = autowired(AppInjectionKeys.MONITORING_SERVICE)
+
 const itemToDisplay = ref<MonitoringEvent | null>(null)
 
 function display(item: MonitoringEvent) {
@@ -38,8 +41,11 @@ function display(item: MonitoringEvent) {
   open()
 }
 
-const statisticService = autowired(AppInjectionKeys.MONITORING_SERVICE)
-const events = await statisticService.getStatistics()
+function replay(item: MonitoringEvent) {
+  monitoringService.replay(item)
+}
+
+const events = await monitoringService.getStatistics()
 
 const {isOpen, open} = useModal()
 </script>
