@@ -41,6 +41,7 @@ async function getStatus() {
   statuses.value = await response.json()
 }
 
+getStatus()
 setInterval(() => {
   getStatus()
 }, 2000)
