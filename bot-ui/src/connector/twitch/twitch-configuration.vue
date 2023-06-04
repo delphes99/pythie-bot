@@ -10,7 +10,7 @@
         style="height: 20px"
         @click="refreshCurrentConfiguration"
     >
-    <h2 class="text-xl font-medium text-black">
+    <h2 class="text-xl font-medium">
       App credential
     </h2>
     <ui-textfield
@@ -26,7 +26,7 @@
         label="common.save"
         @on-click="saveAppCredential"
     />
-    <h2 class="text-xl font-medium text-black">
+    <h2 class="text-xl font-medium">
       Bot identity
     </h2>
     <div v-if="botAccount">

@@ -16,11 +16,11 @@
 }
 
 .light-theme {
-    --background: #ffffff;
+    --background: #1c658c;
     --background-text-color: #000000;
-    --primary-color: #1c658c;
+    --primary-color: #ffffff;
     --primary-color-hover: #0b2736;
-    --primary-text-color: #d8d2cb;
+    --primary-text-color: #000000;
     --secondary-color: #1c658c;
     --title-color: #374151;
     --input-color: #1c658c;

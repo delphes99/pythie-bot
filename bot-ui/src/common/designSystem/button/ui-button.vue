@@ -68,7 +68,7 @@ const classes = computed(() => {
 }
 
 .primary-button {
-  @apply bg-primaryColor hover:bg-primaryColorHover;
+  @apply bg-secondaryColor hover:bg-primaryColorHover;
 }
 
 .secondary-button {

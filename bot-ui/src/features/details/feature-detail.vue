@@ -1,17 +1,20 @@
 <template>
-  <div v-for="descriptor in featureDescription.descriptors" :key="descriptor.fieldName">
-    <component :is="descriptor.viewComponent()"
-               :descriptor="descriptor"
-               @modifyDescriptor="modifyDescriptor"
-    />
-  </div>
-  <ui-button label="common.save" @click="saveDescription"/>
+  <ui-panel :title="featureDescription.id">
+    <div v-for="descriptor in featureDescription.descriptors" :key="descriptor.fieldName">
+      <component :is="descriptor.viewComponent()"
+                 :descriptor="descriptor"
+                 @modifyDescriptor="modifyDescriptor"
+      />
+    </div>
+    <ui-button label="common.save" @click="saveDescription"/>
+  </ui-panel>
 </template>
 
 <script lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
 import {FieldDescriptor} from "@/common/describableForm/field-descriptor";
 import UiButton from "@/common/designSystem/button/ui-button.vue";
+import UiPanel from "@/common/designSystem/panel/ui-panel.vue";
 import {autowired} from "@/common/utils/injection.util";
 import {ref} from "vue";
 import {useI18n} from "vue-i18n";

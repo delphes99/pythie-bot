@@ -1,17 +1,15 @@
 <template>
-  <ui-panel
-      :menu="[UiPanelMenuItem.of('common.add', openCreate)]"
-      title="overlay.title"
-  >
-    <ui-card-panel>
-      <overlay-card
-          v-for="overlay in overlays"
-          :key="overlay"
-          :overlay="overlay"
-          @deleted="deleteOverlay(overlay)"
-      />
-    </ui-card-panel>
-  </ui-panel>
+  <ui-card-panel title="overlay.title">
+    <template #header>
+      <ui-button label="common.add" @on-click="openCreate()"/>
+    </template>
+    <overlay-card
+        v-for="overlay in overlays"
+        :key="overlay"
+        :overlay="overlay"
+        @deleted="deleteOverlay(overlay)"
+    />
+  </ui-card-panel>
   <ui-modal
       v-model:is-open="isCreateModalOpened"
       title="Create overlay"
@@ -48,8 +46,6 @@ import UiCardPanel from "@/common/designSystem/card/ui-card-panel.vue"
 import UiTextfield from "@/common/designSystem/form/textfield/ui-textfield.vue"
 import UiModal from "@/common/designSystem/modal/ui-modal.vue"
 import {useModal} from "@/common/designSystem/modal/useModal"
-import {UiPanelMenuItem} from "@/common/designSystem/panel/ui-panel.menu.item"
-import UiPanel from "@/common/designSystem/panel/ui-panel.vue"
 import {autowired} from "@/common/utils/injection.util";
 import OverlayCard from "@/overlay/components/overlay-card.vue"
 import Overlay from "@/overlay/Overlay"

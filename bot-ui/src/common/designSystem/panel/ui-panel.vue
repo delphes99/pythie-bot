@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-2 p-0 border-primaryColor border-2">
-    <div class="bg-primaryColor text-primaryTextColor p-2">
+  <div class="mb-2 p-0 bg-primaryColor shadow">
+    <div class="text-primaryTextColor p-4">
       <h1 class="inline text-2xl font-medium title-font">
         {{ $t(title) }}
       </h1>
@@ -20,7 +20,7 @@
     </div>
     <div
         v-if="$slots.default"
-        class="p-4"
+        class="m-4"
     >
       <slot/>
     </div>

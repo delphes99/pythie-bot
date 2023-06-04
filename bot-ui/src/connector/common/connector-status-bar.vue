@@ -1,7 +1,8 @@
 <template>
-  <div class="w-screen flex flex-row items-center justify-around bg-primaryColor text-primaryTextColor z-50">
+  <div
+      class="w-screen flex flex-row items-center justify-around bg-primaryColor text-primaryTextColor z-50 drop-shadow-lg">
     <div class="grow">
-      <h1 class="pl-2 text-2xl font-extrabold text-white">
+      <h1 class="pl-2 text-2xl font-extrabold text-backgroundTextColor">
         Pythie-bot
       </h1>
     </div>

@@ -55,12 +55,12 @@ provide(UiTableInjectionKeys.COLUMN_REGISTRATION, {
         <tr
             v-for="(item, index) in data"
             :key="index"
-            class="border-b border-primaryColor text-backgroundTextColor"
+            class="border-b border-secondaryColor text-backgroundTextColor"
         >
           <td
               v-for="column in columns"
               :key="column.id"
-              class="p-2 font-bold text-left text-backgroundTextColor"
+              class="p-2 text-left text-backgroundTextColor"
           >
             <template v-if="column.render">
               <component :is="column.render" :item="item"></component>
