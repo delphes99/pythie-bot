@@ -1,5 +1,8 @@
 import {AppInjectionKeys} from "@/app.injection.keys"
-import {NotificationService} from "@/common/components/common/notification/notification.service";
+import {NotificationService} from "@/common/designSystem/notification/notification.service";
+
+import en from "@/common/lang/en.json"
+import fr from "@/common/lang/fr.json"
 import {LocalStorageItem} from "@/common/LocalStorageItem"
 import FeatureService from "@/features/feature.service"
 import MediasService from "@/media/MediasService"
@@ -15,9 +18,6 @@ import Vue3Toasity from "vue3-toastify"
 import 'vue3-toastify/dist/index.css';
 import App from "./App.vue"
 import "./common/assets/styles/index.css"
-
-import en from "./lang/en.json"
-import fr from "./lang/fr.json"
 import router from "./router"
 
 const messages = {

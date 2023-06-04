@@ -43,13 +43,13 @@
 
 <script lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
-import UiButton from "@/common/components/common/button/UiButton.vue"
-import UiCardPanel from "@/common/components/common/card/UiCardPanel.vue"
-import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
-import UiModal from "@/common/components/common/modal/UiModal.vue"
-import {useModal} from "@/common/components/common/modal/useModal"
-import UiPanel from "@/common/components/common/panel/UiPanel.vue"
-import {UiPanelMenuItem} from "@/common/components/common/panel/UiPanelMenuItem"
+import UiButton from "@/common/designSystem/button/UiButton.vue"
+import UiCardPanel from "@/common/designSystem/card/UiCardPanel.vue"
+import UiTextfield from "@/common/designSystem/form/textfield/UiTextfield.vue"
+import UiModal from "@/common/designSystem/modal/UiModal.vue"
+import {useModal} from "@/common/designSystem/modal/useModal"
+import UiPanel from "@/common/designSystem/panel/UiPanel.vue"
+import {UiPanelMenuItem} from "@/common/designSystem/panel/UiPanelMenuItem"
 import {autowired} from "@/common/utils/injection.util";
 import OverlayCard from "@/overlay/components/OverlayCard.vue"
 import Overlay from "@/overlay/Overlay"

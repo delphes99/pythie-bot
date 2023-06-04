@@ -1,22 +1,22 @@
 <template>
-    <div>
-        <ui-textfield
-                v-model="selectedElement.properties.url"
-                label="overlay.editor.image-component.url"
-        />
-    </div>
+  <div>
     <ui-textfield
-            v-model="selectedElement.properties.width"
-            label="overlay.editor.image-component.width"
+        v-model="selectedElement.properties.url"
+        label="overlay.editor.image-component.url"
     />
-    <ui-textfield
-            v-model="selectedElement.properties.height"
-            label="overlay.editor.image-component.height"
-    />
+  </div>
+  <ui-textfield
+      v-model="selectedElement.properties.width"
+      label="overlay.editor.image-component.width"
+  />
+  <ui-textfield
+      v-model="selectedElement.properties.height"
+      label="overlay.editor.image-component.height"
+  />
 </template>
 
 <script lang="ts" setup>
-import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
+import UiTextfield from "@/common/designSystem/form/textfield/UiTextfield.vue"
 import {useOverlayEditorStore} from "@/overlay/editor/useOverlayEditorStore"
 import {storeToRefs} from "pinia"
 

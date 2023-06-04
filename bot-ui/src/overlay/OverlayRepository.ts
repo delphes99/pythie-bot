@@ -1,4 +1,4 @@
-import {notEmpty} from "@/common/utils"
+import {notEmpty} from "@/common/utils/utils"
 import Overlay from "@/overlay/Overlay"
 import {fromJson} from "@/overlay/OverlayElement"
 import axios from "axios"

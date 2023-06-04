@@ -62,12 +62,12 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: "/discord",
         name: "discord",
-        component: () => import("@/discord/DiscordConfiguration.vue"),
+        component: () => import("@/connector/discord/DiscordConfiguration.vue"),
     },
     {
         path: "/obs",
         name: "obs",
-        component: () => import("@/obs/ObsConfiguration.vue"),
+        component: () => import("@/connector/obs/ObsConfiguration.vue"),
     },
     {
         path: "/twitch",
@@ -75,29 +75,29 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: "",
-                component: () => import("@/twitch/TwitchConfiguration.vue"),
+                component: () => import("@/connector/twitch/TwitchConfiguration.vue"),
             },
             {
                 path: ":channelName",
-                component: () => import("@/twitch/TwitchChannelConfiguration.vue"),
+                component: () => import("@/connector/twitch/TwitchChannelConfiguration.vue"),
                 props: true,
                 children: [
                     {
                         path: "features",
                         name: "twitch_channel_features",
-                        component: () => import("@/twitch/feature/TwitchFeature.vue"),
+                        component: () => import("@/connector/twitch/feature/TwitchFeature.vue"),
                         props: true,
                     },
                     {
                         path: "rewards",
                         name: "twitch_channel_rewards",
-                        component: () => import("@/twitch/reward/TwitchReward.vue"),
+                        component: () => import("@/connector/twitch/reward/TwitchReward.vue"),
                         props: true,
                     },
                     {
                         path: "",
                         name: "twitch_channel_rewards",
-                        component: () => import("@/twitch/reward/TwitchReward.vue"),
+                        component: () => import("@/connector/twitch/reward/TwitchReward.vue"),
                         props: true,
                     },
                 ],

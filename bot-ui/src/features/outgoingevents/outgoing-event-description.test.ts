@@ -1,4 +1,4 @@
-import {TestFieldDescriptor} from "@/common/describable-form/test-field-descriptor.test.utils";
+import {TestFieldDescriptor} from "@/common/describableForm/test-field-descriptor.test.utils";
 import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
 import {describe, expect, it} from "vitest";
 

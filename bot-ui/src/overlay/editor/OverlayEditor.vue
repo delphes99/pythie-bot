@@ -42,8 +42,8 @@
 
 <script async lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
-import UiButton from "@/common/components/common/button/UiButton.vue"
-import UiButtonType from "@/common/components/common/button/UiButtonType"
+import UiButton from "@/common/designSystem/button/UiButton.vue"
+import UiButtonType from "@/common/designSystem/button/UiButtonType"
 import {autowired} from "@/common/utils/injection.util";
 import ImageComponent from "@/overlay/editor/component/imageComponent/ImageComponent"
 import TextComponent from "@/overlay/editor/component/textComponent/TextComponent"

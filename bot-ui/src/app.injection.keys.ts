@@ -1,4 +1,4 @@
-import {NotificationService} from "@/common/components/common/notification/notification.service";
+import {NotificationService} from "@/common/designSystem/notification/notification.service";
 import FeatureService from "@/features/feature.service";
 import MediasService from "@/media/MediasService";
 import {MonitoringService} from "@/monitoring/monitoringService";

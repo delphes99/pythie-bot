@@ -10,8 +10,8 @@
 
 <script lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
-import UiButton from "@/common/components/common/button/UiButton.vue";
-import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
+import {FieldDescriptor} from "@/common/describableForm/field-descriptor";
+import UiButton from "@/common/designSystem/button/UiButton.vue";
 import {autowired} from "@/common/utils/injection.util";
 import {ref} from "vue";
 import {useI18n} from "vue-i18n";

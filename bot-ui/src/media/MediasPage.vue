@@ -38,11 +38,11 @@
 
 <script lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
-import UiButton from "@/common/components/common/button/UiButton.vue"
-import UiTextfield from "@/common/components/common/form/textfield/UiTextfield.vue"
-import UiPanel from "@/common/components/common/panel/UiPanel.vue"
-import UiTableColumn from "@/common/components/common/table/ui-table-column.vue";
-import UiTable from "@/common/components/common/table/ui-table.vue"
+import UiButton from "@/common/designSystem/button/UiButton.vue"
+import UiTextfield from "@/common/designSystem/form/textfield/UiTextfield.vue"
+import UiPanel from "@/common/designSystem/panel/UiPanel.vue"
+import UiTableColumn from "@/common/designSystem/table/ui-table-column.vue";
+import UiTable from "@/common/designSystem/table/ui-table.vue"
 import {autowired} from "@/common/utils/injection.util";
 import {ref} from "vue"
 import {useI18n} from "vue-i18n"

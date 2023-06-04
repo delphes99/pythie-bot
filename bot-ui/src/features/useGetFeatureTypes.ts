@@ -1,5 +1,5 @@
 import {AppInjectionKeys} from "@/app.injection.keys";
-import {UiSelectOption} from "@/common/components/common/form/select/UiSelectOption";
+import {UiSelectOption} from "@/common/designSystem/form/select/UiSelectOption";
 import {autowired} from "@/common/utils/injection.util";
 import FeatureService, {FeatureType} from "@/features/feature.service";
 import {computed, ref} from "vue";

@@ -21,12 +21,12 @@
 
 <script setup lang="ts">
 import {AppInjectionKeys} from "@/app.injection.keys";
-import UiButton from "@/common/components/common/button/UiButton.vue";
-import UiModal from "@/common/components/common/modal/UiModal.vue";
-import {useModal} from "@/common/components/common/modal/useModal";
-import UiPanel from "@/common/components/common/panel/UiPanel.vue";
-import UiTableColumn from "@/common/components/common/table/ui-table-column.vue";
-import UiTable from "@/common/components/common/table/ui-table.vue";
+import UiButton from "@/common/designSystem/button/UiButton.vue";
+import UiModal from "@/common/designSystem/modal/UiModal.vue";
+import {useModal} from "@/common/designSystem/modal/useModal";
+import UiPanel from "@/common/designSystem/panel/UiPanel.vue";
+import UiTableColumn from "@/common/designSystem/table/ui-table-column.vue";
+import UiTable from "@/common/designSystem/table/ui-table.vue";
 import {autowired} from "@/common/utils/injection.util";
 import {MonitoringEvent} from "@/monitoring/monitoringService";
 import {ref} from "vue";

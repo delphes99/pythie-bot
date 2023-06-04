@@ -1,6 +1,6 @@
-import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
-import {fromJsonDescriptor} from "@/common/describable-form/field-descriptor.factory";
-import {FormDescription} from "@/common/describable-form/form-description";
+import {FieldDescriptor} from "@/common/describableForm/field-descriptor";
+import {fromJsonDescriptor} from "@/common/describableForm/field-descriptor.factory";
+import {FormDescription} from "@/common/describableForm/form-description";
 import {OutgoingEvent} from "@/features/outgoingevents/outgoing-event";
 import {v4 as uuid} from "uuid";
 

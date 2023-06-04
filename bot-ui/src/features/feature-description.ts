@@ -1,6 +1,6 @@
-import {FieldDescriptor} from "@/common/describable-form/field-descriptor";
-import {DescriptorJsonType, fromJsonDescriptor} from "@/common/describable-form/field-descriptor.factory";
-import {FormDescription} from "@/common/describable-form/form-description";
+import {FieldDescriptor} from "@/common/describableForm/field-descriptor";
+import {DescriptorJsonType, fromJsonDescriptor} from "@/common/describableForm/field-descriptor.factory";
+import {FormDescription} from "@/common/describableForm/form-description";
 
 type FeatureDescriptionJson = {
     type: string,
