@@ -65,8 +65,8 @@ provide(UiTableInjectionKeys.COLUMN_REGISTRATION, {
             <template v-if="column.render">
               <component :is="column.render" :item="item"></component>
             </template>
-            <template v-else-if="column.propertyName">
-              {{ item[column.propertyName] }}
+            <template v-else-if="column.extractValue">
+              {{ column.extractValue(item) }}
             </template>
           </td>
         </tr>

@@ -3,15 +3,18 @@
     <ui-table
         :data="events"
     >
-      <ui-table-column header-name="common.date" property-name="date"></ui-table-column>
-      <ui-table-column header-name="monitoring.events.id" v-slot="{item}">
-        {{ item?.event?.incomingEvent?.id }}
+      <ui-table-column header-name="common.date"
+                       property-name="date"
+                       :transform="ColumnTransformation.DATE"></ui-table-column>
+      <ui-table-column header-name="monitoring.events.id"
+                       property-name="event.incomingEvent.id">
       </ui-table-column>
-      <ui-table-column header-name="monitoring.events.type" v-slot="{item}">
-        {{ item?.event?.incomingEvent?.data?.type }}
+      <ui-table-column header-name="monitoring.events.type"
+                       property-name="event.incomingEvent.data.type">
       </ui-table-column>
-      <ui-table-column header-name="monitoring.events.isReplay" v-slot="{item}">
-        {{ item?.event?.incomingEvent?.replay !== null }}
+      <ui-table-column header-name="monitoring.events.isReplay"
+                       property-name="event.incomingEvent.replay"
+                       :transform="item => item != undefined">
       </ui-table-column>
       <ui-table-column header-name="common.actions" v-slot="{item}">
         <ui-button label="common.view" @on-click="display(item)"></ui-button>
@@ -33,6 +36,7 @@ import UiButton from "@/common/designSystem/button/ui-button.vue";
 import UiModal from "@/common/designSystem/modal/ui-modal.vue";
 import {useModal} from "@/common/designSystem/modal/useModal";
 import UiPanel from "@/common/designSystem/panel/ui-panel.vue";
+import {ColumnTransformation} from "@/common/designSystem/table/ui-table-column.transformation";
 import UiTableColumn from "@/common/designSystem/table/ui-table-column.vue";
 import UiTable from "@/common/designSystem/table/ui-table.vue";
 import {autowired} from "@/common/utils/injection.util";

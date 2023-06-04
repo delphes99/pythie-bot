@@ -16,7 +16,7 @@ fun Application.Monitoring(bot: Bot) {
     val statisticService = bot.statisticService
     routing {
         get("/monitoring/events") {
-            call.respond(statisticService.getEvents())
+            call.respond(statisticService.getEvents().sortedByDescending { it.date })
         }
         post("/monitoring/replay") {
             val event = call.receive<IncomingEventWrapper<IncomingEvent>>()
