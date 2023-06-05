@@ -9,70 +9,49 @@
         class="router-link"
         to="/"
     >
-      <img
-          src="../../assets/home.svg"
-          width="20"
-      >
+      <ui-icon name="home" class="menu-icon"/>
       {{ $t("home") }}
     </router-link>
     <router-link
         class="router-link"
         to="/monitoring"
     >
-      <img
-          src="../../assets/monitoring.svg"
-          width="20"
-      >
+      <ui-icon name="monitoring" class="menu-icon"/>
       {{ $t("monitoring.title") }}
     </router-link>
     <router-link
         class="router-link"
         to="/features"
     >
-      <img
-          src="../../assets/features.svg"
-          width="20"
-      >
+      <ui-icon name="features" class="menu-icon"/>
       {{ $t("features.title") }}
     </router-link>
     <router-link
         class="router-link"
         to="/overlay"
     >
-      <img
-          src="../../assets/overlay.svg"
-          width="20"
-      >
+      <ui-icon name="overlay" class="menu-icon"/>
       {{ $t("overlay.title") }}
     </router-link>
     <router-link
         class="router-link"
         to="/medias"
     >
-      <img
-          src="../../assets/medias.svg"
-          width="20"
-      >
+      <ui-icon name="medias" class="menu-icon"/>
       {{ $t("medias.title") }}
     </router-link>
     <router-link
         class="router-link"
         to="/settings"
     >
-      <img
-          src="../../assets/settings.svg"
-          width="20"
-      >
+      <ui-icon name="settings" class="menu-icon"/>
       {{ $t("settings.title") }}
     </router-link>
     <router-link
         class="router-link"
         to="/about"
     >
-      <img
-          src="../../assets/about.svg"
-          width="20"
-      >
+      <ui-icon name="about" class="menu-icon"/>
       {{ $t("about") }}
     </router-link>
   </nav>
@@ -108,8 +87,8 @@ const mouseOut = () => {
   @apply bg-blue-900 text-white shadow-2xl;
 }
 
+.menu-icon,
 .router-link img {
-  @apply mr-5;
-  filter: invert(100%);
+  @apply mr-5 w-5 h-5 fill-backgroundTextColor;
 }
 </style>

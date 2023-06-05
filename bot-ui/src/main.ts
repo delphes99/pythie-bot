@@ -1,4 +1,5 @@
 import {AppInjectionKeys} from "@/app.injection.keys"
+import UiIcon from "@/common/designSystem/icons/ui-icon.vue";
 import {NotificationService} from "@/common/designSystem/notification/notification.service";
 
 import en from "@/common/lang/en.json"
@@ -36,6 +37,8 @@ const i18n = createI18n({
 const backendUrl = "http://localhost:8080"
 
 createApp(App)
+    .component("json-viewer", JsonViewer)
+    .component("ui-icon", UiIcon)
     .use(router)
     .use(i18n)
     .use(createPinia())
@@ -43,7 +46,6 @@ createApp(App)
         autoClose: 3000,
         position: "top-right",
     })
-    .use(JsonViewer)
     .provide(AppInjectionKeys.BACKEND_URL, backendUrl)
     .provide(AppInjectionKeys.MEDIA_SERVICE, new MediaService(backendUrl))
     .provide(AppInjectionKeys.FEATURE_SERVICE, new FeatureService(backendUrl))

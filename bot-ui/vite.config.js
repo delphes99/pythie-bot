@@ -1,6 +1,7 @@
 import vue from "@vitejs/plugin-vue"
 
 import {defineConfig} from "vite"
+import svgLoader from "vite-svg-loader";
 
 const path = require("path")
 
@@ -10,7 +11,10 @@ export default defineConfig({
     server: {
         port: 8082,
     },
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        svgLoader()
+    ],
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),

@@ -2,12 +2,7 @@
   <Menu as="div" class="relative inline-block text-left">
     <MenuButton>
       <div>
-        <img
-            :alt="connector"
-            :src="image"
-            height="48"
-            width="48"
-        >
+        <ui-icon :name="connector.toLowerCase()" class="w-8 h-8"></ui-icon>
         <div
             :class="[statusColor]"
             class="absolute -bottom-1 -right-1 z-2 rounded-full shadow-lg"
@@ -44,9 +39,7 @@
 
 <script lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
-import discordImage from "@/common/assets/discord.png"
-import obsImage from "@/common/assets/obs.svg"
-import twitchImage from "@/common/assets/twitch.svg"
+import UiIcon from "@/common/designSystem/icons/ui-icon.vue";
 import {autowired} from "@/common/utils/injection.util";
 import {StatusColor} from "@/connector/common/status/connector.status.color"
 import {ConnectorStatusEnum} from "@/connector/common/status/connector.status.enum"
@@ -105,19 +98,6 @@ function toActions(
     case ConnectorStatusEnum.disconnecting:
     default:
       return []
-  }
-}
-
-function toImage(connector: ConnectorEnum) {
-  switch (connector) {
-    case ConnectorEnum.TWITCH:
-      return twitchImage
-    case ConnectorEnum.DISCORD:
-      return discordImage
-    case ConnectorEnum.OBS:
-      return obsImage
-    default:
-      throw new Error("Unknown connector")
   }
 }
 

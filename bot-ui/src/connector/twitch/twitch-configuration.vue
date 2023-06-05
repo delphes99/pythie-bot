@@ -3,13 +3,12 @@
     <DetailedConnectorStatus :connector="connector"/>
   </ui-panel>
   <ui-panel title="Twitch bot configuration">
-    <img
+    <ui-icon
+        name="refresh"
         alt="Refresh configuration"
-        class="inline-block align-middle"
-        src="../../common/assets/refresh.svg"
-        style="height: 20px"
+        class="inline-block align-middle w-4 h-4 fill-backgroundTextColor"
         @click="refreshCurrentConfiguration"
-    >
+    />
     <h2 class="text-xl font-medium">
       App credential
     </h2>
@@ -70,6 +69,7 @@ import {AppInjectionKeys} from "@/app.injection.keys";
 import UiButtonType from "@/common/designSystem/button/ui-button.type"
 import UiButton from "@/common/designSystem/button/ui-button.vue"
 import UiTextfield from "@/common/designSystem/form/textfield/ui-textfield.vue"
+import UiIcon from "@/common/designSystem/icons/ui-icon.vue";
 import {UiPanelMenuItem} from "@/common/designSystem/panel/ui-panel.menu.item";
 import UiPanel from "@/common/designSystem/panel/ui-panel.vue"
 import UiTableColumn from "@/common/designSystem/table/ui-table-column.vue";
