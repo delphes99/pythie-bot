@@ -4,36 +4,42 @@
 @tailwind utilities;
 
 .monochrome-theme {
-    --background: #334155;
+    --background: theme('colors.gray.400');
+    --primary-container-background: theme('colors.gray.800');
     --background-text-color: #ffffff;
-    --primary-color: #0f172a;
-    --primary-color-hover: #0b2736;
-    --primary-text-color: #d8d2cb;
-    --secondary-color: #1c658c;
+    --primary-color: theme('colors.gray.600');
+    --primary-color-hover: theme('colors.gray.400');
+    --primary-text-color: theme('colors.gray.100');
+    --secondary-color: theme('colors.gray.900');
+    --secondary-text-color: theme('colors.gray.400');
     --title-color: #9ca3af;
     --input-color: #4b5563;
     --input-text-color: #dddddd;
 }
 
 .light-theme {
-    --background: #1c658c;
+    --background: theme('colors.gray.300');
+    --primary-container-background: theme('colors.gray.100');
     --background-text-color: #000000;
-    --primary-color: #ffffff;
-    --primary-color-hover: #0b2736;
-    --primary-text-color: #000000;
-    --secondary-color: #1c658c;
+    --primary-color: theme('colors.blue.400');
+    --primary-color-hover: theme('colors.blue.600');
+    --primary-text-color: theme('colors.gray.900');
+    --secondary-color: theme('colors.blue.100');
+    --secondary-text-color: theme('colors.gray.700');
     --title-color: #374151;
     --input-color: #1c658c;
     --input-text-color: #d8d2cb;
 }
 
 .dark-theme {
-    --background: #334155;
+    --background: theme('colors.gray.700');
+    --primary-container-background: theme('colors.gray.900');
     --background-text-color: #ffffff;
-    --primary-color: #0f172a;
-    --primary-color-hover: #0b2736;
-    --primary-text-color: #d8d2cb;
-    --secondary-color: #1c658c;
+    --primary-color: theme('colors.blue.600');
+    --primary-color-hover: theme('colors.blue.400');
+    --primary-text-color: theme('colors.gray.100');
+    --secondary-color: theme('colors.blue.900');
+    --secondary-text-color: theme('colors.gray.300');
     --title-color: #9ca3af;
     --input-color: #4b5563;
     --input-text-color: #dddddd;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg-primaryColor text-primaryTextColor shadow h-full flex flex-col">
+    <div class="bg-primaryContainerBackground text-primaryTextColor shadow h-full flex flex-col">
       <div class="flex flex-row shrink space-x-2">
         <slot name="icon"/>
         <h1

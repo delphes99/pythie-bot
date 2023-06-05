@@ -10,7 +10,7 @@
           width-class="w-12"
       />
       <div
-          class="mt-16 ml-12 p-4 h-full overflow-auto"
+          class="mt-16 ml-12 p-8 h-full overflow-auto"
           style="height: calc(100% - 4rem)"
       >
         <suspense>

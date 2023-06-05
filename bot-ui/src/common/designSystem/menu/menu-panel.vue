@@ -3,7 +3,7 @@
       :class="expand ? 'w-52' : widthClass"
       @mouseenter="mouseIn"
       @mouseleave="mouseOut"
-      class="z-50 h-full flex flex-col bg-primaryColor text-primaryTextColor overflow-hidden"
+      class="z-50 h-full flex flex-col bg-primaryContainerBackground text-primaryTextColor overflow-hidden"
   >
     <router-link
         class="router-link"

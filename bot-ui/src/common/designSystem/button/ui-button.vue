@@ -64,15 +64,15 @@ const classes = computed(() => {
 
 <style scoped>
 .button-shape {
-  @apply m-2 px-3 py-1 text-base rounded-lg focus:ring inline-block text-white border-0 rounded-md transition duration-500 select-none focus:outline-none;
+  @apply m-2 px-3 py-1 text-base rounded-lg focus:ring inline-block border-0 rounded-md transition duration-500 select-none focus:outline-none;
 }
 
 .primary-button {
-  @apply bg-secondaryColor hover:bg-primaryColorHover;
+  @apply bg-primaryColor hover:bg-primaryColorHover text-primaryTextColor;
 }
 
 .secondary-button {
-  @apply bg-red-500 hover:bg-red-800;
+  @apply bg-secondaryColor hover:bg-red-800 text-secondaryTextColor;
 }
 
 .warning-button {
