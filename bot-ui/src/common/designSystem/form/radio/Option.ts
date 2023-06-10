@@ -5,8 +5,8 @@ export class Option<T> {
     public readonly value: T
     private readonly display: (data: T) => string
 
-    constructor(value: T, display: (data: T) => string) {
-        this.id = uuid()
+    constructor(value: T, display: (data: T) => string, id: string = uuid()) {
+        this.id = id
         this.value = value
         this.display = display
     }

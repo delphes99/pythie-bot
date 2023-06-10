@@ -1,6 +1,6 @@
 import {Options} from "@/common/designSystem/form/radio/Options";
 import {LocalStorageItem} from "@/common/utils/local.storage.item"
-import {Themes} from "@/common/utils/theme/Themes"
+import {lightTheme, themes} from "@/common/utils/theme/Themes"
 import {useStorage} from "@vueuse/core"
 import {defineStore} from "pinia"
 import {computed} from "vue";
@@ -8,7 +8,7 @@ import {useI18n} from "vue-i18n";
 
 const useApplicationThemeStore = defineStore('applicationTheme', {
     state: () => {
-        return {theme: useStorage(LocalStorageItem.APPLICATION_THEME, Themes.LIGHT)}
+        return {theme: useStorage(LocalStorageItem.APPLICATION_THEME, lightTheme)}
     },
 })
 
@@ -16,12 +16,15 @@ export function useApplicationTheme() {
     const applicationThemeStore = useApplicationThemeStore()
 
     const themeClass = computed(() => {
-        return `${applicationThemeStore.theme}-theme`
+        const monochromeClass = applicationThemeStore.theme.monochrome ? " grayscale" : ""
+        return `${applicationThemeStore.theme.className}-theme${monochromeClass}`
     })
 
     const {t} = useI18n()
-    const availableThemesOptions = Options.for<string>(Object.values(Themes), (theme) =>
-        t("settings.theme." + theme),
+    const availableThemesOptions = Options.for(
+        themes,
+        (theme) => t("settings.theme." + theme.name),
+        (theme) => theme.name
     )
 
     return {

@@ -131,8 +131,9 @@
     "theme": {
       "label": "Theme",
       "light": "Light",
+      "light-monochrome": "Light (Mono)",
       "dark": "Dark",
-      "monochrome": "Monochrome"
+      "dark-monochrome": "Dark (Mono)"
     },
     "showThemeSwitcher": "Show theme switcher"
   },

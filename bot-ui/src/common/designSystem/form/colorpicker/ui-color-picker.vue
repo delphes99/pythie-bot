@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import {Themes} from "@/common/utils/theme/Themes"
+import {darkMonochromeTheme, darkTheme} from "@/common/utils/theme/Themes";
 import {useApplicationTheme} from "@/common/utils/theme/UseApplicationThemeStore"
 import {v4 as uuid} from "uuid"
 import {computed, ref, watch} from "vue"
@@ -43,9 +43,8 @@ const {currentTheme} = useApplicationTheme()
 
 const pickerTheme = computed(() => {
   switch (currentTheme.theme) {
-    case Themes.DARK:
-      return "dark"
-    case Themes.MONOCHROME:
+    case darkTheme:
+    case darkMonochromeTheme:
       return "dark"
     default:
       return "light"

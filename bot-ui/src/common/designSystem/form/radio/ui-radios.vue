@@ -4,7 +4,7 @@
         v-if="title"
         class="block text-titleColor text-sm font-semibold mb-2"
     >{{ $t(title) }}</label>
-    <RadioGroup v-model="model">
+    <RadioGroup v-model="model" :by="comparaisonField">
       <div class="flex flex-row items-center space-x-2 my-2">
         <RadioGroupOption v-for="option in options.values"
                           :key="option.id"
@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="VALUE">
 import {Options} from "@/common/designSystem/form/radio/Options"
 import {RadioGroup, RadioGroupOption,} from '@headlessui/vue'
 import {useVModel} from "@vueuse/core";
@@ -30,7 +30,7 @@ import {PropType} from "vue"
 
 const props = defineProps({
   modelValue: {
-    type: [Object, String] as PropType<unknown>,
+    type: [Object, String] as PropType<VALUE>,
     required: true,
   },
   name: {
@@ -38,13 +38,17 @@ const props = defineProps({
     required: true,
   },
   options: {
-    type: Object as PropType<Options<unknown>>,
+    type: Object as PropType<Options<VALUE>>,
     required: true,
   },
   title: {
     type: String,
     default: null,
     nullable: true,
+  },
+  comparaisonField: {
+    type: String,
+    default: undefined,
   },
 })
 

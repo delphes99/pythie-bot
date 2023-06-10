@@ -4,6 +4,7 @@
       :options="availableThemesOptions"
       :title="displayLabel ? 'settings.theme.label' : undefined"
       name="theme"
+      comparaisonField="name"
   />
 </template>
 
