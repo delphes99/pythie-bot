@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import UiRadios from "@/common/designSystem/form/radio/ui-radios.vue";
-import {useApplicationTheme} from "@/common/utils/theme/UseApplicationThemeStore";
+import {useApplicationTheme} from "@/common/style/UseApplicationThemeStore";
 
 defineProps({
   displayLabel: {

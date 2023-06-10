@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-import {darkMonochromeTheme, darkTheme} from "@/common/utils/theme/Themes";
-import {useApplicationTheme} from "@/common/utils/theme/UseApplicationThemeStore"
+import {darkMonochromeTheme, darkTheme} from "@/common/style/Themes";
+import {useApplicationTheme} from "@/common/style/UseApplicationThemeStore"
 import {v4 as uuid} from "uuid"
 import {computed, ref, watch} from "vue"
 import {ColorPicker} from "vue-color-kit"

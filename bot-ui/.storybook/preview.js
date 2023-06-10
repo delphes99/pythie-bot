@@ -1,4 +1,4 @@
-import "../src/common/assets/styles/index.css"
+import "@/common/style/index.css"
 import {setup} from '@storybook/vue3';
 import {createI18n} from 'vue-i18n';
 import Vue3Toasity from "vue3-toastify";

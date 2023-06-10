@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import UiPanel from "@/common/designSystem/panel/ui-panel.vue"
-import {useApplicationTheme} from "@/common/utils/theme/UseApplicationThemeStore";
+import {useApplicationTheme} from "@/common/style/UseApplicationThemeStore";
 import {Dialog, DialogPanel,} from '@headlessui/vue'
 
 defineProps({
