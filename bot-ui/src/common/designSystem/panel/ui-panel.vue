@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-2 p-0 bg-primaryContainerBackground shadow">
+  <div class="mb-2 p-0 pb-1 bg-primaryContainerBackground shadow">
     <div class="text-primaryTextColor p-4">
       <h1 class="inline text-2xl font-medium title-font">
         {{ $t(title) }}

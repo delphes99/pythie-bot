@@ -5,7 +5,6 @@ import svgLoader from "vite-svg-loader";
 
 const path = require("path")
 
-// https://vitejs.dev/config/
 export default defineConfig({
     base: "",
     server: {

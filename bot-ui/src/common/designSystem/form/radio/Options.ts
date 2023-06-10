@@ -7,7 +7,7 @@ export class Options<T> {
         this.values = values
     }
 
-    static for<T>(values: T[], displayFunction: (value: T) => string): Options<T> {
+    static for<T extends Object>(values: T[], displayFunction: (value: T) => string = (obj => obj.toString())): Options<T> {
         return new this(values.map((value) => new Option(value, displayFunction)))
     }
 }

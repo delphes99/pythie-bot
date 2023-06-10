@@ -6,6 +6,9 @@
         Pythie-bot
       </h1>
     </div>
+    <div v-if="showThemeSwitcher">
+      <theme-switcher/>
+    </div>
     <div class="grow-0 right-0 mx-3">
       <div
           class="flex flex-row-reverse items-center space-x-reverse space-x-3 h-16 px-5"
@@ -23,6 +26,8 @@
 
 <script lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
+import ThemeSwitcher from "@/common/style/theme-switcher.vue";
+import {useShowThemeSwitcher} from "@/common/style/useShowThemeSwitcher";
 import {autowired} from "@/common/utils/injection.util";
 import ConnectorStatus from "@/connector/common/status/connector-status.vue"
 import {ConnectorStatusEnum} from "@/connector/common/status/connector.status.enum"
@@ -42,6 +47,7 @@ async function getStatus() {
   statuses.value = await response.json()
 }
 
+const {showThemeSwitcher} = useShowThemeSwitcher()
 getStatus()
 setInterval(() => {
   getStatus()

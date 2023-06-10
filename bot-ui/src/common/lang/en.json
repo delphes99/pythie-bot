@@ -133,7 +133,8 @@
       "light": "Light",
       "dark": "Dark",
       "monochrome": "Monochrome"
-    }
+    },
+    "showThemeSwitcher": "Show theme switcher"
   },
   "twitch": {
     "channels": "Channels",
