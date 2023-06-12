@@ -6,5 +6,5 @@ import fr.delphes.generation.PolymorphicSerializerModuleProcessorProvider
 class RegisterFieldDescriptorSerializerModuleProcessorProvider : PolymorphicSerializerModuleProcessorProvider(
     RegisterFieldDescriptor::class.java,
     ClassName("fr.delphes.feature.descriptor", "FeatureDescriptor"),
-    "generatedFieldDescriptorSerializerModule",
+    "FieldDescriptorSerializerModule",
 )

@@ -15,13 +15,13 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
+import fr.delphes.generation.GenerationUtils.getModuleName
 import kotlinx.serialization.modules.SerializersModule
 
 abstract class PolymorphicSerializerModuleProcessorProvider(
     private val annotationClazz: Class<out Any>,
     private val parentClassName: ClassName,
-    private val moduleName: String,
-    private val packageName: String = "fr.delphes.generated",
+    private val serializerModuleName: String,
 ) : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         return PolymorphicSerializerModuleProcessor(
@@ -29,8 +29,8 @@ abstract class PolymorphicSerializerModuleProcessorProvider(
             environment.logger,
             annotationClazz,
             parentClassName,
-            moduleName,
-            packageName,
+            serializerModuleName,
+            getModuleName(environment),
         )
     }
 }
@@ -40,9 +40,11 @@ class PolymorphicSerializerModuleProcessor(
     private val logger: KSPLogger,
     private val annotationClazz: Class<out Any>,
     private val parentClassName: ClassName,
+    private val serializerModuleName: String,
     private val moduleName: String,
-    private val targetPackage: String,
 ) : SymbolProcessor {
+    private val propertyName get() = "$moduleName$serializerModuleName"
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
         logger.info("Start processing")
         val (valids, invalids) =
@@ -61,8 +63,8 @@ class PolymorphicSerializerModuleProcessor(
 
     private fun create(fieldDescriptorClasses: List<KSClassDeclaration>) {
         FileSpec.builder(
-            targetPackage,
-            moduleName.replaceFirstChar(Char::titlecase)
+            "fr.delphes.$moduleName.generated",
+            propertyName
         )
             .addProperty(fieldDescriptorClasses.toModuleVariable())
             .build()
@@ -70,7 +72,7 @@ class PolymorphicSerializerModuleProcessor(
     }
 
     private fun List<KSClassDeclaration>.toModuleVariable() =
-        PropertySpec.builder(moduleName, SerializersModule::class, KModifier.INTERNAL)
+        PropertySpec.builder(propertyName, SerializersModule::class, KModifier.INTERNAL)
             .initializer(
                 CodeBlock.builder()
                     .addStatement("SerializersModule {")

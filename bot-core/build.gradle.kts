@@ -50,4 +50,8 @@ tasks.withType<Jar> {
     dependsOn(copyUiTask, copyOverlayTask)
 }
 
+ksp {
+    arg("module-name", "core")
+}
+
 description = "bot-core"

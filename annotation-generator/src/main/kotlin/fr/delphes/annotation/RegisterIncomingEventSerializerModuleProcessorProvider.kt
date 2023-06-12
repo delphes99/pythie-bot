@@ -6,5 +6,5 @@ import fr.delphes.generation.PolymorphicSerializerModuleProcessorProvider
 class RegisterIncomingEventSerializerModuleProcessorProvider : PolymorphicSerializerModuleProcessorProvider(
     RegisterIncomingEvent::class.java,
     ClassName("fr.delphes.bot.event.incoming", "IncomingEvent"),
-    "generatedIncomingEventSerializerModule",
+    "IncomingEventSerializerModule",
 )

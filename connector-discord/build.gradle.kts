@@ -15,4 +15,8 @@ dependencies {
     ksp(project(":annotation-generator"))
 }
 
+ksp {
+    arg("module-name", "discord")
+}
+
 description = "connector-discord"

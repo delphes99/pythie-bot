@@ -2,8 +2,8 @@ package fr.delphes.bot
 
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.PlaySound
-import fr.delphes.generated.generatedFieldDescriptorSerializerModule
-import fr.delphes.generated.generatedIncomingEventSerializerModule
+import fr.delphes.core.generated.coreFieldDescriptorSerializerModule
+import fr.delphes.core.generated.coreIncomingEventSerializerModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -17,6 +17,6 @@ val coreSerializersModule = SerializersModule {
     /** Generated
      * @see annotation-generator module
      * */
-    include(generatedIncomingEventSerializerModule)
-    include(generatedFieldDescriptorSerializerModule)
+    include(coreIncomingEventSerializerModule)
+    include(coreFieldDescriptorSerializerModule)
 }

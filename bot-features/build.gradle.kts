@@ -18,4 +18,8 @@ dependencies {
     ksp(project(":annotation-generator"))
 }
 
+ksp {
+    arg("module-name", "features")
+}
+
 description = "bot-features"

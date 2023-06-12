@@ -15,4 +15,8 @@ dependencies {
     ksp(project(":annotation-generator"))
 }
 
+ksp {
+    arg("module-name", "obs")
+}
+
 description = "connector-obs"
