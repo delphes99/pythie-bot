@@ -1,5 +1,5 @@
 [versions]
-kotlin-version = "1.8.21"
+kotlin-version = "1.8.22"
 kotlinx-coroutines-version = "1.7.0"
 node-gradle-version = "3.5.1"
 gradle-shadow-version = "7.1.2"
@@ -9,6 +9,7 @@ kitteh-version = "8.0.0"
 kumo-version = "1.27"
 node-version = "18.16.0"
 pnpm-version = "8.2.0"
+ksp-version = "1.8.22-1.0.11"
 
 #test
 mockk-version = "1.13.2"
@@ -50,6 +51,9 @@ kitteh = { module = "org.kitteh.irc:client-lib", version.ref = "kitteh-version" 
 #word cloud
 kumo = { module = "com.kennycason:kumo-core", version.ref = "kumo-version" }
 
+#ksp
+ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp-version" }
+
 [bundles]
 kotlin-common = ["kotlinx-coroutines"]
 kotlin-test = ["mockk", "bytebuddy", "junit-core", "kotest-assertion-core", "kotest-assertion-json", "kotest-runner"]
@@ -62,3 +66,4 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
 node = { id = "com.github.node-gradle.node", version.ref = "node-gradle-version" }
 fatjar = { id = "com.github.johnrengelman.shadow", version.ref = "gradle-shadow-version" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-version" }

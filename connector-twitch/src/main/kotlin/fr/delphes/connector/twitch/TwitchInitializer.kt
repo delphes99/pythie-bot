@@ -3,8 +3,8 @@ package fr.delphes.connector.twitch
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.ConnectorInitializer
 import fr.delphes.configuration.ChannelConfiguration
-import fr.delphes.connector.twitch.incomingEvent.twitchIncomingEventSerializerModule
 import fr.delphes.connector.twitch.outgoingEvent.twitchOutgoingEventSerializerModule
+import fr.delphes.generated.generatedIncomingEventSerializerModule
 
 class TwitchInitializer(
     private val channelConfigurations: List<ChannelConfiguration>,
@@ -13,7 +13,7 @@ class TwitchInitializer(
         vararg channels: ChannelConfiguration,
     ) : this(channels.toList())
 
-    override val incomingEventSerializerModule = twitchIncomingEventSerializerModule
+    override val incomingEventSerializerModule = generatedIncomingEventSerializerModule
     override val outgoingEventBuilderSerializerModule = twitchOutgoingEventSerializerModule
 
     override fun buildConnector(bot: Bot) = TwitchConnector(

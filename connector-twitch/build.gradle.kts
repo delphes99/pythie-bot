@@ -2,6 +2,7 @@ plugins {
     id("fr.delphes.kotlin-conventions")
     id(libs.plugins.kotlin.jvm.get().pluginId)
     id(libs.plugins.kotlin.serialization.get().pluginId)
+    alias(libs.plugins.ksp)
 }
 
 dependencies {
@@ -13,6 +14,8 @@ dependencies {
     implementation(libs.ktor.client.core)
     testImplementation(libs.bundles.kotlin.test)
     testImplementation(project(":utils-test"))
+    implementation(project(":annotation-generator"))
+    ksp(project(":annotation-generator"))
 }
 
 description = "connector-twitch"

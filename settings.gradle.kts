@@ -23,3 +23,4 @@ include(":twitch-api")
 
 include(":bot-ui")
 include(":bot-overlay")
+include(":annotation-generator")

@@ -2,6 +2,7 @@ plugins {
     id("fr.delphes.kotlin-conventions")
     id(libs.plugins.kotlin.jvm.get().pluginId)
     id(libs.plugins.kotlin.serialization.get().pluginId)
+    alias(libs.plugins.ksp)
 }
 
 dependencies {
@@ -10,6 +11,8 @@ dependencies {
     implementation(project(":bot-core"))
     implementation(libs.ktor.server.core)
     implementation(libs.kord)
+    implementation(project(":annotation-generator"))
+    ksp(project(":annotation-generator"))
 }
 
 description = "connector-discord"

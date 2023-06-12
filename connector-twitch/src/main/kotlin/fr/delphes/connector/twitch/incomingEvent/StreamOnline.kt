@@ -2,6 +2,7 @@
 
 package fr.delphes.connector.twitch.incomingEvent
 
+import fr.delphes.annotation.RegisterIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.streams.ThumbnailUrl
@@ -11,6 +12,7 @@ import kotlinx.serialization.UseSerializers
 import java.time.LocalDateTime
 
 @Serializable
+@RegisterIncomingEvent
 data class StreamOnline(
     override val channel: TwitchChannel,
     val id: String,

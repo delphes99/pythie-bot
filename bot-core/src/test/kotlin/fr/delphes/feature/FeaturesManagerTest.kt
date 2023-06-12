@@ -6,6 +6,7 @@ import fr.delphes.FakeIncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.SimpleFeatureRuntime
+import fr.delphes.state.StateProvider
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
@@ -18,7 +19,9 @@ internal class FeaturesManagerTest : ShouldSpec({
         should("build runtime when compiled feature is registered") {
             val runtime = mockk<SimpleFeatureRuntime>()
             val featuresManager = FeaturesManager(
-                mockk(),
+                mockk {
+                    every { readOnly } returns StateProvider(this)
+                },
                 listOf(FakeFeatureDefinition(ID, runtime)),
                 mockk(relaxed = true)
             )
@@ -38,18 +41,22 @@ internal class FeaturesManagerTest : ShouldSpec({
                     mockk {
                         every { buildFeature() } returns mockk {
                             every { buildRuntime(any()) } returns runtimeForConfigurableFeature
+                            every { getSpecificStates(any()) } returns emptyList()
                         }
                     },
                     mockk {
                         every { buildFeature() } returns mockk {
                             every { buildRuntime(any()) } returns runtimeForAnotherConfigurableFeature
+                            every { getSpecificStates(any()) } returns emptyList()
                         }
                     }
                 )
             }
 
             val featuresManager = FeaturesManager(
-                mockk(),
+                mockk {
+                    every { readOnly } returns StateProvider(this)
+                },
                 listOf(
                     FakeFeatureDefinition(ID, runtimeForCompiledFeature),
                     FakeFeatureDefinition(ID, runtimeForAnotherCompiledFeature)

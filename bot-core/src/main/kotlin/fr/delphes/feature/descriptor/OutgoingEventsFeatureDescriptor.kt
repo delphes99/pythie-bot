@@ -1,5 +1,6 @@
 package fr.delphes.feature.descriptor
 
+import fr.delphes.annotation.RegisterFieldDescriptor
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import kotlinx.serialization.SerialName
@@ -7,6 +8,7 @@ import kotlinx.serialization.Serializable
 
 @SerialName("OUTGOING_EVENTS")
 @Serializable
+@RegisterFieldDescriptor
 data class OutgoingEventsFeatureDescriptor(
     override val fieldName: String,
     override val description: String,

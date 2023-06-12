@@ -1,11 +1,13 @@
 package fr.delphes.connector.twitch.incomingEvent
 
+import fr.delphes.annotation.RegisterIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.irc.IrcChannelMessage
 import kotlinx.serialization.Serializable
 
 @Serializable
+@RegisterIncomingEvent
 data class MessageReceived(
     override val channel: TwitchChannel,
     val user: UserName,

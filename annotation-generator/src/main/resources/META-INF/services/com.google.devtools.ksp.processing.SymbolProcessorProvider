@@ -1,0 +1,2 @@
+fr.delphes.annotation.RegisterFieldDescriptorSerializerModuleProcessorProvider
+fr.delphes.annotation.RegisterIncomingEventSerializerModuleProcessorProvider
