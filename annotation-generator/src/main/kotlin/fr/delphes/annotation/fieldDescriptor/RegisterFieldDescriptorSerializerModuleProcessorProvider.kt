@@ -1,4 +1,4 @@
-package fr.delphes.annotation
+package fr.delphes.annotation.fieldDescriptor
 
 import com.squareup.kotlinpoet.ClassName
 import fr.delphes.generation.PolymorphicSerializerModuleProcessorProvider

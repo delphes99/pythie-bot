@@ -1,6 +1,6 @@
 package fr.delphes.feature.descriptor
 
-import fr.delphes.annotation.RegisterFieldDescriptor
+import fr.delphes.annotation.fieldDescriptor.RegisterFieldDescriptor
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

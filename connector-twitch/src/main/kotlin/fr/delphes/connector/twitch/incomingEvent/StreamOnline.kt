@@ -2,7 +2,7 @@
 
 package fr.delphes.connector.twitch.incomingEvent
 
-import fr.delphes.annotation.RegisterIncomingEvent
+import fr.delphes.annotation.incomingEvent.RegisterIncomingEvent
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.streams.ThumbnailUrl

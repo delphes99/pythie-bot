@@ -1,6 +1,6 @@
 package fr.delphes.bot.event.incoming
 
-import fr.delphes.annotation.RegisterIncomingEvent
+import fr.delphes.annotation.incomingEvent.RegisterIncomingEvent
 import kotlinx.serialization.Serializable
 
 @Serializable
