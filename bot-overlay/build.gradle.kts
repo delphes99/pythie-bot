@@ -5,16 +5,12 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+
 dependencies {
     implementation(libs.bundles.kotlin.common)
     implementation(project(":bot-core"))
-    api(project(":bot-overlay"))
-    api(project(":connector-discord"))
-    api(project(":connector-obs"))
-    api(project(":connector-twitch"))
-    implementation(libs.kumo)
-    testImplementation(libs.bundles.kotlin.test)
-    testImplementation(project(":utils-test"))
+    api(libs.ktor.server.core)
+    implementation(libs.bundles.ktor.server)
     implementation(project(":annotation-generator"))
     ksp(project(":annotation-generator"))
 }
@@ -22,5 +18,3 @@ dependencies {
 ksp {
     arg("module-name", "features")
 }
-
-description = "bot-features"

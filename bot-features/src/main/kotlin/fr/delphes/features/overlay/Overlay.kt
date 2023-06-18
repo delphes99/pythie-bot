@@ -2,7 +2,6 @@ package fr.delphes.features.overlay
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.eventHandler.LegacyEventHandlers
-import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.connector.twitch.TwitchEventHandler
 import fr.delphes.connector.twitch.incomingEvent.BitCheered
@@ -10,6 +9,7 @@ import fr.delphes.connector.twitch.incomingEvent.NewFollow
 import fr.delphes.connector.twitch.incomingEvent.NewSub
 import fr.delphes.feature.HaveHttp
 import fr.delphes.feature.NonEditableFeature
+import fr.delphes.overlay.event.outgoing.Alert
 import fr.delphes.twitch.TwitchChannel
 import io.ktor.server.application.Application
 

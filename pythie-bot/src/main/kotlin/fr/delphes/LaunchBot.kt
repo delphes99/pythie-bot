@@ -16,6 +16,7 @@ import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeatureConfigurationType
 import fr.delphes.features.featureSerializersModule
 import fr.delphes.features.twitch.command.CustomCommandConfiguration
+import fr.delphes.overlay.OverlayInitializer
 import kotlinx.serialization.InternalSerializationApi
 import java.io.File
 
@@ -34,7 +35,8 @@ fun main() {
         TwitchInitializer(
             delphes99Channel,
             delphestestChannel
-        )
+        ),
+        OverlayInitializer(),
     )
 
     val configuration = BotConfiguration(

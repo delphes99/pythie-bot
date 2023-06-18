@@ -7,12 +7,8 @@ import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
-import fr.delphes.bot.event.outgoing.Alert
-import fr.delphes.bot.event.outgoing.CoreOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
-import fr.delphes.bot.event.outgoing.Pause
-import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
@@ -22,13 +18,10 @@ import fr.delphes.feature.NonEditableFeature
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
-import fr.delphes.utils.exhaustive
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.modules.SerializersModule
 
@@ -78,7 +71,6 @@ class Bot(
 
     val outgoingEventsTypes: List<OutgoingEventBuilderDefinition>
         get() = listOf(
-            PlaySound.builderDefinition,
             *connectors
                 .flatMap(Connector<*, *>::outgoingEventsTypes)
                 .toTypedArray()
@@ -86,8 +78,6 @@ class Bot(
 
     internal val overlayRepository =
         OverlayRepository(configuration.pathOf("overlays", "overlays.json"))
-
-    val alerts = Channel<Alert>()
 
     override suspend fun handle(incomingEvent: IncomingEventWrapper<out IncomingEvent>) {
         listOf(legacyfeatures)
@@ -99,21 +89,8 @@ class Bot(
     }
 
     override suspend fun processOutgoingEvent(event: OutgoingEvent) {
-        if (event is CoreOutgoingEvent) {
-            when (event) {
-                is Alert -> alerts.send(event)
-                is Pause -> delay(event.delay.toMillis())
-                is PlaySound -> alerts.send(
-                    Alert(
-                        "playSound",
-                        "mediaName" to event.mediaName,
-                    )
-                ) // TODO move appart from alert
-            }.exhaustive()
-        } else {
-            _connectors.forEach { connector ->
-                connector.execute(event)
-            }
+        _connectors.forEach { connector ->
+            connector.execute(event)
         }
     }
 

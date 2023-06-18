@@ -1,8 +1,5 @@
 package fr.delphes.configuration.channel.delphes99
 
-import fr.delphes.bot.event.outgoing.Alert
-import fr.delphes.bot.event.outgoing.Pause
-import fr.delphes.bot.event.outgoing.PlaySound
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.configuration.channel.Games
 import fr.delphes.connector.discord.outgoingEvent.DiscordEmbeddedMessage
@@ -46,6 +43,9 @@ import fr.delphes.features.twitch.streamerHighlight.StreamerHighlightFeature
 import fr.delphes.features.twitch.voth.Stats
 import fr.delphes.features.twitch.voth.VOTH
 import fr.delphes.features.twitch.voth.VOTHState
+import fr.delphes.overlay.event.outgoing.Alert
+import fr.delphes.overlay.event.outgoing.Pause
+import fr.delphes.overlay.event.outgoing.PlaySound
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.user.UserName

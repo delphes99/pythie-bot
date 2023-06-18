@@ -1,8 +1,7 @@
-package fr.delphes.bot.webserver.alert
+package fr.delphes.overlay.webserver
 
 import fr.delphes.bot.Bot
-import fr.delphes.bot.event.outgoing.Alert
-import fr.delphes.utils.serialization.Serializer
+import fr.delphes.overlay.event.outgoing.Alert
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.routing.routing
@@ -13,22 +12,33 @@ import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import java.util.Collections
 
-fun Application.AlertModule(bot: Bot) {
+fun Application.AlertModule(alerts: Channel<Alert>, bot: Bot) {
     install(WebSockets)
 
     routing {
         val wsConnections = Collections.synchronizedSet(LinkedHashSet<DefaultWebSocketSession>())
 
         this@AlertModule.launch {
-            for (alert in bot.alerts) {
+            for (alert in alerts) {
                 wsConnections
                     .map(DefaultWebSocketSession::outgoing)
-                    .forEach { connection -> connection.send(Frame.Text(Serializer.encodeToString(SerializableAlert(alert)))) }
+                    .forEach { connection ->
+                        connection.send(
+                            Frame.Text(
+                                bot.serializer.encodeToString(
+                                    SerializableAlert(
+                                        alert
+                                    )
+                                )
+                            )
+                        )
+                    }
             }
         }
 
@@ -44,7 +54,9 @@ fun Application.AlertModule(bot: Bot) {
                                 close(CloseReason(CloseReason.Codes.NORMAL, "Client said BYE"))
                             }
                         }
-                        else -> { /* nothin */}
+
+                        else -> { /* nothin */
+                        }
                     }
                 }
             } finally {
@@ -57,7 +69,7 @@ fun Application.AlertModule(bot: Bot) {
 @Serializable
 private data class SerializableAlert(
     val type: String,
-    val parameters: Map<String, String>
+    val parameters: Map<String, String>,
 ) {
-    constructor(alert: Alert): this(alert.type, alert.parameters)
+    constructor(alert: Alert) : this(alert.type, alert.parameters)
 }

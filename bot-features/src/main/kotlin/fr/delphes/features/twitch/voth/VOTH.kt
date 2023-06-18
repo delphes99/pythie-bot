@@ -2,7 +2,6 @@ package fr.delphes.features.twitch.voth
 
 import fr.delphes.bot.event.eventHandler.EventHandlerAction
 import fr.delphes.bot.event.eventHandler.EventHandlers
-import fr.delphes.bot.event.outgoing.Alert
 import fr.delphes.connector.twitch.TwitchFeature
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
@@ -11,6 +10,7 @@ import fr.delphes.connector.twitch.outgoingEvent.PromoteVIP
 import fr.delphes.connector.twitch.outgoingEvent.RemoveVIP
 import fr.delphes.connector.twitch.state.GetVipState
 import fr.delphes.features.twitch.handlerFor
+import fr.delphes.overlay.event.outgoing.Alert
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
