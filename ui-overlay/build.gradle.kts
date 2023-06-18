@@ -28,4 +28,4 @@ tasks.register<PnpmTask>("pnpmBuild") {
     outputs.dir("dist")
 }
 
-description = "bot-overlay"
+description = "ui-overlay"

@@ -32,9 +32,9 @@ tasks.register<Copy>(copyUiTask) {
     into(layout.buildDirectory.dir("resources/main/admin"))
 }
 
-val copyOverlayTask = "copyOverlayToServer"
-tasks.register<Copy>(copyOverlayTask) {
-    dependsOn(":bot-overlay:pnpmBuild")
+val copyUiOverlayTask = "copyUiOverlayToServer"
+tasks.register<Copy>(copyUiOverlayTask) {
+    dependsOn(":ui-overlay:pnpmBuild")
 
     doFirst {
         delete(
@@ -42,12 +42,12 @@ tasks.register<Copy>(copyOverlayTask) {
         )
     }
 
-    from(layout.buildDirectory.dir("../../bot-overlay/dist"))
+    from(layout.buildDirectory.dir("../../ui-overlay/dist"))
     into(layout.buildDirectory.dir("resources/main/overlay"))
 }
 
 tasks.withType<Jar> {
-    dependsOn(copyUiTask, copyOverlayTask)
+    dependsOn(copyUiTask, copyUiOverlayTask)
 }
 
 ksp {
