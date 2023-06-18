@@ -4,7 +4,7 @@ import com.squareup.kotlinpoet.ClassName
 import fr.delphes.generation.PolymorphicSerializerModuleProcessorProvider
 
 class RegisterFieldDescriptorSerializerModuleProcessorProvider : PolymorphicSerializerModuleProcessorProvider(
-    RegisterFieldDescriptor::class.java,
+    RegisterFieldDescriptor::class,
     ClassName("fr.delphes.feature.descriptor", "FeatureDescriptor"),
     "FieldDescriptorSerializerModule",
 )

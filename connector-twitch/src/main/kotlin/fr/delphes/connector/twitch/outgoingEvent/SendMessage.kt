@@ -1,5 +1,6 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
+import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.WithBuilder
 import fr.delphes.connector.twitch.TwitchConnector
@@ -13,6 +14,7 @@ import fr.delphes.twitch.irc.IrcClient
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@RegisterOutgoingEvent
 data class SendMessage(
     val text: String,
     override val channel: TwitchChannel,

@@ -8,7 +8,6 @@ import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -16,10 +15,12 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.generation.GenerationUtils.getModuleName
+import fr.delphes.generation.GenerationUtils.process
 import kotlinx.serialization.modules.SerializersModule
+import kotlin.reflect.KClass
 
 abstract class PolymorphicSerializerModuleProcessorProvider(
-    private val annotationClazz: Class<out Any>,
+    private val annotationClass: KClass<out Any>,
     private val parentClassName: ClassName,
     private val serializerModuleName: String,
 ) : SymbolProcessorProvider {
@@ -27,7 +28,7 @@ abstract class PolymorphicSerializerModuleProcessorProvider(
         return PolymorphicSerializerModuleProcessor(
             environment.codeGenerator,
             environment.logger,
-            annotationClazz,
+            annotationClass,
             parentClassName,
             serializerModuleName,
             getModuleName(environment),
@@ -38,7 +39,7 @@ abstract class PolymorphicSerializerModuleProcessorProvider(
 class PolymorphicSerializerModuleProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
-    private val annotationClazz: Class<out Any>,
+    private val annotationClass: KClass<out Any>,
     private val parentClassName: ClassName,
     private val serializerModuleName: String,
     private val moduleName: String,
@@ -46,22 +47,10 @@ class PolymorphicSerializerModuleProcessor(
     private val propertyName get() = "$moduleName$serializerModuleName"
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        logger.info("Start processing")
-        val (valids, invalids) =
-            resolver.getSymbolsWithAnnotation(annotationClazz.name)
-                .partition { it.validate() }
-
-        if (valids.isNotEmpty()) {
-            logger.info("Generate entry for ${valids.size} classes")
-            create(valids.filterIsInstance<KSClassDeclaration>())
-        } else {
-            logger.info("No class to generate")
-        }
-
-        return invalids
+        return resolver.process(logger, annotationClass, ::createSerializerModule)
     }
 
-    private fun create(fieldDescriptorClasses: List<KSClassDeclaration>) {
+    private fun createSerializerModule(fieldDescriptorClasses: List<KSClassDeclaration>) {
         FileSpec.builder(
             "fr.delphes.$moduleName.generated",
             propertyName
