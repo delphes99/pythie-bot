@@ -7,6 +7,7 @@ plugins {
 dependencies {
     implementation(libs.ksp)
     implementation(libs.kotlin.poet)
+    implementation(project(":bot-core"))
     testImplementation(libs.bundles.kotlin.test)
     testImplementation(libs.ksp.compile.testing)
 }

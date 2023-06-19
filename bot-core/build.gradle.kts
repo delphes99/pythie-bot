@@ -14,8 +14,6 @@ dependencies {
     implementation(libs.bundles.ktor.client)
     testImplementation(libs.bundles.kotlin.test)
     testImplementation(project(":utils-test"))
-    implementation(project(":annotation-generator"))
-    ksp(project(":annotation-generator"))
 }
 
 val copyUiTask = "copyBotUIToServer"
@@ -48,10 +46,6 @@ tasks.register<Copy>(copyUiOverlayTask) {
 
 tasks.withType<Jar> {
     dependsOn(copyUiTask, copyUiOverlayTask)
-}
-
-ksp {
-    arg("module-name", "core")
 }
 
 description = "bot-core"
