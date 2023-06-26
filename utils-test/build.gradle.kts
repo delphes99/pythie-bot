@@ -10,4 +10,8 @@ dependencies {
     testImplementation(libs.bundles.kotlin.test)
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "utils-test"

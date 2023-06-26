@@ -11,8 +11,6 @@ dependencies {
     implementation(project(":bot-features"))
 }
 
-description = "pythie-bot"
-
 tasks.withType<Jar> {
     archiveBaseName.set("pythie-bot")
     archiveClassifier.set("")
@@ -27,3 +25,9 @@ tasks.withType<Jar> {
         )
     }
 }
+
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
+description = "pythie-bot"

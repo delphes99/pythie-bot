@@ -14,4 +14,8 @@ dependencies {
     testImplementation(project(":utils-test"))
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "twitch-api"

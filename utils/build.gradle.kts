@@ -9,4 +9,8 @@ dependencies {
     testImplementation(libs.bundles.kotlin.test)
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "fr.delphes.utils"

@@ -19,4 +19,8 @@ ksp {
     arg("module-name", "obs")
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "connector-obs"

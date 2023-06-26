@@ -48,4 +48,8 @@ tasks.withType<Jar> {
     dependsOn(copyUiTask, copyUiOverlayTask)
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "bot-core"

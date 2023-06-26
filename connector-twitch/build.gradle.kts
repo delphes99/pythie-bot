@@ -22,4 +22,8 @@ ksp {
     arg("module-name", "twitch")
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "connector-twitch"

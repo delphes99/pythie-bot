@@ -23,4 +23,8 @@ ksp {
     arg("module-name", "features")
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "bot-features"

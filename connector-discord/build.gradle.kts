@@ -19,4 +19,8 @@ ksp {
     arg("module-name", "discord")
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "connector-discord"

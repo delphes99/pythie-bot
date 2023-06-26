@@ -16,4 +16,8 @@ sourceSets.main {
     java.srcDirs("src/main/kotlin")
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 description = "annotation-generator"
