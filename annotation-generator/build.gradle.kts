@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("fr.delphes.kotlin-conventions")
     alias(libs.plugins.ksp)
@@ -16,7 +18,13 @@ sourceSets.main {
     java.srcDirs("src/main/kotlin")
 }
 
-tasks.withType<Test>() {
+tasks.withType<KotlinCompile>() {
+    kotlinOptions {
+        freeCompilerArgs += "-Xopt-in=com.google.devtools.ksp.KspExperimental"
+    }
+}
+
+tasks.test {
     useJUnitPlatform()
 }
 

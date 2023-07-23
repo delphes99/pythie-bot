@@ -1,5 +1,6 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
+import fr.delphes.annotation.outgoingEvent.FieldDescription
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.WithBuilder
@@ -14,9 +15,11 @@ import fr.delphes.twitch.irc.IrcClient
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@RegisterOutgoingEvent
+@RegisterOutgoingEvent("twitch-send-message")
 data class SendMessage(
+    @FieldDescription("description of text")
     val text: String,
+    @FieldDescription("description of channel")
     override val channel: TwitchChannel,
 ) : TwitchChatOutgoingEvent {
     override suspend fun executeOnTwitch(

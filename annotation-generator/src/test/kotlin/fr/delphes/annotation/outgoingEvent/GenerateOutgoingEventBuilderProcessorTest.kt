@@ -1,0 +1,168 @@
+package fr.delphes.annotation.outgoingEvent
+
+import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.kspArgs
+import com.tschuchort.compiletesting.kspWithCompilation
+import com.tschuchort.compiletesting.symbolProcessorProviders
+import fr.delphes.feature.OutgoingEventBuilderDescription
+import fr.delphes.feature.OutgoingEventType
+import fr.delphes.feature.descriptor.StringFeatureDescriptor
+import io.kotest.assertions.withClue
+import io.kotest.core.spec.style.ShouldSpec
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
+    should("outgoing event should have outgoing event interface") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+        
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent
+        """.shouldCompileWith {
+            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            messages shouldContain "MyEvent must implement OutgoingEvent"
+        }
+    }
+    should("outgoing event must have at least one field with description") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent : OutgoingEvent
+        """.shouldCompileWith {
+            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            messages shouldContain "MyEvent must have at least one field with description"
+        }
+    }
+    should("outgoing event must have all fields with description") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription                
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                val myField: String,
+                val myField2: String,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            messages shouldContain "MyEvent must have all fields with description"
+        }
+    }
+    should("outgoing event interface is know if inherited") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription                
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            interface MyOutgoingEventInterface : OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                val myField: String,
+            ) : MyOutgoingEventInterface
+        """.shouldCompileWith {
+            exitCode shouldBe KotlinCompilation.ExitCode.OK
+        }
+    }
+    should("generate builder with all fields") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription                
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                val myField: String,
+                @FieldDescription("second description")
+                val myField2: String,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+                .declaredFields
+                .map { it.name to it.type } shouldBe listOf(
+                "myField" to String::class.java,
+                "myField2" to String::class.java,
+            )
+        }
+    }
+    should("generate builder with serialize infos") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription                
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                val myField: String,
+                @FieldDescription("second description")
+                val myField2: String,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+                .annotations.should { annotations ->
+                    withClue("should have serializable annotation") {
+                        annotations.firstOrNull { it is Serializable }.shouldNotBeNull()
+                    }
+                    withClue("should have serial name annotation") {
+                        annotations.firstOrNull { it is SerialName }
+                            ?.let { it as SerialName }?.value shouldBe "serializeName"
+                    }
+                }
+        }
+    }
+    should("generate builder with description method") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription                
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                val myField: String,
+                @FieldDescription("second description")
+                val myField2: String,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            val loadClass = classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+            val newInstance = loadClass
+                .getConstructor(String::class.java, String::class.java)
+                .newInstance("value", "value2")
+            loadClass.getMethod("description").invoke(newInstance) shouldBe OutgoingEventBuilderDescription(
+                OutgoingEventType("serializeName"),
+                StringFeatureDescriptor("myField", "description", "value"),
+                StringFeatureDescriptor("myField2", "second description", "value2"),
+            )
+        }
+    }
+    //TODO factory field description
+})
+
+private fun String.shouldCompileWith(
+    assertion: KotlinCompilation.Result.() -> Unit,
+) {
+    val source = SourceFile.kotlin(
+        "MyEvent.kt", this
+    )
+    KotlinCompilation()
+        .apply {
+            sources = listOf(source)
+            symbolProcessorProviders = listOf(GenerateOutgoingEventBuilderModuleProcessorProvider())
+            inheritClassPath = true
+            kspArgs = mutableMapOf("module-name" to "test")
+            kspWithCompilation = true
+        }.compile().apply(assertion)
+}
