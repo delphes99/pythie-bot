@@ -20,7 +20,6 @@ import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
-import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.generation.GenerationUtils.getModuleName
 import fr.delphes.generation.GenerationUtils.processEach
 import fr.delphes.generation.hasParent
@@ -105,13 +104,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                             .addStatement("listOf(")
                             .apply {
                                 outgoingEventClass.getAllProperties().forEach { property ->
-                                    addCode("%T(", StringFeatureDescriptor::class)
-                                    addStatement("fieldName=\"${property.simpleName.asString()}\",")
-                                    property.getAnnotationsByType(FieldDescription::class).first().let {
-                                        addStatement("description=\"${it.description}\",")
-                                    }
-                                    addStatement("value=${property.simpleName.asString()},")
-                                    addCode("),\n")
+                                    FieldDescriptionFactory.build(this, property)
                                 }
                             }
                             .addCode(")")

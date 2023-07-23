@@ -7,6 +7,7 @@ import com.tschuchort.compiletesting.kspWithCompilation
 import com.tschuchort.compiletesting.symbolProcessorProviders
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
+import fr.delphes.feature.descriptor.DurationFeatureDescriptor
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.ShouldSpec
@@ -16,6 +17,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.time.Duration
 
 class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     should("outgoing event should have outgoing event interface") {
@@ -80,20 +82,21 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.annotation.outgoingEvent.FieldDescription                
             import fr.delphes.bot.event.outgoing.OutgoingEvent
+            import java.time.Duration
 
             @RegisterOutgoingEvent("serializeName")
             class MyEvent(
-                @FieldDescription("description")
-                val myField: String,
-                @FieldDescription("second description")
-                val myField2: String,
+                @FieldDescription("string description")
+                val stringField: String,
+                @FieldDescription("duration description")
+                val durationField: Duration,
             ) : OutgoingEvent
         """.shouldCompileWith {
             classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
                 .declaredFields
                 .map { it.name to it.type } shouldBe listOf(
-                "myField" to String::class.java,
-                "myField2" to String::class.java,
+                "stringField" to String::class.java,
+                "durationField" to Duration::class.java,
             )
         }
     }
@@ -128,27 +131,27 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.annotation.outgoingEvent.FieldDescription                
             import fr.delphes.bot.event.outgoing.OutgoingEvent
+            import java.time.Duration
 
             @RegisterOutgoingEvent("serializeName")
             class MyEvent(
-                @FieldDescription("description")
-                val myField: String,
-                @FieldDescription("second description")
-                val myField2: String,
+                @FieldDescription("string description")
+                val stringField: String,
+                @FieldDescription("duration description")
+                val durationField: Duration,
             ) : OutgoingEvent
         """.shouldCompileWith {
             val loadClass = classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
             val newInstance = loadClass
-                .getConstructor(String::class.java, String::class.java)
-                .newInstance("value", "value2")
+                .getConstructor(String::class.java, Duration::class.java)
+                .newInstance("value", Duration.ofSeconds(42))
             loadClass.getMethod("description").invoke(newInstance) shouldBe OutgoingEventBuilderDescription(
                 OutgoingEventType("serializeName"),
-                StringFeatureDescriptor("myField", "description", "value"),
-                StringFeatureDescriptor("myField2", "second description", "value2"),
+                StringFeatureDescriptor("stringField", "string description", "value"),
+                DurationFeatureDescriptor("durationField", "duration description", Duration.ofSeconds(42)),
             )
         }
     }
-    //TODO factory field description
 })
 
 private fun String.shouldCompileWith(
