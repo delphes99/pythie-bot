@@ -221,6 +221,59 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
                 ?.type shouldBe String::class.java
         }
     }
+    should("generate builder with build method which build event") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription                
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+            import java.time.Duration
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("string description")
+                val stringField: String,
+                @FieldDescription("duration description")
+                val durationField: Duration,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            val builderClass = classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+            val newInstance = builderClass
+                .getConstructor(String::class.java, Duration::class.java)
+                .newInstance("value", Duration.ofSeconds(42))
+
+            builderClass.getMethod("build").invoke(newInstance).should { buildEvent ->
+                buildEvent.getFieldValue("durationField") shouldBe Duration.ofSeconds(42)
+                buildEvent.getFieldValue("stringField") shouldBe "value"
+            }
+        }
+    }
+    should("generate builder with build method which build event with custom type mapping") {
+        """
+            import fr.delphes.annotation.outgoingEvent.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription       
+            import fr.delphes.annotation.outgoingEvent.FieldMapper         
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+            import java.time.Duration
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("custom description")
+                @FieldMapper(CustomFieldTypeMapper::class)
+                val customField: CustomFieldType,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            val builderClass = classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+            val newInstance = builderClass
+                .getConstructor(String::class.java)
+                .newInstance("custom value")
+
+            builderClass.getMethod("build").invoke(newInstance).should { buildEvent ->
+                buildEvent.getFieldValue("customField") shouldBe CustomFieldType("custom value")
+            }
+        }
+    }
 })
 
 private fun String.shouldCompileWith(

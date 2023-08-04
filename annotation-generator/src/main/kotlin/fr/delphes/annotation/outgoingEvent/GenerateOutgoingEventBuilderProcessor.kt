@@ -15,6 +15,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.OutgoingEventBuilderDescription
@@ -107,6 +108,23 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                                 }
                             }
                             .addCode(")")
+                            .addCode(")")
+                            .build()
+                    )
+                    .addFunction(
+                        FunSpec.builder("build")
+                            .returns(outgoingEventClass.toClassName())
+                            .addCode(
+                                "return %T(\n",
+                                outgoingEventClass.toClassName()
+                            )
+                            .apply {
+                                outgoingEventClass.getAllProperties().forEach { property ->
+                                    addCode("${property.simpleName.asString()} = ")
+                                    FieldDescriptionFactory.buildEncodeValue(this, property)
+                                    addCode(",\n")
+                                }
+                            }
                             .addCode(")")
                             .build()
                     )

@@ -6,6 +6,7 @@ import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor
 import fr.delphes.feature.descriptor.FeatureDescriptor
@@ -49,6 +50,15 @@ object FieldDescriptionFactory {
 
     private fun KSPropertyDeclaration.getFieldDescriptionMapper(): KSType? {
         return getAnnotationValue(FieldMapper::class, FieldMapper::mapperClass)?.value as KSType?
+    }
+
+    fun buildEncodeValue(builder: FunSpec.Builder, property: KSPropertyDeclaration) {
+        val fieldInfos = property.getFieldInfos()
+        if (fieldInfos?.mapperClass != null) {
+            builder.addCode("%T.map(this.${property.simpleName.asString()})", fieldInfos.mapperClass.toClassName())
+        } else {
+            builder.addCode("this.${property.simpleName.asString()}")
+        }
     }
 
     private val typeToDescriptor = mapOf(
