@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent
+package fr.delphes.annotation
 
 fun Any.getFieldValue(propertyName: String): Any? {
     val getterName = "get" + propertyName.capitalize()

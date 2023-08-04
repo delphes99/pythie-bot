@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent
+package fr.delphes.annotation.outgoingEvent.builder
 
 import kotlin.reflect.KClass
 

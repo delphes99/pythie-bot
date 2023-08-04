@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent
+package fr.delphes.annotation.outgoingEvent.builder
 
 import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration

@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent
+package fr.delphes.annotation.outgoingEvent.builder
 
 import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.isAnnotationPresent
@@ -17,6 +17,8 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
+import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
@@ -74,6 +76,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                         listOf(
                             AnnotationSpec.builder(Serializable::class).build(),
                             AnnotationSpec.builder(SerialName::class).addMember("%S", serialName).build(),
+                            AnnotationSpec.builder(RegisterOutgoingEventBuilder::class).build(),
                         )
                     )
                     .apply {

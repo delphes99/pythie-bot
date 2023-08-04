@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent
+package fr.delphes.annotation.outgoingEvent.builder
 
 @Target(AnnotationTarget.FIELD)
 annotation class FieldDescription(
