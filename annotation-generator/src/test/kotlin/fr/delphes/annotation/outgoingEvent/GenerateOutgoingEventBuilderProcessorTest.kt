@@ -152,6 +152,50 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
             )
         }
     }
+    should("custom mapper should be provided for custom fields") {
+        """
+            import fr.delphes.annotation.outgoingEvent.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription                
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("string description")
+                val stringField: String,
+                @FieldDescription("custom description")
+                val customField: CustomFieldType,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            messages shouldContain "customField must have a mapper"
+        }
+    }
+    should("custom fields should be string in builder") {
+        """
+            import fr.delphes.annotation.outgoingEvent.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.FieldMapper
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("string description")
+                val stringField: String,
+                @FieldDescription("custom description")
+                @FieldMapper(CustomFieldTypeMapper::class)
+                val customField: CustomFieldType,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+                .declaredFields
+                .firstOrNull { it.name == "customField" }
+                ?.type shouldBe String::class.java
+        }
+    }
 })
 
 private fun String.shouldCompileWith(

@@ -1,10 +1,12 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
 import fr.delphes.annotation.outgoingEvent.FieldDescription
+import fr.delphes.annotation.outgoingEvent.FieldMapper
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.WithBuilder
 import fr.delphes.connector.twitch.TwitchConnector
+import fr.delphes.connector.twitch.outgoingEvent.descriptionMapper.TwitchChannelMapper
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
@@ -19,6 +21,7 @@ import kotlinx.serialization.Serializable
 data class SendMessage(
     @FieldDescription("description of text")
     val text: String,
+    @FieldMapper(TwitchChannelMapper::class)
     @FieldDescription("description of channel")
     override val channel: TwitchChannel,
 ) : TwitchChatOutgoingEvent {
