@@ -3,7 +3,7 @@ package fr.delphes.connector.twitch.outgoingEvent
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
 import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
 import fr.delphes.annotation.outgoingEvent.builder.FieldMapper
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.LegacyOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.WithBuilder
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.outgoingEvent.descriptionMapper.TwitchChannelMapper
@@ -42,7 +42,7 @@ data class SendMessage(
         class Builder(
             val text: String = "",
             val channel: TwitchChannel = TwitchChannel(""),
-        ) : OutgoingEventBuilder {
+        ) : LegacyOutgoingEventBuilder {
             override suspend fun build(stateManager: StateManager) = SendMessage(text, channel)
 
             override fun description(): OutgoingEventBuilderDescription {

@@ -1,6 +1,6 @@
 package fr.delphes.feature.descriptor
 
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.LegacyOutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
 import fr.delphes.serializer
@@ -48,7 +48,7 @@ class OutgoingEventsFeatureDescriptorTest : ShouldSpec({
             fieldName = "fieldName",
             description = "description",
             builders = listOf(
-                mockk<OutgoingEventBuilder> {
+                mockk<LegacyOutgoingEventBuilder> {
                     every { description() } returns DESCRIPTION
                 }
             )

@@ -1,6 +1,6 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.LegacyOutgoingEventBuilder
 import fr.delphes.connector.twitch.twitchTestSerializer
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
@@ -17,7 +17,7 @@ class SendMessageBuilderTest : ShouldSpec({
     should("serialize") {
         val builder = SendMessage.Companion.Builder("Hello", TwitchChannel("channel"))
 
-        val json = twitchTestSerializer.encodeToString<OutgoingEventBuilder>(builder)
+        val json = twitchTestSerializer.encodeToString<LegacyOutgoingEventBuilder>(builder)
 
         json shouldEqualJson """
             {
@@ -37,7 +37,7 @@ class SendMessageBuilderTest : ShouldSpec({
             }
             """
 
-        val builder = twitchTestSerializer.decodeFromString<OutgoingEventBuilder>(json)
+        val builder = twitchTestSerializer.decodeFromString<LegacyOutgoingEventBuilder>(json)
 
         with(builder) {
             this.shouldBeInstanceOf<SendMessage.Companion.Builder>()

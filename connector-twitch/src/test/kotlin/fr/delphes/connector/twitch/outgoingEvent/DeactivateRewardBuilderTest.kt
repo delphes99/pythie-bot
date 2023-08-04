@@ -1,6 +1,6 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.LegacyOutgoingEventBuilder
 import fr.delphes.connector.twitch.state.ChannelRewardsState
 import fr.delphes.connector.twitch.twitchTestSerializer
 import fr.delphes.feature.OutgoingEventBuilderDescription
@@ -22,7 +22,7 @@ class DeactivateRewardBuilderTest : ShouldSpec({
     should("serialize") {
         val builder = DeactivateReward.Companion.Builder("someReward", TwitchChannel("channel"))
 
-        val json = twitchTestSerializer.encodeToString<OutgoingEventBuilder>(builder)
+        val json = twitchTestSerializer.encodeToString<LegacyOutgoingEventBuilder>(builder)
 
         json shouldEqualJson """
             {

@@ -1,6 +1,6 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.LegacyOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.WithBuilder
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.state.ChannelRewardsState
@@ -35,7 +35,7 @@ data class DeactivateReward(
         class Builder(
             val rewardName: String = "",
             val channel: TwitchChannel = TwitchChannel(""),
-        ) : OutgoingEventBuilder {
+        ) : LegacyOutgoingEventBuilder {
             override suspend fun build(stateManager: StateManager): DeactivateReward {
                 val channelRewardsState = stateManager.getStateOrNull(ChannelRewardsState.id(channel))
                     ?: error("No state for channel $channel")

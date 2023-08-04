@@ -9,7 +9,7 @@ interface WithBuilder {
     val builderDefinition: OutgoingEventBuilderDefinition
 
     fun buildDefinition(
-        newBuilderProvider: () -> OutgoingEventBuilder,
+        newBuilderProvider: () -> LegacyOutgoingEventBuilder,
     ) = OutgoingEventBuilderDefinition(
         type = this.type,
         newBuilderProvider = newBuilderProvider

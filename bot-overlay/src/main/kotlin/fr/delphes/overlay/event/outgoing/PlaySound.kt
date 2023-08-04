@@ -1,6 +1,6 @@
 package fr.delphes.overlay.event.outgoing
 
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.LegacyOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.WithBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
@@ -19,7 +19,7 @@ data class PlaySound(val mediaName: String) : OverlayOutgoingEvent {
         @SerialName("core-play-sound")
         class Builder(
             private val mediaName: String = "",
-        ) : OutgoingEventBuilder {
+        ) : LegacyOutgoingEventBuilder {
             override suspend fun build(stateManager: StateManager) = PlaySound(mediaName)
 
             override fun description(): OutgoingEventBuilderDescription {
