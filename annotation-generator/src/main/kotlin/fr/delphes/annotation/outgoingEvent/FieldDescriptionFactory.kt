@@ -42,9 +42,9 @@ object FieldDescriptionFactory {
     private fun KSPropertyDeclaration.getFieldInfos(): FieldInfos? {
         val className = type.resolve().declaration.qualifiedName?.asString()
 
-        return typeToDescriptor[className]
-            ?: this.getFieldDescriptionMapper()
-                ?.let(FieldInfos.Companion::of)
+        return this.getFieldDescriptionMapper()
+            ?.let(FieldInfos.Companion::of)
+            ?: typeToDescriptor[className]
     }
 
     private fun KSPropertyDeclaration.getFieldDescriptionMapper(): KSType? {

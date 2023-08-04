@@ -196,6 +196,31 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
                 ?.type shouldBe String::class.java
         }
     }
+    should("mapper on generic type should override generic type (field must be string)") {
+        """
+            import fr.delphes.annotation.outgoingEvent.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.DurationFixedTypeMapper
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.annotation.outgoingEvent.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.FieldMapper
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+            import java.time.Duration
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("string description")
+                val stringField: String,
+                @FieldMapper(DurationFixedTypeMapper::class)
+                @FieldDescription("duration description")
+                val durationField: Duration,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+                .declaredFields
+                .firstOrNull { it.name == "durationField" }
+                ?.type shouldBe String::class.java
+        }
+    }
 })
 
 private fun String.shouldCompileWith(
