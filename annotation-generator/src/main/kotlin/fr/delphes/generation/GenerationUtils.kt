@@ -18,7 +18,6 @@ object GenerationUtils {
         kClass: KClass<out Any>,
         processClasses: (List<KSClassDeclaration>) -> Unit,
     ): List<KSAnnotated> {
-        logger.info("Start processing")
         val (valids, invalids) =
             getSymbolsWithAnnotation(kClass.java.name)
                 .partition { it.validate() }

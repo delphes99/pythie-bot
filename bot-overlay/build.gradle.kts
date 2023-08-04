@@ -16,5 +16,5 @@ dependencies {
 }
 
 ksp {
-    arg("module-name", "features")
+    arg("module-name", "overlay")
 }

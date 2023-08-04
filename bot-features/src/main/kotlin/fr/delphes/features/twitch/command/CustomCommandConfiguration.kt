@@ -2,7 +2,7 @@
 
 package fr.delphes.features.twitch.command
 
-import fr.delphes.bot.event.outgoing.LegacyOutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.FeatureConfiguration
 import fr.delphes.feature.FeatureDescription
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor
@@ -24,7 +24,7 @@ class CustomCommandConfiguration(
     private val command: String = "",
     override val id: FeatureId = FeatureId(),
     private val cooldown: Duration = Duration.ZERO,
-    private val actions: List<LegacyOutgoingEventBuilder> = emptyList(),
+    private val actions: List<OutgoingEventBuilder> = emptyList(),
 ) : FeatureConfiguration {
     override fun buildFeature(): FeatureDefinition {
         return CustomCommand(
@@ -33,7 +33,7 @@ class CustomCommandConfiguration(
             id = id,
             cooldown = cooldown,
             action = {
-                val outgoingEvent = actions.map { it.build(stateManager) }
+                val outgoingEvent = actions.map { it.build() }
                 outgoingEvent.forEach { this.executeOutgoingEvent(it) }
             }
         )

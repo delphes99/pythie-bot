@@ -1,6 +1,6 @@
 package fr.delphes.feature.descriptor
 
-import fr.delphes.bot.event.outgoing.LegacyOutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,7 +16,7 @@ data class OutgoingEventsFeatureDescriptor(
         fun fromBuilders(
             fieldName: String,
             description: String,
-            builders: List<LegacyOutgoingEventBuilder>,
+            builders: List<OutgoingEventBuilder>,
         ) = OutgoingEventsFeatureDescriptor(
             fieldName = fieldName,
             description = description,

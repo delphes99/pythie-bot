@@ -8,7 +8,6 @@ import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
@@ -68,13 +67,6 @@ class Bot(
 
     private val _connectors = mutableListOf<Connector<*, *>>()
     val connectors get(): List<Connector<*, *>> = _connectors
-
-    val outgoingEventsTypes: List<OutgoingEventBuilderDefinition>
-        get() = listOf(
-            *connectors
-                .flatMap(Connector<*, *>::outgoingEventsTypes)
-                .toTypedArray()
-        )
 
     internal val overlayRepository =
         OverlayRepository(configuration.pathOf("overlays", "overlays.json"))

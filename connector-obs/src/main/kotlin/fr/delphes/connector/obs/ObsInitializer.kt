@@ -2,12 +2,10 @@ package fr.delphes.connector.obs
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.ConnectorInitializer
-import fr.delphes.obs.generated.obsIncomingEventSerializerModule
-import kotlinx.serialization.modules.SerializersModule
+import fr.delphes.obs.generated.obsPolymorphicSerializerModule
 
 class ObsInitializer : ConnectorInitializer() {
-    override val incomingEventSerializerModule = obsIncomingEventSerializerModule
-    override val outgoingEventBuilderSerializerModule = SerializersModule {}
+    override val serializerModule = obsPolymorphicSerializerModule
 
     override fun buildConnector(bot: Bot) = ObsConnector(
         bot,

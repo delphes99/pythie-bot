@@ -15,8 +15,7 @@ fun buildSerializer(
         include(coreSerializersModule)
         include(featureSerializersModule)
         connectors.forEach {
-            include(it.incomingEventSerializerModule)
-            include(it.outgoingEventBuilderSerializerModule)
+            include(it.serializerModule)
         }
     }
 }

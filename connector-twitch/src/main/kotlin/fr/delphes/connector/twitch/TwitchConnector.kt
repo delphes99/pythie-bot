@@ -5,13 +5,9 @@ import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilderDefinition
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
-import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
-import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
-import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.state.ChannelRewardsState
 import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.connector.twitch.state.GetCurrentStreamState
@@ -62,12 +58,6 @@ class TwitchConnector(
     private val twitchHelixApi = TwitchHelixClient()
 
     override val connectionManager = TwitchConnectionManager(this)
-
-    override val outgoingEventsTypes: List<OutgoingEventBuilderDefinition> = listOf(
-        SendMessage.builderDefinition,
-        ActivateReward.builderDefinition,
-        DeactivateReward.builderDefinition,
-    )
 
     private val internalHandler = TwitchConnectorHandler(this)
 
