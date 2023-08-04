@@ -13,6 +13,7 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.toClassName
@@ -20,6 +21,7 @@ import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
 import fr.delphes.generation.GenerationUtils.getModuleName
@@ -79,6 +81,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                             AnnotationSpec.builder(RegisterOutgoingEventBuilder::class).build(),
                         )
                     )
+                    .addSuperinterface(OutgoingEventBuilder::class)
                     .apply {
                         outgoingEventClass.getAllProperties().forEach { property ->
                             addProperty(
@@ -94,6 +97,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     }
                     .addFunction(
                         FunSpec.builder("description")
+                            .addModifiers(KModifier.OVERRIDE)
                             .returns(OutgoingEventBuilderDescription::class)
                             .addCode(
                                 "return %T(\n",
@@ -116,6 +120,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     )
                     .addFunction(
                         FunSpec.builder("build")
+                            .addModifiers(KModifier.OVERRIDE)
                             .returns(outgoingEventClass.toClassName())
                             .addCode(
                                 "return %T(\n",

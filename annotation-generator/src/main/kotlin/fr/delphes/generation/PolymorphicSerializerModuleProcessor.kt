@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
 
 abstract class PolymorphicSerializerModuleProcessorProvider(
     private val annotationClass: KClass<out Any>,
-    private val parentClassName: ClassName,
+    private val parentClassName: KClass<out Any>,
     private val serializerModuleName: String,
 ) : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
@@ -40,7 +40,7 @@ class PolymorphicSerializerModuleProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
     private val annotationClass: KClass<out Any>,
-    private val parentClassName: ClassName,
+    private val parentClassName: KClass<out Any>,
     private val serializerModuleName: String,
     private val moduleName: String,
 ) : SymbolProcessor {

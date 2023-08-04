@@ -7,6 +7,7 @@ import com.tschuchort.compiletesting.kspWithCompilation
 import com.tschuchort.compiletesting.symbolProcessorProviders
 import fr.delphes.annotation.getFieldValue
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor
@@ -116,7 +117,8 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
                 val myField2: String,
             ) : OutgoingEvent
         """.shouldCompileWith {
-            classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+            val loadedClass = classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.MyEventBuilder")
+            loadedClass
                 .annotations.should { annotations ->
                     withClue("should have serializable annotation") {
                         annotations.firstOrNull { it is Serializable }.shouldNotBeNull()
@@ -130,6 +132,10 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
                             ?.let { it as RegisterOutgoingEventBuilder }.shouldNotBeNull()
                     }
                 }
+            withClue("should have OutgoingEventBuilder interface") {
+                loadedClass.interfaces.firstOrNull { it == OutgoingEventBuilder::class.java }
+                    .shouldNotBeNull()
+            }
         }
     }
     should("generate builder with description method") {
