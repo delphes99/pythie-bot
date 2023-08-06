@@ -1,9 +1,9 @@
 package fr.delphes.annotation.incomingEvent
 
-import fr.delphes.annotation.serialization.SerializerModule
+import fr.delphes.annotation.serialization.RegisterPolymorphic
 import fr.delphes.bot.event.incoming.IncomingEvent
 
-val incomingEventSerializerModule = SerializerModule(
+val incomingEventRegisterPolymorphic = RegisterPolymorphic(
     RegisterIncomingEvent::class,
     IncomingEvent::class,
 )

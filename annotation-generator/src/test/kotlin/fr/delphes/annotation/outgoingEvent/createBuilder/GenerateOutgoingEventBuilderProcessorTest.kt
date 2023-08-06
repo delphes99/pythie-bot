@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent.builder
+package fr.delphes.annotation.outgoingEvent.createBuilder
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
@@ -48,7 +48,7 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("outgoing event must have all fields with description") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -65,7 +65,7 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("outgoing event interface is know if inherited") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -82,7 +82,7 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("generate builder with all fields") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import java.time.Duration
@@ -105,7 +105,7 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("generate builder with serialize infos") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -140,7 +140,7 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("generate builder with description method") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import java.time.Duration
@@ -166,9 +166,9 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("custom mapper should be provided for custom fields") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.builder.CustomFieldTypeMapper
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -186,10 +186,10 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("custom fields should be string in builder") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.builder.CustomFieldTypeMapper
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
-            import fr.delphes.annotation.outgoingEvent.builder.FieldMapper
+            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -210,10 +210,10 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("mapper on generic type should override generic type (field must be string)") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.builder.DurationFixedTypeMapper
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
-            import fr.delphes.annotation.outgoingEvent.builder.FieldMapper
+            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.createBuilder.DurationFixedTypeMapper
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import java.time.Duration
@@ -235,7 +235,7 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("generate builder with build method which build event") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import java.time.Duration
@@ -261,10 +261,10 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("generate builder with build method which build event with custom type mapping") {
         """
-            import fr.delphes.annotation.outgoingEvent.builder.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.builder.CustomFieldTypeMapper
-            import fr.delphes.annotation.outgoingEvent.builder.FieldDescription
-            import fr.delphes.annotation.outgoingEvent.builder.FieldMapper
+            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import java.time.Duration

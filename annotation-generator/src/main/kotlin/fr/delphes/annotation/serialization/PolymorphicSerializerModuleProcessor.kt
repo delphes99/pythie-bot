@@ -15,14 +15,14 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
-import fr.delphes.annotation.incomingEvent.incomingEventSerializerModule
-import fr.delphes.annotation.outgoingEvent.registerBuilder.outgoingEventSerializerModule
+import fr.delphes.annotation.incomingEvent.incomingEventRegisterPolymorphic
+import fr.delphes.annotation.outgoingEvent.outgoingEventRegisterPolymorphic
 import fr.delphes.generation.GenerationUtils.getModuleName
 import kotlinx.serialization.modules.SerializersModule
 
 val serializerModules = listOf(
-    incomingEventSerializerModule,
-    outgoingEventSerializerModule,
+    incomingEventRegisterPolymorphic,
+    outgoingEventRegisterPolymorphic,
 )
 
 class PolymorphicSerializerModuleProcessorProvider(
@@ -40,10 +40,10 @@ class PolymorphicSerializerModuleProcessorProvider(
 class PolymorphicSerializerModuleProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
-    private val modules: List<SerializerModule>,
+    private val modules: List<RegisterPolymorphic>,
     private val moduleName: String,
 ) : SymbolProcessor {
-    private val childrenByModule = mutableMapOf<SerializerModule, MutableSet<KSClassDeclaration>>()
+    private val childrenByModule = mutableMapOf<RegisterPolymorphic, MutableSet<KSClassDeclaration>>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         logger.info("Start processing : PolymorphicSerializerModuleProcessor")
@@ -94,7 +94,7 @@ class PolymorphicSerializerModuleProcessor(
     private fun getSources() = childrenByModule.values.flatten().map { it.containingFile as KSFile }
 
     private fun CodeBlock.Builder.toModuleCode(
-        module: SerializerModule,
+        module: RegisterPolymorphic,
         children: MutableSet<KSClassDeclaration>,
     ) {
         addStatement("%T(%T::class) {", POLYMORPHIC, module.parentClassName)
