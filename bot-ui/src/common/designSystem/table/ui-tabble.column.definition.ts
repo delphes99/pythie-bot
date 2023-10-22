@@ -1,4 +1,3 @@
-import {v4 as uuid} from "uuid";
 import {Slot} from "vue";
 
 export type TransformValue = (item: unknown) => unknown
@@ -8,7 +7,7 @@ export class UiTabbleColumnDefinition {
         readonly headerName: string,
         readonly render: Slot | undefined,
         readonly extractValue: TransformValue | undefined,
-        readonly id: string = uuid(),
+        readonly id: string = crypto.randomUUID(),
     ) {
     }
 }

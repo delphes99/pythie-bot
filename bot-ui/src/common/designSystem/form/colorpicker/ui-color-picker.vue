@@ -17,9 +17,7 @@
 <script lang="ts" setup>
 import {darkMonochromeTheme, darkTheme} from "@/common/style/Themes";
 import {useApplicationTheme} from "@/common/style/UseApplicationThemeStore"
-import {v4 as uuid} from "uuid"
 import {computed, ref, watch} from "vue"
-import {ColorPicker} from "vue-color-kit"
 import "vue-color-kit/dist/vue-color-kit.css"
 
 const emits = defineEmits(["update:modelValue"])
@@ -31,7 +29,7 @@ const props = defineProps({
   },
   id: {
     type: String,
-    default: () => uuid(),
+    default: () => crypto.randomUUID(),
   },
   label: {
     type: String,

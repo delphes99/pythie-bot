@@ -34,10 +34,9 @@
 <script lang="ts" setup>
 import {UiSelectOption} from "@/common/designSystem/form/select/ui-select.option"
 import {useVModel} from "@vueuse/core"
-import {v4 as uuid} from "uuid"
 import {PropType} from "vue"
 
-const id = uuid()
+const id = crypto.randomUUID()
 
 const props = defineProps({
   modelValue: {

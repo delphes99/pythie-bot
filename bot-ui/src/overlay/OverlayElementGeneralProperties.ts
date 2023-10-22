@@ -1,12 +1,10 @@
-import {v4 as uuid} from "uuid"
-
 export class OverlayElementGeneralProperties {
     id: string
     left: number
     top: number
     sortOrder: number
 
-    constructor(left: number, top: number, id: string = uuid(), sortOrder = 0) {
+    constructor(left: number, top: number, id: string = crypto.randomUUID(), sortOrder = 0) {
         this.id = id
         this.left = left
         this.top = top

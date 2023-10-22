@@ -21,12 +21,11 @@
 <script setup lang="ts">
 import {Switch} from '@headlessui/vue'
 import {useVModel} from "@vueuse/core";
-import {v4 as uuid} from "uuid";
 
 const props = defineProps({
   id: {
     type: String,
-    default: () => uuid(),
+    default: () => crypto.randomUUID(),
   },
   modelValue: {
     type: Boolean,

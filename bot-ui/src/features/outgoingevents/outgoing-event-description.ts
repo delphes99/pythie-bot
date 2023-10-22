@@ -2,7 +2,6 @@ import {FieldDescriptor} from "@/common/describableForm/field-descriptor";
 import {fromJsonDescriptor} from "@/common/describableForm/field-descriptor.factory";
 import {FormDescription} from "@/common/describableForm/form-description";
 import {OutgoingEvent} from "@/features/outgoingevents/outgoing-event";
-import {v4 as uuid} from "uuid";
 
 type jsonFormat = {
     type: string,
@@ -13,7 +12,7 @@ export class OutgoingEventDescription implements FormDescription<OutgoingEvent> 
     constructor(
         public type: string,
         public descriptors: FieldDescriptor<any>[],
-        readonly id: string = uuid(),
+        readonly id: string = crypto.randomUUID(),
     ) {
     }
 

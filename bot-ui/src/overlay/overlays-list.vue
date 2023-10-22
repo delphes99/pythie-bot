@@ -52,7 +52,6 @@ import Overlay from "@/overlay/Overlay"
 import OverlayRepository from "@/overlay/OverlayRepository"
 import Resolution from "@/overlay/Resolution"
 import router from "@/router"
-import {v4 as uuidv4} from "uuid"
 import {ref} from "vue"
 
 function useOverlayList(repository: OverlayRepository) {
@@ -83,7 +82,7 @@ function useCreateOverlay(repository: OverlayRepository) {
     }
 
     const overlay = new Overlay(
-        uuidv4(),
+        crypto.randomUUID(),
         addName.value,
         new Resolution(addWidth.value, addHeight.value),
     )
