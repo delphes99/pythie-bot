@@ -8,6 +8,7 @@ import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEventRegistry
 import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
@@ -86,6 +87,13 @@ class Bot(
         return connectorInitializers
             .map(ConnectorInitializer::outgoingEventRegistry)
             .flatMap(OutgoingEventRegistry::types)
+    }
+
+    fun getNewOutgoingEvent(type: OutgoingEventType): OutgoingEventBuilder? {
+        return connectorInitializers
+            .map(ConnectorInitializer::outgoingEventRegistry)
+            .firstNotNullOfOrNull { it.getRegistryEntry(type) }
+            ?.buildNewInstance()
     }
 
     override suspend fun processOutgoingEvent(event: OutgoingEvent) {

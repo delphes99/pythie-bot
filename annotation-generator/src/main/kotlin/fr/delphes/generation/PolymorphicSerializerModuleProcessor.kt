@@ -52,7 +52,7 @@ class PolymorphicSerializerModuleProcessor(
 
     private fun createSerializerModule(fieldDescriptorClasses: List<KSClassDeclaration>) {
         FileSpec.builder(
-            "fr.delphes.$moduleName.generated",
+            GenerationUtils.baseGeneratedPackage(moduleName),
             propertyName
         )
             .addProperty(fieldDescriptorClasses.toModuleVariable())

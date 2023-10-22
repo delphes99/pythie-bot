@@ -9,6 +9,10 @@ import com.google.devtools.ksp.validate
 import kotlin.reflect.KClass
 
 object GenerationUtils {
+    fun baseGeneratedPackage(moduleName: String): String {
+        return "fr.delphes.$moduleName.generated"
+    }
+
     fun getModuleName(environment: SymbolProcessorEnvironment): String {
         return environment.options["module-name"] ?: "default"
     }

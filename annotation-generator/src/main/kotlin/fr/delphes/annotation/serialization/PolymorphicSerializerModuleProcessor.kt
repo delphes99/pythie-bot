@@ -17,6 +17,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.incomingEvent.incomingEventRegisterPolymorphic
 import fr.delphes.annotation.outgoingEvent.outgoingEventRegisterPolymorphic
+import fr.delphes.generation.GenerationUtils
 import fr.delphes.generation.GenerationUtils.getModuleName
 import kotlinx.serialization.modules.SerializersModule
 
@@ -65,7 +66,7 @@ class PolymorphicSerializerModuleProcessor(
 
         FileSpec
             .builder(
-                "fr.delphes.$moduleName.generated",
+                GenerationUtils.baseGeneratedPackage(moduleName),
                 "${moduleName}PolymorphicSerializerModule"
             )
             .addProperty(

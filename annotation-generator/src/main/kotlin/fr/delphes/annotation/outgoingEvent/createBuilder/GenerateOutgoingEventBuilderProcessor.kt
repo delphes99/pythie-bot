@@ -11,9 +11,11 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.toClassName
@@ -24,6 +26,7 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
+import fr.delphes.generation.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.GenerationUtils.getModuleName
 import fr.delphes.generation.GenerationUtils.processEach
 import fr.delphes.generation.hasParent
@@ -57,20 +60,25 @@ class GenerateOutgoingEventBuilderModuleProcessor(
         checkAllFieldsHaveDescription(outgoingEventClass)
         val serialName = outgoingEventClass.getAnnotationsByType(RegisterOutgoingEvent::class)
             .first().serializeName
+        val builderClass = builderName(outgoingEventClass)
         FileSpec.builder(
-            "fr.delphes.$moduleName.generated.outgoingEvent",
-            outgoingEventClass.simpleName.asString() + "Builder"
+            packageName(moduleName),
+            builderClass
         )
             .addType(
-                TypeSpec.classBuilder(outgoingEventClass.simpleName.asString() + "Builder")
+                TypeSpec.classBuilder(builderClass)
                     .primaryConstructor(
                         FunSpec
                             .constructorBuilder()
                             .apply {
                                 outgoingEventClass.getAllProperties().forEach { property ->
                                     addParameter(
-                                        property.simpleName.asString(),
-                                        FieldDescriptionFactory.buildFieldType(property),
+                                        ParameterSpec.builder(
+                                            property.simpleName.asString(),
+                                            FieldDescriptionFactory.buildFieldType(property),
+                                        )
+                                            .defaultValue("\"\"")
+                                            .build(),
                                     )
                                 }
                             }
@@ -162,5 +170,16 @@ class GenerateOutgoingEventBuilderModuleProcessor(
         if (!outgoingEventClass.getAllProperties().all { it.isAnnotationPresent(FieldDescription::class) }) {
             logger.error("${outgoingEventClass.qualifiedName?.asString()} must have all fields with description")
         }
+    }
+
+    companion object {
+        fun packageName(moduleName: String) = "${baseGeneratedPackage(moduleName)}.outgoingEvent"
+
+        fun builderName(eventClass: KSClassDeclaration) = "${eventClass.simpleName.asString()}Builder"
+
+        fun builderClassName(moduleName: String, eventClass: KSClassDeclaration) = ClassName(
+            packageName(moduleName),
+            builderName(eventClass),
+        )
     }
 }

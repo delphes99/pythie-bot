@@ -17,12 +17,13 @@ fun Application.OutgoingEventKtorModule(bot: Bot) {
             )
         }
         get("outgoing-events/types/{type}") {
-            val id = this.call.parameters["type"]
+            val type = this.call.parameters["type"]
                 ?.let { OutgoingEventType(it) }
                 ?: return@get this.context.respond(HttpStatusCode.BadRequest, "outgoing event type missing")
 
-            //TODO
-            this.context.respond(HttpStatusCode.BadRequest, "unknown outgoing event type")
+            val newInstance = bot.getNewOutgoingEvent(type)
+                ?: return@get this.context.respond(HttpStatusCode.BadRequest, "unknown outgoing event type")
+            this.context.respond(HttpStatusCode.OK, newInstance.description())
         }
     }
 }

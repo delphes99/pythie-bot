@@ -15,9 +15,11 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+import fr.delphes.annotation.outgoingEvent.createBuilder.GenerateOutgoingEventBuilderModuleProcessor
 import fr.delphes.bot.event.outgoing.OutgoingEventRegistry
 import fr.delphes.bot.event.outgoing.OutgoingEventRegistryEntry
 import fr.delphes.feature.OutgoingEventType
+import fr.delphes.generation.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.GenerationUtils.getModuleName
 import fr.delphes.generation.getSerialName
 
@@ -53,7 +55,7 @@ class GenerateOutgoingEventRegistryProcessor(
 
         FileSpec
             .builder(
-                "fr.delphes.$moduleName.generated",
+                baseGeneratedPackage(moduleName),
                 "${moduleName}OutgoingEventRegistry"
             )
             .addProperty(
@@ -69,11 +71,20 @@ class GenerateOutgoingEventRegistryProcessor(
                             .apply {
                                 allOutgoingEvents.forEach { event ->
                                     val serialName = event.getSerialName()
+                                    val builderClassName =
+                                        GenerateOutgoingEventBuilderModuleProcessor.builderClassName(moduleName, event)
+
                                     addStatement(
-                                        "%T(%T(\"$serialName\")),",
-                                        OutgoingEventRegistryEntry::class,
+                                        "%T(",
+                                        OutgoingEventRegistryEntry::class
+                                    )
+                                    addStatement(
+                                        "%T(\"$serialName\"),",
                                         OutgoingEventType::class,
                                     )
+                                    addStatement(") {")
+                                    addStatement("%T()", builderClassName)
+                                    addStatement("},")
                                 }
                             }
                             .addStatement(")")
