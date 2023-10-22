@@ -13,7 +13,7 @@ fun Application.OutgoingEventKtorModule(bot: Bot) {
     routing {
         get("outgoing-events/types") {
             this.context.respond(
-                HttpStatusCode.OK, bot.allGoingEventTypes()
+                HttpStatusCode.OK, bot.eventsManager.allGoingEventTypes()
             )
         }
         get("outgoing-events/types/{type}") {
@@ -21,7 +21,7 @@ fun Application.OutgoingEventKtorModule(bot: Bot) {
                 ?.let { OutgoingEventType(it) }
                 ?: return@get this.context.respond(HttpStatusCode.BadRequest, "outgoing event type missing")
 
-            val newInstance = bot.getNewOutgoingEvent(type)
+            val newInstance = bot.eventsManager.getNewOutgoingEvent(type)
                 ?: return@get this.context.respond(HttpStatusCode.BadRequest, "unknown outgoing event type")
             this.context.respond(HttpStatusCode.OK, newInstance.description())
         }

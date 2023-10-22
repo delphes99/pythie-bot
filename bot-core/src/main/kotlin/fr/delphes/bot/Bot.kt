@@ -4,19 +4,17 @@ import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorInitializer
 import fr.delphes.bot.connector.ConnectorType
+import fr.delphes.bot.event.EventsManager
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
-import fr.delphes.bot.event.outgoing.OutgoingEventRegistry
 import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
-import fr.delphes.feature.OutgoingEventType
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
@@ -83,18 +81,7 @@ class Bot(
         featuresManager.handle(incomingEvent, this)
     }
 
-    fun allGoingEventTypes(): List<OutgoingEventType> {
-        return connectorInitializers
-            .map(ConnectorInitializer::outgoingEventRegistry)
-            .flatMap(OutgoingEventRegistry::types)
-    }
-
-    fun getNewOutgoingEvent(type: OutgoingEventType): OutgoingEventBuilder? {
-        return connectorInitializers
-            .map(ConnectorInitializer::outgoingEventRegistry)
-            .firstNotNullOfOrNull { it.getRegistryEntry(type) }
-            ?.buildNewInstance()
-    }
+    val eventsManager = EventsManager(connectorInitializers)
 
     override suspend fun processOutgoingEvent(event: OutgoingEvent) {
         _connectors.forEach { connector ->
