@@ -1,3 +1,10 @@
 package fr.delphes.overlay.event.outgoing
 
-data class PlaySound(val mediaName: String) : OverlayOutgoingEvent
+import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+
+@RegisterOutgoingEvent("overlay-play-sound")
+data class PlaySound(
+    @FieldDescription("file to play")
+    val mediaName: String,
+) : OverlayOutgoingEvent
