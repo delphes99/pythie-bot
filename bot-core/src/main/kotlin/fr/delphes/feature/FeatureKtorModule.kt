@@ -64,25 +64,11 @@ fun Application.FeatureAdminModule(bot: Bot) {
             bot.featuresManager.loadConfigurableFeatures()
             this.context.respond(HttpStatusCode.OK)
         }
-        get("outgoing-events/types") {
-            this.context.respond(
-                //TODO retrieve outgoing event types
-                HttpStatusCode.OK, emptyList<String>()
-            )
-        }
         get("features/types") {
             this.context.respond(
                 HttpStatusCode.OK, bot.featureConfigurationsType
                     .map(FeatureConfigurationBuilderRegistry::type)
             )
-        }
-        get("outgoing-events/types/{type}") {
-            val id = this.call.parameters["type"]
-                ?.let { OutgoingEventType(it) }
-                ?: return@get this.context.respond(HttpStatusCode.BadRequest, "outgoing event type missing")
-
-            //TODO
-            this.context.respond(HttpStatusCode.BadRequest, "unknown outgoing event type")
         }
     }
 }

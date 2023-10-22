@@ -8,12 +8,14 @@ import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.event.outgoing.OutgoingEventRegistry
 import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.NonEditableFeature
+import fr.delphes.feature.OutgoingEventType
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
@@ -78,6 +80,12 @@ class Bot(
             .forEach { event -> processOutgoingEvent(event) }
         statisticService.handle(incomingEvent)
         featuresManager.handle(incomingEvent, this)
+    }
+
+    fun allGoingEventTypes(): List<OutgoingEventType> {
+        return connectorInitializers
+            .map(ConnectorInitializer::outgoingEventRegistry)
+            .flatMap(OutgoingEventRegistry::types)
     }
 
     override suspend fun processOutgoingEvent(event: OutgoingEvent) {

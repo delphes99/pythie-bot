@@ -1,5 +1,6 @@
-package fr.delphes.annotation.outgoingEvent.createBuilder
+package fr.delphes.annotation.outgoingEvent
 
+import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescriptorMapper
 import java.time.Duration
 
 object DurationFixedTypeMapper : FieldDescriptorMapper<Duration> {

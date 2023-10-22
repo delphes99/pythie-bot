@@ -1,6 +1,7 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.connector.connectionstate.endpoint.ConnectorsModule
+import fr.delphes.bot.event.outgoing.OutgoingEventKtorModule
 import fr.delphes.bot.media.MediaModule
 import fr.delphes.bot.media.MediasService
 import fr.delphes.bot.monitoring.Monitoring
@@ -39,6 +40,7 @@ class WebServer(
             Overlays(bot)
             ConnectorsModule(bot)
             FeatureAdminModule(bot)
+            OutgoingEventKtorModule(bot)
             Monitoring(bot)
 
             internalModules.forEach { module -> module(this) }

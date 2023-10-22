@@ -27,6 +27,7 @@ import fr.delphes.feature.OutgoingEventType
 import fr.delphes.generation.GenerationUtils.getModuleName
 import fr.delphes.generation.GenerationUtils.processEach
 import fr.delphes.generation.hasParent
+import fr.delphes.generation.toNonAggregatingDependencies
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -140,7 +141,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     .build()
             )
             .build()
-            .writeTo(codeGenerator, false)
+            .writeTo(codeGenerator, outgoingEventClass.toNonAggregatingDependencies())
     }
 
     private fun checkInheritFromOutgoingEvent(outgoingEventClass: KSClassDeclaration) {

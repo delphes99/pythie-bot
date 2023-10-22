@@ -1,2 +1,3 @@
 fr.delphes.annotation.outgoingEvent.createBuilder.GenerateOutgoingEventBuilderModuleProcessorProvider
+fr.delphes.annotation.outgoingEvent.createRegistry.GenerateOutgoingEventRegistryProcessorProvider
 fr.delphes.annotation.serialization.PolymorphicSerializerModuleProcessorProvider

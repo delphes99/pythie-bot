@@ -1,12 +1,10 @@
 package fr.delphes.annotation.outgoingEvent.createBuilder
 
 import com.tschuchort.compiletesting.KotlinCompilation
-import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspArgs
-import com.tschuchort.compiletesting.kspWithCompilation
-import com.tschuchort.compiletesting.symbolProcessorProviders
 import fr.delphes.annotation.getFieldValue
+import fr.delphes.annotation.outgoingEvent.CustomFieldType
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
+import fr.delphes.annotation.shouldCompileWithProvider
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
@@ -166,8 +164,8 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("custom mapper should be provided for custom fields") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -186,8 +184,8 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("custom fields should be string in builder") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
@@ -210,8 +208,8 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("mapper on generic type should override generic type (field must be string)") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.createBuilder.DurationFixedTypeMapper
+            import fr.delphes.annotation.outgoingEvent.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.DurationFixedTypeMapper
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
@@ -261,8 +259,8 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("generate builder with build method which build event with custom type mapping") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.createBuilder.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.CustomFieldType
+            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
@@ -291,15 +289,5 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
 private fun String.shouldCompileWith(
     assertion: KotlinCompilation.Result.() -> Unit,
 ) {
-    val source = SourceFile.kotlin(
-        "MyEvent.kt", this
-    )
-    KotlinCompilation()
-        .apply {
-            sources = listOf(source)
-            symbolProcessorProviders = listOf(GenerateOutgoingEventBuilderModuleProcessorProvider())
-            inheritClassPath = true
-            kspArgs = mutableMapOf("module-name" to "test")
-            kspWithCompilation = true
-        }.compile().apply(assertion)
+    shouldCompileWithProvider(GenerateOutgoingEventBuilderModuleProcessorProvider(), assertion)
 }
