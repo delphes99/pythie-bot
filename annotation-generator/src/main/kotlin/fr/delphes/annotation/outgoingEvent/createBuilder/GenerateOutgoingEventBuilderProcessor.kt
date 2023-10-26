@@ -77,7 +77,18 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                                             property.simpleName.asString(),
                                             FieldDescriptionFactory.buildFieldType(property),
                                         )
-                                            .defaultValue("\"\"")
+                                            .defaultValue(FieldDescriptionFactory.buildFieldDefaultValue(property))
+                                            .apply {
+                                                val fieldSerializer =
+                                                    FieldDescriptionFactory.buildFieldSerializer(property)
+                                                if (fieldSerializer != null) {
+                                                    addAnnotation(
+                                                        AnnotationSpec.builder(Serializable::class)
+                                                            .addMember("with = %T::class", fieldSerializer)
+                                                            .build()
+                                                    )
+                                                }
+                                            }
                                             .build(),
                                     )
                                 }
