@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 class SubscribeChannelFollow(
     override val condition: ChannelFollowCondition,
     override val transport: SubscribeTransport,
-    override val version: String = "1"
-): EventSubSubscribe<ChannelFollowCondition> {
+    override val version: String = "2",
+) : EventSubSubscribe<ChannelFollowCondition> {
     override val type: EventSubSubscriptionType = EventSubSubscriptionType.CHANNEL_FOLLOW
 }

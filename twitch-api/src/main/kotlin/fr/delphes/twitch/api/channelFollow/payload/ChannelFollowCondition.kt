@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChannelFollowCondition(
-    val broadcaster_user_id: UserId
-): GenericCondition
+    val broadcaster_user_id: UserId,
+    val moderator_user_id: UserId = broadcaster_user_id,
+) : GenericCondition
