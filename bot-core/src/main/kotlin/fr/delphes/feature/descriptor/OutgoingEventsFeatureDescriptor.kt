@@ -13,7 +13,7 @@ data class OutgoingEventsFeatureDescriptor(
     override val value: List<OutgoingEventBuilderDescription> = emptyList(),
 ) : FeatureDescriptor() {
     companion object {
-        fun fromBuilders(
+        suspend fun fromBuilders(
             fieldName: String,
             description: String,
             builders: List<OutgoingEventBuilder>,

@@ -10,7 +10,7 @@ fun interface EventHandler<T : IncomingEvent> {
     companion object {
         inline fun <reified T : IncomingEvent> of(noinline handler: IncomingEventHandlerAction<T>) =
             EventHandler { event: IncomingEventWrapper<T>, bot: Bot ->
-                EventHandlerContext(bot, event, bot.featuresManager.stateManager).handler()
+                EventHandlerContext(bot, event, bot.stateManager).handler()
             }
     }
 }

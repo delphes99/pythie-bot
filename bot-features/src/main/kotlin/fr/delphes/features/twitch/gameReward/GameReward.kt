@@ -8,6 +8,7 @@ import fr.delphes.connector.twitch.incomingEvent.StreamChanges
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.outgoingEvent.ActivateReward
 import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
+import fr.delphes.connector.twitch.reward.ChannelRewardId
 import fr.delphes.features.twitch.handlerFor
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
@@ -41,11 +42,11 @@ class GameReward(
     //TODO cache if the feature is already enabled / disabled
     private fun deactivateFeaturesNotAssociateWith(game: GameId?): List<OutgoingEvent> {
         return gameRewards.filterKeys { gameId -> gameId != game }.values.flatten()
-            .map { DeactivateReward(it, channel) }
+            .map { DeactivateReward(ChannelRewardId(it.title, channel)) }
     }
 
     private fun activateFeaturesAssociateWith(game: GameId?): List<OutgoingEvent> {
-        return gameRewards[game]?.map { ActivateReward(it, channel) } ?: emptyList()
+        return gameRewards[game]?.map { ActivateReward(ChannelRewardId(it.title, channel)) } ?: emptyList()
     }
 
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {

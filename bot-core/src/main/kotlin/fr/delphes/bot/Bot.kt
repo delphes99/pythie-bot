@@ -62,6 +62,9 @@ class Bot(
 
     val serializer = buildSerializer(featureSerializersModule, connectorInitializers)
 
+    val stateManager = StateManager()
+        .withState(ClockState())
+
     val featuresManager = buildFeatureManager()
 
     val statisticService = StatisticService(configuration, serializer)
@@ -104,7 +107,7 @@ class Bot(
         runBlocking {
             _connectors.map { connector -> async { connector.connect() } }.awaitAll()
             _connectors.flatMap(Connector<*, *>::states).forEach { state ->
-                featuresManager.stateManager.put(state)
+                stateManager.put(state)
             }
 
             handle(IncomingEventWrapper(BotStarted, clock.now()))
@@ -120,9 +123,6 @@ class Bot(
 
 
     private fun buildFeatureManager(): FeaturesManager {
-        val stateManager = StateManager()
-            .withState(ClockState())
-
         val featureConfigurationRepository = FeatureConfigurationRepository(
             configuration.pathOf("features"),
             serializer

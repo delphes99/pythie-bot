@@ -1,5 +1,7 @@
 package fr.delphes.configuration.channel.delphes99
 
+import fr.delphes.connector.twitch.reward.ChannelRewardId
+import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.reward.RewardConfiguration
 import fr.delphes.twitch.api.reward.WithRewardConfiguration
 import java.time.Duration
@@ -13,6 +15,9 @@ enum class DelphesReward(override val rewardConfiguration: RewardConfiguration) 
     SATISFACTORY_COLOR(satisfactoryBaseColor),
     RIP(rip),
     WIZZ(wizz);
+
+    //TODO : migrate
+    fun toRewardId() = ChannelRewardId(rewardConfiguration.title, TwitchChannel("delphes99"))
 
     companion object {
         fun toRewardList() = values().map(DelphesReward::rewardConfiguration).toList()

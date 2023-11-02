@@ -8,11 +8,11 @@ import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
-import fr.delphes.connector.twitch.state.ChannelRewardsState
 import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.connector.twitch.state.GetCurrentStreamState
 import fr.delphes.connector.twitch.state.GetUserInfos
 import fr.delphes.connector.twitch.state.GetVipState
+import fr.delphes.connector.twitch.state.RewardsState
 import fr.delphes.connector.twitch.statistics.TwitchStatistics
 import fr.delphes.connector.twitch.user.UserInfos
 import fr.delphes.connector.twitch.user.getUserInfos
@@ -48,7 +48,7 @@ class TwitchConnector(
         GetCurrentStreamState(this),
         //TODO dynamic state (reload the configuration must reload the states)
         *configurationManager.currentConfiguration.listenedChannels.map {
-            ChannelRewardsState(it.channel, this)
+            RewardsState(this)
         }.toTypedArray(),
     )
 

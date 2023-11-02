@@ -23,7 +23,7 @@ fun <U : TwitchIncomingEvent> TwitchChannel.handlersFor(
 ): EventHandlers {
     return EventHandlers.builder().addHandler(clazz) { event: IncomingEventWrapper<U>, bot: Bot ->
         if (event.data.channel == this) {
-            EventHandlerContext(bot, event, bot.featuresManager.stateManager).action()
+            EventHandlerContext(bot, event, bot.stateManager).action()
         }
     }.build()
 }

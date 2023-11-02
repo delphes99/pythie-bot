@@ -10,6 +10,7 @@ import fr.delphes.feature.descriptor.OutgoingEventsFeatureDescriptor
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
+import fr.delphes.state.StateProvider
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.serialization.DurationSerializer
 import kotlinx.serialization.SerialName
@@ -26,20 +27,20 @@ class CustomCommandConfiguration(
     private val cooldown: Duration = Duration.ZERO,
     private val actions: List<OutgoingEventBuilder> = emptyList(),
 ) : FeatureConfiguration {
-    override fun buildFeature(): FeatureDefinition {
+    override fun buildFeature(stateProvider: StateProvider): FeatureDefinition {
         return CustomCommand(
             channel = channel,
             trigger = command,
             id = id,
             cooldown = cooldown,
             action = {
-                val outgoingEvent = actions.map { it.build() }
+                val outgoingEvent = actions.map { it.build(stateProvider) }
                 outgoingEvent.forEach { this.executeOutgoingEvent(it) }
             }
         )
     }
 
-    override fun description(): FeatureDescription {
+    override suspend fun description(): FeatureDescription {
         return FeatureDescription(
             type = "TwitchCustomCommandConfiguration",
             id = id.value,

@@ -43,7 +43,6 @@ fun OverlayModule(
 //TODO voth inject informations
 private fun lastVOTH(bot: Bot, channel: TwitchChannel): List<OverlayVoth> {
     return bot
-        .featuresManager
         .stateManager
         .getState(VOTHState.idFor(channel))
         .lastReigns()

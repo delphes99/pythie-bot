@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class FeaturesManager(
-    val stateManager: StateManager,
+    private val stateManager: StateManager,
     private val customFeatures: List<FeatureDefinition> = emptyList(),
     private val featureConfigurationRepository: FeatureConfigurationRepository,
 ) {
@@ -30,7 +30,7 @@ class FeaturesManager(
         runBlocking {
             configurableRunTimes = featureConfigurationRepository.load()
                 .map { configuration ->
-                    configuration.buildFeature()
+                    configuration.buildFeature(stateManager.readOnly)
                 }.associateWith { definition ->
                     registerSpecificStatesAndBuildRuntimeOf(definition)
                 }

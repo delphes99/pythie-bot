@@ -6,7 +6,7 @@ import fr.delphes.feature.OutgoingEventType
 import fr.delphes.serializer
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.ShouldSpec
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.serialization.encodeToString
 import java.time.Duration
@@ -49,7 +49,7 @@ class OutgoingEventsFeatureDescriptorTest : ShouldSpec({
             description = "description",
             builders = listOf(
                 mockk<OutgoingEventBuilder> {
-                    every { description() } returns DESCRIPTION
+                    coEvery { description() } returns DESCRIPTION
                 }
             )
         )

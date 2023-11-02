@@ -133,13 +133,13 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel,
         "!deactivateTest"
     ) {
-        executeOutgoingEvent(DeactivateReward(DelphesReward.DEV_TEST, channel))
+        executeOutgoingEvent(DeactivateReward(DelphesReward.DEV_TEST.toRewardId()))
     },
     CustomCommand(
         channel,
         "!activateTest"
     ) {
-        executeOutgoingEvent(ActivateReward(DelphesReward.DEV_TEST, channel))
+        executeOutgoingEvent(ActivateReward(DelphesReward.DEV_TEST.toRewardId()))
     },
     CustomCommand(
         channel,

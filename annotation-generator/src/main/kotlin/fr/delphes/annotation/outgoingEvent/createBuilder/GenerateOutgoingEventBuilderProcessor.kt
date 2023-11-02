@@ -10,6 +10,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -31,6 +32,7 @@ import fr.delphes.generation.GenerationUtils.getModuleName
 import fr.delphes.generation.GenerationUtils.processEach
 import fr.delphes.generation.hasParent
 import fr.delphes.generation.toNonAggregatingDependencies
+import fr.delphes.state.StateProvider
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -58,6 +60,8 @@ class GenerateOutgoingEventBuilderModuleProcessor(
         checkInheritFromOutgoingEvent(outgoingEventClass)
         checkHaveAtLeastOneFieldWithDescription(outgoingEventClass)
         checkAllFieldsHaveDescription(outgoingEventClass)
+        checkAllCustomFieldsHaveMapper(outgoingEventClass)
+
         val serialName = outgoingEventClass.getAnnotationsByType(RegisterOutgoingEvent::class)
             .first().serializeName
         val builderClass = builderName(outgoingEventClass)
@@ -71,7 +75,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                         FunSpec
                             .constructorBuilder()
                             .apply {
-                                outgoingEventClass.getAllProperties().forEach { property ->
+                                outgoingEventClass.getDescriptionFields().forEach { property ->
                                     addParameter(
                                         ParameterSpec.builder(
                                             property.simpleName.asString(),
@@ -104,7 +108,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     )
                     .addSuperinterface(OutgoingEventBuilder::class)
                     .apply {
-                        outgoingEventClass.getAllProperties().forEach { property ->
+                        outgoingEventClass.getDescriptionFields().forEach { property ->
                             addProperty(
                                 PropertySpec
                                     .builder(
@@ -118,7 +122,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     }
                     .addFunction(
                         FunSpec.builder("description")
-                            .addModifiers(KModifier.OVERRIDE)
+                            .addModifiers(KModifier.OVERRIDE, KModifier.SUSPEND)
                             .returns(OutgoingEventBuilderDescription::class)
                             .addCode(
                                 "return %T(\n",
@@ -131,7 +135,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                             )
                             .addStatement("listOf(")
                             .apply {
-                                outgoingEventClass.getAllProperties().forEach { property ->
+                                outgoingEventClass.getDescriptionFields().forEach { property ->
                                     FieldDescriptionFactory.buildDescription(this, property)
                                 }
                             }
@@ -141,16 +145,22 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     )
                     .addFunction(
                         FunSpec.builder("build")
-                            .addModifiers(KModifier.OVERRIDE)
+                            .addModifiers(KModifier.OVERRIDE, KModifier.SUSPEND)
+                            .addParameter(
+                                ParameterSpec.builder(
+                                    "stateProvider",
+                                    StateProvider::class
+                                ).build()
+                            )
                             .returns(outgoingEventClass.toClassName())
                             .addCode(
                                 "return %T(\n",
                                 outgoingEventClass.toClassName()
                             )
                             .apply {
-                                outgoingEventClass.getAllProperties().forEach { property ->
+                                outgoingEventClass.getDescriptionFields().forEach { property ->
                                     addCode("${property.simpleName.asString()} = ")
-                                    FieldDescriptionFactory.buildEncodeValue(this, property)
+                                    FieldDescriptionFactory.buildEncodeValue(this, property, "stateProvider")
                                     addCode(",\n")
                                 }
                             }
@@ -172,15 +182,36 @@ class GenerateOutgoingEventBuilderModuleProcessor(
 
 
     private fun checkHaveAtLeastOneFieldWithDescription(outgoingEventClass: KSClassDeclaration) {
-        if (!outgoingEventClass.getAllProperties().any { it.isAnnotationPresent(FieldDescription::class) }) {
+        if (!outgoingEventClass.getDescriptionFields().any { it.isAnnotationPresent(FieldDescription::class) }) {
             logger.error("${outgoingEventClass.qualifiedName?.asString()} must have at least one field with description")
         }
     }
 
     private fun checkAllFieldsHaveDescription(outgoingEventClass: KSClassDeclaration) {
-        if (!outgoingEventClass.getAllProperties().all { it.isAnnotationPresent(FieldDescription::class) }) {
+        if (!outgoingEventClass.getDescriptionFields().all { it.isAnnotationPresent(FieldDescription::class) }) {
             logger.error("${outgoingEventClass.qualifiedName?.asString()} must have all fields with description")
         }
+    }
+
+    private fun checkAllCustomFieldsHaveMapper(outgoingEventClass: KSClassDeclaration) {
+        outgoingEventClass.getDescriptionFields()
+            .associateWith { it.getFieldInfos() }
+            .filterValues { it == null }
+            .keys
+            .takeIf { it.isNotEmpty() }
+            ?.joinToString { it.simpleName.asString() }
+            ?.also {
+                logger.error("custom fields with missing mapper : $it")
+            }
+    }
+
+    private fun KSClassDeclaration.getDescriptionFields(): Sequence<KSPropertyDeclaration> {
+        val constructorParameterNames = primaryConstructor
+            ?.parameters
+            ?.mapNotNull { it.name }
+            ?: emptyList()
+        
+        return getAllProperties().filter { it.simpleName in constructorParameterNames }
     }
 
     companion object {
