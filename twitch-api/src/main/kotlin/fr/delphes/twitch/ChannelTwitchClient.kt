@@ -19,7 +19,7 @@ import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.TwitchRewardConfiguration
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
@@ -41,7 +41,7 @@ import java.time.LocalDateTime
 class ChannelTwitchClient(
     private val helixApi: ChannelHelixApi,
     private val webhookApi: WebhookApi,
-    rewardsConfigurations: List<RewardConfiguration>,
+    rewardsConfigurations: List<TwitchRewardConfiguration>,
     private val appTwitchApi: AppTwitchApi,
 ) : ChannelTwitchApi, WebhookApi by webhookApi {
     private val rewards = RewardCache(rewardsConfigurations, helixApi)
@@ -57,17 +57,17 @@ class ChannelTwitchClient(
         return helixApi.getGameById(id)?.let { game -> Game(id, game.name) }
     }
 
-    override suspend fun getRewards(): List<RewardConfiguration> {
+    override suspend fun getRewards(): List<TwitchRewardConfiguration> {
         return rewards.getRewards()
     }
 
-    override suspend fun deactivateReward(reward: RewardConfiguration) {
+    override suspend fun deactivateReward(reward: TwitchRewardConfiguration) {
         rewards.rewardOf(reward)?.also { twitchReward ->
             helixApi.updateCustomReward(UpdateCustomReward(is_enabled = false), twitchReward.id)
         } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
     }
 
-    override suspend fun activateReward(reward: RewardConfiguration) {
+    override suspend fun activateReward(reward: TwitchRewardConfiguration) {
         rewards.rewardOf(reward)?.also { twitchReward ->
             helixApi.updateCustomReward(UpdateCustomReward(is_enabled = true), twitchReward.id)
         } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
@@ -121,7 +121,7 @@ class ChannelTwitchClient(
             publicUrl: String,
             configFilepath: String,
             webhookSecret: String,
-            rewardsConfigurations: List<RewardConfiguration>,
+            rewardsConfigurations: List<TwitchRewardConfiguration>,
         ): Builder {
             return Builder(
                 appTwitchApi,
@@ -144,7 +144,7 @@ class ChannelTwitchClient(
         private val publicUrl: String,
         private val configFilepath: String,
         private val webhookSecret: String,
-        private val rewardsConfigurations: List<RewardConfiguration>,
+        private val rewardsConfigurations: List<TwitchRewardConfiguration>,
     ) {
         val channel = TwitchChannel(user.name)
 

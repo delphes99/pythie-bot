@@ -1,8 +1,10 @@
 package fr.delphes.connector.twitch.reward
 
 import fr.delphes.twitch.TwitchChannel
+import kotlinx.serialization.Serializable
 
-data class ChannelRewardId(
-    val title: String,
+@Serializable
+data class RewardId(
     val channel: TwitchChannel,
+    val title: RewardTitle,
 )

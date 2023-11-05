@@ -1,9 +1,10 @@
 package fr.delphes.connector.twitch.eventMapper
 
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
+import fr.delphes.connector.twitch.reward.RewardId
+import fr.delphes.connector.twitch.reward.RewardTitle
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.channelPointsCustomRewardRedemption.payload.ChannelPointsCustomRewardRedemptionCondition
-import fr.delphes.twitch.api.reward.RewardId
 import fr.delphes.twitch.api.user.UserName
 import io.kotest.core.spec.style.ShouldSpec
 
@@ -14,10 +15,9 @@ class RewardRedeemedMapperTest : ShouldSpec({
                 RewardRedeemedMapper(),
                 ChannelPointsCustomRewardRedemptionCondition::class,
                 RewardRedemption(
-                    channel = TwitchChannel("Cool_User"),
-                    reward = RewardId(
-                        id = "9001",
-                        name = "title"
+                    rewardId = RewardId(
+                        channel = TwitchChannel("Cool_User"),
+                        title = RewardTitle("title"),
                     ),
                     user = UserName("Cooler_User"),
                     cost = 100,

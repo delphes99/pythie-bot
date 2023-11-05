@@ -1,7 +1,7 @@
 package fr.delphes.twitch
 
-import fr.delphes.twitch.api.reward.Reward
-import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.TwitchReward
+import fr.delphes.twitch.api.reward.TwitchRewardConfiguration
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
@@ -9,10 +9,10 @@ import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 
 class RewardCache(
-    private val configurations: List<RewardConfiguration>,
+    private val configurations: List<TwitchRewardConfiguration>,
     private val api: ChannelHelixApi,
 ) {
-    private val map = mutableMapOf<RewardConfiguration, Reward>()
+    private val map = mutableMapOf<TwitchRewardConfiguration, TwitchReward>()
 
     //TODO Move to synchronize method
     init {
@@ -75,15 +75,15 @@ class RewardCache(
         }
     }
 
-    fun rewardOf(configuration: RewardConfiguration): Reward? {
+    fun rewardOf(configuration: TwitchRewardConfiguration): TwitchReward? {
         return map[configuration]
     }
 
-    private fun GetCustomRewardDataPayload.toReward(configuration: RewardConfiguration): Reward {
-        return Reward(id, configuration)
+    private fun GetCustomRewardDataPayload.toReward(configuration: TwitchRewardConfiguration): TwitchReward {
+        return TwitchReward(id, configuration)
     }
 
-    private fun GetCustomRewardDataPayload.isDesynchronized(configuration: RewardConfiguration): Boolean {
+    private fun GetCustomRewardDataPayload.isDesynchronized(configuration: TwitchRewardConfiguration): Boolean {
         return title != configuration.title ||
                 cost != configuration.cost ||
                 configuration.prompt != null && prompt != configuration.prompt ||
@@ -98,7 +98,7 @@ class RewardCache(
                 configuration.shouldRedemptionsSkipRequestQueue != null && should_redemptions_skip_request_queue != configuration.shouldRedemptionsSkipRequestQueue
     }
 
-    fun getRewards(): List<RewardConfiguration> {
+    fun getRewards(): List<TwitchRewardConfiguration> {
         return map.keys.toList()
     }
 

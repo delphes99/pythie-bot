@@ -4,6 +4,8 @@ import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
 import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.outgoingEvent.PromoteVIP
+import fr.delphes.connector.twitch.reward.RewardId
+import fr.delphes.connector.twitch.reward.RewardTitle
 import fr.delphes.features.TestEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.state.state.ClockState
@@ -11,8 +13,6 @@ import fr.delphes.test.TestClock
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.reward.RewardConfiguration
-import fr.delphes.twitch.api.reward.RewardId
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coVerify
@@ -23,7 +23,7 @@ class VOTHTest : ShouldSpec({
         should("promote vip") {
             val executionContext = VOTH(
                 channel,
-                reward,
+                rewardId,
                 TestEventHandlerAction()
             ).testRuntime {
                 atFixedTime(NOW)
@@ -34,12 +34,12 @@ class VOTHTest : ShouldSpec({
                 currentVip shouldBe VOTHWinner("user", NOW, 50)
             }
         }
-        
+
         should("announce new vip") {
             val newVipAnnouncer = TestEventHandlerAction<NewVOTHAnnounced>()
             VOTH(
                 channel,
-                reward,
+                rewardId,
                 newVipAnnouncer
             ).testRuntime {
                 atFixedTime(NOW)
@@ -52,7 +52,7 @@ class VOTHTest : ShouldSpec({
         should("don't promote vip if already VOTH") {
             val executionContext = VOTH(
                 channel,
-                reward,
+                rewardId,
                 TestEventHandlerAction()
             ).testRuntime {
                 atFixedTime(NOW)
@@ -68,7 +68,7 @@ class VOTHTest : ShouldSpec({
             val newVipAnnouncer = TestEventHandlerAction<NewVOTHAnnounced>()
             VOTH(
                 channel,
-                reward,
+                rewardId,
                 newVipAnnouncer
             ).testRuntime {
                 atFixedTime(NOW)
@@ -84,7 +84,7 @@ class VOTHTest : ShouldSpec({
     should("pause when stream goes offline") {
         val executionContext = VOTH(
             channel,
-            reward,
+            rewardId,
             TestEventHandlerAction()
         ).testRuntime {
             atFixedTime(NOW)
@@ -99,7 +99,7 @@ class VOTHTest : ShouldSpec({
     should("unpause when stream goes online") {
         val executionContext = VOTH(
             channel,
-            reward,
+            rewardId,
             TestEventHandlerAction()
         ).testRuntime {
             atFixedTime(NOW)
@@ -113,9 +113,9 @@ class VOTHTest : ShouldSpec({
 }) {
     companion object {
         private val channel = TwitchChannel("channel")
-        private const val rewardName = "voth"
-        private val reward = RewardConfiguration(rewardName, 100)
-        private val rewardRedemption = RewardRedemption(channel, RewardId("id", rewardName), "user", 50)
+        private val rewardName = RewardTitle("voth")
+        private val rewardId = RewardId(channel, rewardName)
+        private val rewardRedemption = RewardRedemption(rewardId, "user", 50)
         private val NOW = LocalDateTime.of(2020, 1, 1, 0, 0)
     }
 }

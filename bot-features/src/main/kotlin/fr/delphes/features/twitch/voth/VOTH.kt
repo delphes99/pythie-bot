@@ -8,6 +8,7 @@ import fr.delphes.connector.twitch.incomingEvent.StreamOffline
 import fr.delphes.connector.twitch.incomingEvent.StreamOnline
 import fr.delphes.connector.twitch.outgoingEvent.PromoteVIP
 import fr.delphes.connector.twitch.outgoingEvent.RemoveVIP
+import fr.delphes.connector.twitch.reward.RewardId
 import fr.delphes.connector.twitch.state.GetVipState
 import fr.delphes.features.twitch.handlerFor
 import fr.delphes.overlay.event.outgoing.Alert
@@ -19,12 +20,11 @@ import fr.delphes.state.State
 import fr.delphes.state.StateProvider
 import fr.delphes.state.state.ClockState
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.reward.WithRewardConfiguration
 import fr.delphes.twitch.api.user.UserName
 
 class VOTH(
     override val channel: TwitchChannel,
-    val reward: WithRewardConfiguration,
+    val rewardId: RewardId,
     val newVipAnnouncer: EventHandlerAction<NewVOTHAnnounced>,
     private val saveStatePath: String? = null,
 ) : FeatureDefinition, TwitchFeature {
@@ -35,7 +35,7 @@ class VOTH(
             .builder()
             .addHandler(
                 channel.handlerFor<RewardRedemption> {
-                    if (reward.rewardConfiguration.match(event.data.reward)) {
+                    if (rewardId == event.data.rewardId) {
                         val state = state(VOTHState.idFor(channel)) ?: error("No state for VOTH")
                         val oldVOTH = state.data.currentVip
                         state.newVOTH(event.data)

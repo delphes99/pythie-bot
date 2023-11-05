@@ -5,7 +5,7 @@ import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
 import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.outgoingEvent.descriptionMapper.ChannelRewardIdMapper
-import fr.delphes.connector.twitch.reward.ChannelRewardId
+import fr.delphes.connector.twitch.reward.RewardId
 import fr.delphes.connector.twitch.state.RewardsState
 import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
@@ -14,7 +14,7 @@ import fr.delphes.twitch.TwitchChannel
 data class DeactivateReward(
     @FieldDescription("reward to deactivate")
     @FieldMapper(ChannelRewardIdMapper::class)
-    val reward: ChannelRewardId,
+    val reward: RewardId,
 ) : TwitchApiOutgoingEvent {
     override val channel: TwitchChannel = reward.channel
 
@@ -25,6 +25,6 @@ data class DeactivateReward(
         val twitchReward = connector.bot.stateManager.getState(RewardsState.ID).getReward(reward)
             ?: error("Reward ${reward.title} not found")
 
-        twitchApi.deactivateReward(twitchReward.rewardConfiguration)
+        twitchApi.deactivateReward(twitchReward.twitchRewardConfiguration)
     }
 }

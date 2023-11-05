@@ -30,5 +30,5 @@ class TestFeatureReturnExecutionContext(
         state.executeAssertion()
     }
 
-    val bot = mockk<Bot> { every { stateManager } returns stateManager }
+    val bot = mockk<Bot> { every { stateManager } returns this@TestFeatureReturnExecutionContext.stateManager }
 }

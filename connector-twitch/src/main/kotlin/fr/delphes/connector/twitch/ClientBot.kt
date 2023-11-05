@@ -5,7 +5,7 @@ import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.TwitchRewardConfiguration
 import fr.delphes.twitch.auth.CredentialsManager
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
@@ -36,7 +36,7 @@ class ClientBot(
 
     fun channelApiBuilder(
         botConfiguration: BotConfiguration,
-        rewards: List<RewardConfiguration>,
+        rewards: List<TwitchRewardConfiguration>,
         channel: TwitchChannel,
     ): ChannelTwitchClient.Builder {
         val user = runBlocking {

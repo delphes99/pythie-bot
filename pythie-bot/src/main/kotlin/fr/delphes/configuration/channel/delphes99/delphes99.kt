@@ -93,7 +93,8 @@ val delphes99Features = listOf<NonEditableFeature>(
 val delphes99Channel = ChannelConfiguration.build("configuration-delphes99.properties") { properties ->
     ChannelConfiguration(
         TwitchChannel(properties.getProperty("channel.name")),
-        DelphesReward.toRewardList()
+        //Sync reward with twitch
+        emptyList()
     )
 }
 
@@ -133,13 +134,13 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel,
         "!deactivateTest"
     ) {
-        executeOutgoingEvent(DeactivateReward(DelphesReward.DEV_TEST.toRewardId()))
+        executeOutgoingEvent(DeactivateReward(Delphes99Rewards.DEV_TEST))
     },
     CustomCommand(
         channel,
         "!activateTest"
     ) {
-        executeOutgoingEvent(ActivateReward(DelphesReward.DEV_TEST.toRewardId()))
+        executeOutgoingEvent(ActivateReward(Delphes99Rewards.DEV_TEST))
     },
     CustomCommand(
         channel,
@@ -385,7 +386,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     },
     RewardRedeem(
         channel,
-        DelphesReward.DEV_TEST
+        Delphes99Rewards.DEV_TEST
     ) {
         executeOutgoingEvent(Alert("test"))
         executeOutgoingEvent(
@@ -402,7 +403,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     },
     RewardRedeem(
         channel,
-        DelphesReward.DEV_TEST2
+        Delphes99Rewards.DEV_TEST2
     ) {
         executeOutgoingEvent(SendMessage("-> test dev 2", channel))
         executeOutgoingEvent(
@@ -416,7 +417,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     },
     RewardRedeem(
         channel,
-        DelphesReward.DEV_TEST3
+        Delphes99Rewards.DEV_TEST3
     ) {
         executeOutgoingEvent(SendMessage("-> test dev 3", channel))
         executeOutgoingEvent(
@@ -430,7 +431,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     },
     RewardRedeem(
         channel,
-        DelphesReward.ENTER_THE_MATRIX
+        Delphes99Rewards.ENTER_THE_MATRIX
     ) {
         executeOutgoingEvent(ActivateFilter(matrixFilter))
     },
@@ -443,7 +444,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     },
     RewardRedeem(
         channel,
-        DelphesReward.RIP,
+        Delphes99Rewards.RIP,
     ) {
         executeOutgoingEvent(PlaySound("sad.mp3"))
         executeOutgoingEvent(ActivateFilter(blackAndWhiteFilter))
@@ -458,7 +459,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     },
     RewardRedeem(
         channel,
-        DelphesReward.WIZZ,
+        Delphes99Rewards.WIZZ,
     ) {
         executeOutgoingEvent(PlaySound("wizz.mp3"))
         executeOutgoingEvent(ActivateFilter(wizzFilter))
@@ -477,14 +478,14 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ),
     GameReward(
         channel = channel,
-        Games.SOFTWARE_DEVELOPMENT to DelphesReward.DEV_TEST,
-        Games.SOFTWARE_DEVELOPMENT to DelphesReward.DEV_TEST2,
-        Games.SOFTWARE_DEVELOPMENT to DelphesReward.DEV_TEST3,
-        Games.SATISFACTORY to DelphesReward.SATISFACTORY_COLOR,
+        Games.SOFTWARE_DEVELOPMENT to Delphes99Rewards.DEV_TEST,
+        Games.SOFTWARE_DEVELOPMENT to Delphes99Rewards.DEV_TEST2,
+        Games.SOFTWARE_DEVELOPMENT to Delphes99Rewards.DEV_TEST3,
+        Games.SATISFACTORY to Delphes99Rewards.SATISFACTORY_COLOR,
     ),
     VOTH(
         channel,
-        reward = DelphesReward.VOTH,
+        rewardId = Delphes99Rewards.VOTH,
         newVipAnnouncer = {
             executeOutgoingEvent(
                 SendMessage(
@@ -538,5 +539,16 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
                     )
                 )
             }
+    },
+    RewardRedeem(
+        channel,
+        Delphes99Rewards.DEV_HORS_BOT
+    ) {
+        executeOutgoingEvent(
+            SendMessage(
+                "⚠️ ${event.data.user.name} a utilisé le reward hors bot ! ⚠️",
+                channel
+            )
+        )
     },
 )

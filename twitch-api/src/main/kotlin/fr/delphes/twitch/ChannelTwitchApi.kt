@@ -4,7 +4,7 @@ import fr.delphes.twitch.api.channelPoll.CreatePoll
 import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
-import fr.delphes.twitch.api.reward.RewardConfiguration
+import fr.delphes.twitch.api.reward.TwitchRewardConfiguration
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.api.user.UserId
@@ -15,11 +15,11 @@ interface ChannelTwitchApi : WebhookApi {
 
     suspend fun getGame(id: GameId): Game?
 
-    suspend fun getRewards(): List<RewardConfiguration>
+    suspend fun getRewards(): List<TwitchRewardConfiguration>
 
-    suspend fun deactivateReward(reward: RewardConfiguration)
+    suspend fun deactivateReward(reward: TwitchRewardConfiguration)
 
-    suspend fun activateReward(reward: RewardConfiguration)
+    suspend fun activateReward(reward: TwitchRewardConfiguration)
 
     suspend fun getClips(startedAfter: LocalDateTime): List<Clip>
 

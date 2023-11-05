@@ -1,11 +1,11 @@
 package fr.delphes.features.twitch.rewardRedeem
 
 import fr.delphes.connector.twitch.incomingEvent.RewardRedemption
+import fr.delphes.connector.twitch.reward.RewardId
+import fr.delphes.connector.twitch.reward.RewardTitle
 import fr.delphes.features.TestIncomingEventHandlerAction
 import fr.delphes.features.testRuntime
 import fr.delphes.twitch.TwitchChannel
-import fr.delphes.twitch.api.reward.RewardConfiguration
-import fr.delphes.twitch.api.reward.RewardId
 import io.kotest.core.spec.style.ShouldSpec
 
 class RewardRedeemTest : ShouldSpec({
@@ -16,8 +16,7 @@ class RewardRedeemTest : ShouldSpec({
 
         customNewSub.testRuntime().hasReceived(
             RewardRedemption(
-                CHANNEL,
-                RewardId("featureID", "reward"),
+                REWARD,
                 "user",
                 50
             )
@@ -32,8 +31,7 @@ class RewardRedeemTest : ShouldSpec({
 
         customNewSub.testRuntime().hasReceived(
             RewardRedemption(
-                CHANNEL,
-                RewardId("otherFeatureID", "other reward"),
+                RewardId(CHANNEL, RewardTitle("other reward")),
                 "user",
                 50
             )
@@ -44,6 +42,6 @@ class RewardRedeemTest : ShouldSpec({
 }) {
     companion object {
         private val CHANNEL = TwitchChannel("channel")
-        private val REWARD = RewardConfiguration("reward", 100)
+        private val REWARD = RewardId(CHANNEL, RewardTitle("reward"))
     }
 }
