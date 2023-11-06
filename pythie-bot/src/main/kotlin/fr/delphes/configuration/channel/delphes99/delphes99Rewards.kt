@@ -17,6 +17,7 @@ object Delphes99Rewards {
     val SATISFACTORY_COLOR = RewardId(channel, RewardTitle("Couleur de la base"))
     val RIP = RewardId(channel, RewardTitle("R.I.P."))
     val WIZZ = RewardId(channel, RewardTitle("Wizz"))
+    val TEST_CREATE = RewardId(channel, RewardTitle("Test create"))
 
     private val vothReward = RewardConfiguration(
         300,
@@ -28,18 +29,15 @@ object Delphes99Rewards {
     )
     private val testDev = RewardConfiguration(
         1,
-        "Test lors des live coding",
-        isGlobalCooldownEnabled = false
+        "Test lors des live coding"
     )
     private val testDev2 = RewardConfiguration(
         1,
-        "Test lors des live coding",
-        isGlobalCooldownEnabled = false
+        "Test lors des live coding"
     )
     private val testDev3 = RewardConfiguration(
         1,
-        "Test lors des live coding",
-        isGlobalCooldownEnabled = false
+        "Test lors des live coding"
     )
     private val satisfactoryBaseColor = RewardConfiguration(
         1500,
@@ -69,6 +67,10 @@ object Delphes99Rewards {
         SATISFACTORY_COLOR to satisfactoryBaseColor,
         RIP to rip,
         WIZZ to wizz,
+        TEST_CREATE to RewardConfiguration(
+            1,
+            "Test create"
+        ),
     )
         .map { (id, configuration) -> ConfiguredReward(id, configuration) }
         .let { ConfiguredRewards(it) }

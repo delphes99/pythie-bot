@@ -25,6 +25,6 @@ data class ActivateReward(
         val twitchReward = connector.bot.stateManager.getState(RewardsState.ID).getReward(reward)
             ?: error("Reward ${reward.title} not found")
 
-        twitchApi.activateReward(twitchReward.twitchRewardConfiguration)
+        twitchApi.activateReward(twitchReward)
     }
 }

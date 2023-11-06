@@ -18,9 +18,13 @@ class TwitchConnectionManager(
     private val ircBotConnectionManager = TwitchIrcConnectionManager(connector)
     private val apiConnectionManager = TwitchApiConnectionManager(connector)
 
-    private val apiChannelConnectionManagers = mutableMapOf<ConfigurationTwitchAccountName, TwitchApiChannelConnectionManager>()
+    private val apiChannelConnectionManagers =
+        mutableMapOf<ConfigurationTwitchAccountName, TwitchApiChannelConnectionManager>()
 
-    suspend fun <T> whenConnected(channelName: ConfigurationTwitchAccountName, doStuff: suspend TwitchApiChannelRuntime.() -> T?) =
+    suspend fun <T> whenConnected(
+        channelName: ConfigurationTwitchAccountName,
+        doStuff: suspend TwitchApiChannelRuntime.() -> T?,
+    ) =
         when (val state = apiChannelConnectionManagers[channelName]?.state) {
             is Connected -> state.runtime.doStuff()
             else -> null

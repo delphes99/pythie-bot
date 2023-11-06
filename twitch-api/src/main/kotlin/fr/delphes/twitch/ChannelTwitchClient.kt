@@ -20,7 +20,10 @@ import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.TwitchRewardConfiguration
+import fr.delphes.twitch.api.reward.TwitchRewardId
+import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
+import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import fr.delphes.twitch.api.streamOffline.StreamOfflineEventSubConfiguration
 import fr.delphes.twitch.api.streamOnline.StreamOnlineEventSubConfiguration
 import fr.delphes.twitch.api.streams.Stream
@@ -57,16 +60,30 @@ class ChannelTwitchClient(
         return helixApi.getGameById(id)?.let { game -> Game(id, game.name) }
     }
 
-    override suspend fun getRewards(): List<TwitchRewardConfiguration> {
+    override suspend fun getCachedRewards(): List<TwitchRewardConfiguration> {
         return rewards.getRewards()
     }
 
+    override suspend fun getRewards(): List<GetCustomRewardDataPayload> {
+        return helixApi.getCustomRewards()
+    }
+
+    override suspend fun updateReward(reward: UpdateCustomReward, rewardId: TwitchRewardId) {
+        helixApi.updateCustomReward(reward, rewardId)
+    }
+
+    override suspend fun createReward(reward: CreateCustomReward): GetCustomRewardDataPayload {
+        return helixApi.createCustomReward(reward)
+    }
+
+    @Deprecated("Dont use cached rewards")
     override suspend fun deactivateReward(reward: TwitchRewardConfiguration) {
         rewards.rewardOf(reward)?.also { twitchReward ->
             helixApi.updateCustomReward(UpdateCustomReward(is_enabled = false), twitchReward.id)
         } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
     }
 
+    @Deprecated("Dont use cached rewards")
     override suspend fun activateReward(reward: TwitchRewardConfiguration) {
         rewards.rewardOf(reward)?.also { twitchReward ->
             helixApi.updateCustomReward(UpdateCustomReward(is_enabled = true), twitchReward.id)

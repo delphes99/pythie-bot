@@ -3,6 +3,7 @@ package fr.delphes.connector.discord
 import fr.delphes.bot.Bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorInternalIncomingEventHandler
 import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.connector.SimpleConfigurationManager
@@ -15,14 +16,12 @@ class DiscordConnector(
     override val botConfiguration: BotConfiguration,
 ) : Connector<DiscordConfiguration, DiscordRunTime> {
     override val connectorType = ConnectorType("Discord")
-
     override val states = emptyList<ConnectorState>()
-
     override val configurationManager = SimpleConfigurationManager(
         DiscordConfigurationRepository(botConfiguration.pathOf("discord", "configuration.json"))
     )
-
     override val connectionManager = DiscordConnectionManager(this)
+    override val internalHandlers: List<ConnectorInternalIncomingEventHandler> = emptyList()
 
     override fun internalEndpoints(application: Application) {
         return application.DiscordModule(this)

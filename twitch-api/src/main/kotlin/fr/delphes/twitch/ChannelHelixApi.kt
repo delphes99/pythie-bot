@@ -6,12 +6,12 @@ import fr.delphes.twitch.api.channelPoll.payload.CreatePollDataPayload
 import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
+import fr.delphes.twitch.api.reward.TwitchRewardId
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.RedemptionStatusForUpdate
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import fr.delphes.twitch.api.streams.payload.StreamInfos
-import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.api.user.UserId
 import fr.delphes.twitch.api.vip.payload.VIPPayload
 import java.time.LocalDateTime
@@ -25,9 +25,9 @@ interface ChannelHelixApi {
 
     suspend fun getCustomRewards(): List<GetCustomRewardDataPayload>
 
-    suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String)
+    suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: TwitchRewardId)
 
-    suspend fun createCustomReward(reward: CreateCustomReward) : GetCustomRewardDataPayload
+    suspend fun createCustomReward(reward: CreateCustomReward): GetCustomRewardDataPayload
 
     suspend fun updateRewardRedemption(redemption: RewardRedemption, status: RedemptionStatusForUpdate)
 

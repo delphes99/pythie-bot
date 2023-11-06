@@ -81,6 +81,7 @@ class Bot(
             .flatMap { feature -> feature.handleIncomingEvent(incomingEvent.data, this) }
             .forEach { event -> processOutgoingEvent(event) }
         statisticService.handle(incomingEvent)
+        connectors.forEach { it.handleForInternal(incomingEvent) }
         featuresManager.handle(incomingEvent, this)
     }
 

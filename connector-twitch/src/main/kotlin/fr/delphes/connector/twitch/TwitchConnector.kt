@@ -3,11 +3,15 @@ package fr.delphes.connector.twitch
 import fr.delphes.bot.Bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorInternalIncomingEventHandler
 import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.configuration.ChannelConfiguration
+import fr.delphes.connector.twitch.api.TwitchApi
 import fr.delphes.connector.twitch.command.Command
 import fr.delphes.connector.twitch.incomingEvent.TwitchIncomingEvent
+import fr.delphes.connector.twitch.reward.ConfiguredRewards
+import fr.delphes.connector.twitch.reward.RewardService
 import fr.delphes.connector.twitch.state.CommandListState
 import fr.delphes.connector.twitch.state.GetCurrentStreamState
 import fr.delphes.connector.twitch.state.GetUserInfos
@@ -34,6 +38,7 @@ class TwitchConnector(
     val bot: Bot,
     override val botConfiguration: BotConfiguration,
     val channels: List<ChannelConfiguration>,
+    val configuredRewards: ConfiguredRewards,
 ) : Connector<TwitchConfiguration, TwitchLegacyRuntime> {
     override val connectorType = ConnectorType("Twitch")
 
@@ -58,6 +63,14 @@ class TwitchConnector(
     private val twitchHelixApi = TwitchHelixClient()
 
     override val connectionManager = TwitchConnectionManager(this)
+
+    override val internalHandlers: List<ConnectorInternalIncomingEventHandler> = listOf(
+        BotStartedInternalEventHandler(this),
+    )
+
+    val twitchApi = TwitchApi(this)
+
+    val rewardService = RewardService(twitchApi, configuredRewards)
 
     private val internalHandler = TwitchConnectorHandler(this)
 

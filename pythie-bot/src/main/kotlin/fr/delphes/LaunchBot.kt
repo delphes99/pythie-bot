@@ -3,6 +3,7 @@ package fr.delphes
 import fr.delphes.bot.Bot
 import fr.delphes.bot.Ngrok
 import fr.delphes.bot.configuration.BotConfiguration
+import fr.delphes.configuration.channel.delphes99.Delphes99Rewards
 import fr.delphes.configuration.channel.delphes99.delphes99Channel
 import fr.delphes.configuration.channel.delphes99.delphes99CustomFeatures
 import fr.delphes.configuration.channel.delphes99.delphes99Features
@@ -33,8 +34,11 @@ fun main() {
         DiscordInitializer(),
         ObsInitializer(),
         TwitchInitializer(
-            delphes99Channel,
-            delphestestChannel
+            listOf(
+                delphes99Channel,
+                delphestestChannel
+            ),
+            Delphes99Rewards.configuredRewards
         ),
         OverlayInitializer(),
     )

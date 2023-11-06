@@ -10,6 +10,7 @@ import fr.delphes.twitch.api.clips.payload.GetClipsPayload
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.games.payload.GetGamesDataPayload
 import fr.delphes.twitch.api.games.payload.GetGamesPayload
+import fr.delphes.twitch.api.reward.TwitchRewardId
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.RedemptionStatusForUpdate
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
@@ -29,10 +30,12 @@ internal class ChannelHelixClient(
     channel: TwitchChannel,
     clientId: String,
     credentialsManager: CredentialsManager,
-    private val broadcasterId: UserId
+    private val broadcasterId: UserId,
 ) : ScopedHelixClient(
     clientId = clientId,
-    getToken = { credentialsManager.getChannelToken(channel) ?: error("Token must be provided for channel ${channel.name}") },
+    getToken = {
+        credentialsManager.getChannelToken(channel) ?: error("Token must be provided for channel ${channel.name}")
+    },
     getTokenRefreshed = { credentialsManager.getChannelTokenRefreshed(channel) }
 ), ChannelHelixApi {
     override suspend fun getGameByName(name: String): GetGamesDataPayload? {
@@ -76,20 +79,20 @@ internal class ChannelHelixClient(
         return payload.data.first()
     }
 
-    override suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: String) {
+    override suspend fun updateCustomReward(reward: UpdateCustomReward, rewardId: TwitchRewardId) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards".patch<HttpResponse>(
             reward,
             "broadcaster_id" to broadcasterId.id,
-            "id" to rewardId
+            "id" to rewardId.id
         )
     }
 
     override suspend fun updateRewardRedemption(redemption: RewardRedemption, status: RedemptionStatusForUpdate) {
         "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions".patch<HttpResponse>(
             UpdateRedemptionStatus(status),
-            "id" to redemption.id,
+            "id" to redemption.redemptionId,
             "broadcaster_id" to broadcasterId.id,
-            "reward_id" to redemption.reward.id
+            "reward_id" to redemption.rewardId.id
         )
     }
 

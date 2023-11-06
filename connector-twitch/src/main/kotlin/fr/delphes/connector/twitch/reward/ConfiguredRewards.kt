@@ -3,8 +3,13 @@ package fr.delphes.connector.twitch.reward
 import fr.delphes.twitch.TwitchChannel
 
 class ConfiguredRewards(
-    val rewards: List<ConfiguredReward>,
+    val rewards: List<ConfiguredReward> = emptyList(),
 ) {
+    constructor(vararg rewards: ConfiguredReward) : this(rewards.toList())
+
+    fun get(rewardId: RewardId) = rewards.firstOrNull { it.id == rewardId }
+
+
     companion object {
         fun builder(channel: TwitchChannel) = Builder(channel)
     }

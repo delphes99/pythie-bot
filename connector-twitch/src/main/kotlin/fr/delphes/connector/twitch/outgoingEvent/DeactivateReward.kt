@@ -25,6 +25,6 @@ data class DeactivateReward(
         val twitchReward = connector.bot.stateManager.getState(RewardsState.ID).getReward(reward)
             ?: error("Reward ${reward.title} not found")
 
-        twitchApi.deactivateReward(twitchReward.twitchRewardConfiguration)
+        twitchApi.deactivateReward(twitchReward)
     }
 }

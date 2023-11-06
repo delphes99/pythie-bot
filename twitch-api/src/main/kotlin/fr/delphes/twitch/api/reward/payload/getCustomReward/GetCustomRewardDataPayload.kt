@@ -1,10 +1,11 @@
 package fr.delphes.twitch.api.reward.payload.getCustomReward
 
+import fr.delphes.twitch.api.reward.TwitchRewardId
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetCustomRewardDataPayload(
-    val id: String,
+    val id: TwitchRewardId,
     val title: String,
     val broadcaster_name: String,
     val broadcaster_id: String,
@@ -20,5 +21,5 @@ data class GetCustomRewardDataPayload(
     val global_cooldown_setting: GlobalCooldownSetting,
     val is_paused: Boolean,
     val is_in_stock: Boolean,
-    val should_redemptions_skip_request_queue: Boolean
+    val should_redemptions_skip_request_queue: Boolean,
 )

@@ -13,7 +13,7 @@ class RewardsState(
     suspend fun getReward(id: RewardId): TwitchRewardConfiguration? {
         return whenRunning(id.channel) {
             channelTwitchApi
-                .getRewards()
+                .getCachedRewards()
                 .firstOrNull { it.title == id.title.title }
         }
     }

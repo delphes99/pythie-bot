@@ -1,6 +1,6 @@
 package fr.delphes.twitch.api.reward
 
 data class TwitchReward(
-    val id: String,
+    val id: TwitchRewardId,
     val twitchRewardConfiguration: TwitchRewardConfiguration,
 )

@@ -2,6 +2,7 @@ package fr.delphes.overlay
 
 import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorInternalIncomingEventHandler
 import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.overlay.event.outgoing.Alert
@@ -16,6 +17,7 @@ class OverlayConnector(
     override val states = emptyList<ConnectorState>()
     override val configurationManager = OverlayConfigurationManager()
     override val connectionManager = OverlayConnectionManager(this)
+    override val internalHandlers: List<ConnectorInternalIncomingEventHandler> = emptyList()
 
     override val botConfiguration = bot.configuration
 

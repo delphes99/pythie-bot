@@ -5,6 +5,10 @@ import fr.delphes.twitch.api.clips.Clip
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.reward.TwitchRewardConfiguration
+import fr.delphes.twitch.api.reward.TwitchRewardId
+import fr.delphes.twitch.api.reward.payload.CreateCustomReward
+import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
+import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import fr.delphes.twitch.api.streams.Stream
 import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.api.user.UserId
@@ -15,11 +19,18 @@ interface ChannelTwitchApi : WebhookApi {
 
     suspend fun getGame(id: GameId): Game?
 
-    suspend fun getRewards(): List<TwitchRewardConfiguration>
+    @Deprecated("Use getRewards instead (cache in connector)")
+    suspend fun getCachedRewards(): List<TwitchRewardConfiguration>
+
+    suspend fun getRewards(): List<GetCustomRewardDataPayload>
 
     suspend fun deactivateReward(reward: TwitchRewardConfiguration)
 
     suspend fun activateReward(reward: TwitchRewardConfiguration)
+
+    suspend fun updateReward(reward: UpdateCustomReward, rewardId: TwitchRewardId)
+
+    suspend fun createReward(reward: CreateCustomReward): GetCustomRewardDataPayload
 
     suspend fun getClips(startedAfter: LocalDateTime): List<Clip>
 

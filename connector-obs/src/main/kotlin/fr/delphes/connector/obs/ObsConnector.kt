@@ -3,6 +3,7 @@ package fr.delphes.connector.obs
 import fr.delphes.bot.Bot
 import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
+import fr.delphes.bot.connector.ConnectorInternalIncomingEventHandler
 import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.bot.connector.SimpleConfigurationManager
@@ -24,6 +25,7 @@ class ObsConnector(
     )
 
     override val connectionManager = ObsConnectionManager(this)
+    override val internalHandlers: List<ConnectorInternalIncomingEventHandler> = emptyList()
 
     override fun internalEndpoints(application: Application) {
         application.ObsModule(this)
