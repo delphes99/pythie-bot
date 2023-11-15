@@ -51,10 +51,7 @@ class TwitchConnector(
         GetVipState(this),
         GetUserInfos(this),
         GetCurrentStreamState(this),
-        //TODO dynamic state (reload the configuration must reload the states)
-        *configurationManager.currentConfiguration.listenedChannels.map {
-            RewardsState(this)
-        }.toTypedArray(),
+        RewardsState(this),
     )
 
     @Deprecated("use generic statistics")

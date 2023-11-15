@@ -11,22 +11,27 @@ class RewardService(
         val twitchMatchingReward = twitchApi.getCustomRewards(rewardId)
         val configuredMatchingReward = configuredRewards.get(rewardId)
 
-        return when {
-            twitchMatchingReward != null && configuredMatchingReward != null -> SynchronizedReward(
-                rewardId, configuredMatchingReward.configuration
-            )
+        return rewardId.mapToRunTime(twitchMatchingReward, configuredMatchingReward)
+    }
 
-            twitchMatchingReward != null -> UnmanagedReward(
-                rewardId, twitchMatchingReward.configuration
-            )
+    private fun RewardId.mapToRunTime(
+        twitchMatchingReward: InTwitchReward?,
+        configuredMatchingReward: ConfiguredReward?,
+    ) = when {
+        twitchMatchingReward != null && configuredMatchingReward != null -> SynchronizedReward(
+            this, configuredMatchingReward.configuration
+        )
 
-            configuredMatchingReward != null -> NotDeployedReward(
-                rewardId,
-                configuredMatchingReward.configuration
-            )
+        twitchMatchingReward != null -> UnmanagedReward(
+            this, twitchMatchingReward.configuration
+        )
 
-            else -> UnknownReward(rewardId)
-        }
+        configuredMatchingReward != null -> NotDeployedReward(
+            this,
+            configuredMatchingReward.configuration
+        )
+
+        else -> UnknownReward(this)
     }
 
     suspend fun synchronizeRewards() {
@@ -51,6 +56,17 @@ class RewardService(
             is SynchronizedReward -> doStuff()
             is UnknownReward -> logger.warn { "Reward $this not found" }
             is UnmanagedReward -> logger.warn { "Reward $this is not managed by the bot" }
+        }
+    }
+
+    suspend fun getRewards(): List<RunTimeReward> {
+        val twitchRewards = twitchApi.getRewards()
+        val ids = configuredRewards.rewards.map { it.id }.plus(twitchRewards.map { it.rewardId }).toSet()
+        return ids.map { id ->
+            id.mapToRunTime(
+                twitchRewards.firstOrNull { it.rewardId == id },
+                configuredRewards.get(id)
+            )
         }
     }
 }

@@ -11,18 +11,26 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
+import fr.delphes.utils.flatMapNotNull
 
 class TwitchApi(
     private val connector: TwitchConnector,
 ) {
     suspend fun getCustomRewards(rewardId: RewardId): InTwitchReward? {
-        return connector.connectionManager.whenConnected(ConfigurationTwitchAccountName(rewardId.channel.name)) {
-            channelTwitchApi.getRewards()
-                .filter { it.toRewardId() == rewardId }
-                .map { it.toRewardConfiguration() }
-                .firstOrNull()
+        return rewardId.ifFound { payload ->
+            payload
+                ?.toRewardConfiguration()
                 ?.let { InTwitchReward(rewardId, it) }
         }
+    }
+
+    suspend fun getRewards(): List<InTwitchReward> {
+        return connector.configuration?.listenedChannels?.flatMapNotNull { channel ->
+            connector.connectionManager.whenConnected(ConfigurationTwitchAccountName(channel.channel.name)) {
+                channelTwitchApi.getRewards()
+                    .map { InTwitchReward(it.toRewardId(), it.toRewardConfiguration()) }
+            }
+        } ?: emptyList()
     }
 
     suspend fun activateReward(id: RewardId) {
@@ -45,11 +53,11 @@ class TwitchApi(
         }
     }
 
-    suspend fun <T> RewardId.ifFound(doStuff: suspend TwitchApiChannelRuntime.(GetCustomRewardDataPayload?) -> T?) {
-        connector.connectionManager.whenConnected(ConfigurationTwitchAccountName(channel.name)) {
+    suspend fun <T> RewardId.ifFound(doStuff: suspend TwitchApiChannelRuntime.(GetCustomRewardDataPayload?) -> T?): T? {
+        return connector.connectionManager.whenConnected(ConfigurationTwitchAccountName(channel.name)) {
             channelTwitchApi.getRewards()
                 .firstOrNull { it.toRewardId() == this@ifFound }
-                .also { twitchReward -> doStuff(twitchReward) }
+                .let { twitchReward -> doStuff(twitchReward) }
         }
     }
 

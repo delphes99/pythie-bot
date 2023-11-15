@@ -16,6 +16,12 @@ class StateManager(vararg states: State) {
         return getStateOrNull(id) ?: throw IllegalStateException("State $id not found")
     }
 
+    fun getState(id: StateIdQualifier): State {
+        return map.values
+            .firstNotNullOfOrNull { it[id] }
+            ?: throw IllegalStateException("State $id not found")
+    }
+
     inline fun <reified T : State> getStateOrNull(id: StateId<T>): T? {
         return map[T::class]?.get(id.qualifier) as T?
     }

@@ -8,6 +8,7 @@ import fr.delphes.bot.monitoring.Monitoring
 import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.feature.FeatureAdminModule
+import fr.delphes.state.StateModule
 import io.ktor.http.HttpMethod
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -39,6 +40,7 @@ class WebServer(
             MediaModule(MediasService(bot.configuration))
             Overlays(bot)
             ConnectorsModule(bot)
+            StateModule(bot)
             FeatureAdminModule(bot)
             OutgoingEventKtorModule(bot)
             Monitoring(bot)
