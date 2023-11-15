@@ -51,6 +51,9 @@ class TwitchConnector(
         GetVipState(this),
         GetUserInfos(this),
         GetCurrentStreamState(this),
+    )
+
+    override val enumerationStates = listOf(
         RewardsState(this),
     )
 

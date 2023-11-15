@@ -65,12 +65,14 @@ class Bot(
     val stateManager = StateManager()
         .withState(ClockState())
 
+    val enumerationStates get() = connectors.flatMap(Connector<*, *>::enumerationStates)
+
     val featuresManager = buildFeatureManager()
 
     val statisticService = StatisticService(configuration, serializer)
 
-    private val _connectors = mutableListOf<Connector<*, *>>()
-    val connectors get(): List<Connector<*, *>> = _connectors
+    val connectors = connectorInitializers
+        .map { connector -> connector.buildConnector(this) }
 
     internal val overlayRepository =
         OverlayRepository(configuration.pathOf("overlays", "overlays.json"))
@@ -88,26 +90,22 @@ class Bot(
     val eventsManager = EventsManager(connectorInitializers)
 
     override suspend fun processOutgoingEvent(event: OutgoingEvent) {
-        _connectors.forEach { connector ->
+        connectors.forEach { connector ->
             connector.execute(event)
         }
     }
 
     fun init() {
-        _connectors.addAll(connectorInitializers
-            .map { connector -> connector.buildConnector(this) }
-        )
-
         WebServer(
             bot = this,
-            internalModules = _connectors.map { connector -> { application -> connector.internalEndpoints(application) } },
-            publicModules = _connectors.map { connector -> { application -> connector.publicEndpoints(application) } }
+            internalModules = connectors.map { connector -> { application -> connector.internalEndpoints(application) } },
+            publicModules = connectors.map { connector -> { application -> connector.publicEndpoints(application) } }
         )
 
         // After initial state
         runBlocking {
-            _connectors.map { connector -> async { connector.connect() } }.awaitAll()
-            _connectors.flatMap(Connector<*, *>::states).forEach { state ->
+            connectors.map { connector -> async { connector.connect() } }.awaitAll()
+            connectors.flatMap(Connector<*, *>::states).forEach { state ->
                 stateManager.put(state)
             }
 

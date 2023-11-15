@@ -7,6 +7,7 @@ import fr.delphes.bot.connector.ConnectorState
 import fr.delphes.bot.connector.ConnectorType
 import fr.delphes.overlay.event.outgoing.Alert
 import fr.delphes.overlay.webserver.AlertModule
+import fr.delphes.state.enumeration.EnumerationState
 import io.ktor.server.application.Application
 import kotlinx.coroutines.channels.Channel
 
@@ -15,6 +16,7 @@ class OverlayConnector(
 ) : Connector<OverlayConfiguration, OverlayRuntime> {
     override val connectorType = ConnectorType("Overlay")
     override val states = emptyList<ConnectorState>()
+    override val enumerationStates = emptyList<EnumerationState<*>>()
     override val configurationManager = OverlayConfigurationManager()
     override val connectionManager = OverlayConnectionManager(this)
     override val internalHandlers: List<ConnectorInternalIncomingEventHandler> = emptyList()

@@ -11,11 +11,11 @@ import fr.delphes.twitch.api.user.UserName
 class LegacyCommandHandler(
     val channel: TwitchChannel,
     val command: Command,
-    private val doCommand: suspend (UserName, TwitchConnector) -> List<OutgoingEvent>
+    private val doCommand: suspend (UserName, TwitchConnector) -> List<OutgoingEvent>,
 ) : TwitchEventHandler<CommandAsked>(channel) {
     override suspend fun handleIfGoodChannel(event: CommandAsked, bot: Bot): List<OutgoingEvent> {
         val twitchConnector = bot.connectors.filterIsInstance<TwitchConnector>().first()
-        return if(event.command == command) {
+        return if (event.command == command) {
             doCommand(event.by, twitchConnector)
         } else {
             emptyList()

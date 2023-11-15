@@ -5,11 +5,13 @@ import fr.delphes.bot.connector.status.ConnectorStatus
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.state.enumeration.EnumerationState
 import io.ktor.server.application.Application
 
 interface Connector<CONFIGURATION : ConnectorConfiguration, RUNTIME : ConnectorRuntime> {
     val connectorType: ConnectorType
     val states: List<ConnectorState>
+    val enumerationStates: List<EnumerationState<*>>
     val configurationManager: ConfigurationManager<CONFIGURATION>
     val connectionManager: ConnectionManager<CONFIGURATION>
     val internalHandlers: List<ConnectorInternalIncomingEventHandler>
