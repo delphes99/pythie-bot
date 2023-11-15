@@ -2,20 +2,16 @@ package fr.delphes.connector.twitch.state
 
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.reward.RewardId
+import fr.delphes.connector.twitch.reward.RunTimeReward
 import fr.delphes.state.StateId
-import fr.delphes.twitch.api.reward.TwitchRewardConfiguration
 
 class RewardsState(
     connector: TwitchConnector,
 ) : TwitchChannelApiConnectorState(connector) {
     override val id: StateId<RewardsState> = ID
 
-    suspend fun getReward(id: RewardId): TwitchRewardConfiguration? {
-        return whenRunning(id.channel) {
-            channelTwitchApi
-                .getCachedRewards()
-                .firstOrNull { it.title == id.title.title }
-        }
+    suspend fun getReward(id: RewardId): RunTimeReward {
+        return connector.rewardService.getReward(id)
     }
 
     companion object {

@@ -43,7 +43,7 @@ class RewardServiceTest : ShouldSpec({
 
         service.getReward(rewardId) shouldBe NotDeployedReward(
             rewardId,
-            configuredReward
+            rewardConfiguration
         )
     }
 

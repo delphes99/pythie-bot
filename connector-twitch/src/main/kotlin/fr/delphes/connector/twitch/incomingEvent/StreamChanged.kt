@@ -23,6 +23,7 @@ sealed class StreamChanges {
         val newTitle: String,
     ) : StreamChanges()
 
+    @Serializable
     data class Game(
         val oldGame: fr.delphes.twitch.api.games.Game?,
         val newGame: fr.delphes.twitch.api.games.Game?,

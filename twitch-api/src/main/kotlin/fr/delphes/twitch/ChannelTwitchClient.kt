@@ -76,18 +76,12 @@ class ChannelTwitchClient(
         return helixApi.createCustomReward(reward)
     }
 
-    @Deprecated("Dont use cached rewards")
-    override suspend fun deactivateReward(reward: TwitchRewardConfiguration) {
-        rewards.rewardOf(reward)?.also { twitchReward ->
-            helixApi.updateCustomReward(UpdateCustomReward(is_enabled = false), twitchReward.id)
-        } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
+    override suspend fun deactivateReward(id: TwitchRewardId) {
+        helixApi.updateCustomReward(UpdateCustomReward(is_enabled = false), id)
     }
 
-    @Deprecated("Dont use cached rewards")
-    override suspend fun activateReward(reward: TwitchRewardConfiguration) {
-        rewards.rewardOf(reward)?.also { twitchReward ->
-            helixApi.updateCustomReward(UpdateCustomReward(is_enabled = true), twitchReward.id)
-        } ?: LOGGER.error { "no twitch reward found : ${reward.title}" }
+    override suspend fun activateReward(id: TwitchRewardId) {
+        helixApi.updateCustomReward(UpdateCustomReward(is_enabled = true), id)
     }
 
     override suspend fun getClips(startedAfter: LocalDateTime): List<Clip> {

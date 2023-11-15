@@ -1,6 +1,7 @@
 package fr.delphes.connector.twitch.reward
 
 import fr.delphes.connector.twitch.api.TwitchApi
+import mu.KotlinLogging
 
 class RewardService(
     private val twitchApi: TwitchApi,
@@ -16,10 +17,14 @@ class RewardService(
             )
 
             twitchMatchingReward != null -> UnmanagedReward(
-                rewardId, twitchMatchingReward.rewardConfiguration
+                rewardId, twitchMatchingReward.configuration
             )
 
-            configuredMatchingReward != null -> NotDeployedReward(rewardId, configuredMatchingReward)
+            configuredMatchingReward != null -> NotDeployedReward(
+                rewardId,
+                configuredMatchingReward.configuration
+            )
+
             else -> UnknownReward(rewardId)
         }
     }
@@ -35,5 +40,19 @@ class RewardService(
             }
         }
     }
+
+    suspend fun activateReward(id: RewardId) = id.ifManaged { twitchApi.activateReward(id) }
+
+    suspend fun deactivateReward(id: RewardId) = id.ifManaged { twitchApi.deactivateReward(id) }
+
+    private suspend fun RewardId.ifManaged(doStuff: suspend () -> Unit) {
+        when (getReward(this)) {
+            is NotDeployedReward -> doStuff()
+            is SynchronizedReward -> doStuff()
+            is UnknownReward -> logger.warn { "Reward $this not found" }
+            is UnmanagedReward -> logger.warn { "Reward $this is not managed by the bot" }
+        }
+    }
 }
 
+private val logger = KotlinLogging.logger {}

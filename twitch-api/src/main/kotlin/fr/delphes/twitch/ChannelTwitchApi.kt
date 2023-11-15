@@ -24,9 +24,9 @@ interface ChannelTwitchApi : WebhookApi {
 
     suspend fun getRewards(): List<GetCustomRewardDataPayload>
 
-    suspend fun deactivateReward(reward: TwitchRewardConfiguration)
+    suspend fun deactivateReward(id: TwitchRewardId)
 
-    suspend fun activateReward(reward: TwitchRewardConfiguration)
+    suspend fun activateReward(id: TwitchRewardId)
 
     suspend fun updateReward(reward: UpdateCustomReward, rewardId: TwitchRewardId)
 

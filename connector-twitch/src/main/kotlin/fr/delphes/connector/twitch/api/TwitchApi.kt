@@ -25,6 +25,34 @@ class TwitchApi(
         }
     }
 
+    suspend fun activateReward(id: RewardId) {
+        id.ifFound { payload ->
+            payload?.also {
+                logger.debug { "Activate reward $id" }
+                channelTwitchApi.activateReward(it.id)
+            } ?: logger.warn { "Reward $id not found" }
+        }
+    }
+
+    suspend fun deactivateReward(id: RewardId) {
+        id.ifFound { payload ->
+            if (payload != null) {
+                logger.debug { "Deactivate reward $id" }
+                channelTwitchApi.deactivateReward(payload.id)
+            } else {
+                logger.warn { "Reward $id not found" }
+            }
+        }
+    }
+
+    suspend fun <T> RewardId.ifFound(doStuff: suspend TwitchApiChannelRuntime.(GetCustomRewardDataPayload?) -> T?) {
+        connector.connectionManager.whenConnected(ConfigurationTwitchAccountName(channel.name)) {
+            channelTwitchApi.getRewards()
+                .firstOrNull { it.toRewardId() == this@ifFound }
+                .also { twitchReward -> doStuff(twitchReward) }
+        }
+    }
+
     private fun GetCustomRewardDataPayload.toRewardId() = RewardId(
         TwitchChannel(broadcaster_name), RewardTitle(title)
     )
@@ -53,10 +81,10 @@ class TwitchApi(
                 .firstOrNull()
 
             if (twitchReward != null) {
-                log.info { "Update reward ${reward.id.title}" }
+                logger.info { "Update reward ${reward.id.title}" }
                 channelTwitchApi.updateReward(reward.toUpdateCustomReward(), twitchReward.id)
             } else {
-                log.info { "Create reward ${reward.id.title}" }
+                logger.info { "Create reward ${reward.id.title}" }
                 channelTwitchApi.createReward(reward.toCreateCustomReward())
             }
         }
@@ -102,8 +130,6 @@ class TwitchApi(
             )
         }
     }
-
-    companion object {
-        private val log = mu.KotlinLogging.logger {}
-    }
 }
+
+private val logger = mu.KotlinLogging.logger {}
