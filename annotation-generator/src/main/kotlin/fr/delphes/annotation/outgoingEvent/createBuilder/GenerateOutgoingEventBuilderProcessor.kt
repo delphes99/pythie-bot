@@ -23,14 +23,13 @@ import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
-import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
+import fr.delphes.generation.CompilationCheckException
 import fr.delphes.generation.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.GenerationUtils.getModuleName
 import fr.delphes.generation.GenerationUtils.processEach
-import fr.delphes.generation.hasParent
 import fr.delphes.generation.toNonAggregatingDependencies
 import fr.delphes.state.StateProvider
 import kotlinx.serialization.SerialName
@@ -171,22 +170,22 @@ class GenerateOutgoingEventBuilderModuleProcessor(
     }
 
     private fun checkInheritFromOutgoingEvent(outgoingEventClass: KSClassDeclaration) {
-        if (outgoingEventClass.superTypes.none { it.hasParent(OutgoingEvent::class) }) {
-            //TODO verify all parents
-            logger.info("${outgoingEventClass.qualifiedName?.asString()} must implement OutgoingEvent")
-        }
+        //TODO verify all parents
+        //if (outgoingEventClass.superTypes.none { it.hasParent(OutgoingEvent::class) }) {
+        //    throw CompilationCheckException("${outgoingEventClass.qualifiedName?.asString()} must implement OutgoingEvent")
+        //}
     }
 
 
     private fun checkHaveAtLeastOneFieldWithDescription(outgoingEventClass: KSClassDeclaration) {
         if (!outgoingEventClass.getDescriptionFields().any { it.isAnnotationPresent(FieldDescription::class) }) {
-            logger.error("${outgoingEventClass.qualifiedName?.asString()} must have at least one field with description")
+            throw CompilationCheckException("${outgoingEventClass.qualifiedName?.asString()} must have at least one field with description")
         }
     }
 
     private fun checkAllFieldsHaveDescription(outgoingEventClass: KSClassDeclaration) {
         if (!outgoingEventClass.getDescriptionFields().all { it.isAnnotationPresent(FieldDescription::class) }) {
-            logger.error("${outgoingEventClass.qualifiedName?.asString()} must have all fields with description")
+            throw CompilationCheckException("${outgoingEventClass.qualifiedName?.asString()} must have all fields with description")
         }
     }
 

@@ -6,6 +6,7 @@ import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.asTypeName
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
+import fr.delphes.generation.CompilationCheckException
 import fr.delphes.generation.getAnnotationValue
 import fr.delphes.utils.serialization.DurationSerializer
 import java.time.Duration
@@ -33,6 +34,6 @@ fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
             Duration::class.asTypeName()
         )
 
-        else -> throw IllegalArgumentException("Field ${this.simpleName.asString()}: Unknown type and no mapper")
+        else -> throw CompilationCheckException("Field [${this.simpleName.asString()}] : Unknown type and no mapper")
     }
 }

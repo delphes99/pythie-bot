@@ -4,6 +4,7 @@ import com.squareup.kotlinpoet.asTypeName
 import fr.delphes.annotation.assertCompileResolver
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
+import fr.delphes.generation.CompilationCheckException
 import fr.delphes.utils.serialization.DurationSerializer
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ShouldSpec
@@ -103,12 +104,12 @@ class FieldMetadataTest : ShouldSpec({
                 val myField: UnknownType,
             ) : OutgoingEvent
         """.assertCompileResolver {
-            shouldThrow<IllegalArgumentException> {
+            shouldThrow<CompilationCheckException> {
                 it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
                     .shouldNotBeNull()
                     .getFieldMeta()
             }
-                .shouldHaveMessage("Field myField: Unknown type and no mapper")
+                .shouldHaveMessage("Field [myField] : Unknown type and no mapper")
         }
     }
 })
