@@ -5,11 +5,13 @@ import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.asTypeName
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor
+import fr.delphes.feature.descriptor.MapFeatureDescriptor
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.generation.CompilationCheckException
 import fr.delphes.generation.getAnnotationValue
 import fr.delphes.utils.serialization.DurationSerializer
 import java.time.Duration
+import kotlin.reflect.typeOf
 
 fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
     val name = simpleName.asString()
@@ -32,6 +34,15 @@ fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
             "Duration.ZERO",
             DurationFeatureDescriptor::class,
             Duration::class.asTypeName()
+        )
+
+        "kotlin.collections.Map" -> FieldWithType(
+            name,
+            description,
+            null,
+            "emptyMap()",
+            MapFeatureDescriptor::class,
+            typeOf<Map<String, String>>().asTypeName()
         )
 
         else -> throw CompilationCheckException("Field [${this.simpleName.asString()}] : Unknown type and no mapper")

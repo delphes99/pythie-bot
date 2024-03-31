@@ -71,5 +71,5 @@ private data class SerializableAlert(
     val type: String,
     val parameters: Map<String, String>,
 ) {
-    constructor(alert: Alert) : this(alert.type, alert.parameters)
+    constructor(alert: Alert) : this(alert.alertType, alert.parameters)
 }

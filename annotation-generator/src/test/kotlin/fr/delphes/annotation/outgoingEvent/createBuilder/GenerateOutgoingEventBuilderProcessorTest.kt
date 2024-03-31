@@ -23,6 +23,20 @@ import kotlinx.serialization.Serializable
 import java.time.Duration
 
 class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
+    should("outgoing event must not have field named 'type'") {
+        """
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                val type: String,
+            ) : OutgoingEvent
+        """.shouldCompileWith {
+            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            messages shouldContain "MyEvent must no have a field named 'type'"
+        }
+    }
     //TODO verify all parents
     xshould("outgoing event should have outgoing event interface") {
         """

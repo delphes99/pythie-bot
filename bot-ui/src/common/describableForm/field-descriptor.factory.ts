@@ -1,6 +1,7 @@
 import {DurationDescriptor} from "@/common/describableForm/duration/duration-descriptor";
 import {FieldDescriptor} from "@/common/describableForm/field-descriptor";
 import {FieldDescriptorType} from "@/common/describableForm/field-descriptor-type";
+import {MapDescriptor} from "@/common/describableForm/map/map-descriptor";
 import {OutgoingEventsDescriptor} from "@/common/describableForm/outgoingEvents/outgoing-events-descriptor";
 import {StringDescriptor} from "@/common/describableForm/string/string-descriptor";
 
@@ -18,5 +19,7 @@ export function fromJsonDescriptor(descriptor: DescriptorJsonType): FieldDescrip
             return DurationDescriptor.fromJson(descriptor);
         case FieldDescriptorType.OUTGOING_EVENTS:
             return OutgoingEventsDescriptor.fromJson(descriptor);
+        case FieldDescriptorType.MAP:
+            return MapDescriptor.fromJson(descriptor);
     }
 }

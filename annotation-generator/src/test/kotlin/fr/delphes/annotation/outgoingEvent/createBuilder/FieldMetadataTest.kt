@@ -3,6 +3,7 @@ package fr.delphes.annotation.outgoingEvent.createBuilder
 import com.squareup.kotlinpoet.asTypeName
 import fr.delphes.annotation.assertCompileResolver
 import fr.delphes.feature.descriptor.DurationFeatureDescriptor
+import fr.delphes.feature.descriptor.MapFeatureDescriptor
 import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.generation.CompilationCheckException
 import fr.delphes.utils.serialization.DurationSerializer
@@ -88,6 +89,31 @@ class FieldMetadataTest : ShouldSpec({
                     serializer shouldBe DurationSerializer::class
                     descriptionClass shouldBe DurationFeatureDescriptor::class
                     fieldType shouldBe Duration::class.asTypeName()
+                }
+        }
+    }
+    should("map metadata") {
+        """
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                val myField: Map<String, String>,
+            ) : OutgoingEvent
+        """.assertCompileResolver {
+            it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
+                .shouldNotBeNull()
+                .getFieldMeta()
+                .shouldBeInstanceOf<FieldWithType>()
+                .apply {
+                    description shouldBe "description"
+                    defaultValue shouldBe "emptyMap()"
+                    serializer.shouldBeNull()
+                    descriptionClass shouldBe MapFeatureDescriptor::class
+                    fieldType.toString() shouldBe "kotlin.collections.Map<kotlin.String, kotlin.String>"
                 }
         }
     }

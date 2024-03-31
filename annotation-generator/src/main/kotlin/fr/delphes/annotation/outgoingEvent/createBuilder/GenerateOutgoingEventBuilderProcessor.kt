@@ -56,6 +56,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
     }
 
     private fun create(outgoingEventClass: KSClassDeclaration) {
+        checkNoTypeField(outgoingEventClass)
         checkInheritFromOutgoingEvent(outgoingEventClass)
         checkHaveAtLeastOneFieldWithDescription(outgoingEventClass)
         checkAllFieldsHaveDescription(outgoingEventClass)
@@ -167,6 +168,12 @@ class GenerateOutgoingEventBuilderModuleProcessor(
             )
             .build()
             .writeTo(codeGenerator, outgoingEventClass.toNonAggregatingDependencies())
+    }
+
+    private fun checkNoTypeField(outgoingEventClass: KSClassDeclaration) {
+        if (!outgoingEventClass.getDescriptionFields().none { it.simpleName.asString() == "type" }) {
+            throw CompilationCheckException("${outgoingEventClass.qualifiedName?.asString()} must no have a field named 'type'")
+        }
     }
 
     private fun checkInheritFromOutgoingEvent(outgoingEventClass: KSClassDeclaration) {

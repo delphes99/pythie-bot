@@ -1,5 +1,14 @@
 package fr.delphes.overlay.event.outgoing
 
-data class Alert(val type: String, val parameters: Map<String, String>) : OverlayOutgoingEvent {
+import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+
+@RegisterOutgoingEvent("overlay-alert")
+data class Alert(
+    @FieldDescription("Type of the alert")
+    val alertType: String,
+    @FieldDescription("Parameters")
+    val parameters: Map<String, String>,
+) : OverlayOutgoingEvent {
     constructor(type: String, vararg parameters: Pair<String, String>) : this(type, mapOf(*parameters))
 }
