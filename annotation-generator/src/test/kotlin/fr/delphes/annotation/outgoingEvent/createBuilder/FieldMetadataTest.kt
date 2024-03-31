@@ -1,0 +1,115 @@
+package fr.delphes.annotation.outgoingEvent.createBuilder
+
+import com.squareup.kotlinpoet.asTypeName
+import fr.delphes.annotation.assertCompileResolver
+import fr.delphes.feature.descriptor.DurationFeatureDescriptor
+import fr.delphes.feature.descriptor.StringFeatureDescriptor
+import fr.delphes.utils.serialization.DurationSerializer
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.ShouldSpec
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.throwable.shouldHaveMessage
+import io.kotest.matchers.types.shouldBeInstanceOf
+import java.time.Duration
+
+class FieldMetadataTest : ShouldSpec({
+    should("retrieve mapper informations") {
+        """
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
+            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                @FieldMapper(CustomFieldTypeMapper::class)
+                val myField: String,
+            ) : OutgoingEvent
+        """.assertCompileResolver {
+            it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
+                .shouldNotBeNull()
+                .getFieldMeta()
+                .shouldBeInstanceOf<FieldWithMapper>()
+                .apply {
+                    this.mapperClass.toString() shouldBe "CustomFieldTypeMapper"
+                }
+        }
+    }
+    should("string metadata") {
+        """
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                val myField: String,
+            ) : OutgoingEvent
+        """.assertCompileResolver {
+            it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
+                .shouldNotBeNull()
+                .getFieldMeta()
+                .shouldBeInstanceOf<FieldWithType>()
+                .apply {
+                    description shouldBe "description"
+                    defaultValue shouldBe "\"\""
+                    serializer.shouldBeNull()
+                    descriptionClass shouldBe StringFeatureDescriptor::class
+                    fieldType shouldBe String::class.asTypeName()
+                }
+        }
+    }
+    should("duration metadata") {
+        """
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+            import java.time.Duration
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("duration description")
+                val myField: Duration,
+            ) : OutgoingEvent
+        """.assertCompileResolver {
+            it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
+                .shouldNotBeNull()
+                .getFieldMeta()
+                .shouldBeInstanceOf<FieldWithType>()
+                .apply {
+                    description shouldBe "duration description"
+                    defaultValue shouldBe "Duration.ZERO"
+                    serializer shouldBe DurationSerializer::class
+                    descriptionClass shouldBe DurationFeatureDescriptor::class
+                    fieldType shouldBe Duration::class.asTypeName()
+                }
+        }
+    }
+    should("unable to extract informations from unknown type") {
+        """
+            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.bot.event.outgoing.OutgoingEvent
+            import fr.delphes.test.UnknownType
+
+            @RegisterOutgoingEvent("serializeName")
+            class MyEvent(
+                @FieldDescription("description")
+                val myField: UnknownType,
+            ) : OutgoingEvent
+        """.assertCompileResolver {
+            shouldThrow<IllegalArgumentException> {
+                it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
+                    .shouldNotBeNull()
+                    .getFieldMeta()
+            }
+                .shouldHaveMessage("Field myField: Unknown type and no mapper")
+        }
+    }
+})
+

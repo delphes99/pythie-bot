@@ -1,62 +1,30 @@
 package fr.delphes.annotation.outgoingEvent.createBuilder
 
-import com.google.devtools.ksp.getAnnotationsByType
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.ksp.toClassName
-import com.squareup.kotlinpoet.ksp.toTypeName
-import fr.delphes.feature.descriptor.FeatureDescriptor
-import kotlin.reflect.KClass
 
 object FieldDescriptionFactory {
-    fun buildFieldType(property: KSPropertyDeclaration): TypeName {
-        val fieldInfos = property.getFieldInfos()
-        return fieldInfos?.mapperClass?.let {
-            return ClassName("kotlin", "String")
-        } ?: property.type.toTypeName()
-    }
-
-    fun buildDescription(builder: FunSpec.Builder, property: KSPropertyDeclaration) {
+    fun buildDescription(builder: FunSpec.Builder, property: FieldMetadata) {
         with(builder) {
-            addCode("%T(", property.toDescriptorClass())
-            addStatement("fieldName=\"${property.simpleName.asString()}\",")
-            property.getAnnotationsByType(FieldDescription::class).first().let {
-                addStatement("description=\"${it.description}\",")
-            }
-            addStatement("value=${property.simpleName.asString()},")
+            addCode("%T(", property.descriptionClass)
+            addStatement("fieldName=\"${property.name}\",")
+            addStatement("description=\"${property.description}\",")
+            addStatement("value=${property.name},")
             addCode("),\n")
         }
     }
 
-    private fun KSPropertyDeclaration.toDescriptorClass(): KClass<out FeatureDescriptor> {
-        val fieldInfos = getFieldInfos() ?: error("unable to find fieldInfos for ${simpleName.asString()}")
+    fun buildEncodeValue(builder: FunSpec.Builder, property: FieldMetadata, stateProviderName: String) {
+        when (property) {
+            is FieldWithMapper -> {
+                builder.addCode(
+                    "%T.map(this.${property.name}, $stateProviderName)", property.mapperClass.toClassName()
+                )
+            }
 
-        return fieldInfos.descriptionClass
-    }
-
-    fun buildEncodeValue(builder: FunSpec.Builder, property: KSPropertyDeclaration, stateProviderName: String) {
-        val fieldInfos = property.getFieldInfos()
-        if (fieldInfos?.mapperClass != null) {
-            builder.addCode(
-                "%T.map(this.${property.simpleName.asString()}, $stateProviderName)",
-                fieldInfos.mapperClass.toClassName()
-            )
-        } else {
-            builder.addCode("this.${property.simpleName.asString()}")
+            is FieldWithType -> {
+                builder.addCode("this.${property.name}")
+            }
         }
-    }
-
-    fun buildFieldDefaultValue(property: KSPropertyDeclaration): String {
-        val fieldInfos =
-            property.getFieldInfos() ?: error("unable to find fieldInfos for ${property.simpleName.asString()}")
-        return fieldInfos.defaultValue
-    }
-
-    fun buildFieldSerializer(property: KSPropertyDeclaration): ClassName? {
-        val fieldInfos =
-            property.getFieldInfos() ?: error("unable to find fieldInfos for ${property.simpleName.asString()}")
-        return fieldInfos.fieldSerializer
     }
 }

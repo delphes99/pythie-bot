@@ -60,7 +60,6 @@ class GenerateOutgoingEventBuilderModuleProcessor(
         checkInheritFromOutgoingEvent(outgoingEventClass)
         checkHaveAtLeastOneFieldWithDescription(outgoingEventClass)
         checkAllFieldsHaveDescription(outgoingEventClass)
-        checkAllCustomFieldsHaveMapper(outgoingEventClass)
 
         val serialName = outgoingEventClass.getAnnotationsByType(RegisterOutgoingEvent::class)
             .first().serializeName
@@ -75,20 +74,18 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                         FunSpec
                             .constructorBuilder()
                             .apply {
-                                outgoingEventClass.getDescriptionFields().forEach { property ->
+                                outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
                                     addParameter(
                                         ParameterSpec.builder(
-                                            property.simpleName.asString(),
-                                            FieldDescriptionFactory.buildFieldType(property),
+                                            property.name,
+                                            property.fieldType,
                                         )
-                                            .defaultValue(FieldDescriptionFactory.buildFieldDefaultValue(property))
+                                            .defaultValue(property.defaultValue)
                                             .apply {
-                                                val fieldSerializer =
-                                                    FieldDescriptionFactory.buildFieldSerializer(property)
-                                                if (fieldSerializer != null) {
+                                                if (property is FieldWithType && property.serializer != null) {
                                                     addAnnotation(
                                                         AnnotationSpec.builder(Serializable::class)
-                                                            .addMember("with = %T::class", fieldSerializer)
+                                                            .addMember("with = %T::class", property.serializer)
                                                             .build()
                                                     )
                                                 }
@@ -108,14 +105,14 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     )
                     .addSuperinterface(OutgoingEventBuilder::class)
                     .apply {
-                        outgoingEventClass.getDescriptionFields().forEach { property ->
+                        outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
                             addProperty(
                                 PropertySpec
                                     .builder(
-                                        property.simpleName.asString(),
-                                        FieldDescriptionFactory.buildFieldType(property),
+                                        property.name,
+                                        property.fieldType,
                                     )
-                                    .initializer(property.simpleName.asString())
+                                    .initializer(property.name)
                                     .build()
                             )
                         }
@@ -135,7 +132,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                             )
                             .addStatement("listOf(")
                             .apply {
-                                outgoingEventClass.getDescriptionFields().forEach { property ->
+                                outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
                                     FieldDescriptionFactory.buildDescription(this, property)
                                 }
                             }
@@ -158,8 +155,8 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                                 outgoingEventClass.toClassName()
                             )
                             .apply {
-                                outgoingEventClass.getDescriptionFields().forEach { property ->
-                                    addCode("${property.simpleName.asString()} = ")
+                                outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
+                                    addCode("${property.name} = ")
                                     FieldDescriptionFactory.buildEncodeValue(this, property, "stateProvider")
                                     addCode(",\n")
                                 }
@@ -193,16 +190,8 @@ class GenerateOutgoingEventBuilderModuleProcessor(
         }
     }
 
-    private fun checkAllCustomFieldsHaveMapper(outgoingEventClass: KSClassDeclaration) {
-        outgoingEventClass.getDescriptionFields()
-            .associateWith { it.getFieldInfos() }
-            .filterValues { it == null }
-            .keys
-            .takeIf { it.isNotEmpty() }
-            ?.joinToString { it.simpleName.asString() }
-            ?.also {
-                logger.error("custom fields with missing mapper : $it")
-            }
+    private fun KSClassDeclaration.getDescriptionFieldsMetadata(): Sequence<FieldMetadata> {
+        return getDescriptionFields().map(KSPropertyDeclaration::getFieldMeta)
     }
 
     private fun KSClassDeclaration.getDescriptionFields(): Sequence<KSPropertyDeclaration> {
@@ -210,7 +199,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
             ?.parameters
             ?.mapNotNull { it.name }
             ?: emptyList()
-        
+
         return getAllProperties().filter { it.simpleName in constructorParameterNames }
     }
 
