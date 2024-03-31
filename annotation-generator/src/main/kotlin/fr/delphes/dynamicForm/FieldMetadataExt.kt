@@ -1,12 +1,12 @@
-package fr.delphes.annotation.outgoingEvent.createBuilder
+package fr.delphes.dynamicForm
 
 import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.asTypeName
-import fr.delphes.feature.descriptor.DurationFeatureDescriptor
-import fr.delphes.feature.descriptor.MapFeatureDescriptor
-import fr.delphes.feature.descriptor.StringFeatureDescriptor
+import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
+import fr.delphes.dynamicForm.descriptor.MapFieldDescriptor
+import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
 import fr.delphes.generation.CompilationCheckException
 import fr.delphes.generation.getAnnotationValue
 import fr.delphes.utils.serialization.DurationSerializer
@@ -24,7 +24,7 @@ fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
 
     return when (this.type.resolve().declaration.qualifiedName?.asString()) {
         "kotlin.String" -> FieldWithType(
-            name, description, null, "\"\"", StringFeatureDescriptor::class, String::class.asTypeName()
+            name, description, null, "\"\"", StringFieldDescriptor::class, String::class.asTypeName()
         )
 
         "java.time.Duration" -> FieldWithType(
@@ -32,7 +32,7 @@ fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
             description,
             DurationSerializer::class,
             "Duration.ZERO",
-            DurationFeatureDescriptor::class,
+            DurationFieldDescriptor::class,
             Duration::class.asTypeName()
         )
 
@@ -41,7 +41,7 @@ fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
             description,
             null,
             "emptyMap()",
-            MapFeatureDescriptor::class,
+            MapFieldDescriptor::class,
             typeOf<Map<String, String>>().asTypeName()
         )
 

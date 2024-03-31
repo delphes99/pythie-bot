@@ -30,7 +30,7 @@ class FeaturesManager(
         runBlocking {
             configurableRunTimes = featureConfigurationRepository.load()
                 .map { configuration ->
-                    configuration.buildFeature(stateManager.readOnly)
+                    configuration.buildFeature()
                 }.associateWith { definition ->
                     registerSpecificStatesAndBuildRuntimeOf(definition)
                 }

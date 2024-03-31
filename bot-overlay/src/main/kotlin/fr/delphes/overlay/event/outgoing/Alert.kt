@@ -1,7 +1,7 @@
 package fr.delphes.overlay.event.outgoing
 
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
-import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+import fr.delphes.dynamicForm.FieldDescription
 
 @RegisterOutgoingEvent("overlay-alert")
 data class Alert(

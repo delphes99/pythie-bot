@@ -1,6 +1,6 @@
 package fr.delphes.feature
 
-import fr.delphes.feature.descriptor.StringFeatureDescriptor
+import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
 import fr.delphes.serializer
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.ShouldSpec
@@ -10,7 +10,7 @@ class OutgoingEventBuilderDescriptionTest : ShouldSpec({
     should("serialize") {
         val builder = OutgoingEventBuilderDescription(
             OutgoingEventType("someEvent"),
-            StringFeatureDescriptor(
+            StringFieldDescriptor(
                 fieldName = "someField",
                 description = "someDescription",
                 value = "someValue"

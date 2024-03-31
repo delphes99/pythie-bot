@@ -39,13 +39,13 @@ internal class FeaturesManagerTest : ShouldSpec({
             val featureConfigurationRepository = mockk<FeatureConfigurationRepository> {
                 coEvery { load() } returns listOf(
                     mockk {
-                        every { buildFeature(any()) } returns mockk {
+                        every { buildFeature() } returns mockk {
                             every { buildRuntime(any()) } returns runtimeForConfigurableFeature
                             every { getSpecificStates(any()) } returns emptyList()
                         }
                     },
                     mockk {
-                        every { buildFeature(any()) } returns mockk {
+                        every { buildFeature() } returns mockk {
                             every { buildRuntime(any()) } returns runtimeForAnotherConfigurableFeature
                             every { getSpecificStates(any()) } returns emptyList()
                         }

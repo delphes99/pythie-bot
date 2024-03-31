@@ -1,4 +1,4 @@
-package fr.delphes.feature.descriptor
+package fr.delphes.dynamicForm.descriptor
 
 import fr.delphes.utils.serialization.DurationSerializer
 import kotlinx.serialization.SerialName
@@ -7,9 +7,9 @@ import java.time.Duration
 
 @SerialName("DURATION")
 @Serializable
-data class DurationFeatureDescriptor(
+data class DurationFieldDescriptor(
     override val fieldName: String,
     override val description: String,
     @Serializable(with = DurationSerializer::class)
     override val value: Duration?,
-) : FeatureDescriptor()
+) : FieldDescriptor()

@@ -24,6 +24,10 @@ import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.dynamicForm.FieldDescription
+import fr.delphes.dynamicForm.FieldMetadata
+import fr.delphes.dynamicForm.FieldWithType
+import fr.delphes.dynamicForm.getFieldMeta
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
 import fr.delphes.generation.CompilationCheckException
@@ -31,7 +35,6 @@ import fr.delphes.generation.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.GenerationUtils.getModuleName
 import fr.delphes.generation.GenerationUtils.processEach
 import fr.delphes.generation.toNonAggregatingDependencies
-import fr.delphes.state.StateProvider
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -143,12 +146,6 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     .addFunction(
                         FunSpec.builder("build")
                             .addModifiers(KModifier.OVERRIDE, KModifier.SUSPEND)
-                            .addParameter(
-                                ParameterSpec.builder(
-                                    "stateProvider",
-                                    StateProvider::class
-                                ).build()
-                            )
                             .returns(outgoingEventClass.toClassName())
                             .addCode(
                                 "return %T(\n",
@@ -157,7 +154,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                             .apply {
                                 outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
                                     addCode("${property.name} = ")
-                                    FieldDescriptionFactory.buildEncodeValue(this, property, "stateProvider")
+                                    FieldDescriptionFactory.buildEncodeValue(this, property)
                                     addCode(",\n")
                                 }
                             }

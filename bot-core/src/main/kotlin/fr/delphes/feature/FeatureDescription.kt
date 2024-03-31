@@ -1,11 +1,11 @@
 package fr.delphes.feature
 
-import fr.delphes.feature.descriptor.FeatureDescriptor
+import fr.delphes.dynamicForm.descriptor.FieldDescriptor
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class FeatureDescription(
     val type: String,
     val id: String,
-    val descriptors: List<FeatureDescriptor>,
+    val descriptors: List<FieldDescriptor>,
 )

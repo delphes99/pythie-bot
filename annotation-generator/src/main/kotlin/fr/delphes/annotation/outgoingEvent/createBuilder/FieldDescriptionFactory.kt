@@ -2,6 +2,9 @@ package fr.delphes.annotation.outgoingEvent.createBuilder
 
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ksp.toClassName
+import fr.delphes.dynamicForm.FieldMetadata
+import fr.delphes.dynamicForm.FieldWithMapper
+import fr.delphes.dynamicForm.FieldWithType
 
 object FieldDescriptionFactory {
     fun buildDescription(builder: FunSpec.Builder, property: FieldMetadata) {
@@ -14,11 +17,11 @@ object FieldDescriptionFactory {
         }
     }
 
-    fun buildEncodeValue(builder: FunSpec.Builder, property: FieldMetadata, stateProviderName: String) {
+    fun buildEncodeValue(builder: FunSpec.Builder, property: FieldMetadata) {
         when (property) {
             is FieldWithMapper -> {
                 builder.addCode(
-                    "%T.map(this.${property.name}, $stateProviderName)", property.mapperClass.toClassName()
+                    "%T.map(this.${property.name})", property.mapperClass.toClassName()
                 )
             }
 

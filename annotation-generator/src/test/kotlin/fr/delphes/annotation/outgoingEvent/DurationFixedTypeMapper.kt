@@ -1,11 +1,10 @@
 package fr.delphes.annotation.outgoingEvent
 
-import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescriptorMapper
-import fr.delphes.state.StateProvider
+import fr.delphes.dynamicForm.FieldDescriptorMapper
 import java.time.Duration
 
 object DurationFixedTypeMapper : FieldDescriptorMapper<Duration> {
-    override suspend fun map(value: String, stateProvider: StateProvider): Duration {
+    override suspend fun map(value: String): Duration {
         return Duration.ZERO
     }
 }

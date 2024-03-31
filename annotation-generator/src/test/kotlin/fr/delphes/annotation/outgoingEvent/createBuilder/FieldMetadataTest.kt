@@ -2,9 +2,12 @@ package fr.delphes.annotation.outgoingEvent.createBuilder
 
 import com.squareup.kotlinpoet.asTypeName
 import fr.delphes.annotation.assertCompileResolver
-import fr.delphes.feature.descriptor.DurationFeatureDescriptor
-import fr.delphes.feature.descriptor.MapFeatureDescriptor
-import fr.delphes.feature.descriptor.StringFeatureDescriptor
+import fr.delphes.dynamicForm.FieldWithMapper
+import fr.delphes.dynamicForm.FieldWithType
+import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
+import fr.delphes.dynamicForm.descriptor.MapFieldDescriptor
+import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
+import fr.delphes.dynamicForm.getFieldMeta
 import fr.delphes.generation.CompilationCheckException
 import fr.delphes.utils.serialization.DurationSerializer
 import io.kotest.assertions.throwables.shouldThrow
@@ -19,8 +22,8 @@ import java.time.Duration
 class FieldMetadataTest : ShouldSpec({
     should("retrieve mapper informations") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
-            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
+            import fr.delphes.dynamicForm.FieldDescription
+            import fr.delphes.dynamicForm.FieldMapper
             import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -43,7 +46,7 @@ class FieldMetadataTest : ShouldSpec({
     }
     should("string metadata") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -61,14 +64,14 @@ class FieldMetadataTest : ShouldSpec({
                     description shouldBe "description"
                     defaultValue shouldBe "\"\""
                     serializer.shouldBeNull()
-                    descriptionClass shouldBe StringFeatureDescriptor::class
+                    descriptionClass shouldBe StringFieldDescriptor::class
                     fieldType shouldBe String::class.asTypeName()
                 }
         }
     }
     should("duration metadata") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import java.time.Duration
@@ -87,14 +90,14 @@ class FieldMetadataTest : ShouldSpec({
                     description shouldBe "duration description"
                     defaultValue shouldBe "Duration.ZERO"
                     serializer shouldBe DurationSerializer::class
-                    descriptionClass shouldBe DurationFeatureDescriptor::class
+                    descriptionClass shouldBe DurationFieldDescriptor::class
                     fieldType shouldBe Duration::class.asTypeName()
                 }
         }
     }
     should("map metadata") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -112,14 +115,14 @@ class FieldMetadataTest : ShouldSpec({
                     description shouldBe "description"
                     defaultValue shouldBe "emptyMap()"
                     serializer.shouldBeNull()
-                    descriptionClass shouldBe MapFeatureDescriptor::class
+                    descriptionClass shouldBe MapFieldDescriptor::class
                     fieldType.toString() shouldBe "kotlin.collections.Map<kotlin.String, kotlin.String>"
                 }
         }
     }
     should("unable to extract informations from unknown type") {
         """
-            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import fr.delphes.test.UnknownType

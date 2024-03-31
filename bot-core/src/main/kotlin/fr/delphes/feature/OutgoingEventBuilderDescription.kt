@@ -1,16 +1,16 @@
 package fr.delphes.feature
 
-import fr.delphes.feature.descriptor.FeatureDescriptor
+import fr.delphes.dynamicForm.descriptor.FieldDescriptor
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class OutgoingEventBuilderDescription(
     val type: OutgoingEventType,
-    val descriptors: List<FeatureDescriptor>,
+    val descriptors: List<FieldDescriptor>,
 ) {
     constructor(
         type: OutgoingEventType,
-        vararg descriptors: FeatureDescriptor,
+        vararg descriptors: FieldDescriptor,
     ) : this(
         type = type,
         descriptors = descriptors.toList()

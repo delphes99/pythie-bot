@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent.createBuilder
+package fr.delphes.dynamicForm
 
 import kotlin.reflect.KClass
 

@@ -1,8 +1,8 @@
 package fr.delphes.connector.twitch.outgoingEvent
 
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
-import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
-import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
+import fr.delphes.dynamicForm.FieldDescription
+import fr.delphes.dynamicForm.FieldMapper
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.outgoingEvent.descriptionMapper.TwitchChannelMapper
 import fr.delphes.twitch.TwitchChannel

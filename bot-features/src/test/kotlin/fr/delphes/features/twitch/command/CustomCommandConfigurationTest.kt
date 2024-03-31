@@ -4,19 +4,16 @@ import fr.delphes.connector.twitch.command.Command
 import fr.delphes.feature.FeatureConfiguration
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.serializer
-import fr.delphes.state.StateProvider
 import fr.delphes.twitch.TwitchChannel
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.mockk.mockk
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import java.time.Duration
 
 class CustomCommandConfigurationTest : ShouldSpec({
-    val stateProvider = mockk<StateProvider>()
     should("create feature") {
         val feature = serializer.decodeFromString<FeatureConfiguration>(
             """
@@ -28,7 +25,7 @@ class CustomCommandConfigurationTest : ShouldSpec({
                         "cooldown": "PT30S"
                     }
                 """
-        ).buildFeature(stateProvider)
+        ).buildFeature()
 
         feature.shouldBeInstanceOf<CustomCommand>()
 

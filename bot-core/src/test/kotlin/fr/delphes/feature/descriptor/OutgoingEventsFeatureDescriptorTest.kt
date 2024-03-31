@@ -1,6 +1,10 @@
 package fr.delphes.feature.descriptor
 
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
+import fr.delphes.dynamicForm.descriptor.FieldDescriptor
+import fr.delphes.dynamicForm.descriptor.OutgoingEventsFieldDescriptor
+import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
 import fr.delphes.serializer
@@ -13,13 +17,13 @@ import java.time.Duration
 
 class OutgoingEventsFeatureDescriptorTest : ShouldSpec({
     should("serialization with no events") {
-        val descriptor = OutgoingEventsFeatureDescriptor(
+        val descriptor = OutgoingEventsFieldDescriptor(
             fieldName = "fieldName",
             description = "description",
             value = emptyList()
         )
 
-        val payload = serializer.encodeToString<FeatureDescriptor>(descriptor)
+        val payload = serializer.encodeToString<FieldDescriptor>(descriptor)
 
         payload shouldEqualJson """
             {
@@ -32,19 +36,19 @@ class OutgoingEventsFeatureDescriptorTest : ShouldSpec({
     }
 
     should("serialization with events") {
-        val descriptor = OutgoingEventsFeatureDescriptor(
+        val descriptor = OutgoingEventsFieldDescriptor(
             fieldName = "fieldName",
             description = "description",
             value = listOf(DESCRIPTION)
         )
 
-        val payload = serializer.encodeToString<FeatureDescriptor>(descriptor)
+        val payload = serializer.encodeToString<FieldDescriptor>(descriptor)
 
         payload shouldEqualJson EXPECTED_PAYLOAD
     }
 
     should("serialization with events from builder") {
-        val descriptor = OutgoingEventsFeatureDescriptor.fromBuilders(
+        val descriptor = OutgoingEventsFieldDescriptor.fromBuilders(
             fieldName = "fieldName",
             description = "description",
             builders = listOf(
@@ -54,7 +58,7 @@ class OutgoingEventsFeatureDescriptorTest : ShouldSpec({
             )
         )
 
-        val payload = serializer.encodeToString<FeatureDescriptor>(descriptor)
+        val payload = serializer.encodeToString<FieldDescriptor>(descriptor)
 
         payload shouldEqualJson EXPECTED_PAYLOAD
     }
@@ -63,12 +67,12 @@ class OutgoingEventsFeatureDescriptorTest : ShouldSpec({
         private val DESCRIPTION = OutgoingEventBuilderDescription(
             type = OutgoingEventType("SOME_EVENT"),
             listOf(
-                StringFeatureDescriptor(
+                StringFieldDescriptor(
                     fieldName = "stringValue",
                     description = "description of stringValue",
                     value = "stringValue"
                 ),
-                DurationFeatureDescriptor(
+                DurationFieldDescriptor(
                     fieldName = "durationValue",
                     description = "description of durationValue",
                     value = Duration.ofSeconds(30)

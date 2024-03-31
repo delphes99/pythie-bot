@@ -3,14 +3,13 @@
 package fr.delphes.features.twitch.command
 
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
+import fr.delphes.dynamicForm.descriptor.OutgoingEventsFieldDescriptor
+import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
 import fr.delphes.feature.FeatureConfiguration
 import fr.delphes.feature.FeatureDescription
-import fr.delphes.feature.descriptor.DurationFeatureDescriptor
-import fr.delphes.feature.descriptor.OutgoingEventsFeatureDescriptor
-import fr.delphes.feature.descriptor.StringFeatureDescriptor
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
-import fr.delphes.state.StateProvider
 import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.serialization.DurationSerializer
 import kotlinx.serialization.SerialName
@@ -27,14 +26,14 @@ class CustomCommandConfiguration(
     private val cooldown: Duration = Duration.ZERO,
     private val actions: List<OutgoingEventBuilder> = emptyList(),
 ) : FeatureConfiguration {
-    override fun buildFeature(stateProvider: StateProvider): FeatureDefinition {
+    override fun buildFeature(): FeatureDefinition {
         return CustomCommand(
             channel = channel,
             trigger = command,
             id = id,
             cooldown = cooldown,
             action = {
-                val outgoingEvent = actions.map { it.build(stateProvider) }
+                val outgoingEvent = actions.map { it.build() }
                 outgoingEvent.forEach { this.executeOutgoingEvent(it) }
             }
         )
@@ -45,10 +44,10 @@ class CustomCommandConfiguration(
             type = "TwitchCustomCommandConfiguration",
             id = id.value,
             descriptors = listOf(
-                StringFeatureDescriptor("channel", "Channel name", channel.name),
-                StringFeatureDescriptor("command", "command trigger", command),
-                DurationFeatureDescriptor("cooldown", "cooldown", cooldown),
-                OutgoingEventsFeatureDescriptor.fromBuilders("actions", "actions on trigger", actions),
+                StringFieldDescriptor("channel", "Channel name", channel.name),
+                StringFieldDescriptor("command", "command trigger", command),
+                DurationFieldDescriptor("cooldown", "cooldown", cooldown),
+                OutgoingEventsFieldDescriptor.fromBuilders("actions", "actions on trigger", actions),
             )
         )
     }

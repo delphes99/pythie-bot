@@ -12,7 +12,7 @@ class GenerateOutgoingEventRegistryProcessorTest : ShouldSpec({
         """
             import fr.delphes.annotation.outgoingEvent.CustomFieldType
             import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
-            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldDescription
+            import fr.delphes.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
