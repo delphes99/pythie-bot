@@ -1,14 +1,16 @@
-package fr.delphes.dynamicForm
+package fr.delphes.generation.dynamicForm
 
 import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.asTypeName
+import fr.delphes.annotation.dynamicForm.FieldDescription
+import fr.delphes.annotation.dynamicForm.FieldMapper
 import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.MapFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
-import fr.delphes.generation.CompilationCheckException
-import fr.delphes.generation.getAnnotationValue
+import fr.delphes.generation.utils.CompilationCheckException
+import fr.delphes.generation.utils.getAnnotationValue
 import fr.delphes.utils.serialization.DurationSerializer
 import java.time.Duration
 import kotlin.reflect.typeOf

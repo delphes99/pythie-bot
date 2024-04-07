@@ -1,4 +1,4 @@
-package fr.delphes.generation
+package fr.delphes.generation.utils
 
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
@@ -14,8 +14,8 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
-import fr.delphes.generation.GenerationUtils.getModuleName
-import fr.delphes.generation.GenerationUtils.process
+import fr.delphes.generation.utils.GenerationUtils.getModuleName
+import fr.delphes.generation.utils.GenerationUtils.process
 import kotlinx.serialization.modules.SerializersModule
 import kotlin.reflect.KClass
 

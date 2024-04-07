@@ -1,4 +1,4 @@
-package fr.delphes.generation
+package fr.delphes.generation.utils
 
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver

@@ -1,4 +1,4 @@
-package fr.delphes.annotation
+package fr.delphes.generation
 
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor

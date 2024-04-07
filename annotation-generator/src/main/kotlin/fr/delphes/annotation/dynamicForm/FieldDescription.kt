@@ -1,4 +1,4 @@
-package fr.delphes.dynamicForm
+package fr.delphes.annotation.dynamicForm
 
 @Target(AnnotationTarget.FIELD)
 annotation class FieldDescription(

@@ -1,5 +1,6 @@
-package fr.delphes.dynamicForm
+package fr.delphes.annotation.dynamicForm
 
+import fr.delphes.generation.dynamicForm.FieldDescriptorMapper
 import kotlin.reflect.KClass
 
 @Target(AnnotationTarget.FIELD)

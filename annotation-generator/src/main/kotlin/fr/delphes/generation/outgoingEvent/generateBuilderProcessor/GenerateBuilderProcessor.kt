@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent.createBuilder
+package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
 
 import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.isAnnotationPresent
@@ -21,20 +21,20 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
+import fr.delphes.annotation.dynamicForm.FieldDescription
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
-import fr.delphes.dynamicForm.FieldDescription
-import fr.delphes.dynamicForm.FieldMetadata
-import fr.delphes.dynamicForm.FieldWithType
-import fr.delphes.dynamicForm.getFieldMeta
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
-import fr.delphes.generation.CompilationCheckException
-import fr.delphes.generation.GenerationUtils.baseGeneratedPackage
-import fr.delphes.generation.GenerationUtils.getModuleName
-import fr.delphes.generation.GenerationUtils.processEach
-import fr.delphes.generation.toNonAggregatingDependencies
+import fr.delphes.generation.dynamicForm.FieldMetadata
+import fr.delphes.generation.dynamicForm.FieldWithType
+import fr.delphes.generation.dynamicForm.getFieldMeta
+import fr.delphes.generation.utils.CompilationCheckException
+import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage
+import fr.delphes.generation.utils.GenerationUtils.getModuleName
+import fr.delphes.generation.utils.GenerationUtils.processEach
+import fr.delphes.generation.utils.toNonAggregatingDependencies
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

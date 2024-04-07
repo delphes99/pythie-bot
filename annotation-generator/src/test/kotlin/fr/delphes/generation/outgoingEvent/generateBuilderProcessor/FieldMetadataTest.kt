@@ -1,14 +1,14 @@
-package fr.delphes.annotation.outgoingEvent.createBuilder
+package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
 
 import com.squareup.kotlinpoet.asTypeName
-import fr.delphes.annotation.assertCompileResolver
-import fr.delphes.dynamicForm.FieldWithMapper
-import fr.delphes.dynamicForm.FieldWithType
 import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.MapFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
-import fr.delphes.dynamicForm.getFieldMeta
-import fr.delphes.generation.CompilationCheckException
+import fr.delphes.generation.assertCompileResolver
+import fr.delphes.generation.dynamicForm.FieldWithMapper
+import fr.delphes.generation.dynamicForm.FieldWithType
+import fr.delphes.generation.dynamicForm.getFieldMeta
+import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.utils.serialization.DurationSerializer
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ShouldSpec
@@ -22,10 +22,10 @@ import java.time.Duration
 class FieldMetadataTest : ShouldSpec({
     should("retrieve mapper informations") {
         """
-            import fr.delphes.dynamicForm.FieldDescription
-            import fr.delphes.dynamicForm.FieldMapper
-            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.annotation.dynamicForm.FieldDescription
+            import fr.delphes.annotation.dynamicForm.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
+            import fr.delphes.generation.outgoingEvent.CustomFieldTypeMapper
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
             @RegisterOutgoingEvent("serializeName")
@@ -46,7 +46,7 @@ class FieldMetadataTest : ShouldSpec({
     }
     should("string metadata") {
         """
-            import fr.delphes.dynamicForm.FieldDescription
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -71,7 +71,7 @@ class FieldMetadataTest : ShouldSpec({
     }
     should("duration metadata") {
         """
-            import fr.delphes.dynamicForm.FieldDescription
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import java.time.Duration
@@ -97,7 +97,7 @@ class FieldMetadataTest : ShouldSpec({
     }
     should("map metadata") {
         """
-            import fr.delphes.dynamicForm.FieldDescription
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
@@ -122,7 +122,7 @@ class FieldMetadataTest : ShouldSpec({
     }
     should("unable to extract informations from unknown type") {
         """
-            import fr.delphes.dynamicForm.FieldDescription
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import fr.delphes.test.UnknownType

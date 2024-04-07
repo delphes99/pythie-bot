@@ -1,4 +1,4 @@
-package fr.delphes.annotation.outgoingEvent.createRegistry
+package fr.delphes.generation.outgoingEvent.generateRegistryProcessor
 
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
@@ -15,13 +15,13 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
-import fr.delphes.annotation.outgoingEvent.createBuilder.GenerateOutgoingEventBuilderModuleProcessor
 import fr.delphes.bot.event.outgoing.OutgoingEventRegistry
 import fr.delphes.bot.event.outgoing.OutgoingEventRegistryEntry
 import fr.delphes.feature.OutgoingEventType
-import fr.delphes.generation.GenerationUtils.baseGeneratedPackage
-import fr.delphes.generation.GenerationUtils.getModuleName
-import fr.delphes.generation.getSerialName
+import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.GenerateOutgoingEventBuilderModuleProcessor
+import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage
+import fr.delphes.generation.utils.GenerationUtils.getModuleName
+import fr.delphes.generation.utils.getSerialName
 
 class GenerateOutgoingEventRegistryProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {

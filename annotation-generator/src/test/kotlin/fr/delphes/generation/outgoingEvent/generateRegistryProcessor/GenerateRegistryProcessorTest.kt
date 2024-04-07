@@ -1,13 +1,13 @@
-package fr.delphes.annotation.outgoingEvent.createRegistry
+package fr.delphes.generation.outgoingEvent.generateRegistryProcessor
 
 import com.tschuchort.compiletesting.KotlinCompilation
-import fr.delphes.annotation.getFieldValue
-import fr.delphes.annotation.shouldCompileWithProvider
 import fr.delphes.feature.OutgoingEventType
+import fr.delphes.generation.getFieldValue
+import fr.delphes.generation.shouldCompileWithProvider
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 
-class GenerateOutgoingEventRegistryProcessorTest : ShouldSpec({
+class GenerateRegistryProcessorTest : ShouldSpec({
     xshould("generate outgoing event new instance registration") {
         """
             import fr.delphes.annotation.outgoingEvent.CustomFieldType

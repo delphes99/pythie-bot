@@ -1,15 +1,15 @@
-package fr.delphes.annotation.outgoingEvent.createBuilder
+package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
 
 import com.tschuchort.compiletesting.KotlinCompilation
-import fr.delphes.annotation.getFieldValue
-import fr.delphes.annotation.outgoingEvent.CustomFieldType
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
-import fr.delphes.annotation.shouldCompileWithProvider
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
+import fr.delphes.generation.getFieldValue
+import fr.delphes.generation.outgoingEvent.CustomFieldType
+import fr.delphes.generation.shouldCompileWithProvider
 import fr.delphes.state.StateProvider
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.ShouldSpec
@@ -22,7 +22,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.Duration
 
-class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
+class GenerateBuilderProcessorTest : ShouldSpec({
     should("outgoing event must not have field named 'type'") {
         """
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
@@ -63,9 +63,9 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("outgoing event must have all fields with description") {
         """
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
 
             @RegisterOutgoingEvent("serializeName")
             class MyEvent(
@@ -98,9 +98,9 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("generate builder with all fields") {
         """
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
             import java.time.Duration
 
             @RegisterOutgoingEvent("serializeName")
@@ -121,9 +121,9 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("generate builder with serialize infos") {
         """
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
 
             @RegisterOutgoingEvent("serializeName")
             class MyEvent(
@@ -157,9 +157,9 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     //TODO : call suspend function from java classloader
     xshould("generate builder with description method") {
         """
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
             import java.time.Duration
 
             @RegisterOutgoingEvent("serializeName")
@@ -183,11 +183,11 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("custom mapper should be provided for custom fields") {
         """
-            import fr.delphes.annotation.outgoingEvent.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
+            import fr.delphes.generation.outgoingEvent.CustomFieldType
+            import fr.delphes.generation.outgoingEvent.CustomFieldTypeMapper
 
             @RegisterOutgoingEvent("serializeName")
             class MyEvent(
@@ -203,12 +203,12 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("custom fields should be string in builder") {
         """
-            import fr.delphes.annotation.outgoingEvent.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.annotation.dynamicForm.FieldDescription
+            import fr.delphes.annotation.dynamicForm.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
-            import fr.delphes.dynamicForm.FieldMapper
+            import fr.delphes.generation.outgoingEvent.CustomFieldType
+            import fr.delphes.generation.outgoingEvent.CustomFieldTypeMapper
 
             @RegisterOutgoingEvent("serializeName")
             class MyEvent(
@@ -227,11 +227,11 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("should ignore fields not in primary constructor") {
         """
-            import fr.delphes.annotation.outgoingEvent.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
+            import fr.delphes.generation.outgoingEvent.CustomFieldType
+            import fr.delphes.generation.outgoingEvent.CustomFieldTypeMapper
 
             @RegisterOutgoingEvent("serializeName")
             class MyEvent(
@@ -246,12 +246,12 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     }
     should("mapper on generic type should override generic type (field must be string)") {
         """
-            import fr.delphes.annotation.outgoingEvent.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.DurationFixedTypeMapper
+            import fr.delphes.annotation.dynamicForm.FieldDescription
+            import fr.delphes.annotation.dynamicForm.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
-            import fr.delphes.dynamicForm.FieldMapper
+            import fr.delphes.generation.outgoingEvent.CustomFieldType
+            import fr.delphes.generation.outgoingEvent.DurationFixedTypeMapper
             import java.time.Duration
 
             @RegisterOutgoingEvent("serializeName")
@@ -272,9 +272,9 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     //TODO : call suspend function from java classloader
     xshould("generate builder with build method which build event") {
         """
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
             import java.time.Duration
 
             @RegisterOutgoingEvent("serializeName")
@@ -300,12 +300,12 @@ class GenerateOutgoingEventBuilderProcessorTest : ShouldSpec({
     //TODO : call suspend function from java classloader
     xshould("generate builder with build method which build event with custom type mapping") {
         """
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.CustomFieldType
             import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
             import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
-            import fr.delphes.dynamicForm.FieldDescription
             import java.time.Duration
 
             @RegisterOutgoingEvent("serializeName")

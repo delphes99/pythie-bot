@@ -15,15 +15,23 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
-import fr.delphes.annotation.incomingEvent.incomingEventRegisterPolymorphic
-import fr.delphes.annotation.outgoingEvent.outgoingEventRegisterPolymorphic
-import fr.delphes.generation.GenerationUtils
-import fr.delphes.generation.GenerationUtils.getModuleName
+import fr.delphes.annotation.incomingEvent.RegisterIncomingEvent
+import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
+import fr.delphes.bot.event.incoming.IncomingEvent
+import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.generation.utils.GenerationUtils
+import fr.delphes.generation.utils.GenerationUtils.getModuleName
 import kotlinx.serialization.modules.SerializersModule
 
-val serializerModules = listOf(
-    incomingEventRegisterPolymorphic,
-    outgoingEventRegisterPolymorphic,
+private val serializerModules = listOf(
+    RegisterPolymorphic(
+        RegisterIncomingEvent::class,
+        IncomingEvent::class,
+    ),
+    RegisterPolymorphic(
+        RegisterOutgoingEventBuilder::class,
+        OutgoingEventBuilder::class,
+    ),
 )
 
 class PolymorphicSerializerModuleProcessorProvider(

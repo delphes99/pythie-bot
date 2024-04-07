@@ -1,4 +1,4 @@
-package fr.delphes.dynamicForm
+package fr.delphes.generation.dynamicForm
 
 import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.TypeName

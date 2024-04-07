@@ -1,3 +1,3 @@
-package fr.delphes.annotation.outgoingEvent
+package fr.delphes.generation.outgoingEvent
 
 data class CustomFieldType(val value: String)

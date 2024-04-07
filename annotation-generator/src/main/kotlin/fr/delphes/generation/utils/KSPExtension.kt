@@ -1,4 +1,4 @@
-package fr.delphes.generation
+package fr.delphes.generation.utils
 
 import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.Dependencies

@@ -1,7 +1,7 @@
 package fr.delphes.overlay.event.outgoing
 
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
-import fr.delphes.dynamicForm.FieldDescription
+import fr.delphes.annotation.dynamicForm.FieldDescription
 import java.time.Duration
 
 @RegisterOutgoingEvent("overlay-pause")

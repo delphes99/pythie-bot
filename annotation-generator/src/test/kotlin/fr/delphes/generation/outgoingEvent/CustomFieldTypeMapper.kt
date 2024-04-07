@@ -1,6 +1,6 @@
-package fr.delphes.annotation.outgoingEvent
+package fr.delphes.generation.outgoingEvent
 
-import fr.delphes.dynamicForm.FieldDescriptorMapper
+import fr.delphes.generation.dynamicForm.FieldDescriptorMapper
 
 object CustomFieldTypeMapper : FieldDescriptorMapper<CustomFieldType> {
     override suspend fun map(value: String): CustomFieldType {

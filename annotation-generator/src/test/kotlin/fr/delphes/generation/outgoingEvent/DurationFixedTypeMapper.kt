@@ -1,6 +1,6 @@
-package fr.delphes.annotation.outgoingEvent
+package fr.delphes.generation.outgoingEvent
 
-import fr.delphes.dynamicForm.FieldDescriptorMapper
+import fr.delphes.generation.dynamicForm.FieldDescriptorMapper
 import java.time.Duration
 
 object DurationFixedTypeMapper : FieldDescriptorMapper<Duration> {
