@@ -2,6 +2,7 @@
 
 package fr.delphes.features.twitch.command
 
+import fr.delphes.annotation.dynamicForm.DynamicForm
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.OutgoingEventsFieldDescriptor
@@ -19,6 +20,7 @@ import java.time.Duration
 
 @Serializable
 @SerialName("TwitchCustomCommandConfiguration")
+@DynamicForm("custom-command", ["feature"])
 class CustomCommandConfiguration(
     private val channel: TwitchChannel = TwitchChannel(""),
     private val command: String = "",

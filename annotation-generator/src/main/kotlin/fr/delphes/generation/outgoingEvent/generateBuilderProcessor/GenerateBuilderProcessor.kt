@@ -54,7 +54,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
     private val moduleName: String,
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        logger.info("Start processing : GenerateOutgoingEventBuilderModuleProcessor")
+        logger.info("Start processing : Generate Outgoing Event Builders")
         return resolver.processEach(logger, RegisterOutgoingEvent::class, ::create)
     }
 

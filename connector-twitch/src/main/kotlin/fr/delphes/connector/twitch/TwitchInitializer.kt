@@ -4,7 +4,8 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.ConnectorInitializer
 import fr.delphes.configuration.ChannelConfiguration
 import fr.delphes.connector.twitch.reward.ConfiguredRewards
-import fr.delphes.twitch.generated.twitchOutgoingEventRegistry
+import fr.delphes.twitch.generated.dynamicForm.twitchDynamicFormRegistry
+import fr.delphes.twitch.generated.outgoingEvent.twitchOutgoingEventRegistry
 import fr.delphes.twitch.generated.twitchPolymorphicSerializerModule
 
 class TwitchInitializer(
@@ -13,6 +14,7 @@ class TwitchInitializer(
 ) : ConnectorInitializer() {
     override val serializerModule = twitchPolymorphicSerializerModule
     override val outgoingEventRegistry = twitchOutgoingEventRegistry
+    override val dynamicFormRegistry = twitchDynamicFormRegistry
 
     override fun buildConnector(bot: Bot) = TwitchConnector(
         bot,

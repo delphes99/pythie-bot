@@ -15,13 +15,20 @@ fun String.shouldCompileWithProvider(
     provider: SymbolProcessorProvider,
     assertion: KotlinCompilation.Result.() -> Unit,
 ) {
+    this.shouldCompileWithProvider(listOf(provider), assertion)
+}
+
+fun String.shouldCompileWithProvider(
+    providers: List<SymbolProcessorProvider>,
+    assertion: KotlinCompilation.Result.() -> Unit,
+) {
     val source = SourceFile.kotlin(
         "MyEvent.kt", this
     )
     KotlinCompilation()
         .apply {
             sources = listOf(source)
-            symbolProcessorProviders = listOf(provider)
+            symbolProcessorProviders = providers
             inheritClassPath = true
             kspArgs = mutableMapOf("module-name" to "test")
             kspWithCompilation = true

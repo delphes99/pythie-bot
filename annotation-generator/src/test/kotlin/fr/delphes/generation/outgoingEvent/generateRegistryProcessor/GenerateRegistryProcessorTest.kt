@@ -1,19 +1,20 @@
 package fr.delphes.generation.outgoingEvent.generateRegistryProcessor
 
 import com.tschuchort.compiletesting.KotlinCompilation
+import fr.delphes.bot.event.outgoing.OutgoingEventRegistry
 import fr.delphes.feature.OutgoingEventType
-import fr.delphes.generation.getFieldValue
+import fr.delphes.generation.loadGlobalVariable
+import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.GenerateOutgoingEventBuilderModuleProcessorProvider
 import fr.delphes.generation.shouldCompileWithProvider
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.should
+import io.kotest.matchers.types.shouldBeInstanceOf
 
 class GenerateRegistryProcessorTest : ShouldSpec({
-    xshould("generate outgoing event new instance registration") {
+    should("generate outgoing event new instance registration") {
         """
-            import fr.delphes.annotation.outgoingEvent.CustomFieldType
-            import fr.delphes.annotation.outgoingEvent.CustomFieldTypeMapper
-            import fr.delphes.dynamicForm.FieldDescription
-            import fr.delphes.annotation.outgoingEvent.createBuilder.FieldMapper
+            import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import java.time.Duration
@@ -21,18 +22,20 @@ class GenerateRegistryProcessorTest : ShouldSpec({
             @RegisterOutgoingEvent("serializeName")
             class MyEvent(
                 @FieldDescription("custom description")
-                @FieldMapper(CustomFieldTypeMapper::class)
-                val customField: CustomFieldType,
+                val customField: String,
             ) : OutgoingEvent
         """.shouldCompileWith {
-            this.generatedFiles.first { it.name == "TestOutgoingEventRegistry.kt" }
-            val builderClass =
-                classLoader.loadClass("fr.delphes.test.generated.outgoingEvent.TestOutgoingEventRegistry")
-            val newInstance = builderClass
-                .getConstructor()
-                .newInstance()
+            val registry = classLoader.loadGlobalVariable(
+                "fr.delphes.test.generated.outgoingEvent",
+                "testOutgoingEventRegistry",
+            )
 
-            newInstance.getFieldValue("type") shouldBe OutgoingEventType("serializeName")
+            registry
+                .shouldBeInstanceOf<OutgoingEventRegistry>()
+                .should {
+                    it.types()
+                        .shouldContainExactlyInAnyOrder(OutgoingEventType("serializeName"))
+                }
         }
     }
 })
@@ -40,5 +43,11 @@ class GenerateRegistryProcessorTest : ShouldSpec({
 private fun String.shouldCompileWith(
     assertion: KotlinCompilation.Result.() -> Unit,
 ) {
-    shouldCompileWithProvider(GenerateOutgoingEventRegistryProcessorProvider(), assertion)
+    shouldCompileWithProvider(
+        listOf(
+            GenerateOutgoingEventBuilderModuleProcessorProvider(),
+            GenerateOutgoingEventRegistryProcessorProvider(),
+        ),
+        assertion
+    )
 }

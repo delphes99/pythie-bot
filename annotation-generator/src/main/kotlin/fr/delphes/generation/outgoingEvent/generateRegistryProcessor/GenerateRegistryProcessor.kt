@@ -1,5 +1,6 @@
 package fr.delphes.generation.outgoingEvent.generateRegistryProcessor
 
+import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
@@ -21,7 +22,6 @@ import fr.delphes.feature.OutgoingEventType
 import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.GenerateOutgoingEventBuilderModuleProcessor
 import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.utils.GenerationUtils.getModuleName
-import fr.delphes.generation.utils.getSerialName
 
 class GenerateOutgoingEventRegistryProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
@@ -41,7 +41,7 @@ class GenerateOutgoingEventRegistryProcessor(
     private val allOutgoingEvents = mutableSetOf<KSClassDeclaration>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        logger.info("Start processing : GenerateOutgoingEventRegistryProcessor")
+        logger.info("Start processing : Generate Outgoing Event Registry")
         allOutgoingEvents.addAll(
             resolver.getSymbolsWithAnnotation(RegisterOutgoingEvent::class.java.name)
                 .filterIsInstance<KSClassDeclaration>()
@@ -55,7 +55,7 @@ class GenerateOutgoingEventRegistryProcessor(
 
         FileSpec
             .builder(
-                baseGeneratedPackage(moduleName),
+                "${baseGeneratedPackage(moduleName)}.outgoingEvent",
                 "${moduleName}OutgoingEventRegistry"
             )
             .addProperty(
@@ -99,3 +99,7 @@ class GenerateOutgoingEventRegistryProcessor(
 
     private fun getSources() = allOutgoingEvents.map { it.containingFile as KSFile }
 }
+
+private fun KSClassDeclaration.getSerialName() =
+    getAnnotationsByType(RegisterOutgoingEvent::class)
+        .first().serializeName
