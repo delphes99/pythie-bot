@@ -11,6 +11,7 @@ import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
+import fr.delphes.dynamicForm.DynamicFormRegistry
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
@@ -32,6 +33,7 @@ class Bot(
     val features: List<FeatureDefinition>,
     val featureConfigurationsType: List<FeatureConfigurationBuilderRegistry>,
     private val connectorInitializers: List<ConnectorInitializer>,
+    featuresDynamicFormRegistry: DynamicFormRegistry,
     featureSerializersModule: SerializersModule,
     val clock: Clock = SystemClock,
 ) : IncomingEventHandler,
@@ -45,6 +47,7 @@ class Bot(
             nonEditableFeatures: List<NonEditableFeature>,
             featureDefinitions: List<FeatureDefinition>,
             featureConfigurationBuilderRegistries: List<FeatureConfigurationBuilderRegistry>,
+            featuresDynamicFormRegistry: DynamicFormRegistry,
             featureSerializerModule: SerializersModule,
         ) {
             val bot = Bot(
@@ -53,6 +56,8 @@ class Bot(
                 featureDefinitions,
                 featureConfigurationBuilderRegistries,
                 connectors,
+                //TODO features : connector initializer ?
+                featuresDynamicFormRegistry,
                 featureSerializerModule
             )
 
@@ -73,6 +78,11 @@ class Bot(
 
     val connectors = connectorInitializers
         .map { connector -> connector.buildConnector(this) }
+
+    val dynamicFormRegistry = DynamicFormRegistry.compose(
+        *connectorInitializers.map { it.dynamicFormRegistry }.toTypedArray(),
+        featuresDynamicFormRegistry
+    )
 
     internal val overlayRepository =
         OverlayRepository(configuration.pathOf("overlays", "overlays.json"))

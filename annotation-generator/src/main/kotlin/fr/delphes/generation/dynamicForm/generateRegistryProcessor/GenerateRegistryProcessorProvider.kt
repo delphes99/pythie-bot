@@ -59,18 +59,18 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
                     PropertySpec.builder(
                         "${moduleName}DynamicFormRegistry",
                         DynamicFormRegistry::class,
-                        KModifier.INTERNAL
+                        KModifier.PUBLIC
                     )
                         .initializer(
                             CodeBlock.builder()
-                                .addStatement("DynamicFormRegistry(")
+                                .addStatement("DynamicFormRegistry.of(")
                                 .addStatement("listOf(")
                                 .apply {
                                     allForms.forEach { form ->
                                         val dynamicFormAnnotation =
                                             form.getAnnotationsByType(DynamicForm::class).first()
 
-                                        addStatement("%T(", DynamicFormRegistryEntry::class)
+                                        addStatement("%T.of(", DynamicFormRegistryEntry::class)
                                         addStatement("%S, ", dynamicFormAnnotation.name)
                                         addStatement("%T::class, ", form.toClassName())
                                         addStatement("listOf(")

@@ -7,6 +7,7 @@ import fr.delphes.bot.media.MediasService
 import fr.delphes.bot.monitoring.Monitoring
 import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
+import fr.delphes.dynamicForm.DynamicFormAdminModule
 import fr.delphes.feature.FeatureAdminModule
 import fr.delphes.state.StateModule
 import io.ktor.http.HttpMethod
@@ -41,6 +42,7 @@ class WebServer(
             Overlays(bot)
             ConnectorsModule(bot)
             StateModule(bot)
+            DynamicFormAdminModule(bot)
             FeatureAdminModule(bot)
             OutgoingEventKtorModule(bot)
             Monitoring(bot)

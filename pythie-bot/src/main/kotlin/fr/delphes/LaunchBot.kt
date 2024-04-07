@@ -16,6 +16,7 @@ import fr.delphes.connector.twitch.TwitchInitializer
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeatureConfigurationType
 import fr.delphes.features.featureSerializersModule
+import fr.delphes.features.generated.dynamicForm.featuresDynamicFormRegistry
 import fr.delphes.features.twitch.command.CustomCommandConfiguration
 import fr.delphes.overlay.OverlayInitializer
 import kotlinx.serialization.InternalSerializationApi
@@ -62,6 +63,7 @@ fun main() {
                 CustomCommandConfiguration(id = featureId)
             },
         ),
+        featuresDynamicFormRegistry,
         featureSerializersModule
     )
 }
