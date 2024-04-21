@@ -15,10 +15,12 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
+import fr.delphes.annotation.dynamicForm.RegisterDynamicFormDto
 import fr.delphes.annotation.incomingEvent.RegisterIncomingEvent
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
+import fr.delphes.dynamicForm.DynamicFormDTO
 import fr.delphes.generation.utils.GenerationUtils
 import fr.delphes.generation.utils.GenerationUtils.getModuleName
 import kotlinx.serialization.modules.SerializersModule
@@ -31,6 +33,10 @@ private val serializerModules = listOf(
     RegisterPolymorphic(
         RegisterOutgoingEventBuilder::class,
         OutgoingEventBuilder::class,
+    ),
+    RegisterPolymorphic(
+        RegisterDynamicFormDto::class,
+        DynamicFormDTO::class,
     ),
 )
 
