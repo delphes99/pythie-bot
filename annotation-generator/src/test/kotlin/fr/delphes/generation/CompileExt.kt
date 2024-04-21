@@ -12,18 +12,20 @@ import com.tschuchort.compiletesting.kspWithCompilation
 import com.tschuchort.compiletesting.symbolProcessorProviders
 
 fun String.shouldCompileWithProvider(
+    fileName: String,
     provider: SymbolProcessorProvider,
     assertion: KotlinCompilation.Result.() -> Unit,
 ) {
-    this.shouldCompileWithProvider(listOf(provider), assertion)
+    this.shouldCompileWithProvider(fileName, listOf(provider), assertion)
 }
 
 fun String.shouldCompileWithProvider(
+    fileName: String,
     providers: List<SymbolProcessorProvider>,
     assertion: KotlinCompilation.Result.() -> Unit,
 ) {
     val source = SourceFile.kotlin(
-        "MyEvent.kt", this
+        fileName, this
     )
     KotlinCompilation()
         .apply {
@@ -47,7 +49,7 @@ fun String.assertCompileResolver(
             throw e
         }
     }
-    shouldCompileWithProvider(AssertionSymbolProcessorProvider(saveAssertionError)) {
+    shouldCompileWithProvider("MyEvent.kt", AssertionSymbolProcessorProvider(saveAssertionError)) {
         if (assertionError != null) {
             throw assertionError!!
         }

@@ -2,6 +2,8 @@ package fr.delphes.generation.dynamicForm.generateRegistryProcessor
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import fr.delphes.dynamicForm.DynamicFormRegistry
+import fr.delphes.dynamicForm.DynamicFormType
+import fr.delphes.generation.dynamicForm.generateFormProcessor.GenerateDynamicFormProcessorProvider
 import fr.delphes.generation.loadGlobalVariable
 import fr.delphes.generation.shouldCompileWithProvider
 import io.kotest.core.spec.style.ShouldSpec
@@ -29,9 +31,12 @@ class GenerateRegistryProcessorTest : ShouldSpec({
 
             registry.shouldBeInstanceOf<DynamicFormRegistry>().should {
                 it.entries.size shouldBe 1
-                it.entries[0].name shouldBe "my-form"
-                it.entries[0].tags.shouldContainExactlyInAnyOrder("tag1", "tag2")
-                it.entries[0].clazz.simpleName shouldBe "MyForm"
+                it.entries.first() should {
+                    it.type shouldBe DynamicFormType("my-form")
+                    it.tags.shouldContainExactlyInAnyOrder("tag1", "tag2")
+                    it.clazz.simpleName shouldBe "MyForm"
+                    it.emptyForm().javaClass.simpleName shouldBe "MyFormDynamicForm"
+                }
             }
         }
     }
@@ -40,5 +45,12 @@ class GenerateRegistryProcessorTest : ShouldSpec({
 private fun String.shouldCompileWith(
     assertion: KotlinCompilation.Result.() -> Unit,
 ) {
-    shouldCompileWithProvider(GenerateRegistryProcessorProvider(), assertion)
+    shouldCompileWithProvider(
+        "MyForm.kt",
+        listOf(
+            GenerateDynamicFormProcessorProvider(),
+            GenerateRegistryProcessorProvider()
+        ),
+        assertion
+    )
 }

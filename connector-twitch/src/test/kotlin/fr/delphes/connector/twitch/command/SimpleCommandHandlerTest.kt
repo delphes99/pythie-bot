@@ -37,13 +37,13 @@ class SimpleCommandHandlerTest : ShouldSpec({
             command = command,
             clock = clock,
             responses = {
-                listOf(SendMessage("response", channel))
+                listOf(SendMessage(channel, "response"))
             }
         )
         val event = CommandAsked(channel, command, UserName("user"))
 
         simpleCommand.handle(event, bot).shouldContainExactly(
-            SendMessage("response", channel)
+            SendMessage(channel, "response")
         )
     }
 
@@ -55,7 +55,7 @@ class SimpleCommandHandlerTest : ShouldSpec({
             clock = clock,
             cooldown = Duration.ofMinutes(10),
             responses = {
-                listOf(SendMessage("response", channel))
+                listOf(SendMessage(channel, "response"))
             }
         )
         val event = CommandAsked(channel, command, UserName("user"))
@@ -75,7 +75,7 @@ class SimpleCommandHandlerTest : ShouldSpec({
             clock = clock,
             cooldown = Duration.ofMinutes(10),
             responses = {
-                listOf(SendMessage("response", channel))
+                listOf(SendMessage(channel, "response"))
             }
         )
         val event = CommandAsked(channel, command, UserName("user"))

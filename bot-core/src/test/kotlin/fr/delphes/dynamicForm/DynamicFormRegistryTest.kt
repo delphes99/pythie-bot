@@ -1,54 +1,48 @@
 package fr.delphes.dynamicForm
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.Tuple3
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
+import io.mockk.mockk
 
 class DynamicFormRegistryTest : ShouldSpec({
     should("register") {
-        val registry = DynamicFormRegistry.of(
-            DynamicFormRegistryEntry.of(
-                "someForm",
-                String::class,
-                "tag"
-            ),
-            DynamicFormRegistryEntry.of(
-                "otherForm",
-                String::class,
-                "otherTag"
-            )
+        val registry = DynamicFormRegistry.of(DynamicFormRegistryEntry.of(
+            DynamicFormType("someForm"), String::class, listOf("tag")
+        ) {
+            mockk<DynamicFormDTO<String>>()
+        }, DynamicFormRegistryEntry.of(
+            DynamicFormType("otherForm"), String::class, listOf("otherTag")
+        ) {
+            mockk<DynamicFormDTO<String>>()
+        })
+
+        registry.entries.map { Tuple3(it.type, it.clazz, it.tags) } shouldContain Tuple3(
+            DynamicFormType("someForm"), String::class, listOf("tag")
         )
 
-        registry.entries shouldContain DynamicFormRegistryEntry.of(
-            "someForm",
-            String::class,
-            "tag"
-        )
-
-        registry.entries shouldContain DynamicFormRegistryEntry.of(
-            "otherForm",
-            String::class,
-            "otherTag"
+        registry.entries.map { Tuple3(it.type, it.clazz, it.tags) } shouldContain Tuple3(
+            DynamicFormType("otherForm"), String::class, listOf("otherTag")
         )
     }
     should("don't allow duplicate form name") {
         shouldThrow<IllegalArgumentException> {
-            DynamicFormRegistry.of(
-                DynamicFormRegistryEntry.of(
-                    "duplicateName",
-                    String::class,
-                    "tag"
-                ),
-                DynamicFormRegistryEntry.of(
-                    "duplicateName",
-                    String::class,
-                    "tag2"
-                )
-            )
+            DynamicFormRegistry.of(DynamicFormRegistryEntry.of(
+                DynamicFormType("duplicateName"), String::class, listOf("tag")
+            ) {
+                mockk<DynamicFormDTO<String>>()
+            }, DynamicFormRegistryEntry.of(
+                DynamicFormType("duplicateName"), String::class, listOf("tag2")
+            ) {
+                mockk<DynamicFormDTO<String>>()
+            })
         }.shouldHaveMessage("Duplicate form name: duplicateName")
     }
     should("don't allow duplicate form name (by composing multiple registries)") {
@@ -56,66 +50,58 @@ class DynamicFormRegistryTest : ShouldSpec({
             DynamicFormRegistry.compose(
                 DynamicFormRegistry.of(
                     DynamicFormRegistryEntry.of(
-                        "duplicateName",
-                        String::class,
-                        "tag"
-                    ),
+                        DynamicFormType("duplicateName"), String::class, listOf("tag")
+                    ) {
+                        mockk<DynamicFormDTO<String>>()
+                    },
                 ),
-                DynamicFormRegistry.of(
-                    DynamicFormRegistryEntry.of(
-                        "duplicateName",
-                        String::class,
-                        "tag2"
-                    )
-                ),
+                DynamicFormRegistry.of(DynamicFormRegistryEntry.of(
+                    DynamicFormType("duplicateName"), String::class, listOf("tag2")
+                ) {
+                    mockk<DynamicFormDTO<String>>()
+                }),
             )
         }.shouldHaveMessage("Duplicate form name: duplicateName")
     }
     should("don't find the form") {
         val registry = DynamicFormRegistry.empty()
 
-        registry.find("notExistingForm").shouldBeNull()
+        registry.find(DynamicFormType("notExistingForm")).shouldBeNull()
     }
     should("find the form") {
         val registry = DynamicFormRegistry.of(
             DynamicFormRegistryEntry.of(
-                "someForm",
-                String::class,
-                "tag"
-            ),
+                DynamicFormType("someForm"), String::class, listOf("tag")
+            ) {
+                mockk<DynamicFormDTO<String>>()
+            },
         )
 
-        registry.find("someForm") shouldBe DynamicFormRegistryEntry.of(
-            "someForm",
-            String::class,
-            "tag"
-        )
+        registry.find(DynamicFormType("someForm"))
+            .shouldNotBeNull()
+            .should {
+                it.type shouldBe DynamicFormType("someForm")
+                it.clazz shouldBe String::class
+                it.tags shouldBe listOf("tag")
+            }
     }
     should("find by tag") {
         val registry = DynamicFormRegistry.of(
             DynamicFormRegistryEntry.of(
-                "someForm",
-                String::class,
-                "tag"
-            ),
+                DynamicFormType("someForm"), String::class, listOf("tag")
+            ) {
+                mockk<DynamicFormDTO<String>>()
+            },
             DynamicFormRegistryEntry.of(
-                "otherFormWithSameTag",
-                String::class,
-                "tag"
-            ),
+                DynamicFormType("otherFormWithSameTag"), String::class, listOf("tag")
+            ) {
+                mockk<DynamicFormDTO<String>>()
+            },
         )
 
-        registry.findByTag("tag").shouldContainExactlyInAnyOrder(
-            DynamicFormRegistryEntry.of(
-                "someForm",
-                String::class,
-                "tag"
-            ),
-            DynamicFormRegistryEntry.of(
-                "otherFormWithSameTag",
-                String::class,
-                "tag"
-            ),
+        registry.findByTag("tag").map { Tuple3(it.type, it.clazz, it.tags) }.shouldContainExactlyInAnyOrder(
+            Tuple3(DynamicFormType("someForm"), String::class, listOf("tag")),
+            Tuple3(DynamicFormType("otherFormWithSameTag"), String::class, listOf("tag")),
         )
     }
 })

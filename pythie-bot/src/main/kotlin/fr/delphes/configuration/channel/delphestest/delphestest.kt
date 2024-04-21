@@ -33,14 +33,14 @@ val delphestestCustomFeatures = listOf<FeatureDefinition>(
         cooldown = Duration.ofSeconds(10)
     ) {
         listOf(
-            SendMessage("Compte de test opérationnel !", channel)
+            SendMessage(channel, "Compte de test opérationnel !")
         )
     },
     CustomCommand(
         channel,
         "!ping"
     ) {
-        listOf(SendMessage("ping ?", channel))
+        listOf(SendMessage(channel, "ping ?"))
     },
     CustomCommand(
         channel,
@@ -50,8 +50,8 @@ val delphestestCustomFeatures = listOf<FeatureDefinition>(
         this.state(CommandListState.ID)?.getCommandsOf(channel)?.let { commands ->
             executeOutgoingEvent(
                 SendMessage(
-                    "Liste des commandes : ${commands.joinToString(", ")}",
-                    channel
+                    channel,
+                    "Liste des commandes : ${commands.joinToString(", ")}"
                 )
             )
         }
@@ -59,14 +59,14 @@ val delphestestCustomFeatures = listOf<FeatureDefinition>(
     CustomNewFollow(
         channel
     ) {
-        executeOutgoingEvent(SendMessage("Merci du follow ${event.data.follower.name}", channel))
+        executeOutgoingEvent(SendMessage(channel, "Merci du follow ${event.data.follower.name}"))
     },
     CustomStreamOffline(channel) {
-        executeOutgoingEvent(SendMessage("Le stream est fini, au revoir !", channel))
+        executeOutgoingEvent(SendMessage(channel, "Le stream est fini, au revoir !"))
     },
     CustomStreamOnline(channel) {
         executeOutgoingEvent(
-            SendMessage("Le stream démarre, ravi de vous revoir !", channel)
+            SendMessage(channel, "Le stream démarre, ravi de vous revoir !")
         )
     },
     CustomStreamUpdated(
@@ -74,6 +74,7 @@ val delphestestCustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
+                channel,
                 event.data.changes.joinToString(" | ") { change ->
                     when (change) {
                         is StreamChanges.Title -> {
@@ -84,8 +85,7 @@ val delphestestCustomFeatures = listOf<FeatureDefinition>(
                             "${change.oldGame?.label ?: "Sans catégorie"} ➡ ${change.newGame?.label ?: "Sans catégorie"}"
                         }
                     }
-                },
-                channel
+                }
             )
         )
     },

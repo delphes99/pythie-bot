@@ -1,13 +1,10 @@
-package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
+package fr.delphes.generation.dynamicForm
 
 import com.squareup.kotlinpoet.asTypeName
 import fr.delphes.dynamicForm.descriptor.DurationFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.MapFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
 import fr.delphes.generation.assertCompileResolver
-import fr.delphes.generation.dynamicForm.FieldWithMapper
-import fr.delphes.generation.dynamicForm.FieldWithType
-import fr.delphes.generation.dynamicForm.getFieldMeta
 import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.utils.serialization.DurationSerializer
 import io.kotest.assertions.throwables.shouldThrow

@@ -44,6 +44,7 @@ private fun String.shouldCompileWith(
     assertion: KotlinCompilation.Result.() -> Unit,
 ) {
     shouldCompileWithProvider(
+        "MyEvent.kt",
         listOf(
             GenerateOutgoingEventBuilderModuleProcessorProvider(),
             GenerateOutgoingEventRegistryProcessorProvider(),

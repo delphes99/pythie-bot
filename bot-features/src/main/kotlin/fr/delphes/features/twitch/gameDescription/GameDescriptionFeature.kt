@@ -49,8 +49,8 @@ class GameDescriptionFeature(
                     ?.also { description ->
                         executeOutgoingEvent(
                             SendMessage(
-                                description,
-                                channel
+                                channel,
+                                description
                             )
                         )
                     }

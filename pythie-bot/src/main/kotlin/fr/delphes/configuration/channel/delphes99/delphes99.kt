@@ -67,7 +67,7 @@ val wizzFilter = SourceFilter("in_game", "Wizz")
 
 const val discordInvitationLink = "https://discord.com/invite/SAdBhbu"
 
-val moderators = listOf("delphes99", "vivalinux", "gnu_coding_cafe")
+val moderators = listOf("delphes99", "vivalinux", "gnu_coding_cafe", "delphestest")
 
 fun buildShoutOut(user: UserName): ShoutOut {
     return ShoutOut(
@@ -105,7 +105,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         cooldown = Duration.ofSeconds(10)
     ) {
         executeOutgoingEvent(
-            SendMessage(discordInvitationLink, channel)
+            SendMessage(channel, discordInvitationLink)
         )
     },
     CustomCommand(
@@ -115,8 +115,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                "\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !",
-                channel
+                channel,
+                "\uD83E\uDD16 C'est moi : https://github.com/delphes99/pythie-bot, roadmap disponible : https://git.io/JOyd6, n'hésitez pas à poster vos idées !"
             )
         )
     },
@@ -146,7 +146,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel,
         "!ping"
     ) {
-        executeOutgoingEvent(SendMessage("pong", channel))
+        executeOutgoingEvent(SendMessage(channel, "pong"))
     },
     CustomCommand(
         channel,
@@ -212,7 +212,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         cooldown = secondsOf(10)
     ) {
         executeOutgoingEvent(
-            SendMessage("Coucou ${event.data.by.name} !", channel)
+            SendMessage(channel, "Coucou ${event.data.by.name} !")
         )
     },
     CustomCommand(
@@ -223,8 +223,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         this.state(CommandListState.ID)?.getCommandsOf(channel)?.let { commands ->
             executeOutgoingEvent(
                 SendMessage(
-                    "ℹ️ Commandes : ${commands.map(Command::triggerMessage).joinToString(", ")}",
-                    channel
+                    channel,
+                    "ℹ️ Commandes : ${commands.map(Command::triggerMessage).joinToString(", ")}"
                 )
             )
         }
@@ -234,8 +234,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                "\uD83D\uDC9C Merci du follow ${event.data.follower.name} \uD83D\uDE4F",
-                channel
+                channel,
+                "\uD83D\uDC9C Merci du follow ${event.data.follower.name} \uD83D\uDE4F"
             )
         )
         executeOutgoingEvent(PlaySound("welcome.mp3"))
@@ -245,8 +245,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                "💎 ${event.data.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${event.data.bitsUsed} bits. Merci beaucoup ! 💎",
-                channel
+                channel,
+                "💎 ${event.data.cheerer?.name ?: "Un utilisateur anonyme"} vient d'envoyer ${event.data.bitsUsed} bits. Merci beaucoup ! 💎"
             )
         )
     },
@@ -254,7 +254,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel
     ) {
         executeOutgoingEvent(
-            SendMessage("⭐ Merci pour le sub ${event.data.sub.name} \uD83D\uDE4F", channel)
+            SendMessage(channel, "⭐ Merci pour le sub ${event.data.sub.name} \uD83D\uDE4F")
         )
         executeOutgoingEvent(
             PlaySound("thank-you.mp3")
@@ -263,7 +263,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     CustomStreamOnline(
         channel
     ) {
-        executeOutgoingEvent(SendMessage("\uD83D\uDC4B Le stream démarre, ravi de vous revoir !", channel))
+        executeOutgoingEvent(SendMessage(channel, "\uD83D\uDC4B Le stream démarre, ravi de vous revoir !"))
         executeOutgoingEvent(
             DiscordEmbeddedMessage(
                 event.data.title,
@@ -283,7 +283,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel
     ) {
         executeOutgoingEvent(
-            SendMessage("\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18", channel)
+            SendMessage(channel, "\uD83D\uDE2D Le stream est fini, à la prochaine et des bisous ! \uD83D\uDE18")
         )
     },
     CustomStreamUpdated(
@@ -291,6 +291,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
+                channel,
                 event.data.changes.joinToString(" | ") { change ->
                     when (change) {
                         is StreamChanges.Title -> {
@@ -301,8 +302,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
                             "\uD83D\uDD04 ${change.oldGame?.label ?: "Sans catégorie"} ➡ ${change.newGame?.label ?: "Sans catégorie"}"
                         }
                     }
-                },
-                channel
+                }
             )
         )
     },
@@ -312,8 +312,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         val clip = event.data.clip
         executeOutgoingEvent(
             SendMessage(
-                "\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}",
-                channel
+                channel,
+                "\uD83C\uDFAC ${clip.creator.name} vient de poster un nouveau clip « ${clip.title} » : ${clip.url}"
             )
         )
         executeOutgoingEvent(
@@ -345,8 +345,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                "\uD83E\uDDED ${event.data.leader.name} explore twitch et fait escale ici avec ses ${event.data.numberOfRaiders} acolytes.",
-                channel
+                channel,
+                "\uD83E\uDDED ${event.data.leader.name} explore twitch et fait escale ici avec ses ${event.data.numberOfRaiders} acolytes."
             )
         )
         executeOutgoingEvent(buildShoutOut(event.data.leader))
@@ -369,19 +369,19 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         executeOutgoingEvent(RefreshSource("in_game", overlayItemId))
         executeOutgoingEvent(Pause(Duration.ofSeconds(1)))
         executeOutgoingEvent(PlaySound("msn-start.mp3"))
-        executeOutgoingEvent(SendMessage("Ready to go", channel))
+        executeOutgoingEvent(SendMessage(channel, "Ready to go"))
     },
     NewGuildMemberFeature {
         executeOutgoingEvent(
             SendMessage(
-                "${event.data.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même ➡ $discordInvitationLink !",
-                channel
+                channel,
+                "${event.data.user} vient de rejoindre le discord \uD83D\uDC6A, n'hésitez à faire de même ➡ $discordInvitationLink !"
             )
         )
     },
     SceneChangedFeature {
         if (event.data.newScene == "End credits") {
-            executeOutgoingEvent(SendMessage("Ca sent la fin", channel))
+            executeOutgoingEvent(SendMessage(channel, "Ca sent la fin"))
         }
     },
     RewardRedeem(
@@ -405,7 +405,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel,
         Delphes99Rewards.DEV_TEST2
     ) {
-        executeOutgoingEvent(SendMessage("-> test dev 2", channel))
+        executeOutgoingEvent(SendMessage(channel, "-> test dev 2"))
         executeOutgoingEvent(
             ChangeItemPosition(
                 WEBCAM_ID,
@@ -419,7 +419,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         channel,
         Delphes99Rewards.DEV_TEST3
     ) {
-        executeOutgoingEvent(SendMessage("-> test dev 3", channel))
+        executeOutgoingEvent(SendMessage(channel, "-> test dev 3"))
         executeOutgoingEvent(
             ChangeItemPosition(
                 WEBCAM_ID,
@@ -489,11 +489,11 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         newVipAnnouncer = {
             executeOutgoingEvent(
                 SendMessage(
+                    channel,
                     listOfNotNull(
                         "\uD83D\uDC51 ${event.rewardRedemption.user.name} devient notre VIP. \uD83D\uDC51",
                         event.oldVOTH?.let { oldVOTH -> " | \uD83D\uDC80 RIP ${oldVOTH.user} [règne : ${event.durationOfReign?.prettyPrint()}] ! \uD83D\uDC80" }
-                    ).joinToString(" "),
-                    channel
+                    ).joinToString(" ")
                 )
             )
             executeOutgoingEvent(
@@ -509,10 +509,10 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         state(VOTHState.idFor(channel))?.getReignsFor(event.data.by)?.also { stats ->
             executeOutgoingEvent(
                 SendMessage(
+                    channel,
                     "⏲️Durée totale : ${stats.totalTime.prettyPrint()} | " +
                             "\uD83C\uDFC6 Victoires : ${stats.numberOfReigns} | " +
-                            "\uD83D\uDCB8 Dépensés : ${stats.totalCost}",
-                    channel
+                            "\uD83D\uDCB8 Dépensés : ${stats.totalCost}"
                 )
             )
         }
@@ -530,12 +530,12 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
                 val top3 = stats.getOrNull(2)
                 executeOutgoingEvent(
                     SendMessage(
+                        channel,
                         listOfNotNull(
                             top1?.let { "\uD83E\uDD47 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
                             top2?.let { "\uD83E\uDD48 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
                             top3?.let { "\uD83E\uDD49 ${it.user.name} [${it.totalTime.prettyPrint()}]" },
-                        ).joinToString(" "),
-                        channel
+                        ).joinToString(" ")
                     )
                 )
             }
@@ -546,8 +546,8 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
     ) {
         executeOutgoingEvent(
             SendMessage(
-                "⚠️ ${event.data.user.name} a utilisé le reward hors bot ! ⚠️",
-                channel
+                channel,
+                "⚠️ ${event.data.user.name} a utilisé le reward hors bot ! ⚠️"
             )
         )
     },

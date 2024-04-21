@@ -1,6 +1,7 @@
 package fr.delphes.generation.dynamicForm
 
 import com.google.devtools.ksp.getAnnotationsByType
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.asTypeName
@@ -49,4 +50,17 @@ fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
 
         else -> throw CompilationCheckException("Field [${this.simpleName.asString()}] : Unknown type and no mapper")
     }
+}
+
+fun KSClassDeclaration.getDescriptionFieldsMetadata(): Sequence<FieldMetadata> {
+    return getDescriptionFields().map(KSPropertyDeclaration::getFieldMeta)
+}
+
+fun KSClassDeclaration.getDescriptionFields(): Sequence<KSPropertyDeclaration> {
+    val constructorParameterNames = primaryConstructor
+        ?.parameters
+        ?.mapNotNull { it.name }
+        ?: emptyList()
+
+    return getAllProperties().filter { it.simpleName in constructorParameterNames }
 }

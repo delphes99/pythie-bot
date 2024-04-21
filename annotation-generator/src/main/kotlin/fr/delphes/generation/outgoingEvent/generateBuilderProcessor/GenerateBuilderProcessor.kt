@@ -10,7 +10,6 @@ import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -27,9 +26,9 @@ import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
-import fr.delphes.generation.dynamicForm.FieldMetadata
 import fr.delphes.generation.dynamicForm.FieldWithType
-import fr.delphes.generation.dynamicForm.getFieldMeta
+import fr.delphes.generation.dynamicForm.getDescriptionFields
+import fr.delphes.generation.dynamicForm.getDescriptionFieldsMetadata
 import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.utils.GenerationUtils.getModuleName
@@ -191,19 +190,6 @@ class GenerateOutgoingEventBuilderModuleProcessor(
         if (!outgoingEventClass.getDescriptionFields().all { it.isAnnotationPresent(FieldDescription::class) }) {
             throw CompilationCheckException("${outgoingEventClass.qualifiedName?.asString()} must have all fields with description")
         }
-    }
-
-    private fun KSClassDeclaration.getDescriptionFieldsMetadata(): Sequence<FieldMetadata> {
-        return getDescriptionFields().map(KSPropertyDeclaration::getFieldMeta)
-    }
-
-    private fun KSClassDeclaration.getDescriptionFields(): Sequence<KSPropertyDeclaration> {
-        val constructorParameterNames = primaryConstructor
-            ?.parameters
-            ?.mapNotNull { it.name }
-            ?: emptyList()
-
-        return getAllProperties().filter { it.simpleName in constructorParameterNames }
     }
 
     companion object {

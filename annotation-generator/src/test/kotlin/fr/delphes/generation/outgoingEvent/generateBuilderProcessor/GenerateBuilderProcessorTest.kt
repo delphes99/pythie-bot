@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
 import java.time.Duration
 
 class GenerateBuilderProcessorTest : ShouldSpec({
-    should("outgoing event must not have field named 'type'") {
+    should("outgoing event must have field named 'type'") {
         """
             import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
@@ -34,7 +34,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             ) : OutgoingEvent
         """.shouldCompileWith {
             exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
-            messages shouldContain "MyEvent must no have a field named 'type'"
+            messages shouldContain "MyEvent must have a field named 'type'"
         }
     }
     //TODO verify all parents
@@ -331,5 +331,5 @@ class GenerateBuilderProcessorTest : ShouldSpec({
 private fun String.shouldCompileWith(
     assertion: KotlinCompilation.Result.() -> Unit,
 ) {
-    shouldCompileWithProvider(GenerateOutgoingEventBuilderModuleProcessorProvider(), assertion)
+    shouldCompileWithProvider("MyEvent.kt", GenerateOutgoingEventBuilderModuleProcessorProvider(), assertion)
 }

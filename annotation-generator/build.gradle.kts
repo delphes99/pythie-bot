@@ -4,9 +4,11 @@ plugins {
     id("fr.delphes.kotlin-conventions")
     alias(libs.plugins.ksp)
     id(libs.plugins.kotlin.jvm.get().pluginId)
+    id(libs.plugins.kotlin.serialization.get().pluginId)
 }
 
 dependencies {
+    implementation(libs.bundles.kotlin.common)
     implementation(libs.ksp)
     implementation(libs.kotlin.poet)
     implementation(project(":bot-core"))

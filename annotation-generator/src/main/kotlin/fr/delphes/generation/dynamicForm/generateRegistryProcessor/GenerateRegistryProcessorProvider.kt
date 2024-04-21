@@ -19,6 +19,8 @@ import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.dynamicForm.DynamicForm
 import fr.delphes.dynamicForm.DynamicFormRegistry
 import fr.delphes.dynamicForm.DynamicFormRegistryEntry
+import fr.delphes.dynamicForm.DynamicFormType
+import fr.delphes.generation.dynamicForm.generateFormProcessor.GenerateDynamicFormProcessor
 import fr.delphes.generation.utils.GenerationUtils
 
 class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
@@ -71,14 +73,17 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
                                             form.getAnnotationsByType(DynamicForm::class).first()
 
                                         addStatement("%T.of(", DynamicFormRegistryEntry::class)
-                                        addStatement("%S, ", dynamicFormAnnotation.name)
+                                        addStatement("%T(%S), ", DynamicFormType::class, dynamicFormAnnotation.name)
                                         addStatement("%T::class, ", form.toClassName())
                                         addStatement("listOf(")
                                         val tags = dynamicFormAnnotation.tags
                                             .joinToString(",") { "\"$it\"" }
                                         addStatement(tags)
                                         addStatement(")")
-                                        addStatement("),")
+                                        addStatement(
+                                            ") { %T() },",
+                                            GenerateDynamicFormProcessor.getGeneratedClassNameFor(form, moduleName)
+                                        )
                                     }
                                 }
                                 .addStatement(")")

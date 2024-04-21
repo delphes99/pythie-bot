@@ -13,11 +13,11 @@ import fr.delphes.twitch.irc.IrcClient
 @RegisterOutgoingEvent("twitch-send-message")
 @DynamicForm("twitch-send-message-form", ["outgoing-event"])
 data class SendMessage(
-    @FieldDescription("description of text")
-    val text: String,
     @FieldMapper(TwitchChannelMapper::class)
     @FieldDescription("description of channel")
     override val channel: TwitchChannel,
+    @FieldDescription("description of text")
+    val text: String,
 ) : TwitchChatOutgoingEvent {
     override suspend fun executeOnTwitch(
         chat: IrcClient,

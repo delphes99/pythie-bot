@@ -22,7 +22,7 @@ class GameDescriptionTest : ShouldSpec({
             `current game is`(GAME)
         }.hasReceived(CommandAsked(channel, Command("!tufekoi"), UserName("user")))
 
-        executionContext.shouldHaveExecuteOutgoingEvent(SendMessage("description", channel))
+        executionContext.shouldHaveExecuteOutgoingEvent(SendMessage(channel, "description"))
     }
     should("describe the current (with other gameId implementation)") {
         val feature = GameDescriptionFeature(channel, "!tufekoi", GameEnum.GAME to "description")
@@ -31,7 +31,7 @@ class GameDescriptionTest : ShouldSpec({
             `current game is`(GAME)
         }.hasReceived(CommandAsked(channel, Command("!tufekoi"), UserName("user")))
 
-        executionContext.shouldHaveExecuteOutgoingEvent(SendMessage("description", channel))
+        executionContext.shouldHaveExecuteOutgoingEvent(SendMessage(channel, "description"))
     }
     should("do nothing when no description") {
         val feature = GameDescriptionFeature(channel, "!tufekoi", GAME_ID to "description")
@@ -40,7 +40,7 @@ class GameDescriptionTest : ShouldSpec({
             `current game is`(OTHER_GAME)
         }.hasReceived(CommandAsked(channel, Command("!tufekoi"), UserName("user")))
 
-        executionContext.shouldHaveNotExecuteOutgoingEvent(SendMessage("description", channel))
+        executionContext.shouldHaveNotExecuteOutgoingEvent(SendMessage(channel, "description"))
     }
 }) {
     companion object {
