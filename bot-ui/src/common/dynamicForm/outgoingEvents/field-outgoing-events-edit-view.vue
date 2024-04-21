@@ -28,13 +28,13 @@
 
 <script lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
-import {FieldDescriptor} from "@/common/describableForm/field-descriptor";
-import {OutgoingEventsDescriptor} from "@/common/describableForm/outgoingEvents/outgoing-events-descriptor";
 import UiButtonType from "@/common/designSystem/button/ui-button.type";
 import UiButton from "@/common/designSystem/button/ui-button.vue";
 import UiSelect from "@/common/designSystem/form/select/ui-select.vue";
 import UiModal from "@/common/designSystem/modal/ui-modal.vue";
 import {useModal} from "@/common/designSystem/modal/useModal";
+import {FieldDescriptor} from "@/common/dynamicForm/field-descriptor";
+import {OutgoingEventsDescriptor} from "@/common/dynamicForm/outgoingEvents/outgoing-events-descriptor";
 import {autowired} from "@/common/utils/injection.util";
 import {OutgoingEventType} from "@/features/outgoingevents/outgoing-event";
 import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";

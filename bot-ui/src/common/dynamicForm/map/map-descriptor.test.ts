@@ -1,6 +1,6 @@
-import {FieldValue} from "@/common/describableForm/field-descriptor";
-import {FieldDescriptorType} from "@/common/describableForm/field-descriptor-type";
-import {MapDescriptor} from "@/common/describableForm/map/map-descriptor";
+import {FieldValue} from "@/common/dynamicForm/field-descriptor";
+import {FieldDescriptorType} from "@/common/dynamicForm/field-descriptor-type";
+import {MapDescriptor} from "@/common/dynamicForm/map/map-descriptor";
 import {describe, expect, it} from "vitest";
 
 describe("Map descriptor", () => {

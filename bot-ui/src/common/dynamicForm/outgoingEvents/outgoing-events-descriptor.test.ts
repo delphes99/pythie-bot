@@ -1,6 +1,6 @@
-import {FieldValue} from "@/common/describableForm/field-descriptor";
-import {OutgoingEventsDescriptor} from "@/common/describableForm/outgoingEvents/outgoing-events-descriptor";
-import {TestFieldDescriptor} from "@/common/describableForm/test-field-descriptor.test.utils";
+import {FieldValue} from "@/common/dynamicForm/field-descriptor";
+import {OutgoingEventsDescriptor} from "@/common/dynamicForm/outgoingEvents/outgoing-events-descriptor";
+import {TestFieldDescriptor} from "@/common/dynamicForm/test-field-descriptor.test.utils";
 import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
 import {describe, expect, it} from "vitest";
 

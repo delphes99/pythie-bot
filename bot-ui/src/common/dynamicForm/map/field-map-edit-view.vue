@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts" setup>
-import {MapDescriptor} from "@/common/describableForm/map/map-descriptor";
 import UiTextfield from "@/common/designSystem/form/textfield/ui-textfield.vue";
+import {MapDescriptor} from "@/common/dynamicForm/map/map-descriptor";
 import {computed, PropType} from "vue";
 
 const emits = defineEmits<{

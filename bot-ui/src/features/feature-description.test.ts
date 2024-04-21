@@ -1,4 +1,4 @@
-import {TestFieldDescriptor} from "@/common/describableForm/test-field-descriptor.test.utils";
+import {TestFieldDescriptor} from "@/common/dynamicForm/test-field-descriptor.test.utils";
 import FeatureDescription from "@/features/feature-description";
 import {describe, expect, it} from "vitest";
 

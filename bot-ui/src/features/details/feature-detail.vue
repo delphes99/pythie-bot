@@ -12,9 +12,9 @@
 
 <script lang="ts" setup>
 import {AppInjectionKeys} from "@/app.injection.keys";
-import {FieldDescriptor} from "@/common/describableForm/field-descriptor";
 import UiButton from "@/common/designSystem/button/ui-button.vue";
 import UiPanel from "@/common/designSystem/panel/ui-panel.vue";
+import {FieldDescriptor} from "@/common/dynamicForm/field-descriptor";
 import {autowired} from "@/common/utils/injection.util";
 import {ref} from "vue";
 import {useI18n} from "vue-i18n";

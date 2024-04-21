@@ -1,5 +1,5 @@
-import {DurationDescriptor} from "@/common/describableForm/duration/duration-descriptor";
-import {FieldValue} from "@/common/describableForm/field-descriptor";
+import {DurationDescriptor} from "@/common/dynamicForm/duration/duration-descriptor";
+import {FieldValue} from "@/common/dynamicForm/field-descriptor";
 import {Duration} from "@/common/utils/duration.utils";
 import {describe, expect, it} from "vitest";
 

@@ -1,7 +1,7 @@
-import {FieldDescriptor, FieldValue} from "@/common/describableForm/field-descriptor";
-import {FieldDescriptorType} from "@/common/describableForm/field-descriptor-type";
-import {DescriptorJsonType} from "@/common/describableForm/field-descriptor.factory";
-import FieldMapEditView from "@/common/describableForm/map/field-map-edit-view.vue";
+import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field-descriptor";
+import {FieldDescriptorType} from "@/common/dynamicForm/field-descriptor-type";
+import {DescriptorJsonType} from "@/common/dynamicForm/field-descriptor.factory";
+import FieldMapEditView from "@/common/dynamicForm/map/field-map-edit-view.vue";
 
 export class MapDescriptor implements FieldDescriptor<string> {
     type: FieldDescriptorType = FieldDescriptorType.MAP;
