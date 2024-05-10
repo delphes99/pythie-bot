@@ -4,7 +4,7 @@ import {DescriptorJsonType} from "@/common/dynamicForm/field-descriptor.factory"
 import FieldStringEditView from "@/common/dynamicForm/string/field-string-edit-view.vue";
 
 export class StringDescriptor implements FieldDescriptor<string> {
-    type: FieldDescriptorType = FieldDescriptorType.STRING
+    static readonly type: FieldDescriptorType = FieldDescriptorType.STRING
 
     constructor(
         readonly description: string,
@@ -24,7 +24,7 @@ export class StringDescriptor implements FieldDescriptor<string> {
     }
 
     static fromJson(json: DescriptorJsonType): StringDescriptor {
-        if (json.type !== FieldDescriptorType.STRING) {
+        if (json.type !== this.type) {
             throw new Error(`Cannot deserialize ${json.type} as StringDescriptor`);
         }
 

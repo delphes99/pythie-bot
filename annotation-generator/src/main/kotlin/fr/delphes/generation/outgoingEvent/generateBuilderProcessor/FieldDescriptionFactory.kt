@@ -3,17 +3,33 @@ package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ksp.toClassName
 import fr.delphes.generation.dynamicForm.FieldMetadata
+import fr.delphes.generation.dynamicForm.FieldWithFormList
 import fr.delphes.generation.dynamicForm.FieldWithMapper
 import fr.delphes.generation.dynamicForm.FieldWithType
 
 object FieldDescriptionFactory {
     fun buildDescription(builder: FunSpec.Builder, property: FieldMetadata) {
         with(builder) {
-            addCode("%T(", property.descriptionClass)
-            addStatement("fieldName=\"${property.name}\",")
-            addStatement("description=\"${property.description}\",")
-            addStatement("value=${property.name},")
-            addCode("),\n")
+            when (property) {
+                is FieldWithType,
+                is FieldWithMapper,
+                -> {
+                    addCode("%T(", property.descriptionClass)
+                    addStatement("fieldName=\"${property.name}\",")
+                    addStatement("description=\"${property.description}\",")
+                    addStatement("value=${property.name},")
+                    addCode("),\n")
+                }
+
+                is FieldWithFormList -> {
+                    addCode("%T(", property.descriptionClass)
+                    addStatement("fieldName=\"${property.name}\",")
+                    addStatement("description=\"${property.description}\",")
+                    addStatement("formFamily=\"${property.formFamily}\",")
+                    addStatement("value=${property.name},")
+                    addCode("),\n")
+                }
+            }
         }
     }
 
@@ -28,6 +44,8 @@ object FieldDescriptionFactory {
             is FieldWithType -> {
                 builder.addCode("this.${property.name}")
             }
+
+            is FieldWithFormList -> TODO()
         }
     }
 }

@@ -1,7 +1,8 @@
 <template>
   <fieldset class="border p-2">
+    <legend v-if="props.title">{{ props.title }}</legend>
     <ui-button label="common.add"
-               @click="openAddEvent"
+               @click="openAddForm"
                :type="UiButtonType.Primary"/>
     <fieldset v-for="item in items" :key="item.id" class="border p-2">
       <legend>{{ item.type }}</legend>
@@ -11,15 +12,16 @@
         />
       </div>
       <ui-button label="common.delete"
-                 :type="UiButtonType.Warning"/>
+                 :type="UiButtonType.Warning"
+                 @click="deleteForm(item.id)"/>
     </fieldset>
   </fieldset>
-  <ui-modal title="common.add" v-model:is-open="isAddEventOpened">
-    <ui-select v-model="selectedType" :options="itemTypes" label="feature.outgoingEvents">
+  <ui-modal title="common.add" v-model:is-open="isAddFormOpened">
+    <ui-select v-model="selectedType" :options="itemTypes" :label="tag">
     </ui-select>
     <ui-button
         label="common.add"
-        @click="addEvent"
+        @click="addForm"
         :type="UiButtonType.Primary"/>
   </ui-modal>
 </template>
@@ -47,10 +49,14 @@ const props = defineProps({
   tag: {
     type: String,
     required: true,
+  },
+  title: {
+    type: String,
+    default: null,
   }
 })
 
-const {isOpen: isAddEventOpened, open: openAddEvent, close: closeAddEvent} = useModal()
+const {isOpen: isAddFormOpened, open: openAddForm, close: closeAddForm} = useModal()
 const selectedType = ref<DynamicFormType | null>(null)
 const itemTypes = ref<UiSelectOption<DynamicFormType>[]>([])
 const items = ref<Item[]>([])
@@ -62,7 +68,7 @@ dynamicFormService.getFormsByTag(props.tag).then(itemsType => {
   itemTypes.value = UiSelectOption.forString(itemsType)
 })
 
-async function addEvent() {
+async function addForm() {
   if (selectedType.value) {
     const description = await dynamicFormService.getForm(selectedType.value)
     items.value = [
@@ -73,7 +79,11 @@ async function addEvent() {
         descriptors: description.descriptors
       }
     ]
-    closeAddEvent()
+    closeAddForm()
   }
+}
+
+function deleteForm(id: string) {
+  items.value = items.value.filter(item => item.id !== id)
 }
 </script>

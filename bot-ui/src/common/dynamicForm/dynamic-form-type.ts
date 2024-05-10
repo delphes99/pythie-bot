@@ -1,1 +1,1 @@
-export type DynamicFormType = string;
+export type DynamicFormType = string

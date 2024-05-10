@@ -1,6 +1,6 @@
 package fr.delphes.bot.event.outgoing
 
-import fr.delphes.annotation.dynamicForm.DynamicFormTag
+import fr.delphes.annotation.dynamicForm.DynamicFormParent
 
-@DynamicFormTag("outgoing-event")
+@DynamicFormParent("outgoing-event")
 interface OutgoingEvent

@@ -75,7 +75,7 @@ class GenerateDynamicFormProcessor(
                         addParameter(
                             ParameterSpec.builder(
                                 property.name,
-                                property.fieldType,
+                                property.fieldType
                             ).defaultValue(property.defaultValue).apply {
                                 if (property is FieldWithType && property.serializer != null) {
                                     addAnnotation(

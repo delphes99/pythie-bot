@@ -16,12 +16,12 @@ class GenerateRegistryProcessorTest : ShouldSpec({
     should("generate dynamic form registry") {
         """
             import fr.delphes.annotation.dynamicForm.DynamicForm
-            import fr.delphes.annotation.dynamicForm.DynamicFormTag
+            import fr.delphes.annotation.dynamicForm.DynamicFormParent
             import fr.delphes.annotation.dynamicForm.FieldDescription
             
             @DynamicForm("my-form")
-            @DynamicFormTag("tag1")
-            @DynamicFormTag("tag2")
+            @DynamicFormParent("tag1")
+            @DynamicFormParent("tag2")
             class MyForm(
                 @FieldDescription("description")
                 val myField: String,
@@ -46,11 +46,11 @@ class GenerateRegistryProcessorTest : ShouldSpec({
     should("register tag from interface") {
         """
             import fr.delphes.annotation.dynamicForm.DynamicForm
-            import fr.delphes.annotation.dynamicForm.DynamicFormTag
+            import fr.delphes.annotation.dynamicForm.DynamicFormParent
             import fr.delphes.annotation.dynamicForm.FieldDescription
             
-            @DynamicFormTag("tag1")
-            @DynamicFormTag("tag2")
+            @DynamicFormParent("tag1")
+            @DynamicFormParent("tag2")
             interface FormInterface
             
             @DynamicForm("my-form")
@@ -78,11 +78,11 @@ class GenerateRegistryProcessorTest : ShouldSpec({
     should("register tag from multiple interface layer") {
         """
             import fr.delphes.annotation.dynamicForm.DynamicForm
-            import fr.delphes.annotation.dynamicForm.DynamicFormTag
+            import fr.delphes.annotation.dynamicForm.DynamicFormParent
             import fr.delphes.annotation.dynamicForm.FieldDescription
             
-            @DynamicFormTag("tag1")
-            @DynamicFormTag("tag2")
+            @DynamicFormParent("tag1")
+            @DynamicFormParent("tag2")
             interface FormInterface
             
             interface IntermediateFormInterface : FormInterface

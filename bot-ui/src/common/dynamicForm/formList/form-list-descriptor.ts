@@ -1,36 +1,30 @@
+import {DynamicFormFamily} from "@/common/dynamicForm/dynamic-form-family";
 import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field-descriptor";
 import {FieldDescriptorType} from "@/common/dynamicForm/field-descriptor-type";
 import {DescriptorJsonType} from "@/common/dynamicForm/field-descriptor.factory";
-import FieldMapEditView from "@/common/dynamicForm/map/field-map-edit-view.vue";
+import FieldFormListEditView from "@/common/dynamicForm/formList/field-form-list-edit-view.vue";
 
-export class MapDescriptor implements FieldDescriptor<string> {
-    static readonly type: FieldDescriptorType = FieldDescriptorType.MAP;
+export class FormListDescriptor implements FieldDescriptor<string> {
+    static readonly type: FieldDescriptorType = FieldDescriptorType.FORM_LIST;
 
     constructor(
         readonly description: string,
         readonly fieldName: string,
+        readonly formFamily: DynamicFormFamily,
         readonly initialValue: string,
         readonly actualValue: string = initialValue
     ) {
     }
 
-    withValue(newValue: string): MapDescriptor {
-        return new MapDescriptor(
-            this.description,
-            this.fieldName,
-            this.initialValue,
-            newValue
-        );
-    }
-
-    static fromJson(json: DescriptorJsonType): MapDescriptor {
+    static fromJson(json: DescriptorJsonType): FormListDescriptor {
         if (json.type !== this.type) {
-            throw new Error(`Cannot deserialize ${json.type} as MapDescriptor`);
+            throw new Error(`Cannot deserialize ${json.type} as FormListDescriptor`);
         }
 
-        return new MapDescriptor(
+        return new FormListDescriptor(
             json.description,
             json.fieldName,
+            json.formFamily,
             JSON.stringify(json.value)
         );
     }
@@ -40,6 +34,6 @@ export class MapDescriptor implements FieldDescriptor<string> {
     }
 
     viewComponent() {
-        return FieldMapEditView
+        return FieldFormListEditView
     }
 }

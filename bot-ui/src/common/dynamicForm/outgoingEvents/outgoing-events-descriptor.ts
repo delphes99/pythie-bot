@@ -6,7 +6,7 @@ import {OutgoingEvent} from "@/features/outgoingevents/outgoing-event";
 import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
 
 export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]> {
-    type: FieldDescriptorType = FieldDescriptorType.OUTGOING_EVENTS
+    static readonly type: FieldDescriptorType = FieldDescriptorType.OUTGOING_EVENTS
 
     constructor(
         readonly fieldName: string,
@@ -62,7 +62,7 @@ export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]
     }
 
     static fromJson(json: DescriptorJsonType): OutgoingEventsDescriptor {
-        if (json.type !== FieldDescriptorType.OUTGOING_EVENTS) {
+        if (json.type !== this.type) {
             throw new Error(`Cannot deserialize ${json.type} as OutgoingEventsDescriptor`);
         }
         return new OutgoingEventsDescriptor(

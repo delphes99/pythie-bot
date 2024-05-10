@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.kumo)
     testImplementation(libs.bundles.kotlin.test)
     testImplementation(project(":utils-test"))
+    implementation(project(":annotation"))
     implementation(project(":annotation-generator"))
     ksp(project(":annotation-generator"))
 }

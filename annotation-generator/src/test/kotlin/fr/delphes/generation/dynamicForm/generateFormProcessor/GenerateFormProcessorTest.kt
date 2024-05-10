@@ -5,6 +5,7 @@ import fr.delphes.annotation.dynamicForm.RegisterDynamicFormDto
 import fr.delphes.dynamicForm.DynamicFormDTO
 import fr.delphes.dynamicForm.DynamicFormDescription
 import fr.delphes.dynamicForm.DynamicFormType
+import fr.delphes.dynamicForm.descriptor.FormListFieldDescriptor
 import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
 import fr.delphes.generation.shouldCompileWithProvider
 import io.kotest.assertions.withClue
@@ -155,6 +156,30 @@ class GenerateBuilderProcessorTest : ShouldSpec({
                 DynamicFormType("serializeName"),
                 StringFieldDescriptor("myField", "description", "value"),
                 StringFieldDescriptor("myField2", "second description", "second value"),
+            )
+        }
+    }
+    should("should have map list of dynamic forms") {
+        """
+            import fr.delphes.annotation.dynamicForm.FieldDescription
+            import fr.delphes.annotation.dynamicForm.DynamicForm
+            import fr.delphes.generation.dynamicForm.generateFormProcessor.SubForms
+
+            @DynamicForm("serializeName")
+            class MyForm(
+                @FieldDescription("description")
+                val subForms: List<SubForms>,
+            )
+        """.shouldCompileWith {
+            val loadedClass = classLoader.loadClass("fr.delphes.test.generated.dynamicForm.MyFormDynamicForm")
+            loadedClass.getDeclaredField("subForms").type shouldBe List::class.java
+
+            val newInstance = loadedClass
+                .getConstructor(List::class.java)
+                .newInstance(emptyList<SubForms>())
+            loadedClass.getMethod("description").invoke(newInstance) shouldBe DynamicFormDescription(
+                DynamicFormType("serializeName"),
+                FormListFieldDescriptor("subForms", "description", "form-family", emptyList()),
             )
         }
     }

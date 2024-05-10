@@ -5,7 +5,7 @@ import {DescriptorJsonType} from "@/common/dynamicForm/field-descriptor.factory"
 import {Duration, formatDuration, parseDuration} from "@/common/utils/duration.utils";
 
 export class DurationDescriptor implements FieldDescriptor<string> {
-    readonly type: FieldDescriptorType = FieldDescriptorType.DURATION
+    static readonly type: FieldDescriptorType = FieldDescriptorType.DURATION
 
     constructor(
         readonly description: string,
@@ -43,7 +43,7 @@ export class DurationDescriptor implements FieldDescriptor<string> {
     }
 
     static fromJson(json: DescriptorJsonType): DurationDescriptor {
-        if (json.type !== FieldDescriptorType.DURATION) {
+        if (json.type !== this.type) {
             throw new Error(`Cannot deserialize ${json.type} as DurationDescriptor`);
         }
         return new DurationDescriptor(
