@@ -168,7 +168,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
 
     private fun checkNoTypeField(outgoingEventClass: KSClassDeclaration) {
         if (!outgoingEventClass.getDescriptionFields().none { it.simpleName.asString() == "type" }) {
-            throw CompilationCheckException("${outgoingEventClass.qualifiedName?.asString()} must no have a field named 'type'")
+            throw CompilationCheckException("${outgoingEventClass.qualifiedName?.asString()} must have a field named 'type'")
         }
     }
 
