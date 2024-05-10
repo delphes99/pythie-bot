@@ -11,7 +11,7 @@ import fr.delphes.twitch.ChannelTwitchApi
 import fr.delphes.twitch.TwitchChannel
 
 @RegisterOutgoingEvent("twitch-activate-reward")
-@DynamicForm("twitch-activate-reward-form", ["outgoing-event"])
+@DynamicForm("twitch-activate-reward-form")
 data class ActivateReward(
     @FieldDescription("reward to activate")
     @FieldMapper(ChannelRewardIdMapper::class)

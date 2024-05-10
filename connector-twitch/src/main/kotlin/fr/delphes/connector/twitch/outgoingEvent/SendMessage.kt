@@ -11,7 +11,7 @@ import fr.delphes.twitch.irc.IrcChannel
 import fr.delphes.twitch.irc.IrcClient
 
 @RegisterOutgoingEvent("twitch-send-message")
-@DynamicForm("twitch-send-message-form", ["outgoing-event"])
+@DynamicForm("twitch-send-message-form")
 data class SendMessage(
     @FieldMapper(TwitchChannelMapper::class)
     @FieldDescription("description of channel")

@@ -1,5 +1,7 @@
 package fr.delphes.generation.utils
 
+import com.google.devtools.ksp.closestClassDeclaration
+import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
@@ -28,6 +30,14 @@ fun <T : Annotation> KSPropertyDeclaration.getAnnotationValue(
 private fun <T : Annotation> KSAnnotation.isAnnotation(annotationClass: KClass<T>): Boolean {
     return shortName.getShortName() == annotationClass.simpleName
             && annotationType.resolve().declaration.qualifiedName?.asString() == annotationClass.qualifiedName
+}
+
+fun <T : Annotation> KSClassDeclaration.getAllAnnotations(annotationType: KClass<T>): Sequence<T> {
+    return getAnnotationsByType(annotationType).plus(
+        superTypes
+            .map { superType -> superType.resolve().declaration.closestClassDeclaration() }
+            .filterNotNull()
+            .flatMap { superType -> superType.getAllAnnotations(annotationType) })
 }
 
 fun KSClassDeclaration.toNonAggregatingDependencies() =

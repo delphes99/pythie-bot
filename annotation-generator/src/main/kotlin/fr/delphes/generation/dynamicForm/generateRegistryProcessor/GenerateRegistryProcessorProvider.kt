@@ -17,11 +17,13 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.dynamicForm.DynamicForm
+import fr.delphes.annotation.dynamicForm.DynamicFormTag
 import fr.delphes.dynamicForm.DynamicFormRegistry
 import fr.delphes.dynamicForm.DynamicFormRegistryEntry
 import fr.delphes.dynamicForm.DynamicFormType
 import fr.delphes.generation.dynamicForm.generateFormProcessor.GenerateDynamicFormProcessor
 import fr.delphes.generation.utils.GenerationUtils
+import fr.delphes.generation.utils.getAllAnnotations
 
 class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
@@ -76,7 +78,7 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
                                         addStatement("%T(%S), ", DynamicFormType::class, dynamicFormAnnotation.name)
                                         addStatement("%T::class, ", form.toClassName())
                                         addStatement("listOf(")
-                                        val tags = dynamicFormAnnotation.tags
+                                        val tags = form.getAllAnnotations(DynamicFormTag::class).map { it.tag }
                                             .joinToString(",") { "\"$it\"" }
                                         addStatement(tags)
                                         addStatement(")")

@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.bundles.kotlin.common)
     implementation(libs.ksp)
     implementation(libs.kotlin.poet)
+    implementation(project(":annotation"))
     implementation(project(":bot-core"))
     testImplementation(libs.bundles.kotlin.test)
     testImplementation(libs.ksp.compile.testing)

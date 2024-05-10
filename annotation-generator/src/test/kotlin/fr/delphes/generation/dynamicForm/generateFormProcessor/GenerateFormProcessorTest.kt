@@ -21,7 +21,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
         """
             import fr.delphes.annotation.dynamicForm.DynamicForm
 
-            @DynamicForm("my-form", ["feature"])
+            @DynamicForm("my-form")
             class MyForm
         """.shouldCompileWith {
             exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
@@ -33,7 +33,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.dynamicForm.DynamicForm
 
-            @DynamicForm("my-form", ["feature"])
+            @DynamicForm("my-form")
             class MyForm(
                 @FieldDescription("description")
                 val myField: String,
@@ -50,7 +50,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.dynamicForm.DynamicForm
 
-            @DynamicForm("my-form", ["feature"])
+            @DynamicForm("my-form")
             class MyForm(
                 @FieldDescription("string description")
                 val stringField: String,
@@ -75,7 +75,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.dynamicForm.DynamicForm
 
-            @DynamicForm("serializeName", ["feature"])
+            @DynamicForm("serializeName")
             class MyForm(
                 @FieldDescription("description")
                 val myField: String,
@@ -104,7 +104,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.dynamicForm.DynamicForm
 
-            @DynamicForm("serializeName", ["feature"])
+            @DynamicForm("serializeName")
             class MyForm(
                 @FieldDescription("description")
                 val myField: String,
@@ -122,7 +122,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.dynamicForm.DynamicForm
 
-            @DynamicForm("my-form", ["feature"])
+            @DynamicForm("my-form")
             class MyForm(
                 @FieldDescription("description")
                 val myField: String,
@@ -139,7 +139,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.dynamicForm.DynamicForm
 
-            @DynamicForm("serializeName", ["feature"])
+            @DynamicForm("serializeName")
             class MyForm(
                 @FieldDescription("description")
                 val myField: String,
