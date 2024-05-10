@@ -49,6 +49,7 @@ tasks.withType<Jar> {
 }
 
 tasks.test {
+    dependsOn(copyUiTask, copyUiOverlayTask)
     useJUnitPlatform()
 }
 

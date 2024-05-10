@@ -1,4 +1,5 @@
 import com.github.gradle.node.pnpm.task.PnpmTask
+import org.gradle.api.internal.TaskInputsInternal
 
 plugins {
     alias(libs.plugins.node)
@@ -17,18 +18,34 @@ tasks.register<PnpmTask>("pnpmBuild") {
 
     outputs.cacheIf { true }
 
-    inputs.dir("node_modules")
-    inputs.dir("src")
-    inputs.dir("public")
-    inputs.files(
+    inputs.addFilesFromSource()
+
+    outputs.dir("dist")
+}
+
+val testTask = tasks.register<PnpmTask>("pnpmTest") {
+    dependsOn(tasks.pnpmInstall)
+
+    inputs.addFilesFromSource()
+
+    args.set(listOf("run", "test"))
+}
+
+tasks.withType<Test> {
+    dependsOn(testTask)
+}
+
+description = "bot-ui"
+
+fun TaskInputsInternal.addFilesFromSource() {
+    dir("node_modules")
+    dir("src")
+    dir("public")
+    files(
         "index.html",
         "package.json",
         "tailwind.config.js",
         "tsconfig.json",
         "vitest.config.ts"
     )
-
-    outputs.dir("dist")
 }
-
-description = "bot-ui"

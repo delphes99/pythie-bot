@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test": "vitest run",
     "serve": "vite preview",
     "lint": "eslint --fix ./src --ext .vue,.js,.ts",
     "storybook": "storybook dev -p 6006",

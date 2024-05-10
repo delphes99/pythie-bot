@@ -19,7 +19,7 @@ ksp {
     arg("module-name", "obs")
 }
 
-tasks.withType<Test>() {
+tasks.withType<Test> {
     useJUnitPlatform()
 }
 
