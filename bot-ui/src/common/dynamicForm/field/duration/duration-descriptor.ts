@@ -1,7 +1,7 @@
-import FieldDurationEditView from "@/common/dynamicForm/duration/field-duration-edit-view.vue";
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field-descriptor";
-import {FieldDescriptorType} from "@/common/dynamicForm/field-descriptor-type";
-import {DescriptorJsonType} from "@/common/dynamicForm/field-descriptor.factory";
+import FieldDurationEditView from "@/common/dynamicForm/field/duration/field-duration-edit-view.vue";
+import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/field-descriptor";
+import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
+import {DescriptorJsonType} from "@/common/dynamicForm/field/field-descriptor.factory";
 import {Duration, formatDuration, parseDuration} from "@/common/utils/duration.utils";
 
 export class DurationDescriptor implements FieldDescriptor<string> {

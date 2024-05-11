@@ -1,4 +1,4 @@
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field-descriptor";
+import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/field-descriptor";
 
 export class TestFieldDescriptor implements FieldDescriptor<string> {
     constructor(readonly fieldName: string,

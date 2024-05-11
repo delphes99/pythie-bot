@@ -3,15 +3,15 @@
 </template>
 
 <script lang="ts" setup>
-import {FormListDescriptor} from "@/common/dynamicForm/formList/form-list-descriptor";
-import ListByTag from "@/common/dynamicForm/listByTag/ListByTag.vue";
+import ListByTag from "@/common/dynamicForm/field/formList/form-list-by-tag.vue";
+import {FormListDescriptor} from "@/common/dynamicForm/field/formList/form-list-descriptor";
 import {PropType} from "vue";
 
-const emits = defineEmits<{
+defineEmits<{
   modifyDescriptor: [descriptor: FormListDescriptor]
 }>()
 
-const props = defineProps({
+defineProps({
   descriptor: {
     type: Object as PropType<FormListDescriptor>,
     required: true,

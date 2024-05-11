@@ -1,7 +1,7 @@
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field-descriptor";
-import {FieldDescriptorType} from "@/common/dynamicForm/field-descriptor-type";
-import {DescriptorJsonType} from "@/common/dynamicForm/field-descriptor.factory";
-import FieldStringEditView from "@/common/dynamicForm/string/field-string-edit-view.vue";
+import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/field-descriptor";
+import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
+import {DescriptorJsonType} from "@/common/dynamicForm/field/field-descriptor.factory";
+import FieldStringEditView from "@/common/dynamicForm/field/string/field-string-edit-view.vue";
 
 export class StringDescriptor implements FieldDescriptor<string> {
     static readonly type: FieldDescriptorType = FieldDescriptorType.STRING

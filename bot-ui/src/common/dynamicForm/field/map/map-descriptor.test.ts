@@ -1,5 +1,5 @@
-import {FieldValue} from "@/common/dynamicForm/field-descriptor";
-import {FieldDescriptorType} from "@/common/dynamicForm/field-descriptor-type";
+import {FieldValue} from "@/common/dynamicForm/field/field-descriptor";
+import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
 import {MapDescriptor} from "@/common/dynamicForm/map/map-descriptor";
 import {describe, expect, it} from "vitest";
 

@@ -1,5 +1,5 @@
-import {FieldDescriptor} from "@/common/dynamicForm/field-descriptor";
-import {fromJsonDescriptor} from "@/common/dynamicForm/field-descriptor.factory";
+import {FieldDescriptor} from "@/common/dynamicForm/field/field-descriptor";
+import {fromJsonDescriptor} from "@/common/dynamicForm/field/field-descriptor.factory";
 import {FormDescription} from "@/common/dynamicForm/form-description";
 import {OutgoingEvent} from "@/features/outgoingevents/outgoing-event";
 

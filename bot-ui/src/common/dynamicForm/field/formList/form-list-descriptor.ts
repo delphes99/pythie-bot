@@ -1,8 +1,8 @@
 import {DynamicFormFamily} from "@/common/dynamicForm/dynamic-form-family";
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field-descriptor";
-import {FieldDescriptorType} from "@/common/dynamicForm/field-descriptor-type";
-import {DescriptorJsonType} from "@/common/dynamicForm/field-descriptor.factory";
-import FieldFormListEditView from "@/common/dynamicForm/formList/field-form-list-edit-view.vue";
+import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/field-descriptor";
+import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
+import {DescriptorJsonType} from "@/common/dynamicForm/field/field-descriptor.factory";
+import FieldFormListEditView from "@/common/dynamicForm/field/formList/field-form-list-edit-view.vue";
 
 export class FormListDescriptor implements FieldDescriptor<string> {
     static readonly type: FieldDescriptorType = FieldDescriptorType.FORM_LIST;

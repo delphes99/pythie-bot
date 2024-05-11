@@ -1,6 +1,6 @@
 import {DynamicFormDescription} from "@/common/dynamicForm/dynamic-form-description";
 import {DynamicFormType} from "@/common/dynamicForm/dynamic-form-type";
-import {fromJsonDescriptor} from "@/common/dynamicForm/field-descriptor.factory";
+import {fromJsonDescriptor} from "@/common/dynamicForm/field/field-descriptor.factory";
 
 export default class DynamicFormService {
     constructor(

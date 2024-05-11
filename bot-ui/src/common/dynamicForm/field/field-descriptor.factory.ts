@@ -1,10 +1,10 @@
-import {DurationDescriptor} from "@/common/dynamicForm/duration/duration-descriptor";
-import {FieldDescriptor} from "@/common/dynamicForm/field-descriptor";
-import {FieldDescriptorType} from "@/common/dynamicForm/field-descriptor-type";
-import {FormListDescriptor} from "@/common/dynamicForm/formList/form-list-descriptor";
-import {MapDescriptor} from "@/common/dynamicForm/map/map-descriptor";
-import {OutgoingEventsDescriptor} from "@/common/dynamicForm/outgoingEvents/outgoing-events-descriptor";
-import {StringDescriptor} from "@/common/dynamicForm/string/string-descriptor";
+import {DurationDescriptor} from "@/common/dynamicForm/field/duration/duration-descriptor";
+import {FieldDescriptor} from "@/common/dynamicForm/field/field-descriptor";
+import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
+import {FormListDescriptor} from "@/common/dynamicForm/field/formList/form-list-descriptor";
+import {MapDescriptor} from "@/common/dynamicForm/field/map/map-descriptor";
+import {OutgoingEventsDescriptor} from "@/common/dynamicForm/field/outgoingEvents/outgoing-events-descriptor";
+import {StringDescriptor} from "@/common/dynamicForm/field/string/string-descriptor";
 
 export type DescriptorJsonType = {
     type: FieldDescriptorType;

@@ -1,5 +1,5 @@
-import {FieldDescriptor} from "@/common/dynamicForm/field-descriptor";
-import {DescriptorJsonType, fromJsonDescriptor} from "@/common/dynamicForm/field-descriptor.factory";
+import {FieldDescriptor} from "@/common/dynamicForm/field/field-descriptor";
+import {DescriptorJsonType, fromJsonDescriptor} from "@/common/dynamicForm/field/field-descriptor.factory";
 import {FormDescription} from "@/common/dynamicForm/form-description";
 
 type FeatureDescriptionJson = {

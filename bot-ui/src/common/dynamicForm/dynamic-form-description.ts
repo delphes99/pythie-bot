@@ -1,4 +1,4 @@
-import {FieldDescriptor} from "@/common/dynamicForm/field-descriptor";
+import {FieldDescriptor} from "@/common/dynamicForm/field/field-descriptor";
 
 export interface DynamicFormDescription {
     readonly type: string

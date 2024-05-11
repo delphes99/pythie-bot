@@ -19,7 +19,7 @@
 
 <script lang="ts" setup>
 import UiTextfield from "@/common/designSystem/form/textfield/ui-textfield.vue";
-import {DurationDescriptor} from "@/common/dynamicForm/duration/duration-descriptor";
+import {DurationDescriptor} from "@/common/dynamicForm/field/duration/duration-descriptor";
 import {computed, PropType} from "vue";
 
 const emits = defineEmits<{
