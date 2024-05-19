@@ -34,10 +34,10 @@ import {UiSelectOption} from "@/common/designSystem/form/select/ui-select.option
 import UiSelect from "@/common/designSystem/form/select/ui-select.vue";
 import UiModal from "@/common/designSystem/modal/ui-modal.vue";
 import {useModal} from "@/common/designSystem/modal/useModal";
+import {DynamicFormType} from "@/common/dynamicForm/dynamic-form-type";
 import DynamicFormService from "@/common/dynamicForm/dynamic-form.service";
 import {autowired} from "@/common/utils/injection.util";
 import {ref} from "vue";
-import {DynamicFormType} from "../dynamic-form-type";
 
 interface Item {
   id: string;
@@ -76,7 +76,7 @@ async function addForm() {
       {
         id: crypto.randomUUID(),
         type: description.type,
-        descriptors: description.descriptors
+        descriptors: description.fields
       }
     ]
     closeAddForm()

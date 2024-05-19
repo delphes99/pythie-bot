@@ -1,12 +1,12 @@
 import {FieldValue} from "@/common/dynamicForm/field/field-descriptor";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
-import {MapDescriptor} from "@/common/dynamicForm/map/map-descriptor";
+import {MapDescriptor} from "@/common/dynamicForm/field/map/map-descriptor";
 import {describe, expect, it} from "vitest";
 
 describe("Map descriptor", () => {
     it("construct from JSON", () => {
         const descriptor = MapDescriptor.fromJson({
-            type: FieldDescriptorType.STRING,
+            type: FieldDescriptorType.MAP,
             fieldName: "fieldName",
             description: "description",
             value: '{"key": "value", "key2": "value2"}',

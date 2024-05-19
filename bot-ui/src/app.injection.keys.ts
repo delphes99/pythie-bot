@@ -1,4 +1,5 @@
 import {NotificationService} from "@/common/designSystem/notification/notification.service";
+import DynamicFormService from "@/common/dynamicForm/dynamic-form.service";
 import FeatureService from "@/features/feature.service";
 import MediaService from "@/media/media.service";
 import {MonitoringService} from "@/monitoring/monitoring.service";
@@ -10,4 +11,5 @@ export const AppInjectionKeys = {
     FEATURE_SERVICE: Symbol() as InjectionKey<FeatureService>,
     NOTIFICATION_SERVICE: Symbol() as InjectionKey<NotificationService>,
     MONITORING_SERVICE: Symbol() as InjectionKey<MonitoringService>,
+    DYNAMIC_FORM_SERVICE: Symbol() as InjectionKey<DynamicFormService>,
 }

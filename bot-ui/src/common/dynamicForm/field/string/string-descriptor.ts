@@ -1,7 +1,7 @@
 import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/field-descriptor";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
 import {DescriptorJsonType} from "@/common/dynamicForm/field/field-descriptor.factory";
-import FieldStringEditView from "@/common/dynamicForm/field/string/field-string-edit-view.vue";
+import StringDescriptorEditView from "@/common/dynamicForm/field/string/string-descriptor-edit-view.vue";
 
 export class StringDescriptor implements FieldDescriptor<string> {
     static readonly type: FieldDescriptorType = FieldDescriptorType.STRING
@@ -40,6 +40,6 @@ export class StringDescriptor implements FieldDescriptor<string> {
     }
 
     viewComponent() {
-        return FieldStringEditView
+        return StringDescriptorEditView;
     }
 }

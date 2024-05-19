@@ -1,7 +1,8 @@
 import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/field-descriptor";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
 import {DescriptorJsonType} from "@/common/dynamicForm/field/field-descriptor.factory";
-import FieldOutgoingEventsEditView from "@/common/dynamicForm/field/outgoingEvents/field-outgoing-events-edit-view.vue";
+import OutgoingEventsDescriptorEditView
+    from "@/common/dynamicForm/field/outgoingEvents/outgoing-events-descriptor-edit-view.vue";
 import {OutgoingEvent} from "@/features/outgoingevents/outgoing-event";
 import {OutgoingEventDescription} from "@/features/outgoingevents/outgoing-event-description";
 
@@ -49,7 +50,7 @@ export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]
 
     modifyDescriptor(newDescription: OutgoingEventDescription) {
         return new OutgoingEventsDescriptor(
-            this.type,
+            this.fieldName,
             this.description,
             this.events.map((e) => {
                 if (e.id === newDescription.id) {
@@ -77,6 +78,6 @@ export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]
     }
 
     viewComponent() {
-        return FieldOutgoingEventsEditView
+        return OutgoingEventsDescriptorEditView
     }
 }

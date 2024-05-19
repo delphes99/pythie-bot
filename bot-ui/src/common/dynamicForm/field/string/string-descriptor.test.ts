@@ -1,6 +1,6 @@
 import {FieldValue} from "@/common/dynamicForm/field/field-descriptor";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
-import {StringDescriptor} from "@/common/dynamicForm/string/string-descriptor";
+import {StringDescriptor} from "@/common/dynamicForm/field/string/string-descriptor";
 import {describe, expect, it} from "vitest";
 
 describe("String descriptor", () => {

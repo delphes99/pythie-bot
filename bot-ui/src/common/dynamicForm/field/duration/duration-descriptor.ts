@@ -1,4 +1,4 @@
-import FieldDurationEditView from "@/common/dynamicForm/field/duration/field-duration-edit-view.vue";
+import DurationDescriptorEditView from "@/common/dynamicForm/field/duration/duration-descriptor-edit-view.vue";
 import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/field-descriptor";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
 import {DescriptorJsonType} from "@/common/dynamicForm/field/field-descriptor.factory";
@@ -58,6 +58,6 @@ export class DurationDescriptor implements FieldDescriptor<string> {
     }
 
     viewComponent() {
-        return FieldDurationEditView
+        return DurationDescriptorEditView
     }
 }

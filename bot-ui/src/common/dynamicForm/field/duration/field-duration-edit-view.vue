@@ -19,45 +19,24 @@
 
 <script lang="ts" setup>
 import UiTextfield from "@/common/designSystem/form/textfield/ui-textfield.vue";
-import {DurationDescriptor} from "@/common/dynamicForm/field/duration/duration-descriptor";
-import {computed, PropType} from "vue";
+import {FieldDuration} from "@/common/dynamicForm/field/duration/field-duration";
+import {PropType, ref} from "vue";
 
 const emits = defineEmits<{
-  modifyDescriptor: [descriptor: DurationDescriptor]
+  modifyDescriptor: [descriptor: FieldDuration]
 }>()
 
 const props = defineProps({
   descriptor: {
-    type: Object as PropType<DurationDescriptor>,
+    type: Object as PropType<FieldDuration>,
     required: true,
   }
 })
 
-const actualHours = computed({
-  get() {
-    return props.descriptor.actualValue.hours
-  },
-  set(newValue) {
-    emits('modifyDescriptor', props.descriptor.withHours(newValue))
-  }
-})
+const actualHours = ref(props.descriptor.actualValue.hours)
 
-const actualMinutes = computed({
-  get() {
-    return props.descriptor.actualValue.minutes
-  },
-  set(newValue) {
-    emits('modifyDescriptor', props.descriptor.withMinutes(newValue))
-  }
-})
+const actualMinutes = ref(props.descriptor.actualValue.minutes)
 
-const actualSeconds = computed({
-  get() {
-    return props.descriptor.actualValue.seconds
-  },
-  set(newValue) {
-    emits('modifyDescriptor', props.descriptor.withSeconds(newValue))
-  }
-})
+const actualSeconds = ref(props.descriptor.actualValue.seconds)
 
 </script>

@@ -1,6 +1,7 @@
 import {AppInjectionKeys} from "@/app.injection.keys"
 import UiIcon from "@/common/designSystem/icons/ui-icon.vue";
 import {NotificationService} from "@/common/designSystem/notification/notification.service";
+import DynamicFormService from "@/common/dynamicForm/dynamic-form.service";
 
 import en from "@/common/lang/en.json"
 import fr from "@/common/lang/fr.json"
@@ -51,4 +52,5 @@ createApp(App)
     .provide(AppInjectionKeys.FEATURE_SERVICE, new FeatureService(backendUrl))
     .provide(AppInjectionKeys.NOTIFICATION_SERVICE, new NotificationService())
     .provide(AppInjectionKeys.MONITORING_SERVICE, new MonitoringService(backendUrl))
+    .provide(AppInjectionKeys.DYNAMIC_FORM_SERVICE, new DynamicFormService(backendUrl))
     .mount("#app")

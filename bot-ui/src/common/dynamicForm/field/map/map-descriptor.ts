@@ -1,7 +1,7 @@
 import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/field-descriptor";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/field-descriptor-type";
 import {DescriptorJsonType} from "@/common/dynamicForm/field/field-descriptor.factory";
-import FieldMapEditView from "@/common/dynamicForm/field/map/field-map-edit-view.vue";
+import MapDescriptorEditView from "./map-descriptor-edit-view.vue";
 
 export class MapDescriptor implements FieldDescriptor<string> {
     static readonly type: FieldDescriptorType = FieldDescriptorType.MAP;
@@ -40,6 +40,6 @@ export class MapDescriptor implements FieldDescriptor<string> {
     }
 
     viewComponent() {
-        return FieldMapEditView
+        return MapDescriptorEditView
     }
 }

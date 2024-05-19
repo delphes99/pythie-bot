@@ -8,26 +8,15 @@
 
 <script lang="ts" setup>
 import UiTextfield from "@/common/designSystem/form/textfield/ui-textfield.vue";
-import {StringDescriptor} from "@/common/dynamicForm/field/string/string-descriptor";
-import {computed, PropType} from "vue";
-
-const emits = defineEmits<{
-  modifyDescriptor: [descriptor: StringDescriptor]
-}>()
+import {FieldString} from "@/common/dynamicForm/field/string/field-string";
+import {PropType, ref} from "vue";
 
 const props = defineProps({
   descriptor: {
-    type: Object as PropType<StringDescriptor>,
+    type: Object as PropType<FieldString>,
     required: true,
   }
 })
 
-const actualValue = computed({
-  get() {
-    return props.descriptor.actualValue
-  },
-  set(newValue) {
-    emits('modifyDescriptor', props.descriptor.withValue(newValue))
-  }
-})
+const actualValue = ref(props.descriptor.actualValue)
 </script>

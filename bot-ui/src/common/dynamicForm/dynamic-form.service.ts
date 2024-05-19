@@ -1,6 +1,6 @@
-import {DynamicFormDescription} from "@/common/dynamicForm/dynamic-form-description";
+import {DynamicForm} from "@/common/dynamicForm/dynamic-form";
 import {DynamicFormType} from "@/common/dynamicForm/dynamic-form-type";
-import {fromJsonDescriptor} from "@/common/dynamicForm/field/field-descriptor.factory";
+import {fieldFromJson} from "@/common/dynamicForm/field/field.factory";
 
 export default class DynamicFormService {
     constructor(
@@ -13,13 +13,13 @@ export default class DynamicFormService {
         return await response.json();
     }
 
-    async getForm(value: DynamicFormType): Promise<DynamicFormDescription> {
+    async getForm(value: DynamicFormType): Promise<DynamicForm> {
         return await fetch(`${this.backendUrl}/dynamicForms/form/${value}`)
             .then(response => response.json())
             .then(json => {
                 return {
                     type: json.type,
-                    descriptors: json.descriptors.map((descriptor: any) => fromJsonDescriptor(descriptor))
+                    fields: json.fields.map((descriptor: any) => fieldFromJson(descriptor))
                 }
             });
     }
