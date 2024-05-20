@@ -4,6 +4,6 @@ export const homeRoutes: Array<RouteRecordRaw> = [
     {
         path: "/",
         name: "Home",
-        component: () => import("@/home/home-page.vue"),
+        component: () => import("@/home/HomePage.vue"),
     }
 ]

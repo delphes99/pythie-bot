@@ -11,25 +11,25 @@ export const twitchRoutes: Array<RouteRecordRaw> = [
             },
             {
                 path: ":channelName",
-                component: () => import("@/connector/twitch/twitch-channel-configuration.vue"),
+                component: () => import("@/connector/twitch/TwitchChannelConfiguration.vue"),
                 props: true,
                 children: [
                     {
                         path: "features",
                         name: "twitch_channel_features",
-                        component: () => import("@/connector/twitch/feature/twitch-feature.vue"),
+                        component: () => import("@/connector/twitch/feature/TwitchFeature.vue"),
                         props: true,
                     },
                     {
                         path: "rewards",
                         name: "twitch_channel_rewards",
-                        component: () => import("@/connector/twitch/reward/twitch-reward.vue"),
+                        component: () => import("@/connector/twitch/reward/TwitchReward.vue"),
                         props: true,
                     },
                     {
                         path: "",
                         name: "twitch_channel_rewards",
-                        component: () => import("@/connector/twitch/reward/twitch-reward.vue"),
+                        component: () => import("@/connector/twitch/reward/TwitchReward.vue"),
                         props: true,
                     },
                 ],

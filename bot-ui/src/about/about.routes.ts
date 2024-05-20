@@ -4,6 +4,6 @@ export const aboutRoutes: Array<RouteRecordRaw> = [
     {
         path: "/about",
         name: "about",
-        component: () => import("@/about/about-page.vue"),
+        component: () => import("@/about/AboutPage.vue"),
     }
 ]

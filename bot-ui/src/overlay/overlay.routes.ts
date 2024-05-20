@@ -7,12 +7,12 @@ export const overlayRoutes: Array<RouteRecordRaw> = [
             {
                 path: "",
                 name: "overlays",
-                component: () => import("@/overlay/overlays-list.vue"),
+                component: () => import("@/overlay/OverlaysList.vue"),
             },
             {
                 path: ":overlayId",
                 name: "overlay_detail",
-                component: () => import("@/overlay/editor/overlay-editor.vue"),
+                component: () => import("@/overlay/editor/OverlayEditor.vue"),
                 props: true,
             },
         ],

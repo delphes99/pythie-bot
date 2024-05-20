@@ -1,10 +1,9 @@
-import {AppInjectionKeys} from "@/app.injection.keys";
-import {UiSelectOption} from "@/common/designSystem/form/select/ui-select.option";
-import {autowired} from "@/common/utils/injection.util";
-import {OutgoingEventType} from "@/features/outgoingevents/outgoing-event";
-import {OutgoingEventCreateService} from "@/features/outgoingevents/outgoing-event.create.service";
+import {AppInjectionKeys} from "@/AppInjectionKeys";
+import {UiSelectOption} from "@/common/designSystem/form/select/UiSelectOption";
+import {autowired} from "@/common/utils/Injection.util";
+import {OutgoingEventType} from "@/features/outgoingevents/OutgoingEvent";
+import {OutgoingEventCreateService} from "@/features/outgoingevents/OutgoingEventCreateService";
 import {computed, ref} from "vue";
-
 
 export function useGetOutgoingEventTypes() {
     const backendUrl = autowired(AppInjectionKeys.BACKEND_URL)

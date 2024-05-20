@@ -14,7 +14,7 @@
           style="height: calc(100% - 4rem)"
       >
         <suspense>
-          <router-view/>
+          <RouterView/>
           <template #fallback>
             Loading...
           </template>
@@ -25,8 +25,8 @@
 </template>
 
 <script lang="ts" setup>
-import MenuPanel from "@/common/designSystem/menu/menu-panel.vue"
-import StatusBar from "@/common/designSystem/menu/status-bar.vue"
+import MenuPanel from "@/common/designSystem/menu/MenuPanel.vue"
+import StatusBar from "@/common/designSystem/menu/StatusBar.vue"
 import {useApplicationTheme} from "@/common/style/UseApplicationThemeStore"
 
 const {themeClass} = useApplicationTheme()

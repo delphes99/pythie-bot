@@ -1,9 +1,8 @@
-import {AppInjectionKeys} from "@/app.injection.keys";
-import {UiSelectOption} from "@/common/designSystem/form/select/ui-select.option";
-import {autowired} from "@/common/utils/injection.util";
-import FeatureService, {FeatureType} from "@/features/feature.service";
+import {AppInjectionKeys} from "@/AppInjectionKeys";
+import {UiSelectOption} from "@/common/designSystem/form/select/UiSelectOption";
+import {autowired} from "@/common/utils/Injection.util";
+import FeatureService, {FeatureType} from "@/features/FeatureService";
 import {computed, ref} from "vue";
-
 
 export function useGetFeatureTypes() {
     const backendUrl = autowired(AppInjectionKeys.BACKEND_URL)

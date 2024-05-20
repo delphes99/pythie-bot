@@ -4,6 +4,6 @@ export const monitoringRoutes: Array<RouteRecordRaw> = [
     {
         path: "/monitoring",
         name: "Monitoring",
-        component: () => import("@/monitoring/monitoring-page.vue"),
+        component: () => import("@/monitoring/MonitoringPage.vue"),
     }
 ]

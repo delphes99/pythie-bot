@@ -65,17 +65,17 @@
 </template>
 
 <script lang="ts" setup>
-import {AppInjectionKeys} from "@/app.injection.keys";
-import UiButtonType from "@/common/designSystem/button/ui-button.type"
-import UiButton from "@/common/designSystem/button/ui-button.vue"
-import UiTextfield from "@/common/designSystem/form/textfield/ui-textfield.vue"
-import UiIcon from "@/common/designSystem/icons/ui-icon.vue";
-import {UiPanelMenuItem} from "@/common/designSystem/panel/ui-panel.menu.item";
-import UiPanel from "@/common/designSystem/panel/ui-panel.vue"
-import UiTableColumn from "@/common/designSystem/table/ui-table-column.vue";
-import UiTable from "@/common/designSystem/table/ui-table.vue";
-import {autowired} from "@/common/utils/injection.util";
-import DetailedConnectorStatus from "@/connector/common/status/detailed-connector-status.vue"
+import {AppInjectionKeys} from "@/AppInjectionKeys";
+import UiButton from "@/common/designSystem/button/UiButton.vue"
+import UiButtonType from "@/common/designSystem/button/UiButtonType"
+import UiTextfield from "@/common/designSystem/form/textfield/UiTextfield.vue"
+import UiIcon from "@/common/designSystem/icons/UiIcon.vue";
+import UiPanel from "@/common/designSystem/panel/UiPanel.vue"
+import {UiPanelMenuItem} from "@/common/designSystem/panel/UiPanelMenuItem";
+import UiTable from "@/common/designSystem/table/UiTable.vue";
+import UiTableColumn from "@/common/designSystem/table/UiTableColumn.vue";
+import {autowired} from "@/common/utils/Injection.util";
+import DetailedConnectorStatus from "@/connector/common/status/DetailedConnectorStatus.vue"
 import {ConnectorEnum} from "@/connector/ConnectorEnum"
 import axios from "axios"
 import {ref} from "vue"

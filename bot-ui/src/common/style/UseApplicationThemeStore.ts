@@ -1,6 +1,6 @@
 import {Options} from "@/common/designSystem/form/radio/Options";
 import {lightTheme, themes} from "@/common/style/Themes"
-import {LocalStorageItem} from "@/common/utils/local.storage.item"
+import {LocalStorageItem} from "@/common/utils/LocalStorage.item"
 import {useStorage} from "@vueuse/core"
 import {defineStore} from "pinia"
 import {computed} from "vue";

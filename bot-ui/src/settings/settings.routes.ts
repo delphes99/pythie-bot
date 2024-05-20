@@ -4,6 +4,6 @@ export const settingsRoutes: Array<RouteRecordRaw> = [
     {
         path: "/settings",
         name: "settings",
-        component: () => import("@/settings/settings-page.vue"),
+        component: () => import("@/settings/SettingsPage.vue"),
     }
 ]

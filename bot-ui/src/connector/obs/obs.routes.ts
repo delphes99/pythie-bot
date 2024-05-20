@@ -4,6 +4,6 @@ export const obsRoutes: Array<RouteRecordRaw> = [
     {
         path: "/obs",
         name: "obs",
-        component: () => import("@/connector/obs/obs-configuration.vue"),
+        component: () => import("@/connector/obs/ObsConfiguration.vue"),
     }
 ]

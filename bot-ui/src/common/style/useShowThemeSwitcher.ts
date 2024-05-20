@@ -1,4 +1,4 @@
-import {LocalStorageItem} from "@/common/utils/local.storage.item";
+import {LocalStorageItem} from "@/common/utils/LocalStorage.item";
 import {useStorage} from "@vueuse/core";
 
 export function useShowThemeSwitcher() {
