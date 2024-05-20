@@ -1,28 +1,28 @@
 <template>
-  <ui-card-panel title="features.title">
+  <UiCardPanel title="features.title">
     <template #header>
-      <ui-button
+      <UiButton
           label="common.add"
           @on-click="openCreateModal"
       />
     </template>
-    <feature-card
+    <FeatureCard
         v-for="feature in features"
-        :key="feature"
+        :key="feature.id"
         :feature="feature"
     />
-  </ui-card-panel>
-  <ui-modal
+  </UiCardPanel>
+  <UiModal
       v-model:is-open="isCreateModalOpened"
       title="Create feature">
-    <ui-textfield v-model="featureId" label="feature.id"/>
-    <ui-select
+    <UiTextfield v-model="featureId" label="feature.id"/>
+    <UiSelect
         v-model="selectedType"
         label="feature.type"
         :options="allTypesAsSelectOptions"
     />
     <ui-button label="common.add" @on-click="createFeature"/>
-  </ui-modal>
+  </UiModal>
 </template>
 
 <script lang="ts" setup>
@@ -40,9 +40,6 @@ import FeatureCard from "@/features/featureCard/feature-card.vue"
 import {useGetFeatureTypes} from "@/features/useGetFeatureTypes";
 import router from "@/router";
 import {ref} from "vue"
-import {useI18n} from "vue-i18n"
-
-const {t} = useI18n()
 
 const backendUrl = autowired(AppInjectionKeys.BACKEND_URL)
 

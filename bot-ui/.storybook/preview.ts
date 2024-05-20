@@ -1,9 +1,17 @@
 import "@/common/style/index.css"
-import {setup} from '@storybook/vue3';
+import {Preview, setup} from '@storybook/vue3';
+import {createPinia} from "pinia";
+import {App} from 'vue';
 import {createI18n} from 'vue-i18n';
 import Vue3Toasity from "vue3-toastify";
 
-const preview = {
+const pinia = createPinia();
+
+setup((app: App) => {
+    app.use(pinia);
+});
+
+const preview: Preview = {
     globalTypes: {
         theme: {
             name: "Theme",
@@ -18,7 +26,6 @@ const preview = {
         }
     },
     parameters: {
-        actions: {argTypesRegex: "^on[A-Z].*"},
         controls: {
             matchers: {
                 color: /(background|color)$/i,
@@ -30,7 +37,7 @@ const preview = {
         components: {story},
         template: `
           <div class="${themeClass(context.globals.theme)} bg-backgroundColor text-backgroundTextColor w-full">
-          <story/>
+            <story/>
           </div>`
     })],
 };

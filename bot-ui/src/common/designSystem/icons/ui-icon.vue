@@ -13,6 +13,6 @@ const props = defineProps({
 });
 
 const icon = defineAsyncComponent(() =>
-    import("./" + props.name + ".svg?component")
+    import(`./${props.name}.svg?component`)
 );
 </script>

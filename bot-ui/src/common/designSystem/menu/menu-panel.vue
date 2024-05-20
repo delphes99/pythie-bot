@@ -5,55 +5,55 @@
       @mouseleave="mouseOut"
       class="z-50 h-full flex flex-col bg-primaryContainerBackground text-primaryTextColor overflow-hidden"
   >
-    <router-link
+    <RouterLink
         class="router-link"
         to="/"
     >
       <ui-icon name="home" class="menu-icon"/>
       {{ $t("home") }}
-    </router-link>
-    <router-link
+    </RouterLink>
+    <RouterLink
         class="router-link"
         to="/monitoring"
     >
       <ui-icon name="monitoring" class="menu-icon"/>
       {{ $t("monitoring.title") }}
-    </router-link>
-    <router-link
+    </RouterLink>
+    <RouterLink
         class="router-link"
         to="/features"
     >
       <ui-icon name="features" class="menu-icon"/>
       {{ $t("features.title") }}
-    </router-link>
-    <router-link
+    </RouterLink>
+    <RouterLink
         class="router-link"
         to="/overlay"
     >
       <ui-icon name="overlay" class="menu-icon"/>
       {{ $t("overlay.title") }}
-    </router-link>
-    <router-link
+    </RouterLink>
+    <RouterLink
         class="router-link"
         to="/medias"
     >
       <ui-icon name="medias" class="menu-icon"/>
       {{ $t("medias.title") }}
-    </router-link>
-    <router-link
+    </RouterLink>
+    <RouterLink
         class="router-link"
         to="/settings"
     >
       <ui-icon name="settings" class="menu-icon"/>
       {{ $t("settings.title") }}
-    </router-link>
-    <router-link
+    </RouterLink>
+    <RouterLink
         class="router-link"
         to="/about"
     >
       <ui-icon name="about" class="menu-icon"/>
       {{ $t("about") }}
-    </router-link>
+    </RouterLink>
   </nav>
 </template>
 

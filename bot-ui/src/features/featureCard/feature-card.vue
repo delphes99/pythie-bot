@@ -10,7 +10,7 @@ import UiButton from "@/common/designSystem/button/ui-button.vue";
 import UiCard from "@/common/designSystem/card/ui-card.vue"
 import {Feature} from "@/features/feature";
 
-const props = defineProps({
+defineProps({
   feature: {
     type: Feature,
     required: true,

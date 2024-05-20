@@ -49,9 +49,9 @@
         :data="channels"
     >
       <ui-table-column header-name="twitch.channel" v-slot="{item:channel}">
-        <router-link :to="`/twitch/${channel}`">
+        <RouterLink :to="`/twitch/${channel}`">
           {{ channel }}
-        </router-link>
+        </RouterLink>
       </ui-table-column>
       <ui-table-column header-name="common.actions" v-slot="{item}">
         <ui-button

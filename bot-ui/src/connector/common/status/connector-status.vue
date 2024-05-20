@@ -14,13 +14,13 @@
       <MenuItem v-slot="{ active }"
                 v-for="action in actions"
                 :key="action.label">
-        <router-link :class="[
+        <RouterLink :class="[
                       active ? 'bg-primaryColorHover text-primaryTextColor' : 'bg-backgroundColor text-backgroundTextColor',
                       'group flex w-full items-center px-2 py-2 text-sm',
                     ]"
-                     :to="link">
+                    :to="link">
           {{ $t("common.configuration") }}
-        </router-link>
+        </RouterLink>
       </MenuItem>
       <MenuItem v-slot="{ active }"
                 v-for="action in actions"

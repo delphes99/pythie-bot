@@ -1,11 +1,11 @@
 <template>
   <template v-if="routerLink">
-    <router-link :to="routerLink">
+    <RouterLink :to="routerLink">
       <a
           :class="classes"
           class="button-shape"
       >{{ $t(label) }}</a>
-    </router-link>
+    </RouterLink>
   </template>
   <template v-else-if="link">
     <a
