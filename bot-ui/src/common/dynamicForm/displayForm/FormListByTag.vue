@@ -4,20 +4,22 @@
     <UiButton label="common.add"
               @click="openAddForm"
               :type="UiButtonType.Primary"/>
-    <fieldset v-for="item in items" :key="item.id" class="border p-2">
-      <legend>{{ item.type }}</legend>
-      <div v-for="descriptor in item.descriptors" :key="descriptor.fieldName">
-        <component :is="descriptor.viewComponent()"
-                   :descriptor="descriptor"
+    <fieldset v-for="subForm in subForms" :key="subForm.id" class="border p-2">
+      <legend>{{ subForm.type }}</legend>
+      <div v-for="field in subForm.fields" :key="field.fieldName">
+        <component :is="field.viewComponent()"
+                   v-model="field.actualValue"
+                   :field="field"
+                   :label="field.description"
         />
       </div>
       <UiButton label="common.delete"
                 :type="UiButtonType.Warning"
-                @click="deleteForm(item.id)"/>
+                @click="deleteForm(subForm.id)"/>
     </fieldset>
   </fieldset>
   <UiModal title="common.add" v-model:is-open="isAddFormOpened">
-    <UiSelect v-model="selectedType" :options="itemTypes" :label="tag"/>
+    <UiSelect v-model="selectedType" :options="subFormTypes" :label="tag"/>
     <UiButton
         label="common.add"
         @click="addForm"
@@ -33,16 +35,11 @@ import UiSelect from "@/common/designSystem/form/select/UiSelect.vue";
 import {UiSelectOption} from "@/common/designSystem/form/select/UiSelectOption";
 import UiModal from "@/common/designSystem/modal/UiModal.vue";
 import {useModal} from "@/common/designSystem/modal/useModal";
+import {DynamicForm} from "@/common/dynamicForm/DynamicForm";
 import DynamicFormService from "@/common/dynamicForm/DynamicFormService";
 import {DynamicFormType} from "@/common/dynamicForm/DynamicFormType";
 import {autowired} from "@/common/utils/Injection.util";
 import {ref} from "vue";
-
-interface Item {
-  id: string;
-  type: string;
-  descriptors: any[];
-}
 
 const props = defineProps({
   tag: {
@@ -57,32 +54,31 @@ const props = defineProps({
 
 const {isOpen: isAddFormOpened, open: openAddForm, close: closeAddForm} = useModal()
 const selectedType = ref<DynamicFormType | null>(null)
-const itemTypes = ref<UiSelectOption<DynamicFormType>[]>([])
-const items = ref<Item[]>([])
+const subFormTypes = ref<UiSelectOption<DynamicFormType>[]>([])
+const subForms = ref<DynamicForm[]>([])
 
 const backendUrl = autowired(AppInjectionKeys.BACKEND_URL)
 const dynamicFormService = new DynamicFormService(backendUrl)
 
 dynamicFormService.getFormsByTag(props.tag).then(itemsType => {
-  itemTypes.value = UiSelectOption.forString(itemsType)
+  subFormTypes.value = UiSelectOption.forString(itemsType)
 })
 
 async function addForm() {
   if (selectedType.value) {
     const description = await dynamicFormService.getForm(selectedType.value)
-    items.value = [
-      ...items.value,
-      {
-        id: crypto.randomUUID(),
-        type: description.type,
-        descriptors: description.fields
-      }
+    subForms.value = [
+      ...subForms.value,
+      new DynamicForm(
+          description.type,
+          description.fields
+      )
     ]
     closeAddForm()
   }
 }
 
 function deleteForm(id: string) {
-  items.value = items.value.filter(item => item.id !== id)
+  subForms.value = subForms.value.filter(item => item.id !== id)
 }
 </script>

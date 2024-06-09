@@ -1,3 +1,4 @@
+//TODO: Remove this
 export enum FieldDescriptorType {
     STRING = "STRING",
     DURATION = "DURATION",

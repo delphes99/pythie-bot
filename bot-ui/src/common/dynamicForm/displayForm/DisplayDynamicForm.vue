@@ -1,10 +1,10 @@
 <template>
   <fieldset class="border p-2">
-    <legend>{{ description.type }}</legend>
-    <div v-for="entry in viewComponentRefByDescriptor.entries()" :key="entry[0].fieldName">
-      <component :is="entry[0].viewComponent()"
-                 :descriptor="entry[0]"
-                 :ref="entry[1]"
+    <legend>{{ form.type }}</legend>
+    <div v-for="field in form.fields" :key="field.id">
+      <component :is="field.viewComponent()"
+                 :field="field"
+                 v-model="field.actualValue"
       />
     </div>
     <UiButton label="common.save" @click="saveDescription"/>
@@ -14,9 +14,8 @@
 <script setup lang="ts">
 import {AppInjectionKeys} from "@/AppInjectionKeys";
 import UiButton from "@/common/designSystem/button/UiButton.vue";
-import {FieldDescriptor} from "@/common/dynamicForm/field/FieldDescriptor";
 import {autowired} from "@/common/utils/Injection.util";
-import {Ref, ref} from "vue";
+import {ref} from "vue";
 
 const props = defineProps({
   name: {
@@ -26,19 +25,10 @@ const props = defineProps({
 })
 
 const dynamicFormService = autowired(AppInjectionKeys.DYNAMIC_FORM_SERVICE)
-const description = await dynamicFormService.getForm(props.name)
-
-const descriptors = description.fields
-const viewComponentRefByDescriptor: Map<FieldDescriptor<any>, Ref> = new Map();
-
-descriptors.forEach(descriptor => {
-  viewComponentRefByDescriptor.set(descriptor, ref(null))
-})
+const form = ref(await dynamicFormService.getForm(props.name))
 
 function saveDescription() {
-  for (let entry of viewComponentRefByDescriptor.entries()) {
-    console.log("actual : ", entry[1].value[0]?.buildValue())
-  }
+  console.log(form)
 }
 
 </script>

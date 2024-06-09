@@ -40,7 +40,7 @@ const id = crypto.randomUUID()
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<unknown>,
+    type: [Object as PropType<unknown>, String],
     default: null,
   },
   options: {

@@ -1,11 +1,14 @@
 import {Component} from "vue";
 
 export interface Field<T> {
-    fieldName: string
-    description: string
+    readonly id: string
+    readonly fieldName: string
+    readonly description: string
 
-    initialValue: T
+    readonly initialValue: T
     actualValue: T
 
     viewComponent(): Component
+
+    buildJson(): object
 }

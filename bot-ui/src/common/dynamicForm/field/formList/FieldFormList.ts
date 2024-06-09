@@ -6,19 +6,6 @@ import {Component} from "vue";
 
 
 export class FieldFormList implements Field<DynamicForm[]> {
-    constructor(
-        public readonly description: string,
-        public readonly fieldName: string,
-        public readonly formFamily: string,
-        public readonly initialValue: DynamicForm[],
-        public readonly actualValue: DynamicForm[] = initialValue
-    ) {
-    }
-
-    viewComponent(): Component {
-        return FieldFormListEditView;
-    }
-
     static fromJson(json: FieldJsonType) {
         return new FieldFormList(
             json.description,
@@ -26,5 +13,23 @@ export class FieldFormList implements Field<DynamicForm[]> {
             json.formFamily,
             json.value
         );
+    }
+
+    readonly id: string = crypto.randomUUID()
+
+    constructor(
+        public readonly description: string,
+        public readonly fieldName: string,
+        public readonly formFamily: string,
+        public readonly initialValue: DynamicForm[],
+        public actualValue: DynamicForm[] = initialValue
+    ) {
+    }
+
+    viewComponent(): Component {
+        return FieldFormListEditView;
+    }
+
+    buildJson(): any {
     }
 }

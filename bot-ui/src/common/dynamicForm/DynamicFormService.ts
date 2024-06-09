@@ -17,10 +17,10 @@ export default class DynamicFormService {
         return await fetch(`${this.backendUrl}/dynamicForms/form/${value}`)
             .then(response => response.json())
             .then(json => {
-                return {
-                    type: json.type,
-                    fields: json.fields.map((descriptor: any) => fieldFromJson(descriptor))
-                }
+                return new DynamicForm(
+                    json.type,
+                    json.fields.map((descriptor: any) => fieldFromJson(descriptor))
+                )
             });
     }
 }

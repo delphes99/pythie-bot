@@ -1,22 +1,21 @@
 <template>
   <UiTextfield
-      :id="descriptor.fieldName"
-      v-model="actualValue"
-      :label="descriptor.description"
+      :id="field.fieldName"
+      v-model="model"
+      :label="field.description"
   />
 </template>
 
 <script lang="ts" setup>
 import UiTextfield from "@/common/designSystem/form/textfield/UiTextfield.vue";
 import {FieldString} from "@/common/dynamicForm/field/string/FieldString";
-import {PropType, ref} from "vue";
+import {PropType} from "vue";
 
-const props = defineProps({
-  descriptor: {
+defineProps({
+  field: {
     type: Object as PropType<FieldString>,
     required: true,
-  }
+  },
 })
-
-const actualValue = ref(props.descriptor.actualValue)
+const model = defineModel<string>({required: true})
 </script>

@@ -12,6 +12,7 @@ export type DescriptorJsonType = {
     [key: string]: any;
 };
 
+//TODO: Remove this
 export function fromJsonDescriptor(descriptor: DescriptorJsonType): FieldDescriptor<any> {
     switch (descriptor.type) {
         case FieldDescriptorType.STRING:

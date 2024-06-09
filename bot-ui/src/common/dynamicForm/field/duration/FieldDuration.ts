@@ -6,6 +6,16 @@ import FieldDurationEditView from "./FieldDurationEditView.vue";
 
 
 export class FieldDuration implements Field<Duration> {
+    static fromJson(json: FieldJsonType) {
+        return new FieldDuration(
+            json.description,
+            json.fieldName,
+            parseDuration(json.value)
+        )
+    }
+
+    readonly id: string = crypto.randomUUID()
+
     constructor(
         public readonly description: string,
         public readonly fieldName: string,
@@ -15,14 +25,9 @@ export class FieldDuration implements Field<Duration> {
     }
 
     viewComponent(): Component {
-        return FieldDurationEditView;
+        return FieldDurationEditView
     }
 
-    static fromJson(json: FieldJsonType) {
-        return new FieldDuration(
-            json.description,
-            json.fieldName,
-            parseDuration(json.value)
-        );
+    buildJson(): any {
     }
 }

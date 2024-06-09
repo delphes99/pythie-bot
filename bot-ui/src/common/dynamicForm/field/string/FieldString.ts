@@ -5,11 +5,21 @@ import {Component} from "vue";
 
 
 export class FieldString implements Field<string> {
+    static fromJson(json: FieldJsonType) {
+        return new FieldString(
+            json.description,
+            json.fieldName,
+            json.value
+        );
+    }
+
+    readonly id: string = crypto.randomUUID()
+
     constructor(
         public readonly description: string,
         public readonly fieldName: string,
         public readonly initialValue: string,
-        public readonly actualValue: string = initialValue
+        public actualValue: string = initialValue
     ) {
     }
 
@@ -17,11 +27,6 @@ export class FieldString implements Field<string> {
         return FieldStringEditView;
     }
 
-    static fromJson(json: FieldJsonType) {
-        return new FieldString(
-            json.description,
-            json.fieldName,
-            json.value
-        );
+    buildJson(): any {
     }
 }
