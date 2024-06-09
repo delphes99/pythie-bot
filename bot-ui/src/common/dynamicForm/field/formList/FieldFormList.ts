@@ -1,9 +1,9 @@
 import {DynamicForm} from "@/common/dynamicForm/DynamicForm";
 import {Field} from "@/common/dynamicForm/field/Field";
 import {FieldJsonType} from "@/common/dynamicForm/field/Field.factory";
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 import FieldFormListEditView from "@/common/dynamicForm/field/formList/FieldFormListEditView.vue";
 import {Component} from "vue";
-
 
 export class FieldFormList implements Field<DynamicForm[]> {
     static fromJson(json: FieldJsonType) {
@@ -30,6 +30,14 @@ export class FieldFormList implements Field<DynamicForm[]> {
         return FieldFormListEditView;
     }
 
-    buildJson(): any {
+    buildJsonValue(): FieldJsonValue {
+        const subForms = this.actualValue
+            .map(form => form.buildJson())
+            .map(form => {
+                const {id, ...formWithoutId} = form
+                return formWithoutId
+            })
+
+        return new FieldJsonValue(this.fieldName, subForms)
     }
 }

@@ -1,4 +1,5 @@
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/FieldDescriptor";
+import {FieldDescriptor} from "@/common/dynamicForm/field/FieldDescriptor";
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 
 export class TestFieldDescriptor implements FieldDescriptor<string> {
     constructor(readonly fieldName: string,
@@ -6,8 +7,8 @@ export class TestFieldDescriptor implements FieldDescriptor<string> {
                 readonly description: string = "description") {
     }
 
-    buildValue(): FieldValue<string> {
-        return new FieldValue(this.fieldName, this.value);
+    buildValue() {
+        return new FieldJsonValue(this.fieldName, this.value);
     }
 
     viewComponent(): any {

@@ -21,7 +21,7 @@ export class OutgoingEventDescription implements FormDescription<OutgoingEvent> 
             type: this.type,
             ...this.descriptors
                 .map(descriptor => descriptor.buildValue())
-                .reduce((acc, value) => ({...acc, [value.fieldName]: value.value}), {})
+                .reduce((acc, value) => ({...acc, [value.fieldName]: value.jsonValue}), {})
         }
     }
 

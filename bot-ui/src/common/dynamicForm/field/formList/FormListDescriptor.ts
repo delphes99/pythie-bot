@@ -1,7 +1,8 @@
 import {DynamicFormFamily} from "@/common/dynamicForm/DynamicFormFamily";
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/FieldDescriptor";
+import {FieldDescriptor} from "@/common/dynamicForm/field/FieldDescriptor";
 import {DescriptorJsonType} from "@/common/dynamicForm/field/FieldDescriptor.factory";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/FieldDescriptorType";
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 import FieldFormListEditView from "@/common/dynamicForm/field/formList/FieldFormListEditView.vue";
 
 export class FormListDescriptor implements FieldDescriptor<string> {
@@ -30,7 +31,7 @@ export class FormListDescriptor implements FieldDescriptor<string> {
     }
 
     buildValue() {
-        return new FieldValue(this.fieldName, JSON.parse(this.actualValue));
+        return new FieldJsonValue(this.fieldName, JSON.parse(this.actualValue));
     }
 
     viewComponent() {

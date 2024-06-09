@@ -1,5 +1,6 @@
 import {Field} from "@/common/dynamicForm/field/Field";
 import {FieldJsonType} from "@/common/dynamicForm/field/Field.factory";
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 import FieldStringEditView from "@/common/dynamicForm/field/string/FieldStringEditView.vue";
 import {Component} from "vue";
 
@@ -27,6 +28,7 @@ export class FieldString implements Field<string> {
         return FieldStringEditView;
     }
 
-    buildJson(): any {
+    buildJsonValue(): FieldJsonValue {
+        return new FieldJsonValue(this.fieldName, this.actualValue)
     }
 }

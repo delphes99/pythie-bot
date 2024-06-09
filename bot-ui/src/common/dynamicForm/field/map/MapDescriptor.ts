@@ -1,6 +1,7 @@
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/FieldDescriptor";
+import {FieldDescriptor} from "@/common/dynamicForm/field/FieldDescriptor";
 import {DescriptorJsonType} from "@/common/dynamicForm/field/FieldDescriptor.factory";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/FieldDescriptorType";
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 import MapDescriptorEditView from "./MapDescriptorEditView.vue";
 
 export class MapDescriptor implements FieldDescriptor<string> {
@@ -36,7 +37,7 @@ export class MapDescriptor implements FieldDescriptor<string> {
     }
 
     buildValue() {
-        return new FieldValue(this.fieldName, JSON.parse(this.actualValue));
+        return new FieldJsonValue(this.fieldName, JSON.parse(this.actualValue));
     }
 
     viewComponent() {

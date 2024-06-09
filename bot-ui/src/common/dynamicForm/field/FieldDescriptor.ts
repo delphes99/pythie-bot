@@ -1,17 +1,11 @@
-export class FieldValue<T> {
-    constructor(
-        readonly fieldName: string,
-        readonly value: T
-    ) {
-    }
-}
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 
 //TODO: Remove this
 export interface FieldDescriptor<T> {
     readonly fieldName: string
     readonly description: string
 
-    buildValue(): FieldValue<T>
+    buildValue(): FieldJsonValue
 
     viewComponent(): any
 }

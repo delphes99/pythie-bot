@@ -1,6 +1,7 @@
 import {Field} from "@/common/dynamicForm/field/Field";
 import {FieldJsonType} from "@/common/dynamicForm/field/Field.factory";
-import {Duration, parseDuration} from "@/common/utils/Duration";
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
+import {Duration, formatDuration, parseDuration} from "@/common/utils/Duration";
 import {Component} from "vue";
 import FieldDurationEditView from "./FieldDurationEditView.vue";
 
@@ -28,6 +29,7 @@ export class FieldDuration implements Field<Duration> {
         return FieldDurationEditView
     }
 
-    buildJson(): any {
+    buildJsonValue(): FieldJsonValue {
+        return new FieldJsonValue(this.fieldName, formatDuration(this.actualValue));
     }
 }

@@ -1,3 +1,4 @@
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 import {Component} from "vue";
 
 export interface Field<T> {
@@ -10,5 +11,5 @@ export interface Field<T> {
 
     viewComponent(): Component
 
-    buildJson(): object
+    buildJsonValue(): FieldJsonValue
 }

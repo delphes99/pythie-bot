@@ -1,6 +1,7 @@
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/FieldDescriptor";
+import {FieldDescriptor} from "@/common/dynamicForm/field/FieldDescriptor";
 import {DescriptorJsonType} from "@/common/dynamicForm/field/FieldDescriptor.factory";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/FieldDescriptorType";
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 import OutgoingEventsDescriptorEditView
     from "@/common/dynamicForm/field/outgoingEvents/OutgoingEventsDescriptorEditView.vue";
 import {OutgoingEvent} from "@/features/outgoingevents/OutgoingEvent";
@@ -73,8 +74,8 @@ export class OutgoingEventsDescriptor implements FieldDescriptor<OutgoingEvent[]
         );
     }
 
-    buildValue(): FieldValue<OutgoingEvent[]> {
-        return new FieldValue(this.fieldName, this.events.map(event => event.buildValue()));
+    buildValue(): FieldJsonValue {
+        return new FieldJsonValue(this.fieldName, this.events.map(event => event.buildValue()));
     }
 
     viewComponent() {

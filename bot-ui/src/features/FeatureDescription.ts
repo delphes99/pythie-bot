@@ -36,7 +36,7 @@ export default class FeatureDescription implements FormDescription<FeatureConfig
             id: this.id,
             ...this.descriptors
                 .map(descriptor => descriptor.buildValue())
-                .reduce((acc, value) => ({...acc, [value.fieldName]: value.value}), {})
+                .reduce((acc, value) => ({...acc, [value.fieldName]: value.jsonValue}), {})
         }
     }
 

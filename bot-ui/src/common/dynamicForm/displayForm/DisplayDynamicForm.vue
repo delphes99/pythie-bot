@@ -28,7 +28,7 @@ const dynamicFormService = autowired(AppInjectionKeys.DYNAMIC_FORM_SERVICE)
 const form = ref(await dynamicFormService.getForm(props.name))
 
 function saveDescription() {
-  console.log(form)
+  console.log(form.value.buildJson())
 }
 
 </script>

@@ -1,7 +1,8 @@
 import DurationDescriptorEditView from "@/common/dynamicForm/field/duration/DurationDescriptorEditView.vue";
-import {FieldDescriptor, FieldValue} from "@/common/dynamicForm/field/FieldDescriptor";
+import {FieldDescriptor} from "@/common/dynamicForm/field/FieldDescriptor";
 import {DescriptorJsonType} from "@/common/dynamicForm/field/FieldDescriptor.factory";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/FieldDescriptorType";
+import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
 import {Duration, formatDuration, parseDuration} from "@/common/utils/Duration";
 
 export class DurationDescriptor implements FieldDescriptor<string> {
@@ -54,7 +55,7 @@ export class DurationDescriptor implements FieldDescriptor<string> {
     }
 
     buildValue() {
-        return new FieldValue(this.fieldName, formatDuration(this.actualValue));
+        return new FieldJsonValue(this.fieldName, formatDuration(this.actualValue));
     }
 
     viewComponent() {
