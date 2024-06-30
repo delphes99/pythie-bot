@@ -2,6 +2,7 @@ package fr.delphes.twitch.eventSub
 
 import fr.delphes.twitch.eventSub.payload.GenericCondition
 import fr.delphes.twitch.eventSub.payload.notification.NotificationPayload
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
@@ -11,7 +12,6 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.post
 import io.ktor.util.pipeline.PipelineContext
-import mu.KotlinLogging
 
 class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
     private val topic: EventSubTopic,
@@ -30,11 +30,13 @@ class EventSubCallback<PAYLOAD, CONDITION : GenericCondition>(
                     LOGGER.info { "Twitch webhook ${topic.name} for $channelName : Subscription ok" }
                     this.challengeWebHook(payload.challenge)
                 }
+
                 payload.event != null -> {
                     listener(payload.event)
 
                     this.context.respond(HttpStatusCode.OK)
                 }
+
                 else -> {
                     LOGGER.error { "Twitch webhook ${topic.webhookPathSuffix} for $channelName : Unable to handle message" }
                 }

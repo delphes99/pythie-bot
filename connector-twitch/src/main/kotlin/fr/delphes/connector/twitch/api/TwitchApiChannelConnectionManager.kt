@@ -11,9 +11,8 @@ import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.connector.twitch.outgoingEvent.TwitchApiOutgoingEvent
 import fr.delphes.twitch.AppTwitchClient
 import fr.delphes.twitch.ChannelTwitchClient
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
-import mu.KLogger
-import mu.KotlinLogging
 
 class TwitchApiChannelConnectionManager(
     private val channelConfiguration: ConfigurationTwitchAccount,
@@ -22,7 +21,8 @@ class TwitchApiChannelConnectionManager(
     override val connectionName = "Helix - ${channelConfiguration.channel.name}"
 
     override suspend fun doConnection(configuration: TwitchConfiguration): ConnectorTransition<TwitchConfiguration, TwitchApiChannelRuntime> {
-        val credentialsManager = connector.configurationManager.buildCredentialsManager() ?: error("Connection with no configuration")
+        val credentialsManager =
+            connector.configurationManager.buildCredentialsManager() ?: error("Connection with no configuration")
 
         //TODO subscribe only when feature requires
         val legacyChannelConfiguration = connector.channels
@@ -84,4 +84,4 @@ class TwitchApiChannelConnectionManager(
     }
 }
 
-private val logger: KLogger = KotlinLogging.logger { }
+private val logger = KotlinLogging.logger { }

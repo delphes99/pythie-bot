@@ -4,8 +4,8 @@ import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.serialization.json.Json
-import mu.KotlinLogging
 
 class StatisticService(
     configuration: BotConfiguration,

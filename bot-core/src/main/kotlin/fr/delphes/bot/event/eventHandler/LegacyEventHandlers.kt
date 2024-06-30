@@ -3,10 +3,10 @@ package fr.delphes.bot.event.eventHandler
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import mu.KotlinLogging
 import kotlin.reflect.KClass
 
 class LegacyEventHandlers(

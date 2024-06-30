@@ -37,7 +37,6 @@ import fr.delphes.twitch.eventSub.EventSubConfiguration
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import mu.KotlinLogging
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -122,8 +121,6 @@ class ChannelTwitchClient(
     }
 
     companion object {
-        private val LOGGER = KotlinLogging.logger {}
-
         fun builder(
             appTwitchApi: AppTwitchApi,
             clientId: String,

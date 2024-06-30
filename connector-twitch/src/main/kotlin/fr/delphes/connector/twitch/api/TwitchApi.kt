@@ -12,6 +12,7 @@ import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
 import fr.delphes.utils.flatMapNotNull
+import io.github.oshai.kotlinlogging.KotlinLogging
 
 class TwitchApi(
     private val connector: TwitchConnector,
@@ -140,4 +141,4 @@ class TwitchApi(
     }
 }
 
-private val logger = mu.KotlinLogging.logger {}
+private val logger = KotlinLogging.logger {}

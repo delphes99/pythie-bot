@@ -7,15 +7,15 @@ import fr.delphes.twitch.irc.handler.ChannelMessageHandler
 import fr.delphes.twitch.irc.handler.GlobalMessageHandler
 import fr.delphes.twitch.irc.handler.JoinHandler
 import fr.delphes.twitch.irc.handler.LoginRefusedHandler
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
-import mu.KotlinLogging
 import org.kitteh.irc.client.library.Client
 import org.kitteh.irc.client.library.feature.twitch.TwitchSupport
 
 class IrcClient(
     builder: Builder,
     private val credentialsManager: CredentialsManager,
-    private val channel: TwitchChannel
+    private val channel: TwitchChannel,
 ) {
     private val builder = builder
         .withOnLoginFailed {
@@ -72,7 +72,7 @@ class IrcClient(
 
     class Builder(
         private val channel: TwitchChannel,
-        private val credentialsManager: CredentialsManager
+        private val credentialsManager: CredentialsManager,
     ) {
         var onChannelMessage: ((IrcChannelMessage) -> Unit)? = null
         var onJoin: ((IrcChannel, IrcUser) -> Unit)? = null

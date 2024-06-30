@@ -12,6 +12,8 @@ node-version = "18.16.0"
 pnpm-version = "8.2.0"
 ksp-version = "1.9.24-1.0.20"
 kotlin-poet-version = "1.16.0"
+kotlin-logging-version = "7.0.0"
+logback-version = "1.5.6"
 
 #test
 mockk-version = "1.13.2"
@@ -46,6 +48,10 @@ kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kote
 kotest-assertion-core = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest-version" }
 kotest-assertion-json = { module = "io.kotest:kotest-assertions-json-jvm", version.ref = "kotest-version" }
 
+#logging
+kotlin-logging = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlin-logging-version" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback-version" }
+
 #discord
 kord = { module = "dev.kord:kord-core", version.ref = "kord-version" }
 
@@ -61,7 +67,7 @@ kotlin-poet = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kotlin-po
 ksp-compile-testing = { module = "com.github.tschuchortdev:kotlin-compile-testing-ksp", version.ref = "ksp-compile-testing-version" }
 
 [bundles]
-kotlin-common = ["kotlinx-coroutines", "kotlinx-serialization"]
+kotlin-common = ["kotlinx-coroutines", "kotlinx-serialization", "kotlin-logging", "logback"]
 kotlin-test = ["mockk", "bytebuddy", "junit-core", "kotest-assertion-core", "kotest-assertion-json", "kotest-runner"]
 ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-serialization", "ktor-server-content-negotiation", "ktor-server-websockets", "ktor-server-cors"]
 ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-serialization", "ktor-client-content-negotiation", "ktor-client-serialization-jvm"]

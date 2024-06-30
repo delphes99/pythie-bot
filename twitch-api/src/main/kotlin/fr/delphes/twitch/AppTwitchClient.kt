@@ -4,16 +4,16 @@ import fr.delphes.twitch.api.channel.ChannelInformation
 import fr.delphes.twitch.api.games.Game
 import fr.delphes.twitch.api.games.GameId
 import fr.delphes.twitch.api.user.TwitchUser
-import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.api.user.UserId
+import fr.delphes.twitch.api.user.UserName
 import fr.delphes.twitch.api.video.ChannelVideo
 import fr.delphes.twitch.api.video.payload.ChannelVideoType
 import fr.delphes.twitch.auth.CredentialsManager
 import fr.delphes.twitch.eventSub.payload.subscription.ListSubscriptionsPayload
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import mu.KotlinLogging
 
 class AppTwitchClient(
     private val twitchAppHelixApi: AppHelixApi,

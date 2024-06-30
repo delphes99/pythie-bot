@@ -9,7 +9,7 @@ import fr.delphes.connector.twitch.api.TwitchApiConnectionManager
 import fr.delphes.connector.twitch.irc.TwitchIrcConnectionManager
 import fr.delphes.utils.addNonPresents
 import fr.delphes.utils.removeAll
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 
 class TwitchConnectionManager(
     private val connector: TwitchConnector,

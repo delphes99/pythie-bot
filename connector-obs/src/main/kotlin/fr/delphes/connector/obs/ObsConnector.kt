@@ -10,8 +10,8 @@ import fr.delphes.bot.connector.SimpleConfigurationManager
 import fr.delphes.bot.connector.connectionstate.Connected
 import fr.delphes.connector.obs.endpoints.ObsModule
 import fr.delphes.state.enumeration.EnumerationState
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.server.application.Application
-import mu.KotlinLogging
 
 class ObsConnector(
     val bot: Bot,

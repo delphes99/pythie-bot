@@ -3,18 +3,18 @@ package fr.delphes.twitch
 import fr.delphes.twitch.api.user.TwitchUser
 import fr.delphes.twitch.eventSub.EventSubConfiguration
 import fr.delphes.twitch.eventSub.payload.subscription.SubscribeTransport
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import mu.KotlinLogging
 
 class WebhookClient(
     private val publicUrl: String,
     private val user: TwitchUser,
     private val secret: String,
     private val appHelixApi: AppHelixApi,
-    private val eventSubConfigurations: List<EventSubConfiguration<*, *>>
+    private val eventSubConfigurations: List<EventSubConfiguration<*, *>>,
 ) : WebhookApi {
     override suspend fun registerWebhooks() {
         coroutineScope {

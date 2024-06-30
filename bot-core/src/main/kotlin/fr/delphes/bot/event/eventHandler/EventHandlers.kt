@@ -3,9 +3,9 @@ package fr.delphes.bot.event.eventHandler
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import mu.KotlinLogging
 import kotlin.reflect.KClass
 
 class EventHandlers(

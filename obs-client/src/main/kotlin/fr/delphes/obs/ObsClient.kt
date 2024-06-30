@@ -14,6 +14,7 @@ import fr.delphes.obs.toObs.ToObsMessageType
 import fr.delphes.obs.toObs.request.RequestDataPayload
 import fr.delphes.utils.toBase64
 import fr.delphes.utils.toSha256
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.websocket.ClientWebSocketSession
@@ -32,15 +33,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import mu.KotlinLogging
 
 class ObsClient(
     private val configuration: Configuration,
     private val listeners: ObsListener,
-    private val serializer: Json
+    private val serializer: Json,
 ) {
     private val requestsToSend = Channel<RequestDataPayload>()
     private val scope = CoroutineScope(Dispatchers.Default)
@@ -97,7 +96,8 @@ class ObsClient(
     }
 
     private suspend fun ClientWebSocketSession.sendRequest(request: RequestDataPayload) {
-        val requestMessage = ToObsMessageType.buildMessageFrom(RequestPayload.toToObsMessagePayload(request, serializer), serializer)
+        val requestMessage =
+            ToObsMessageType.buildMessageFrom(RequestPayload.toToObsMessagePayload(request, serializer), serializer)
 
         send(requestMessage.toFrame())
     }
@@ -130,8 +130,14 @@ class ObsClient(
                         is Hello -> {
                             LOGGER.debug { "└ Hello received" }
                             val authenticationString =
-                                message.d.authentication?.let { configuration.password?.toAuthenticationString(it.salt, it.challenge) }
-                            val identifyMessage = ToObsMessageType.buildMessageFrom(IdentifyPayload(authenticationString), serializer)
+                                message.d.authentication?.let {
+                                    configuration.password?.toAuthenticationString(
+                                        it.salt,
+                                        it.challenge
+                                    )
+                                }
+                            val identifyMessage =
+                                ToObsMessageType.buildMessageFrom(IdentifyPayload(authenticationString), serializer)
 
                             send(identifyMessage.toFrame())
                         }

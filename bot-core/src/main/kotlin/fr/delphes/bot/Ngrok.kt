@@ -1,6 +1,7 @@
 package fr.delphes.bot
 
 import fr.delphes.bot.util.http.httpClient
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.body
 import io.ktor.client.request.delete
 import io.ktor.client.request.post
@@ -10,7 +11,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
-import mu.KotlinLogging
 import java.util.concurrent.TimeUnit
 
 object Ngrok {
@@ -92,7 +92,8 @@ object Ngrok {
         }
 
         companion object {
-            private val EXTRACT_PUBLIC_URL = Regex(".*\"public_url\":\"(https://.*\\.(?:ngrok\\.io|ngrok-free\\.app|ngrok-free\\.dev))\".*")
+            private val EXTRACT_PUBLIC_URL =
+                Regex(".*\"public_url\":\"(https://.*\\.(?:ngrok\\.io|ngrok-free\\.app|ngrok-free\\.dev))\".*")
         }
     }
 

@@ -5,6 +5,7 @@ import fr.delphes.bot.util.http.httpClient
 import fr.delphes.connector.twitch.TwitchConfiguration
 import fr.delphes.connector.twitch.TwitchConnector
 import fr.delphes.twitch.auth.AuthToken
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.call.body
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -19,7 +20,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kotlinx.serialization.Serializable
-import mu.KotlinLogging
 
 internal fun Application.ConfigurationModule(connector: TwitchConnector) {
     routing {
@@ -51,11 +51,13 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
                     val newBotAuth = getAuthToken(code, configuration)
                     connector.newBotAccountConfiguration(newBotAuth)
                 }
+
                 "addChannel" -> {
                     LOGGER.info { "Add channel credential" }
                     val channelAuth = getAuthToken(code, configuration)
                     connector.addChannelConfiguration(channelAuth)
                 }
+
                 else -> {
                     LOGGER.error { "Unknown state value" }
                 }
@@ -65,7 +67,7 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
         }
         delete("/twitch/configuration/channel/{channel}") {
             val channelName = this.context.parameters["channel"]
-            val responseCode = if(channelName != null) {
+            val responseCode = if (channelName != null) {
                 connector.configurationManager.removeChannel(channelName)
                 HttpStatusCode.OK
             } else {
@@ -79,26 +81,26 @@ internal fun Application.ConfigurationModule(connector: TwitchConnector) {
 
 private suspend fun getAuthToken(
     code: String?,
-    configuration: TwitchConfiguration
+    configuration: TwitchConfiguration,
 ) = (httpClient.post("https://id.twitch.tv/oauth2/token") {
-this.parameter("code", code)
-this.parameter("client_id", configuration.clientId)
-this.parameter("client_secret", configuration.clientSecret)
-this.parameter("grant_type", "authorization_code")
-this.parameter("redirect_uri", "http://localhost:8080/twitch/configuration/userCredential")
+    this.parameter("code", code)
+    this.parameter("client_id", configuration.clientId)
+    this.parameter("client_secret", configuration.clientSecret)
+    this.parameter("grant_type", "authorization_code")
+    this.parameter("redirect_uri", "http://localhost:8080/twitch/configuration/userCredential")
 }.body<AuthToken>())
 
 @Serializable
 private data class ConfigurationOverview(
     val clientId: String,
     val botUsername: String?,
-    val channels: List<String>
+    val channels: List<String>,
 )
 
 @Serializable
 private data class AppCredentialRequest(
     val clientId: String,
-    val clientSecret: String
+    val clientSecret: String,
 )
 
 private val LOGGER = KotlinLogging.logger {}

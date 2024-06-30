@@ -5,8 +5,8 @@ import fr.delphes.twitch.api.reward.TwitchRewardConfiguration
 import fr.delphes.twitch.api.reward.payload.CreateCustomReward
 import fr.delphes.twitch.api.reward.payload.UpdateCustomReward
 import fr.delphes.twitch.api.reward.payload.getCustomReward.GetCustomRewardDataPayload
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
-import mu.KotlinLogging
 
 class RewardCache(
     private val configurations: List<TwitchRewardConfiguration>,

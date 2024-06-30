@@ -18,7 +18,7 @@ import fr.delphes.obs.ObsClient
 import fr.delphes.obs.ObsListener
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 
 class ObsConnectionManager(
     private val connector: ObsConnector,

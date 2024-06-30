@@ -1,7 +1,7 @@
 package fr.delphes.connector.twitch.reward
 
 import fr.delphes.connector.twitch.api.TwitchApi
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 
 class RewardService(
     private val twitchApi: TwitchApi,
