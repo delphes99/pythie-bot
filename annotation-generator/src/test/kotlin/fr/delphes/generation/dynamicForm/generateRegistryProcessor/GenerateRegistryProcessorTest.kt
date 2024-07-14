@@ -1,6 +1,6 @@
 package fr.delphes.generation.dynamicForm.generateRegistryProcessor
 
-import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.JvmCompilationResult
 import fr.delphes.dynamicForm.DynamicFormRegistry
 import fr.delphes.dynamicForm.DynamicFormType
 import fr.delphes.generation.dynamicForm.generateFormProcessor.GenerateDynamicFormProcessorProvider
@@ -112,7 +112,7 @@ class GenerateRegistryProcessorTest : ShouldSpec({
 })
 
 private fun String.shouldCompileWith(
-    assertion: KotlinCompilation.Result.() -> Unit,
+    assertion: JvmCompilationResult.() -> Unit,
 ) {
     shouldCompileWithProvider(
         "MyForm.kt",

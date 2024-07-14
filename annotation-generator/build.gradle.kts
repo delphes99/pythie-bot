@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":annotation"))
     implementation(project(":bot-core"))
     testImplementation(libs.bundles.kotlin.test)
-    testImplementation(libs.ksp.compile.testing)
+    testImplementation(libs.bundles.compile.test)
 }
 
 sourceSets.main {
@@ -23,7 +23,7 @@ sourceSets.main {
 tasks.withType<KotlinCompile>() {
     compilerOptions {
         freeCompilerArgs.add("-Xopt-in=com.google.devtools.ksp.KspExperimental")
-
+        freeCompilerArgs.add("-Xopt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
     }
 }
 

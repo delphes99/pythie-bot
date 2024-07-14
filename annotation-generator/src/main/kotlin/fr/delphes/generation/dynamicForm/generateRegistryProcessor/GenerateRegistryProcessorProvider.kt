@@ -22,6 +22,8 @@ import fr.delphes.dynamicForm.DynamicFormRegistry
 import fr.delphes.dynamicForm.DynamicFormRegistryEntry
 import fr.delphes.dynamicForm.DynamicFormType
 import fr.delphes.generation.dynamicForm.generateFormProcessor.GenerateDynamicFormProcessor
+import fr.delphes.generation.dynamicForm.getDescriptionFieldsMetadata
+import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.FieldDescriptionFactory
 import fr.delphes.generation.utils.GenerationUtils
 import fr.delphes.generation.utils.getAllAnnotations
 import fr.delphes.generation.utils.getSources
@@ -80,18 +82,48 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
                                         val dynamicFormAnnotation =
                                             form.getAnnotationsByType(DynamicForm::class).first()
 
-                                        addStatement("%T.of(", DynamicFormRegistryEntry::class)
-                                        addStatement("%T(%S), ", DynamicFormType::class, dynamicFormAnnotation.name)
-                                        addStatement("%T::class, ", form.toClassName())
-                                        addStatement("listOf(")
-                                        val tags = form.getAllAnnotations(DynamicFormParent::class).map { it.family }
-                                            .joinToString(",") { "\"$it\"" }
-                                        addStatement(tags)
-                                        addStatement(")")
-                                        addStatement(
-                                            ") { %T() },",
-                                            GenerateDynamicFormProcessor.getGeneratedClassNameFor(form, moduleName)
-                                        )
+                                        addStatement("%T.of(", DynamicFormRegistryEntry::class).apply {
+                                            addStatement(
+                                                "%T(%S), ",
+                                                DynamicFormType::class,
+                                                dynamicFormAnnotation.name
+                                            )
+                                            addStatement("%T::class, ", form.toClassName())
+                                            addStatement("listOf(").apply {
+                                                val tags =
+                                                    form.getAllAnnotations(DynamicFormParent::class)
+                                                        .map { it.family }
+                                                        .joinToString(",") { "\"$it\"" }
+                                                addStatement(tags)
+                                                addStatement("),")
+                                            }
+                                            addStatement(
+                                                "buildNewInstance = { %T() },",
+                                                GenerateDynamicFormProcessor.getGeneratedClassNameFor(
+                                                    form,
+                                                    moduleName
+                                                )
+                                            )
+                                            addStatement(
+                                                "mapInstance = { item -> %T(",
+                                                GenerateDynamicFormProcessor.getGeneratedClassNameFor(
+                                                    form,
+                                                    moduleName
+                                                )
+                                            ).apply {
+                                                form.getDescriptionFieldsMetadata().forEach { field ->
+                                                    addStatement("${field.name} = ")
+                                                    add(
+                                                        FieldDescriptionFactory.buildObjectToDto(field, "item")
+                                                    )
+                                                    addStatement(",")
+                                                }
+                                                addStatement(")")
+                                                addStatement("}")
+                                            }
+
+                                            addStatement("),")
+                                        }
                                     }
                                 }
                                 .addStatement(")")

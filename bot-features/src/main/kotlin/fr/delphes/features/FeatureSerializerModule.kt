@@ -1,6 +1,7 @@
 package fr.delphes.features
 
 import fr.delphes.feature.FeatureConfiguration
+import fr.delphes.features.generated.featuresPolymorphicSerializerModule
 import fr.delphes.features.twitch.command.CustomCommandConfiguration
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -10,4 +11,5 @@ val featureSerializersModule = SerializersModule {
     polymorphic(FeatureConfiguration::class) {
         subclass(CustomCommandConfiguration::class)
     }
+    include(featuresPolymorphicSerializerModule)
 }

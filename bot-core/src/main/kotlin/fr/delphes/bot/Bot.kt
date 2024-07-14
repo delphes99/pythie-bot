@@ -13,8 +13,8 @@ import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.dynamicForm.DynamicFormRegistry
 import fr.delphes.feature.FeatureConfigurationBuilderRegistry
-import fr.delphes.feature.FeatureConfigurationRepository
 import fr.delphes.feature.FeaturesManager
+import fr.delphes.feature.FileFeatureConfigurationRepository
 import fr.delphes.feature.NonEditableFeature
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.state.StateManager
@@ -58,7 +58,7 @@ class Bot(
                 connectors,
                 //TODO features : connector initializer ?
                 featuresDynamicFormRegistry,
-                featureSerializerModule
+                featureSerializerModule,
             )
 
             bot.init()
@@ -72,8 +72,6 @@ class Bot(
 
     val enumerationStates get() = connectors.flatMap(Connector<*, *>::enumerationStates)
 
-    val featuresManager = buildFeatureManager()
-
     val statisticService = StatisticService(configuration, serializer)
 
     val connectors = connectorInitializers
@@ -83,6 +81,8 @@ class Bot(
         *connectorInitializers.map { it.dynamicFormRegistry }.toTypedArray(),
         featuresDynamicFormRegistry
     )
+
+    val featuresManager = buildFeatureManager(dynamicFormRegistry)
 
     internal val overlayRepository =
         OverlayRepository(configuration.pathOf("overlays", "overlays.json"))
@@ -131,10 +131,11 @@ class Bot(
         .firstOrNull { connector -> connector.connectorType == name }
 
 
-    private fun buildFeatureManager(): FeaturesManager {
-        val featureConfigurationRepository = FeatureConfigurationRepository(
+    private fun buildFeatureManager(formRegistry: DynamicFormRegistry): FeaturesManager {
+        val featureConfigurationRepository = FileFeatureConfigurationRepository(
             configuration.pathOf("features"),
-            serializer
+            serializer,
+            formRegistry
         )
         return FeaturesManager(stateManager, features, featureConfigurationRepository)
     }

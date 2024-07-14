@@ -12,23 +12,20 @@
 </template>
 
 <script setup lang="ts">
-import {AppInjectionKeys} from "@/AppInjectionKeys";
 import UiButton from "@/common/designSystem/button/UiButton.vue";
-import {autowired} from "@/common/utils/Injection.util";
-import {ref} from "vue";
+import {DynamicForm} from "@/common/dynamicForm/DynamicForm";
 
 const props = defineProps({
-  name: {
-    type: String,
+  form: {
+    type: DynamicForm,
     required: true,
   },
 })
 
-const dynamicFormService = autowired(AppInjectionKeys.DYNAMIC_FORM_SERVICE)
-const form = ref(await dynamicFormService.getForm(props.name))
+const emit = defineEmits(["saveForm"])
 
 function saveDescription() {
-  console.log(form.value.buildJson())
+  emit("saveForm")
 }
 
 </script>

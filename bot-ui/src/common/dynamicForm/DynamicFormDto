@@ -1,0 +1,5 @@
+export Interface DynamicFormDto {
+  formId: string;
+  formName: string;
+  formFields: DynamicFormFieldDto[];
+}

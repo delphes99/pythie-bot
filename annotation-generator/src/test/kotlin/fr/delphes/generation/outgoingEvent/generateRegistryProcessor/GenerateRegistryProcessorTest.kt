@@ -1,6 +1,6 @@
 package fr.delphes.generation.outgoingEvent.generateRegistryProcessor
 
-import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.JvmCompilationResult
 import fr.delphes.bot.event.outgoing.OutgoingEventRegistry
 import fr.delphes.feature.OutgoingEventType
 import fr.delphes.generation.loadGlobalVariable
@@ -41,7 +41,7 @@ class GenerateRegistryProcessorTest : ShouldSpec({
 })
 
 private fun String.shouldCompileWith(
-    assertion: KotlinCompilation.Result.() -> Unit,
+    assertion: JvmCompilationResult.() -> Unit,
 ) {
     shouldCompileWithProvider(
         "MyEvent.kt",

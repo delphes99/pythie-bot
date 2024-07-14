@@ -1,5 +1,6 @@
 package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
 
+import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
@@ -329,7 +330,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
 })
 
 private fun String.shouldCompileWith(
-    assertion: KotlinCompilation.Result.() -> Unit,
+    assertion: JvmCompilationResult.() -> Unit,
 ) {
     shouldCompileWithProvider("MyEvent.kt", GenerateOutgoingEventBuilderModuleProcessorProvider(), assertion)
 }

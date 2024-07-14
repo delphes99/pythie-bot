@@ -34,23 +34,21 @@ import UiTextfield from "@/common/designSystem/form/textfield/UiTextfield.vue";
 import UiModal from "@/common/designSystem/modal/UiModal.vue";
 import {useModal} from "@/common/designSystem/modal/useModal";
 import {autowired} from "@/common/utils/Injection.util";
-import {Feature} from "@/features/Feature";
 import FeatureCard from "@/features/featureCard/FeatureCard.vue"
-import FeatureService, {FeatureType} from "@/features/FeatureService";
+import {FeatureType} from "@/features/FeatureService";
+import {FeatureSummary} from "@/features/FeatureSummary";
 import {useGetFeatureTypes} from "@/features/useGetFeatureTypes";
 import router from "@/router";
 import {ref} from "vue"
 
-const backendUrl = autowired(AppInjectionKeys.BACKEND_URL)
+const featureService = autowired(AppInjectionKeys.FEATURE_SERVICE)
 
 const featureId = ref("")
 
-const features = ref<Feature[]>([])
+const features = ref<FeatureSummary[]>([])
 
 async function getFeatures() {
-  const response = await fetch(`${backendUrl}/features`)
-
-  features.value = await response.json()
+  features.value = await featureService.getAllFeatures()
 }
 
 const {allTypesAsSelectOptions, allTypes} = useGetFeatureTypes()
@@ -59,7 +57,7 @@ const selectedType = ref<FeatureType>(allTypes.value[0])
 const {isOpen: isCreateModalOpened, open: openCreateModal} = useModal()
 
 async function createFeature() {
-  await new FeatureService(backendUrl).createFeature(featureId.value, selectedType.value)
+  await featureService.createFeature(featureId.value, selectedType.value)
   await router.push({path: `/feature/${featureId.value}`})
 }
 

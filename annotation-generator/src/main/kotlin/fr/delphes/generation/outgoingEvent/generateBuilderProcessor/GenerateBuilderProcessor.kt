@@ -153,7 +153,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                             .apply {
                                 outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
                                     addCode("${property.name} = ")
-                                    FieldDescriptionFactory.buildEncodeValue(this, property)
+                                    addCode(FieldDescriptionFactory.buildDtoToObject(property))
                                     addCode(",\n")
                                 }
                             }

@@ -17,6 +17,7 @@ import fr.delphes.connector.twitch.outgoingEvent.CreatePoll
 import fr.delphes.connector.twitch.outgoingEvent.DeactivateReward
 import fr.delphes.connector.twitch.outgoingEvent.PromoteModerator
 import fr.delphes.connector.twitch.outgoingEvent.RemoveModerator
+import fr.delphes.connector.twitch.outgoingEvent.RemoveVIP
 import fr.delphes.connector.twitch.outgoingEvent.SendMessage
 import fr.delphes.connector.twitch.outgoingEvent.ShoutOut
 import fr.delphes.connector.twitch.state.CommandListState
@@ -159,6 +160,7 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
         "!mod"
     ) {
         if (moderators.contains(event.data.by.normalizeName)) {
+            executeOutgoingEvent(RemoveVIP(event.data.by, event.data.channel))
             executeOutgoingEvent(PromoteModerator(event.data.by, event.data.channel))
         }
     },

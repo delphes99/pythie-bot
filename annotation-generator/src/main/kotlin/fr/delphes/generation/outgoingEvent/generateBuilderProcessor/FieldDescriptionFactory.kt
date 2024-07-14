@@ -1,5 +1,6 @@
 package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
 
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ksp.toClassName
 import fr.delphes.generation.dynamicForm.FieldMetadata
@@ -33,19 +34,45 @@ object FieldDescriptionFactory {
         }
     }
 
-    fun buildEncodeValue(builder: FunSpec.Builder, property: FieldMetadata) {
+    fun buildDtoToObject(property: FieldMetadata): CodeBlock {
+        val builder = CodeBlock.builder()
         when (property) {
             is FieldWithMapper -> {
-                builder.addCode(
-                    "%T.map(this.${property.name})", property.mapperClass.toClassName()
+                builder.addStatement(
+                    "%T.mapFromDto(this.${property.name})", property.mapperClass.toClassName()
                 )
             }
 
             is FieldWithType -> {
-                builder.addCode("this.${property.name}")
+                builder.addStatement("this.${property.name}")
             }
 
-            is FieldWithFormList -> TODO()
+            is FieldWithFormList -> {
+                //TODO
+                builder.addStatement("emptyList()")
+            }
         }
+        return builder.build()
+    }
+
+    fun buildObjectToDto(property: FieldMetadata, variableName: String = "this"): CodeBlock {
+        val builder = CodeBlock.builder()
+        when (property) {
+            is FieldWithMapper -> {
+                builder.addStatement(
+                    "%T.mapToDto($variableName.${property.name})", property.mapperClass.toClassName()
+                )
+            }
+
+            is FieldWithType -> {
+                builder.addStatement("$variableName.${property.name}")
+            }
+
+            is FieldWithFormList -> {
+                //TODO
+                builder.addStatement("emptyList()")
+            }
+        }
+        return builder.build()
     }
 }

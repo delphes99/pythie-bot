@@ -16,11 +16,13 @@ export default class DynamicFormService {
     async getForm(value: DynamicFormType): Promise<DynamicForm> {
         return await fetch(`${this.backendUrl}/dynamicForms/form/${value}`)
             .then(response => response.json())
-            .then(json => {
-                return new DynamicForm(
-                    json.type,
-                    json.fields.map((descriptor: any) => fieldFromJson(descriptor))
-                )
-            });
+            .then(json => this.buildForm(json));
+    }
+
+    buildForm(json: any) {
+        return new DynamicForm(
+            json.type,
+            json.fields.map((descriptor: any) => fieldFromJson(descriptor))
+        );
     }
 }

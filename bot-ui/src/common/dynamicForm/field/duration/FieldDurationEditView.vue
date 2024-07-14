@@ -1,17 +1,17 @@
 <template>
-  {{ descriptor.description }}
+  {{ field.description }}
   <ui-textfield
-      :id="descriptor.fieldName"
+      :id="field.fieldName"
       v-model.number="actualHours"
       label="common.duration.hours"
   />
   <ui-textfield
-      :id="descriptor.fieldName"
+      :id="field.fieldName"
       v-model.number="actualMinutes"
       label="common.duration.minutes"
   />
   <ui-textfield
-      :id="descriptor.fieldName"
+      :id="field.fieldName"
       v-model.number="actualSeconds"
       label="common.duration.seconds"
   />
@@ -27,16 +27,16 @@ const emits = defineEmits<{
 }>()
 
 const props = defineProps({
-  descriptor: {
+  field: {
     type: Object as PropType<FieldDuration>,
     required: true,
   }
 })
 
-const actualHours = ref(props.descriptor.actualValue.hours)
+const actualHours = ref(props.field.actualValue.hours)
 
-const actualMinutes = ref(props.descriptor.actualValue.minutes)
+const actualMinutes = ref(props.field.actualValue.minutes)
 
-const actualSeconds = ref(props.descriptor.actualValue.seconds)
+const actualSeconds = ref(props.field.actualValue.seconds)
 
 </script>

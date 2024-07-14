@@ -4,10 +4,12 @@ import fr.delphes.annotation.dynamicForm.DynamicForm
 import fr.delphes.annotation.dynamicForm.FieldDescription
 import fr.delphes.annotation.dynamicForm.FieldMapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.connector.twitch.incomingEvent.NewFollow
 import fr.delphes.connector.twitch.outgoingEvent.descriptionMapper.TwitchChannelMapper
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
+import fr.delphes.rework.feature.SimpleFeatureRuntime
 import fr.delphes.state.State
 import fr.delphes.state.StateProvider
 import fr.delphes.twitch.TwitchChannel
@@ -25,10 +27,12 @@ data class NewFollow(
 ) : FeatureDefinition {
     override val id: FeatureId = FeatureId()
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
-        TODO()
+        return SimpleFeatureRuntime.whichHandle<NewFollow>(id) {
+            //TODO launch actions
+        }
     }
 
     override fun getSpecificStates(stateProvider: StateProvider): List<State> {
-        TODO()
+        return emptyList()
     }
 }

@@ -11,6 +11,20 @@ class DynamicFormRegistry private constructor(
         return entries.filter { it.tags.contains(tag) }
     }
 
+    fun <T : Any> transform(item: T): DynamicFormDTO<T>? {
+        return findByClass(item)
+            ?.map(item)
+    }
+
+    fun <T : Any> findByClass(item: T) = entries
+        .filter { entry -> entry.clazz.isInstance(item) }
+        .map { entry -> entry as DynamicFormRegistryEntry<T> }
+        .firstOrNull()
+
+    fun newInstanceOf(type: DynamicFormType): Any? {
+        return find(type)?.emptyForm()?.build()
+    }
+
     companion object {
         fun empty() = DynamicFormRegistry(emptyList())
 

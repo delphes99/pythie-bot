@@ -5,16 +5,20 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspArgs
+import com.tschuchort.compiletesting.kspIncremental
+import com.tschuchort.compiletesting.kspLoggingLevels
+import com.tschuchort.compiletesting.kspProcessorOptions
 import com.tschuchort.compiletesting.kspWithCompilation
 import com.tschuchort.compiletesting.symbolProcessorProviders
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 
 fun String.shouldCompileWithProvider(
     fileName: String,
     provider: SymbolProcessorProvider,
-    assertion: KotlinCompilation.Result.() -> Unit,
+    assertion: JvmCompilationResult.() -> Unit,
 ) {
     this.shouldCompileWithProvider(fileName, listOf(provider), assertion)
 }
@@ -22,18 +26,30 @@ fun String.shouldCompileWithProvider(
 fun String.shouldCompileWithProvider(
     fileName: String,
     providers: List<SymbolProcessorProvider>,
-    assertion: KotlinCompilation.Result.() -> Unit,
+    assertion: JvmCompilationResult.() -> Unit,
 ) {
     val source = SourceFile.kotlin(
         fileName, this
     )
+    source.shouldCompileWithProvider(providers, assertion)
+}
+
+fun SourceFile.shouldCompileWithProvider(
+    providers: List<SymbolProcessorProvider>,
+    assertion: JvmCompilationResult.() -> Unit,
+) {
     KotlinCompilation()
         .apply {
-            sources = listOf(source)
-            symbolProcessorProviders = providers
+            sources = listOf(this@shouldCompileWithProvider)
+            symbolProcessorProviders += providers
             inheritClassPath = true
-            kspArgs = mutableMapOf("module-name" to "test")
             kspWithCompilation = true
+            kspIncremental = true
+            kspLoggingLevels += CompilerMessageSeverity.LOGGING
+            kspLoggingLevels += CompilerMessageSeverity.INFO
+            kspLoggingLevels += CompilerMessageSeverity.WARNING
+            kspLoggingLevels += CompilerMessageSeverity.ERROR
+            kspProcessorOptions.put("module-name", "test")
         }.compile().apply(assertion)
 }
 

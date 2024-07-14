@@ -36,6 +36,7 @@ const i18n = createI18n({
 })
 
 const backendUrl = "http://localhost:8080"
+const dynamicFormService = new DynamicFormService(backendUrl);
 
 createApp(App)
     .component("json-viewer", JsonViewer)
@@ -49,8 +50,8 @@ createApp(App)
     })
     .provide(AppInjectionKeys.BACKEND_URL, backendUrl)
     .provide(AppInjectionKeys.MEDIA_SERVICE, new MediaService(backendUrl))
-    .provide(AppInjectionKeys.FEATURE_SERVICE, new FeatureService(backendUrl))
+    .provide(AppInjectionKeys.FEATURE_SERVICE, new FeatureService(backendUrl, dynamicFormService))
     .provide(AppInjectionKeys.NOTIFICATION_SERVICE, new NotificationService())
     .provide(AppInjectionKeys.MONITORING_SERVICE, new MonitoringService(backendUrl))
-    .provide(AppInjectionKeys.DYNAMIC_FORM_SERVICE, new DynamicFormService(backendUrl))
+    .provide(AppInjectionKeys.DYNAMIC_FORM_SERVICE, dynamicFormService)
     .mount("#app")

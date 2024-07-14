@@ -18,10 +18,10 @@ logback-version = "1.5.6"
 
 #test
 mockk-version = "1.13.2"
-bytebuddy-version = "1.12.18"
+bytebuddy-version = "1.14.18"
 kotest-version = "5.5.1"
 junit-core-version = "5.9.1"
-ksp-compile-testing-version = "1.5.0"
+ksp-compile-testing-version = "0.5.1"
 
 [libraries]
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-version" }
@@ -67,13 +67,15 @@ kumo = { module = "com.kennycason:kumo-core", version.ref = "kumo-version" }
 #code generation
 ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp-version" }
 kotlin-poet = { module = "com.squareup:kotlinpoet-ksp", version.ref = "kotlin-poet-version" }
-ksp-compile-testing = { module = "com.github.tschuchortdev:kotlin-compile-testing-ksp", version.ref = "ksp-compile-testing-version" }
+ksp-compile-testing-core = { module = "dev.zacsweers.kctfork:core", version.ref = "ksp-compile-testing-version" }
+ksp-compile-testing-ksp = { module = "dev.zacsweers.kctfork:ksp", version.ref = "ksp-compile-testing-version" }
 
 [bundles]
 kotlin-common = ["kotlinx-coroutines", "kotlinx-serialization", "kotlin-logging", "logback"]
 kotlin-test = ["mockk", "bytebuddy", "junit-core", "kotest-assertion-core", "kotest-assertion-json", "kotest-runner"]
 ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-serialization", "ktor-server-content-negotiation", "ktor-server-websockets", "ktor-server-cors"]
 ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-serialization", "ktor-client-content-negotiation", "ktor-client-serialization-jvm"]
+compile-test = ["ksp-compile-testing-core", "ksp-compile-testing-ksp"]
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }

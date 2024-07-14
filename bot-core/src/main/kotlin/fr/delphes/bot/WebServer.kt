@@ -8,7 +8,7 @@ import fr.delphes.bot.monitoring.Monitoring
 import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
 import fr.delphes.dynamicForm.DynamicFormAdminModule
-import fr.delphes.feature.FeatureAdminModule
+import fr.delphes.feature.web.FeatureAdminModule
 import fr.delphes.state.StateModule
 import io.ktor.http.HttpMethod
 import io.ktor.serialization.kotlinx.json.json

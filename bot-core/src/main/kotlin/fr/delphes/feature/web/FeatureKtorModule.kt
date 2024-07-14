@@ -1,6 +1,10 @@
-package fr.delphes.feature
+package fr.delphes.feature.web
 
 import fr.delphes.bot.Bot
+import fr.delphes.dynamicForm.DynamicFormType
+import fr.delphes.dynamicForm.http.getDynamicForm
+import fr.delphes.rework.feature.Feature
+import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -16,30 +20,36 @@ import kotlinx.serialization.Serializable
 fun Application.FeatureAdminModule(bot: Bot) {
     routing {
         get("features") {
-            this.context.respond(HttpStatusCode.OK, bot.featuresManager.getEditableFeatures())
+            this.context.respond(HttpStatusCode.OK, bot.featuresManager.getEditableFeatures().map { feature ->
+                FeatureSummaryDto(
+                    feature.id,
+                    bot.findEntryOf(feature).type
+                )
+            })
         }
         get("feature/{id}") {
             val id = this.call.parameters["id"]
                 ?.let { FeatureId(it) }
                 ?: return@get this.context.respond(HttpStatusCode.BadRequest, "feature id missing")
             bot.featuresManager.getEditableFeature(id)
-                ?.description()
+                ?.let { feature ->
+                    feature.toFeatureDto(bot)
+                }
                 ?.let { description -> this.context.respond(HttpStatusCode.OK, description) }
                 ?: this.context.respond(HttpStatusCode.NotFound, "feature with id ${id.value} not found")
         }
-
         put("feature/{id}") {
             val id = this.call.parameters["id"]
                 ?.let { FeatureId(it) }
                 ?: return@put this.context.respond(HttpStatusCode.BadRequest, "feature id missing")
 
-            val configuration = this.call.receive<FeatureConfiguration>()
+            val feature = Feature(
+                id,
+                getDynamicForm<FeatureDefinition>()
+            )
 
-            if (configuration.id != id) {
-                return@put this.context.respond(HttpStatusCode.BadRequest, "feature id mismatch")
-            }
-
-            bot.featuresManager.upsertFeature(configuration)
+            //FIXME make it work
+            bot.featuresManager.upsertFeature(feature)
             this.context.respond(HttpStatusCode.OK)
         }
         post("feature/{id}") {
@@ -52,13 +62,18 @@ fun Application.FeatureAdminModule(bot: Bot) {
             }
 
             val request = this.call.receive<CreateFeatureRequest>()
-            val definition = bot.featureConfigurationsType
-                .firstOrNull { it.type == request.type }
+
+            val emptyFeatureDescription = bot.dynamicFormRegistry.newInstanceOf(request.type) as FeatureDefinition?
                 ?: return@post this.context.respond(HttpStatusCode.BadRequest, "feature type not found")
 
-            val newConfiguration = definition.provideNewConfiguration(id)
-            bot.featuresManager.upsertFeature(newConfiguration)
-            this.context.respond(HttpStatusCode.OK, newConfiguration)
+            val feature = Feature(
+                id,
+                emptyFeatureDescription
+            )
+
+            bot.featuresManager.upsertFeature(feature)
+
+            this.context.respond(HttpStatusCode.OK, feature.toFeatureDto(bot))
         }
         post("features/reload") {
             bot.featuresManager.loadConfigurableFeatures()
@@ -66,14 +81,26 @@ fun Application.FeatureAdminModule(bot: Bot) {
         }
         get("features/types") {
             this.context.respond(
-                HttpStatusCode.OK, bot.featureConfigurationsType
-                    .map(FeatureConfigurationBuilderRegistry::type)
+                HttpStatusCode.OK, bot.dynamicFormRegistry.findByTag("feature").map { it.type }
             )
         }
     }
 }
 
+private fun Feature.toFeatureDto(
+    bot: Bot,
+) = FeatureDto(
+    id,
+    toDynamicForm(bot).description()
+)
+
+private fun Bot.findEntryOf(feature: Feature) =
+    dynamicFormRegistry.findByClass(feature.definition) ?: error("Feature definition not found")
+
+private fun Feature.toDynamicForm(bot: Bot) =
+    bot.dynamicFormRegistry.transform(definition) ?: error("Feature definition not found")
+
 @Serializable
 private class CreateFeatureRequest(
-    val type: FeatureConfigurationType,
+    val type: DynamicFormType,
 )

@@ -1,6 +1,8 @@
 package fr.delphes.generation.dynamicForm.generateFormProcessor
 
+import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.SourceFile
 import fr.delphes.annotation.dynamicForm.RegisterDynamicFormDto
 import fr.delphes.dynamicForm.DynamicFormDTO
 import fr.delphes.dynamicForm.DynamicFormDescription
@@ -16,6 +18,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.io.File
 
 class GenerateBuilderProcessorTest : ShouldSpec({
     should("form must have at least one field with description") {
@@ -183,10 +186,29 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             )
         }
     }
+    //TODO test build function
+    should("build function") {
+        SourceFile.fromPath(File("./src/test/kotlin/fr/delphes/generation/dynamicForm/generateFormProcessor/SubForms.kt"))
+            .shouldCompileWith {
+                val loadedClass =
+                    classLoader.loadClass("fr.delphes.test.generated.dynamicForm.StringSubFormDynamicForm")
+
+                val newInstance = loadedClass
+                    .getConstructor(String::class.java)
+                    .newInstance("someValue")
+                //to kotlin reflect class for call suspend build function
+            }
+    }
 })
 
+private fun SourceFile.shouldCompileWith(
+    assertion: JvmCompilationResult.() -> Unit,
+) {
+    shouldCompileWithProvider(listOf(GenerateDynamicFormProcessorProvider()), assertion)
+}
+
 private fun String.shouldCompileWith(
-    assertion: KotlinCompilation.Result.() -> Unit,
+    assertion: JvmCompilationResult.() -> Unit,
 ) {
     shouldCompileWithProvider("MyForm.kt", GenerateDynamicFormProcessorProvider(), assertion)
 }

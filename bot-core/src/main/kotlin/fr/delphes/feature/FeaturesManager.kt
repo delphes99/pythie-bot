@@ -3,6 +3,7 @@ package fr.delphes.feature
 import fr.delphes.bot.Bot
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
+import fr.delphes.rework.feature.Feature
 import fr.delphes.rework.feature.FeatureDefinition
 import fr.delphes.rework.feature.FeatureId
 import fr.delphes.rework.feature.FeatureRuntime
@@ -29,9 +30,8 @@ class FeaturesManager(
     fun loadConfigurableFeatures() {
         runBlocking {
             configurableRunTimes = featureConfigurationRepository.load()
-                .map { configuration ->
-                    configuration.buildFeature()
-                }.associateWith { definition ->
+                .map(Feature::definition)
+                .associateWith { definition ->
                     registerSpecificStatesAndBuildRuntimeOf(definition)
                 }
         }
@@ -62,15 +62,15 @@ class FeaturesManager(
         return compiledRuntimes.filterKeys { it.id == id }.values.firstOrNull()
     }
 
-    suspend fun getEditableFeatures(): List<FeatureConfiguration> {
+    suspend fun getEditableFeatures(): List<Feature> {
         return featureConfigurationRepository.load()
     }
 
-    suspend fun getEditableFeature(id: FeatureId): FeatureConfiguration? {
+    suspend fun getEditableFeature(id: FeatureId): Feature? {
         return getEditableFeatures().find { it.id == id }
     }
 
-    suspend fun upsertFeature(feature: FeatureConfiguration) {
+    suspend fun upsertFeature(feature: Feature) {
         featureConfigurationRepository.upsert(feature)
         loadConfigurableFeatures()
     }

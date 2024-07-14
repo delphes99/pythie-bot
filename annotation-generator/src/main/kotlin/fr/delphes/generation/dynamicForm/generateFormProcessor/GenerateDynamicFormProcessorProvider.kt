@@ -125,6 +125,20 @@ class GenerateDynamicFormProcessor(
                         .addCode(")")
                         .addCode(")")
                         .build()
+                ).addFunction(
+                    FunSpec.builder("build")
+                        .addModifiers(KModifier.OVERRIDE)
+                        .returns(baseFormClass.toClassName())
+                        .addCode("return %T(\n", baseFormClass.toClassName())
+                        .apply {
+                            baseFormClass.getDescriptionFieldsMetadata().forEach { property ->
+                                addCode("${property.name} = ")
+                                addCode(FieldDescriptionFactory.buildDtoToObject(property))
+                                addCode(",\n")
+                            }
+                        }
+                        .addCode(")")
+                        .build()
                 ).build()
             )
             .build().writeTo(codeGenerator, baseFormClass.toNonAggregatingDependencies())

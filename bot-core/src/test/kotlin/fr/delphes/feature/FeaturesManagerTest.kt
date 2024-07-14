@@ -9,7 +9,6 @@ import fr.delphes.rework.feature.SimpleFeatureRuntime
 import fr.delphes.state.StateProvider
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import java.time.LocalDateTime
@@ -29,37 +28,41 @@ internal class FeaturesManagerTest : ShouldSpec({
             featuresManager.getRuntime(ID) shouldBe runtime
         }
 
-        //TODO test with feature configuration
         should("deliver message to all runtimes") {
-            val runtimeForCompiledFeature = FakeFeatureRuntime()
-            val runtimeForAnotherCompiledFeature = FakeFeatureRuntime()
-            val runtimeForConfigurableFeature = FakeFeatureRuntime()
-            val runtimeForAnotherConfigurableFeature = FakeFeatureRuntime()
+            val compiledFeature1Id = FeatureId("compiled1")
+            val compiledFeature1Runtime = FakeFeatureRuntime()
+            val compiledFeature2Id = FeatureId("compiled2")
+            val compiledFeature2Runtime = FakeFeatureRuntime()
 
-            val featureConfigurationRepository = mockk<FeatureConfigurationRepository> {
-                coEvery { load() } returns listOf(
-                    mockk {
-                        every { buildFeature() } returns mockk {
-                            every { buildRuntime(any()) } returns runtimeForConfigurableFeature
-                            every { getSpecificStates(any()) } returns emptyList()
-                        }
-                    },
-                    mockk {
-                        every { buildFeature() } returns mockk {
-                            every { buildRuntime(any()) } returns runtimeForAnotherConfigurableFeature
-                            every { getSpecificStates(any()) } returns emptyList()
-                        }
-                    }
-                )
-            }
+            val configurableFeature1Id = FeatureId("configurable1")
+            val configurableFeature1Runtime = FakeFeatureRuntime()
+            val configurableFeature2Id = FeatureId("configurable2")
+            val configurableFeature2Runtime = FakeFeatureRuntime()
+
+            val featureConfigurationRepository = TestFeatureConfigurationRepository(
+                fr.delphes.rework.feature.Feature(
+                    configurableFeature1Id,
+                    FakeFeatureDefinition(
+                        configurableFeature1Id,
+                        configurableFeature1Runtime
+                    )
+                ),
+                fr.delphes.rework.feature.Feature(
+                    configurableFeature2Id,
+                    FakeFeatureDefinition(
+                        configurableFeature2Id,
+                        configurableFeature2Runtime
+                    )
+                ),
+            )
 
             val featuresManager = FeaturesManager(
                 mockk {
                     every { readOnly } returns StateProvider(this)
                 },
                 listOf(
-                    FakeFeatureDefinition(ID, runtimeForCompiledFeature),
-                    FakeFeatureDefinition(ID, runtimeForAnotherCompiledFeature)
+                    FakeFeatureDefinition(compiledFeature1Id, compiledFeature1Runtime),
+                    FakeFeatureDefinition(compiledFeature2Id, compiledFeature2Runtime)
                 ),
                 featureConfigurationRepository
             )
@@ -69,10 +72,10 @@ internal class FeaturesManagerTest : ShouldSpec({
                 mockk()
             )
 
-            runtimeForCompiledFeature.isHandleIncomingEventCalled shouldBe true
-            runtimeForAnotherCompiledFeature.isHandleIncomingEventCalled shouldBe true
-            runtimeForConfigurableFeature.isHandleIncomingEventCalled shouldBe true
-            runtimeForAnotherConfigurableFeature.isHandleIncomingEventCalled shouldBe true
+            configurableFeature1Runtime.isHandleIncomingEventCalled shouldBe true
+            configurableFeature2Runtime.isHandleIncomingEventCalled shouldBe true
+            compiledFeature1Runtime.isHandleIncomingEventCalled shouldBe true
+            compiledFeature2Runtime.isHandleIncomingEventCalled shouldBe true
         }
     }
 }) {
