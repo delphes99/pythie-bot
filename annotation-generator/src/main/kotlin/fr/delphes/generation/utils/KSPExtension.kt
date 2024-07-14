@@ -5,6 +5,7 @@ import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSTypeReference
 import kotlin.reflect.KClass
@@ -42,3 +43,5 @@ fun <T : Annotation> KSClassDeclaration.getAllAnnotations(annotationType: KClass
 
 fun KSClassDeclaration.toNonAggregatingDependencies() =
     Dependencies(false, containingFile!!)
+
+fun List<KSClassDeclaration>.getSources() = map { it.containingFile as KSFile }

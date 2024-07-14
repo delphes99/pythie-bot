@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("fr.delphes.kotlin-conventions")
     alias(libs.plugins.ksp)
     id(libs.plugins.kotlin.jvm.get().pluginId)
     id(libs.plugins.kotlin.serialization.get().pluginId)
@@ -22,8 +21,9 @@ sourceSets.main {
 }
 
 tasks.withType<KotlinCompile>() {
-    kotlinOptions {
-        freeCompilerArgs += "-Xopt-in=com.google.devtools.ksp.KspExperimental"
+    compilerOptions {
+        freeCompilerArgs.add("-Xopt-in=com.google.devtools.ksp.KspExperimental")
+
     }
 }
 

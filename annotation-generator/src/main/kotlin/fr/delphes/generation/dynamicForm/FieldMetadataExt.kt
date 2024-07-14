@@ -5,6 +5,8 @@ import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSType
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import fr.delphes.annotation.dynamicForm.DynamicFormParent
 import fr.delphes.annotation.dynamicForm.FieldDescription
@@ -17,7 +19,6 @@ import fr.delphes.generation.utils.getAllAnnotations
 import fr.delphes.generation.utils.getAnnotationValue
 import fr.delphes.utils.serialization.DurationSerializer
 import java.time.Duration
-import kotlin.reflect.typeOf
 
 fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
     val name = simpleName.asString()
@@ -49,7 +50,7 @@ fun KSPropertyDeclaration.getFieldMeta(): FieldMetadata {
             null,
             "emptyMap()",
             MapFieldDescriptor::class,
-            typeOf<Map<String, String>>().asTypeName()
+            Map::class.asClassName().parameterizedBy(String::class.asTypeName(), String::class.asTypeName())
         )
 
         "kotlin.collections.List" -> {

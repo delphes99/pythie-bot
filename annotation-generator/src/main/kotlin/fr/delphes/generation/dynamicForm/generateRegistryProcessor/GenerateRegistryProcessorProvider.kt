@@ -9,7 +9,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSFile
+import com.google.devtools.ksp.symbol.KSName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
@@ -24,6 +24,7 @@ import fr.delphes.dynamicForm.DynamicFormType
 import fr.delphes.generation.dynamicForm.generateFormProcessor.GenerateDynamicFormProcessor
 import fr.delphes.generation.utils.GenerationUtils
 import fr.delphes.generation.utils.getAllAnnotations
+import fr.delphes.generation.utils.getSources
 
 class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
@@ -39,13 +40,16 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
         private val logger: KSPLogger,
         private val moduleName: String,
     ) : SymbolProcessor {
-        private val allForms = mutableSetOf<KSClassDeclaration>()
+        private lateinit var lastResolver: Resolver
+        private val allFormNames = mutableSetOf<KSName>()
 
         override fun process(resolver: Resolver): List<KSAnnotated> {
+            lastResolver = resolver
             logger.info("Start processing : Generate Dynamic Forms Registry")
-            allForms.addAll(
+            allFormNames.addAll(
                 resolver.getSymbolsWithAnnotation(DynamicForm::class.java.name)
                     .filterIsInstance<KSClassDeclaration>()
+                    .map { it.qualifiedName!! }
             )
 
             return emptyList()
@@ -53,7 +57,9 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
 
         override fun finish() {
             super.finish()
-
+            val allForms = allFormNames.map { formClassName ->
+                lastResolver.getClassDeclarationByName(formClassName)!!
+            }
             FileSpec
                 .builder(
                     "${GenerationUtils.baseGeneratedPackage(moduleName)}.dynamicForm",
@@ -95,9 +101,7 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
                         .build()
                 )
                 .build()
-                .writeTo(codeGenerator, false, getSources())
+                .writeTo(codeGenerator, false, allForms.getSources())
         }
-
-        private fun getSources() = allForms.map { it.containingFile as KSFile }
     }
 }

@@ -9,6 +9,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
+import com.google.devtools.ksp.symbol.KSName
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -58,15 +59,18 @@ class PolymorphicSerializerModuleProcessor(
     private val modules: List<RegisterPolymorphic>,
     private val moduleName: String,
 ) : SymbolProcessor {
-    private val childrenByModule = mutableMapOf<RegisterPolymorphic, MutableSet<KSClassDeclaration>>()
+    private lateinit var lastResolver: Resolver
+    private val childrenNamesByModule = mutableMapOf<RegisterPolymorphic, MutableSet<KSName>>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        lastResolver = resolver
         logger.info("Start processing : PolymorphicSerializerModuleProcessor")
         modules.forEach { module ->
             resolver.getSymbolsWithAnnotation(module.annotationClass.java.name)
                 .filterIsInstance<KSClassDeclaration>()
+                .map { it.qualifiedName!! }
                 .forEach { declaration ->
-                    childrenByModule
+                    childrenNamesByModule
                         .getOrPut(module) { mutableSetOf() }
                         .add(declaration)
                 }
@@ -77,6 +81,10 @@ class PolymorphicSerializerModuleProcessor(
 
     override fun finish() {
         super.finish()
+
+        val childrenByModule = childrenNamesByModule.mapValues { (_, children) ->
+            children.map { lastResolver.getClassDeclarationByName(it)!! }
+        }
 
         FileSpec
             .builder(
@@ -103,14 +111,15 @@ class PolymorphicSerializerModuleProcessor(
                     .build()
             )
             .build()
-            .writeTo(codeGenerator, true, getSources())
+            .writeTo(codeGenerator, true, childrenByModule.getSources())
     }
 
-    private fun getSources() = childrenByModule.values.flatten().map { it.containingFile as KSFile }
+    private fun Map<RegisterPolymorphic, List<KSClassDeclaration>>.getSources() =
+        values.flatten().map { it.containingFile as KSFile }
 
     private fun CodeBlock.Builder.toModuleCode(
         module: RegisterPolymorphic,
-        children: MutableSet<KSClassDeclaration>,
+        children: List<KSClassDeclaration>,
     ) {
         addStatement("%T(%T::class) {", POLYMORPHIC, module.parentClassName)
         children.forEach {

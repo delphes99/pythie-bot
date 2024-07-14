@@ -9,7 +9,7 @@ import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSFile
+import com.google.devtools.ksp.symbol.KSName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
@@ -22,6 +22,7 @@ import fr.delphes.feature.OutgoingEventType
 import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.GenerateOutgoingEventBuilderModuleProcessor
 import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.utils.GenerationUtils.getModuleName
+import fr.delphes.generation.utils.getSources
 
 class GenerateOutgoingEventRegistryProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
@@ -38,13 +39,16 @@ class GenerateOutgoingEventRegistryProcessor(
     private val logger: KSPLogger,
     private val moduleName: String,
 ) : SymbolProcessor {
-    private val allOutgoingEvents = mutableSetOf<KSClassDeclaration>()
+    private lateinit var lastResolver: Resolver
+    private val allOutgoingEventsName = mutableSetOf<KSName>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        lastResolver = resolver
         logger.info("Start processing : Generate Outgoing Event Registry")
-        allOutgoingEvents.addAll(
+        allOutgoingEventsName.addAll(
             resolver.getSymbolsWithAnnotation(RegisterOutgoingEvent::class.java.name)
                 .filterIsInstance<KSClassDeclaration>()
+                .map { it.qualifiedName!! }
         )
 
         return emptyList()
@@ -52,6 +56,10 @@ class GenerateOutgoingEventRegistryProcessor(
 
     override fun finish() {
         super.finish()
+
+        val allOutgoingEvents = allOutgoingEventsName.map { eventClassName ->
+            lastResolver.getClassDeclarationByName(eventClassName)!!
+        }
 
         FileSpec
             .builder(
@@ -69,10 +77,13 @@ class GenerateOutgoingEventRegistryProcessor(
                             .addStatement("OutgoingEventRegistry(")
                             .addStatement("listOf(")
                             .apply {
-                                allOutgoingEvents.forEach { event ->
-                                    val serialName = event.getSerialName()
+                                allOutgoingEvents.forEach { eventClass ->
+                                    val serialName = eventClass.getSerialName()
                                     val builderClassName =
-                                        GenerateOutgoingEventBuilderModuleProcessor.builderClassName(moduleName, event)
+                                        GenerateOutgoingEventBuilderModuleProcessor.builderClassName(
+                                            moduleName,
+                                            eventClass
+                                        )
 
                                     addStatement(
                                         "%T(",
@@ -94,10 +105,8 @@ class GenerateOutgoingEventRegistryProcessor(
                     .build()
             )
             .build()
-            .writeTo(codeGenerator, false, getSources())
+            .writeTo(codeGenerator, false, allOutgoingEvents.getSources())
     }
-
-    private fun getSources() = allOutgoingEvents.map { it.containingFile as KSFile }
 }
 
 private fun KSClassDeclaration.getSerialName() =
