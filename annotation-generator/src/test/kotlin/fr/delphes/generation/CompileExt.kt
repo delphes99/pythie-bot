@@ -8,12 +8,9 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspIncremental
-import com.tschuchort.compiletesting.kspLoggingLevels
 import com.tschuchort.compiletesting.kspProcessorOptions
-import com.tschuchort.compiletesting.kspWithCompilation
 import com.tschuchort.compiletesting.symbolProcessorProviders
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
+import com.tschuchort.compiletesting.useKsp2
 
 fun String.shouldCompileWithProvider(
     fileName: String,
@@ -40,16 +37,13 @@ fun SourceFile.shouldCompileWithProvider(
 ) {
     KotlinCompilation()
         .apply {
+            useKsp2()
             sources = listOf(this@shouldCompileWithProvider)
-            symbolProcessorProviders += providers
+            symbolProcessorProviders = providers.toMutableList()
+            languageVersion = "2.0"
             inheritClassPath = true
-            kspWithCompilation = true
-            kspIncremental = true
-            kspLoggingLevels += CompilerMessageSeverity.LOGGING
-            kspLoggingLevels += CompilerMessageSeverity.INFO
-            kspLoggingLevels += CompilerMessageSeverity.WARNING
-            kspLoggingLevels += CompilerMessageSeverity.ERROR
             kspProcessorOptions.put("module-name", "test")
+            messageOutputStream = System.out
         }.compile().apply(assertion)
 }
 

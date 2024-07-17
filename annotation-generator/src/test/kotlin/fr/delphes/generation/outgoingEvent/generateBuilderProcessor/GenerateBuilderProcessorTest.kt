@@ -34,7 +34,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
                 val type: String,
             ) : OutgoingEvent
         """.shouldCompileWith {
-            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            exitCode shouldBe KotlinCompilation.ExitCode.INTERNAL_ERROR
             messages shouldContain "MyEvent must have a field named 'type'"
         }
     }
@@ -46,7 +46,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             @RegisterOutgoingEvent("serializeName")
             class MyEvent
         """.shouldCompileWith {
-            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            exitCode shouldBe KotlinCompilation.ExitCode.INTERNAL_ERROR
             messages shouldContain "MyEvent must implement OutgoingEvent"
         }
     }
@@ -58,7 +58,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             @RegisterOutgoingEvent("serializeName")
             class MyEvent : OutgoingEvent
         """.shouldCompileWith {
-            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            exitCode shouldBe KotlinCompilation.ExitCode.INTERNAL_ERROR
             messages shouldContain "MyEvent must have at least one field with description"
         }
     }
@@ -75,7 +75,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
                 val myField2: String,
             ) : OutgoingEvent
         """.shouldCompileWith {
-            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            exitCode shouldBe KotlinCompilation.ExitCode.INTERNAL_ERROR
             messages shouldContain "MyEvent must have all fields with description"
         }
     }
@@ -198,7 +198,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
                 val customField: CustomFieldType,
             ) : OutgoingEvent
         """.shouldCompileWith {
-            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            exitCode shouldBe KotlinCompilation.ExitCode.INTERNAL_ERROR
             messages shouldContain "Field [customField] : Unknown type and no mapper"
         }
     }

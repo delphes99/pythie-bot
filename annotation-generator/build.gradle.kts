@@ -23,7 +23,9 @@ sourceSets.main {
 tasks.withType<KotlinCompile>() {
     compilerOptions {
         freeCompilerArgs.add("-Xopt-in=com.google.devtools.ksp.KspExperimental")
-        freeCompilerArgs.add("-Xopt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
+        if (name == "compileTestKotlin") {
+            freeCompilerArgs.add("-Xopt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
+        }
     }
 }
 

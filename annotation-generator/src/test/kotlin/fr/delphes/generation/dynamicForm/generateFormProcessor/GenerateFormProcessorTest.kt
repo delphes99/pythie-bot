@@ -28,7 +28,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
             @DynamicForm("my-form")
             class MyForm
         """.shouldCompileWith {
-            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            exitCode shouldBe KotlinCompilation.ExitCode.INTERNAL_ERROR
             messages shouldContain "MyForm must have at least one field with description"
         }
     }
@@ -45,7 +45,7 @@ class GenerateBuilderProcessorTest : ShouldSpec({
                 val myField3: String,
             )
         """.shouldCompileWith {
-            exitCode shouldBe KotlinCompilation.ExitCode.COMPILATION_ERROR
+            exitCode shouldBe KotlinCompilation.ExitCode.INTERNAL_ERROR
             messages shouldContain """MyForm : missing description on fields : ["myField2", "myField3"]"""
         }
     }
