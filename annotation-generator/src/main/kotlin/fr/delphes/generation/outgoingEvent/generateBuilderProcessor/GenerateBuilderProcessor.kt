@@ -26,9 +26,9 @@ import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
-import fr.delphes.generation.dynamicForm.FieldWithType
-import fr.delphes.generation.dynamicForm.getDescriptionFields
-import fr.delphes.generation.dynamicForm.getDescriptionFieldsMetadata
+import fr.delphes.generation.dynamicForm.metada.FieldWithType
+import fr.delphes.generation.dynamicForm.metada.getDescriptionFields
+import fr.delphes.generation.dynamicForm.metada.getDescriptionFieldsMetadata
 import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.utils.GenerationUtils.getModuleName

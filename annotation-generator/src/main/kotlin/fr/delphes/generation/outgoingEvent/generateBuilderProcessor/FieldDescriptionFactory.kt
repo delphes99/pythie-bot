@@ -3,10 +3,10 @@ package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ksp.toClassName
-import fr.delphes.generation.dynamicForm.FieldMetadata
-import fr.delphes.generation.dynamicForm.FieldWithFormList
-import fr.delphes.generation.dynamicForm.FieldWithMapper
-import fr.delphes.generation.dynamicForm.FieldWithType
+import fr.delphes.generation.dynamicForm.metada.FieldMetadata
+import fr.delphes.generation.dynamicForm.metada.FieldWithFormList
+import fr.delphes.generation.dynamicForm.metada.FieldWithMapper
+import fr.delphes.generation.dynamicForm.metada.FieldWithType
 
 object FieldDescriptionFactory {
     fun buildDescription(builder: FunSpec.Builder, property: FieldMetadata) {

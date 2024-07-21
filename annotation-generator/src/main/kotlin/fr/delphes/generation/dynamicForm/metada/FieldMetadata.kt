@@ -1,4 +1,4 @@
-package fr.delphes.generation.dynamicForm
+package fr.delphes.generation.dynamicForm.metada
 
 import com.google.devtools.ksp.symbol.KSType
 import com.squareup.kotlinpoet.AnnotationSpec
