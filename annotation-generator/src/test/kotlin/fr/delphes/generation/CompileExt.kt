@@ -34,11 +34,16 @@ fun String.shouldCompileWithProvider(
 fun SourceFile.shouldCompileWithProvider(
     providers: List<SymbolProcessorProvider>,
     assertion: JvmCompilationResult.() -> Unit,
+) = listOf(this).shouldCompileWithProvider(providers, assertion)
+
+fun List<SourceFile>.shouldCompileWithProvider(
+    providers: List<SymbolProcessorProvider>,
+    assertion: JvmCompilationResult.() -> Unit,
 ) {
     KotlinCompilation()
         .apply {
             useKsp2()
-            sources = listOf(this@shouldCompileWithProvider)
+            sources = this@shouldCompileWithProvider
             symbolProcessorProviders = providers.toMutableList()
             languageVersion = "2.0"
             inheritClassPath = true
@@ -47,6 +52,26 @@ fun SourceFile.shouldCompileWithProvider(
         }.compile().apply(assertion)
 }
 
+fun SourceFile.assertCompileResolver(
+    assertion: (Resolver) -> Unit,
+) {
+    var assertionError: Throwable? = null
+    val saveAssertionError: (Resolver) -> Unit = {
+        try {
+            assertion(it)
+        } catch (e: Throwable) {
+            assertionError = e
+            throw e
+        }
+    }
+    shouldCompileWithProvider(listOf(AssertionSymbolProcessorProvider(saveAssertionError))) {
+        if (assertionError != null) {
+            throw assertionError!!
+        }
+    }
+}
+
+//TODO delete when all move to source file
 fun String.assertCompileResolver(
     assertion: (Resolver) -> Unit,
 ) {
