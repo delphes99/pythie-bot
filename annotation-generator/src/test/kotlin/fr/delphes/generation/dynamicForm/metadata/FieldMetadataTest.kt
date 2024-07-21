@@ -7,7 +7,7 @@ import fr.delphes.dynamicForm.descriptor.StringFieldDescriptor
 import fr.delphes.generation.assertCompileResolver
 import fr.delphes.generation.dynamicForm.metada.FieldWithMapper
 import fr.delphes.generation.dynamicForm.metada.FieldWithType
-import fr.delphes.generation.dynamicForm.metada.getFieldMeta
+import fr.delphes.generation.dynamicForm.metada.MetadataExtractor
 import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.utils.serialization.DurationSerializer
 import io.kotest.assertions.throwables.shouldThrow
@@ -35,9 +35,10 @@ class FieldMetadataTest : ShouldSpec({
                 val myField: String,
             ) : OutgoingEvent
         """.assertCompileResolver {
+            val metadataExtractor = MetadataExtractor()
             it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
                 .shouldNotBeNull()
-                .getFieldMeta()
+                .let(metadataExtractor::getFieldMetaOf)
                 .shouldBeInstanceOf<FieldWithMapper>()
                 .apply {
                     this.mapperClass.toString() shouldBe "CustomFieldTypeMapper"
@@ -56,9 +57,10 @@ class FieldMetadataTest : ShouldSpec({
                 val myField: String,
             ) : OutgoingEvent
         """.assertCompileResolver {
+            val metadataExtractor = MetadataExtractor()
             it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
                 .shouldNotBeNull()
-                .getFieldMeta()
+                .let(metadataExtractor::getFieldMetaOf)
                 .shouldBeInstanceOf<FieldWithType>()
                 .apply {
                     description shouldBe "description"
@@ -82,9 +84,10 @@ class FieldMetadataTest : ShouldSpec({
                 val myField: Duration,
             ) : OutgoingEvent
         """.assertCompileResolver {
+            val metadataExtractor = MetadataExtractor()
             it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
                 .shouldNotBeNull()
-                .getFieldMeta()
+                .let(metadataExtractor::getFieldMetaOf)
                 .shouldBeInstanceOf<FieldWithType>()
                 .apply {
                     description shouldBe "duration description"
@@ -107,9 +110,10 @@ class FieldMetadataTest : ShouldSpec({
                 val myField: Map<String, String>,
             ) : OutgoingEvent
         """.assertCompileResolver {
+            val metadataExtractor = MetadataExtractor()
             it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
                 .shouldNotBeNull()
-                .getFieldMeta()
+                .let(metadataExtractor::getFieldMetaOf)
                 .shouldBeInstanceOf<FieldWithType>()
                 .apply {
                     description shouldBe "description"
@@ -133,10 +137,11 @@ class FieldMetadataTest : ShouldSpec({
                 val myField: UnknownType,
             ) : OutgoingEvent
         """.assertCompileResolver {
+            val metadataExtractor = MetadataExtractor()
             shouldThrow<CompilationCheckException> {
                 it.getPropertyDeclarationByName(it.getKSNameFromString("MyEvent.myField"))
                     .shouldNotBeNull()
-                    .getFieldMeta()
+                    .let(metadataExtractor::getFieldMetaOf)
             }
                 .shouldHaveMessage("Field [myField] : Unknown type and no mapper")
         }

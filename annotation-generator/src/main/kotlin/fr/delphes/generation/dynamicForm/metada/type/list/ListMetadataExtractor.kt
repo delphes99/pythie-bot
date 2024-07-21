@@ -5,13 +5,13 @@ import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import fr.delphes.annotation.dynamicForm.DynamicFormParent
 import fr.delphes.generation.dynamicForm.metada.FieldMetadata
 import fr.delphes.generation.dynamicForm.metada.FieldWithFormList
-import fr.delphes.generation.dynamicForm.metada.MetadataExtractor
+import fr.delphes.generation.dynamicForm.metada.TypeMetadataExtractor
 import fr.delphes.generation.dynamicForm.metada.getDescription
 import fr.delphes.generation.dynamicForm.metada.getSimpleName
 import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.generation.utils.getAllAnnotations
 
-object ListMetadataExtractor : MetadataExtractor {
+object ListMetadataExtractor : TypeMetadataExtractor {
     override val typeName = "kotlin.collections.List"
 
     override fun extract(declaration: KSPropertyDeclaration): FieldMetadata {

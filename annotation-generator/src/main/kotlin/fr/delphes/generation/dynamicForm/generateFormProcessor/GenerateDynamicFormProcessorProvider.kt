@@ -29,8 +29,8 @@ import fr.delphes.dynamicForm.DynamicFormDTO
 import fr.delphes.dynamicForm.DynamicFormDescription
 import fr.delphes.dynamicForm.DynamicFormType
 import fr.delphes.generation.dynamicForm.metada.FieldWithType
+import fr.delphes.generation.dynamicForm.metada.MetadataExtractor
 import fr.delphes.generation.dynamicForm.metada.getDescriptionFields
-import fr.delphes.generation.dynamicForm.metada.getDescriptionFieldsMetadata
 import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.FieldDescriptionFactory
 import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage
@@ -53,7 +53,7 @@ class GenerateDynamicFormProcessorProvider : SymbolProcessorProvider {
 class GenerateDynamicFormProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
-    private val moduleName: String,
+    moduleName: String,
 ) : SymbolProcessor {
     private val formAnnotationClass = DynamicForm::class
     private val packageName = packageNameOf(moduleName)
@@ -64,6 +64,8 @@ class GenerateDynamicFormProcessor(
     }
 
     private fun create(baseFormClass: KSClassDeclaration) {
+        val metadataExtractor = MetadataExtractor()
+
         checkFieldsHaveDescription(baseFormClass)
 
         val serialName = baseFormClass.getAnnotationsByType(formAnnotationClass).first().name
@@ -71,7 +73,7 @@ class GenerateDynamicFormProcessor(
         FileSpec.builder(packageName, generatedClassName)
             .addType(
                 TypeSpec.classBuilder(generatedClassName).primaryConstructor(FunSpec.constructorBuilder().apply {
-                    baseFormClass.getDescriptionFieldsMetadata().forEach { property ->
+                    metadataExtractor.getFieldsMetadataOf(baseFormClass).forEach { property ->
                         addParameter(
                             ParameterSpec.builder(
                                 property.name,
@@ -95,7 +97,7 @@ class GenerateDynamicFormProcessor(
                 ).addSuperinterface(
                     DynamicFormDTO::class.asClassName().plusParameter(baseFormClass.toClassName())
                 ).apply {
-                    baseFormClass.getDescriptionFieldsMetadata().forEach { property ->
+                    metadataExtractor.getFieldsMetadataOf(baseFormClass).forEach { property ->
                         addProperty(
                             PropertySpec.builder(
                                 property.name,
@@ -118,7 +120,7 @@ class GenerateDynamicFormProcessor(
                         .addStatement("formType,")
                         .addStatement("listOf(")
                         .apply {
-                            baseFormClass.getDescriptionFieldsMetadata().forEach { property ->
+                            metadataExtractor.getFieldsMetadataOf(baseFormClass).forEach { property ->
                                 FieldDescriptionFactory.buildDescription(this, property)
                             }
                         }
@@ -131,7 +133,7 @@ class GenerateDynamicFormProcessor(
                         .returns(baseFormClass.toClassName())
                         .addCode("return %T(\n", baseFormClass.toClassName())
                         .apply {
-                            baseFormClass.getDescriptionFieldsMetadata().forEach { property ->
+                            metadataExtractor.getFieldsMetadataOf(baseFormClass).forEach { property ->
                                 addCode("${property.name} = ")
                                 addCode(FieldDescriptionFactory.buildDtoToObject(property))
                                 addCode(",\n")

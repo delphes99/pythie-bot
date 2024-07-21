@@ -22,7 +22,7 @@ import fr.delphes.dynamicForm.DynamicFormRegistry
 import fr.delphes.dynamicForm.DynamicFormRegistryEntry
 import fr.delphes.dynamicForm.DynamicFormType
 import fr.delphes.generation.dynamicForm.generateFormProcessor.GenerateDynamicFormProcessor
-import fr.delphes.generation.dynamicForm.metada.getDescriptionFieldsMetadata
+import fr.delphes.generation.dynamicForm.metada.MetadataExtractor
 import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.FieldDescriptionFactory
 import fr.delphes.generation.utils.GenerationUtils
 import fr.delphes.generation.utils.getAllAnnotations
@@ -62,6 +62,7 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
             val allForms = allFormNames.map { formClassName ->
                 lastResolver.getClassDeclarationByName(formClassName)!!
             }
+            val metadataExtractor = MetadataExtractor()
             FileSpec
                 .builder(
                     "${GenerationUtils.baseGeneratedPackage(moduleName)}.dynamicForm",
@@ -111,7 +112,7 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
                                                     moduleName
                                                 )
                                             ).apply {
-                                                form.getDescriptionFieldsMetadata().forEach { field ->
+                                                metadataExtractor.getFieldsMetadataOf(form).forEach { field ->
                                                     addStatement("${field.name} = ")
                                                     add(
                                                         FieldDescriptionFactory.buildObjectToDto(field, "item")

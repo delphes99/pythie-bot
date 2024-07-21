@@ -27,8 +27,8 @@ import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.feature.OutgoingEventBuilderDescription
 import fr.delphes.feature.OutgoingEventType
 import fr.delphes.generation.dynamicForm.metada.FieldWithType
+import fr.delphes.generation.dynamicForm.metada.MetadataExtractor
 import fr.delphes.generation.dynamicForm.metada.getDescriptionFields
-import fr.delphes.generation.dynamicForm.metada.getDescriptionFieldsMetadata
 import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage
 import fr.delphes.generation.utils.GenerationUtils.getModuleName
@@ -63,6 +63,8 @@ class GenerateOutgoingEventBuilderModuleProcessor(
         checkHaveAtLeastOneFieldWithDescription(outgoingEventClass)
         checkAllFieldsHaveDescription(outgoingEventClass)
 
+        val metadataExtractor = MetadataExtractor()
+
         val serialName = outgoingEventClass.getAnnotationsByType(RegisterOutgoingEvent::class)
             .first().serializeName
         val builderClass = builderName(outgoingEventClass)
@@ -76,7 +78,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                         FunSpec
                             .constructorBuilder()
                             .apply {
-                                outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
+                                metadataExtractor.getFieldsMetadataOf(outgoingEventClass).forEach { property ->
                                     addParameter(
                                         ParameterSpec.builder(
                                             property.name,
@@ -107,7 +109,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                     )
                     .addSuperinterface(OutgoingEventBuilder::class)
                     .apply {
-                        outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
+                        metadataExtractor.getFieldsMetadataOf(outgoingEventClass).forEach { property ->
                             addProperty(
                                 PropertySpec
                                     .builder(
@@ -134,7 +136,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                             )
                             .addStatement("listOf(")
                             .apply {
-                                outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
+                                metadataExtractor.getFieldsMetadataOf(outgoingEventClass).forEach { property ->
                                     FieldDescriptionFactory.buildDescription(this, property)
                                 }
                             }
@@ -151,7 +153,7 @@ class GenerateOutgoingEventBuilderModuleProcessor(
                                 outgoingEventClass.toClassName()
                             )
                             .apply {
-                                outgoingEventClass.getDescriptionFieldsMetadata().forEach { property ->
+                                metadataExtractor.getFieldsMetadataOf(outgoingEventClass).forEach { property ->
                                     addCode("${property.name} = ")
                                     addCode(FieldDescriptionFactory.buildDtoToObject(property))
                                     addCode(",\n")
