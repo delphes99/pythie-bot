@@ -22,6 +22,7 @@ import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.dynamicForm.DynamicFormDTO
+import fr.delphes.dynamicForm.DynamicFormDTOForSerialization
 import fr.delphes.generation.utils.GenerationUtils
 import fr.delphes.generation.utils.GenerationUtils.getModuleName
 import kotlinx.serialization.modules.SerializersModule
@@ -38,6 +39,10 @@ private val serializerModules = listOf(
     RegisterPolymorphic(
         RegisterDynamicFormDto::class,
         DynamicFormDTO::class,
+    ),
+    RegisterPolymorphic(
+        RegisterDynamicFormDto::class,
+        DynamicFormDTOForSerialization::class,
     ),
 )
 

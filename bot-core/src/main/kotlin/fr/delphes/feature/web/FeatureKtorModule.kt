@@ -45,10 +45,9 @@ fun Application.FeatureAdminModule(bot: Bot) {
 
             val feature = Feature(
                 id,
-                getDynamicForm<FeatureDefinition>()
+                getDynamicForm<FeatureDefinition>(bot.serializer)
             )
 
-            //FIXME make it work
             bot.featuresManager.upsertFeature(feature)
             this.context.respond(HttpStatusCode.OK)
         }
