@@ -13,7 +13,7 @@ class DynamicFormRegistry private constructor(
 
     fun <T : Any> transform(item: T): DynamicFormDTO<T>? {
         return findByClass(item)
-            ?.map(item)
+            ?.map(item, this)
     }
 
     fun <T : Any> findByClass(item: T) = entries

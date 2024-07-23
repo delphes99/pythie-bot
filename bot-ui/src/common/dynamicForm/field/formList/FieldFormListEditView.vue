@@ -6,13 +6,8 @@
               :type="UiButtonType.Primary"/>
     <fieldset v-for="subForm in subForms" :key="subForm.id" class="border p-2">
       <legend>{{ subForm.type }}</legend>
-      <div v-for="field in subForm.fields" :key="field.fieldName">
-        <component :is="field.viewComponent()"
-                   v-model="field.actualValue"
-                   :field="field"
-                   :label="field.description"
-        />
-      </div>
+      <DisplayDynamicForm :form="subForm" :is="subForm.id"/>
+
       <UiButton label="common.delete"
                 :type="UiButtonType.Warning"
                 @click="deleteForm(subForm.id)"/>
@@ -35,6 +30,7 @@ import UiSelect from "@/common/designSystem/form/select/UiSelect.vue";
 import {UiSelectOption} from "@/common/designSystem/form/select/UiSelectOption";
 import UiModal from "@/common/designSystem/modal/UiModal.vue";
 import {useModal} from "@/common/designSystem/modal/useModal";
+import DisplayDynamicForm from "@/common/dynamicForm/displayForm/DisplayDynamicForm.vue";
 import {DynamicForm} from "@/common/dynamicForm/DynamicForm";
 import {DynamicFormType} from "@/common/dynamicForm/DynamicFormType";
 import {FieldFormList} from "@/common/dynamicForm/field/formList/FieldFormList";

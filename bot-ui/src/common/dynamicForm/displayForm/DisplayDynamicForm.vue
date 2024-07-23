@@ -7,7 +7,7 @@
                  v-model="field.actualValue"
       />
     </div>
-    <UiButton label="common.save" @click="saveDescription"/>
+    <UiButton v-if="withSaveButton" label="common.save" @click="saveDescription"/>
   </fieldset>
 </template>
 
@@ -19,6 +19,10 @@ const props = defineProps({
   form: {
     type: DynamicForm,
     required: true,
+  },
+  withSaveButton: {
+    type: Boolean,
+    default: false,
   },
 })
 

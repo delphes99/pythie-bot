@@ -1,3 +1,4 @@
+import DynamicFormService from "@/common/dynamicForm/DynamicFormService";
 import {FieldDuration} from "@/common/dynamicForm/field/duration/FieldDuration";
 import {Field} from "@/common/dynamicForm/field/Field";
 import {FieldDescriptorType} from "@/common/dynamicForm/field/FieldDescriptorType";
@@ -11,7 +12,7 @@ export type FieldJsonType = {
     [key: string]: any;
 };
 
-export function fieldFromJson(json: FieldJsonType): Field<any> {
+export function fieldFromJson(json: FieldJsonType, dynamicFormService: DynamicFormService): Field<any> {
     switch (json.type) {
         case FieldDescriptorType.STRING:
             return FieldString.fromJson(json)
@@ -22,6 +23,6 @@ export function fieldFromJson(json: FieldJsonType): Field<any> {
         case FieldDescriptorType.MAP:
             throw new Error("Map is not supported")
         case FieldDescriptorType.FORM_LIST:
-            return FieldFormList.fromJson(json)
+            return FieldFormList.fromJson(json, dynamicFormService)
     }
 }

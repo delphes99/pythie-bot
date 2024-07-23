@@ -3,6 +3,7 @@ package fr.delphes.generation.outgoingEvent.generateBuilderProcessor
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ksp.toClassName
+import fr.delphes.dynamicForm.DynamicFormDTO
 import fr.delphes.generation.dynamicForm.metada.FieldMetadata
 import fr.delphes.generation.dynamicForm.metada.FieldWithFormList
 import fr.delphes.generation.dynamicForm.metada.FieldWithMapper
@@ -26,8 +27,8 @@ object FieldDescriptionFactory {
                     addCode("%T(", property.descriptionClass)
                     addStatement("fieldName=\"${property.name}\",")
                     addStatement("description=\"${property.description}\",")
-                    addStatement("formFamily=\"${property.formFamily}\",")
-                    addStatement("value=${property.name},")
+                    addStatement("formFamily=\"${property.dynamicFormFamily}\",")
+                    addStatement("value=${property.name}.map(%T<*>::description),", DynamicFormDTO::class)
                     addCode("),\n")
                 }
             }
@@ -48,8 +49,10 @@ object FieldDescriptionFactory {
             }
 
             is FieldWithFormList -> {
-                //TODO
-                builder.addStatement("emptyList()")
+                builder.addStatement(
+                    "this.${property.name}.map { it.build() as %T}",
+                    property.formSuperClass.toClassName()
+                )
             }
         }
         return builder.build()
@@ -69,8 +72,7 @@ object FieldDescriptionFactory {
             }
 
             is FieldWithFormList -> {
-                //TODO
-                builder.addStatement("emptyList()")
+                builder.addStatement("$variableName.${property.name}.mapNotNull(registry::transform)")
             }
         }
         return builder.build()

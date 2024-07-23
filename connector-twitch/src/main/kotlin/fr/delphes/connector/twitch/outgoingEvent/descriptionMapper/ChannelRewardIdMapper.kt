@@ -16,6 +16,6 @@ object ChannelRewardIdMapper : FieldDescriptorMapper<RewardId> {
     }
 
     override fun mapToDto(value: RewardId): String {
-        return "${value.channel.name}::${value.title}"
+        return "${value.channel.name}::${value.title.title}"
     }
 }

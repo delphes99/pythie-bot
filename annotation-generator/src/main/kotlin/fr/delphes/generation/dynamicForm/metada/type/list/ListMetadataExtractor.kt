@@ -34,7 +34,8 @@ object ListMetadataExtractor : TypeMetadataExtractor {
         return FieldWithFormList(
             declaration.getSimpleName(),
             declaration.getDescription(),
-            parentAnnotation.family
+            parentAnnotation.family,
+            declaration.type.resolve().arguments.first().type!!.resolve()
         )
     }
 }

@@ -19,14 +19,14 @@ class DynamicFormRegistryTest : ShouldSpec({
             DynamicFormType("someForm"), String::class, listOf("tag"),
             {
                 mockk<DynamicFormDTO<String>>()
-            }, {
+            }, { _, _ ->
                 mockk<DynamicFormDTO<String>>()
             }
         ), DynamicFormRegistryEntry.of(
             DynamicFormType("otherForm"), String::class, listOf("otherTag"),
             {
                 mockk<DynamicFormDTO<String>>()
-            }, {
+            }, { _, _ ->
                 mockk<DynamicFormDTO<String>>()
             }
         )
@@ -47,14 +47,14 @@ class DynamicFormRegistryTest : ShouldSpec({
                     DynamicFormType("duplicateName"), String::class, listOf("tag"),
                     {
                         mockk<DynamicFormDTO<String>>()
-                    }, {
+                    }, { _, _ ->
                         mockk<DynamicFormDTO<String>>()
                     }
                 ), DynamicFormRegistryEntry.of(
                     DynamicFormType("duplicateName"), String::class, listOf("tag2"),
                     {
                         mockk<DynamicFormDTO<String>>()
-                    }, {
+                    }, { _, _ ->
                         mockk<DynamicFormDTO<String>>()
                     }
                 )
@@ -69,7 +69,7 @@ class DynamicFormRegistryTest : ShouldSpec({
                         DynamicFormType("duplicateName"), String::class, listOf("tag"),
                         {
                             mockk<DynamicFormDTO<String>>()
-                        }, {
+                        }, { _, _ ->
                             mockk<DynamicFormDTO<String>>()
                         }
                     ),
@@ -79,7 +79,7 @@ class DynamicFormRegistryTest : ShouldSpec({
                         DynamicFormType("duplicateName"), String::class, listOf("tag2"),
                         {
                             mockk<DynamicFormDTO<String>>()
-                        }, {
+                        }, { _, _ ->
                             mockk<DynamicFormDTO<String>>()
                         }
                     )
@@ -98,7 +98,7 @@ class DynamicFormRegistryTest : ShouldSpec({
                 DynamicFormType("someForm"), String::class, listOf("tag"),
                 {
                     mockk<DynamicFormDTO<String>>()
-                }, {
+                }, { _, _ ->
                     mockk<DynamicFormDTO<String>>()
                 }
             ),
@@ -118,7 +118,7 @@ class DynamicFormRegistryTest : ShouldSpec({
                 DynamicFormType("someForm"), String::class, listOf("tag"),
                 {
                     mockk<DynamicFormDTO<String>>()
-                }, {
+                }, { _, _ ->
                     mockk<DynamicFormDTO<String>>()
                 }
             ),
@@ -126,7 +126,7 @@ class DynamicFormRegistryTest : ShouldSpec({
                 DynamicFormType("otherFormWithSameTag"), String::class, listOf("tag"),
                 {
                     mockk<DynamicFormDTO<String>>()
-                }, {
+                }, { _, _ ->
                     mockk<DynamicFormDTO<String>>()
                 }
             ),
@@ -146,7 +146,7 @@ class DynamicFormRegistryTest : ShouldSpec({
                     mockk<DynamicFormDTO<String>>() {
                         every { build() } returns "build from build()"
                     }
-                }, {
+                }, { _, _ ->
                     mockk<DynamicFormDTO<String>>()
                 }
             ),

@@ -1,4 +1,5 @@
 import {DynamicForm} from "@/common/dynamicForm/DynamicForm";
+import DynamicFormService from "@/common/dynamicForm/DynamicFormService";
 import {Field} from "@/common/dynamicForm/field/Field";
 import {FieldJsonType} from "@/common/dynamicForm/field/Field.factory";
 import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
@@ -6,12 +7,12 @@ import FieldFormListEditView from "@/common/dynamicForm/field/formList/FieldForm
 import {Component} from "vue";
 
 export class FieldFormList implements Field<DynamicForm[]> {
-    static fromJson(json: FieldJsonType) {
+    static fromJson(json: FieldJsonType, dynamicFormService: DynamicFormService) {
         return new FieldFormList(
             json.description,
             json.fieldName,
             json.formFamily,
-            json.value
+            json.value.map((form: any) => dynamicFormService.buildForm(form)),
         );
     }
 

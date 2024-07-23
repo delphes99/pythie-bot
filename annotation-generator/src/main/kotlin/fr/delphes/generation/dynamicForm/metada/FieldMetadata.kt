@@ -34,7 +34,8 @@ data class FieldWithType(
 data class FieldWithFormList(
     override val name: String,
     override val description: String,
-    val formFamily: DynamicFormFamily,
+    val dynamicFormFamily: DynamicFormFamily,
+    val formSuperClass: KSType,
 ) : FieldMetadata() {
     val serializer = null
     override val defaultValue = "emptyList()"

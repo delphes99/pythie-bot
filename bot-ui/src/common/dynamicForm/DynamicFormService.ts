@@ -22,7 +22,7 @@ export default class DynamicFormService {
     buildForm(json: any) {
         return new DynamicForm(
             json.type,
-            json.fields.map((descriptor: any) => fieldFromJson(descriptor))
+            json.fields.map((descriptor: any) => fieldFromJson(descriptor, this))
         );
     }
 }

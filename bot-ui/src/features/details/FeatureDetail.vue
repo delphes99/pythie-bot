@@ -2,6 +2,7 @@
   <UiPanel :title="feature.id">
     <DisplayDynamicForm name="featureDescription"
                         :form="form"
+                        :with-save-button="true"
                         @saveForm="saveDescription"/>
   </UiPanel>
 </template>

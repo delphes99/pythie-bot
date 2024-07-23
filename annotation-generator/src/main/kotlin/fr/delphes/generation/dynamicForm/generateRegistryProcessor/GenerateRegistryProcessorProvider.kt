@@ -106,7 +106,7 @@ class GenerateRegistryProcessorProvider : SymbolProcessorProvider {
                                                 )
                                             )
                                             addStatement(
-                                                "mapInstance = { item -> %T(",
+                                                "mapInstance = { item, registry -> %T(",
                                                 GenerateDynamicFormProcessor.getGeneratedClassNameFor(
                                                     form,
                                                     moduleName

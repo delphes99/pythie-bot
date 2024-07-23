@@ -7,11 +7,11 @@ class DynamicFormRegistryEntry<T : Any>(
     val clazz: KClass<T>,
     val tags: List<String>,
     private val buildNewInstance: () -> DynamicFormDTO<T>,
-    private val mapInstance: (T) -> DynamicFormDTO<T>,
+    private val mapInstance: (T, DynamicFormRegistry) -> DynamicFormDTO<T>,
 ) {
     fun emptyForm(): DynamicFormDTO<T> = buildNewInstance()
 
-    fun map(form: T): DynamicFormDTO<T> = mapInstance(form)
+    fun map(form: T, registry: DynamicFormRegistry): DynamicFormDTO<T> = mapInstance(form, registry)
 
     companion object {
         fun <T : Any> of(
@@ -19,7 +19,7 @@ class DynamicFormRegistryEntry<T : Any>(
             clazz: KClass<T>,
             tags: List<String>,
             buildNewInstance: () -> DynamicFormDTO<T>,
-            mapInstance: (T) -> DynamicFormDTO<T>,
+            mapInstance: (T, DynamicFormRegistry) -> DynamicFormDTO<T>,
         ) = DynamicFormRegistryEntry(name, clazz, tags, buildNewInstance, mapInstance)
     }
 }
