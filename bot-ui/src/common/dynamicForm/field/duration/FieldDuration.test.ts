@@ -1,3 +1,4 @@
+import DynamicFormService from "@/common/dynamicForm/DynamicFormService";
 import {FieldDuration} from "@/common/dynamicForm/field/duration/FieldDuration";
 import {fieldFromJson} from "@/common/dynamicForm/field/Field.factory";
 import {FieldJsonValue} from "@/common/dynamicForm/field/FieldJsonValue";
@@ -16,7 +17,7 @@ describe("FieldDurationTest", () => {
             }
         `
 
-            const field = fieldFromJson(JSON.parse(json));
+            const field = fieldFromJson(JSON.parse(json), new DynamicFormService(""))
 
             expect(field).to.toMatchObject(
                 {

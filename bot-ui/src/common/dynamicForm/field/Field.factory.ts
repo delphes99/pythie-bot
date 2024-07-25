@@ -1,12 +1,12 @@
 import DynamicFormService from "@/common/dynamicForm/DynamicFormService";
 import {FieldDuration} from "@/common/dynamicForm/field/duration/FieldDuration";
 import {Field} from "@/common/dynamicForm/field/Field";
-import {FieldDescriptorType} from "@/common/dynamicForm/field/FieldDescriptorType";
+import {FieldType} from "@/common/dynamicForm/field/FieldType";
 import {FieldFormList} from "@/common/dynamicForm/field/formList/FieldFormList";
 import {FieldString} from "@/common/dynamicForm/field/string/FieldString";
 
 export type FieldJsonType = {
-    type: FieldDescriptorType;
+    type: FieldType;
     fieldName: string;
     value: any;
     [key: string]: any;
@@ -14,15 +14,11 @@ export type FieldJsonType = {
 
 export function fieldFromJson(json: FieldJsonType, dynamicFormService: DynamicFormService): Field<any> {
     switch (json.type) {
-        case FieldDescriptorType.STRING:
+        case FieldType.STRING:
             return FieldString.fromJson(json)
-        case FieldDescriptorType.DURATION:
+        case FieldType.DURATION:
             return FieldDuration.fromJson(json)
-        case FieldDescriptorType.OUTGOING_EVENTS:
-            throw new Error("Outgoing events are not supported")
-        case FieldDescriptorType.MAP:
-            throw new Error("Map is not supported")
-        case FieldDescriptorType.FORM_LIST:
+        case FieldType.FORM_LIST:
             return FieldFormList.fromJson(json, dynamicFormService)
     }
 }
