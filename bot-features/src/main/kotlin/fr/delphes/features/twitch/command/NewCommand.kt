@@ -14,7 +14,9 @@ import fr.delphes.rework.feature.FeatureRuntime
 import fr.delphes.rework.feature.SimpleFeatureRuntime
 import fr.delphes.state.State
 import fr.delphes.state.StateProvider
+import fr.delphes.state.state.TimeState
 import fr.delphes.twitch.TwitchChannel
+import java.time.Duration
 
 @DynamicForm("twitch-command-form")
 data class NewCommand(
@@ -23,22 +25,28 @@ data class NewCommand(
     override val channel: TwitchChannel,
     @FieldDescription("Command to trigger the response")
     val command: String,
+    @FieldDescription("Cooldown")
+    val cooldown: Duration = Duration.ZERO,
     @FieldDescription("Actions to do when the command is triggered")
     val actions: List<OutgoingEvent> = emptyList(),
 ) : TwitchFeature, FeatureDefinition {
     override val id: FeatureId = FeatureId()
+    private val lastCallStateId = TimeState.id("cooldown-${id.value}")
+
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
         return SimpleFeatureRuntime.whichHandle<CommandAsked>(id) {
-            if (event.data.command.triggerMessage == command) {
+            val lastCallState = stateManager.getState(lastCallStateId)
+            if (event.data.command.triggerMessage == command && lastCallState.hasMoreThan(cooldown)) {
                 actions.forEach { action ->
                     executeOutgoingEvent(action)
                 }
+                lastCallState.putNow()
             }
         }
     }
 
     override fun getSpecificStates(stateProvider: StateProvider): List<State> {
-        return emptyList()
+        return listOf(TimeState.withClockFrom(stateProvider, lastCallStateId.qualifier))
     }
 
     override val commands = listOf(Command(command))

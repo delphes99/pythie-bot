@@ -21,7 +21,7 @@ export class FieldDuration implements Field<Duration> {
         public readonly description: string,
         public readonly fieldName: string,
         public readonly initialValue: Duration,
-        public readonly actualValue: Duration = initialValue
+        public actualValue: Duration = initialValue
     ) {
     }
 

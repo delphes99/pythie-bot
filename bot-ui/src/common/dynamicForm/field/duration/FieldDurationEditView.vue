@@ -19,24 +19,45 @@
 
 <script lang="ts" setup>
 import UiTextfield from "@/common/designSystem/form/textfield/UiTextfield.vue";
-import {FieldDuration} from "@/common/dynamicForm/field/duration/FieldDuration";
-import {PropType, ref} from "vue";
+import {FieldString} from "@/common/dynamicForm/field/string/FieldString";
+import {Duration} from "@/common/utils/Duration";
+import {computed, PropType} from "vue";
 
-const emits = defineEmits<{
-  modifyDescriptor: [descriptor: FieldDuration]
-}>()
-
-const props = defineProps({
+defineProps({
   field: {
-    type: Object as PropType<FieldDuration>,
+    type: Object as PropType<FieldString>,
     required: true,
+  },
+})
+const model = defineModel<Duration>({required: true})
+
+console.log(model.value)
+
+const actualHours = computed<number>({
+  get() {
+    return model.value.hours
+  },
+  set(value: number) {
+    model.value = model.value.withHours(value)
   }
 })
 
-const actualHours = ref(props.field.actualValue.hours)
+const actualMinutes = computed<number>({
+  get() {
+    return model.value.minutes
+  },
+  set(value: number) {
+    model.value = model.value.withMinutes(value)
+  }
+})
 
-const actualMinutes = ref(props.field.actualValue.minutes)
-
-const actualSeconds = ref(props.field.actualValue.seconds)
+const actualSeconds = computed<number>({
+  get() {
+    return model.value.seconds
+  },
+  set(value: number) {
+    model.value = model.value.withSeconds(value)
+  }
+})
 
 </script>
