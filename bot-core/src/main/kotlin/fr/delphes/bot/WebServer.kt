@@ -2,7 +2,6 @@ package fr.delphes.bot
 
 import fr.delphes.bot.connector.connectionstate.endpoint.ConnectorsModule
 import fr.delphes.bot.media.MediaModule
-import fr.delphes.bot.media.MediasService
 import fr.delphes.bot.monitoring.Monitoring
 import fr.delphes.bot.overlay.Overlays
 import fr.delphes.bot.webserver.admin.AdminModule
@@ -37,7 +36,7 @@ class WebServer(
                 allowMethod(HttpMethod.Put)
             }
             AdminModule(bot)
-            MediaModule(MediasService(bot.configuration))
+            MediaModule(bot.mediaService)
             Overlays(bot)
             ConnectorsModule(bot)
             StateModule(bot)

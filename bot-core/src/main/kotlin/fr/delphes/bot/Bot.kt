@@ -8,6 +8,7 @@ import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
 import fr.delphes.bot.event.outgoing.OutgoingEvent
+import fr.delphes.bot.media.MediasService
 import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.dynamicForm.DynamicFormRegistry
@@ -19,8 +20,6 @@ import fr.delphes.state.StateManager
 import fr.delphes.state.state.ClockState
 import fr.delphes.utils.time.Clock
 import fr.delphes.utils.time.SystemClock
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.modules.SerializersModule
 
@@ -59,6 +58,8 @@ class Bot(
             bot.init()
         }
     }
+
+    val mediaService: MediasService = MediasService(configuration)
 
     val serializer = buildSerializer(featureSerializersModule, connectorInitializers)
 
@@ -107,10 +108,7 @@ class Bot(
 
         // After initial state
         runBlocking {
-            connectors.map { connector -> async { connector.connect() } }.awaitAll()
-            connectors.flatMap(Connector<*, *>::states).forEach { state ->
-                stateManager.put(state)
-            }
+            BotInitializer(stateManager, connectors).initialize()
 
             handle(IncomingEventWrapper(BotStarted, clock.now()))
         }

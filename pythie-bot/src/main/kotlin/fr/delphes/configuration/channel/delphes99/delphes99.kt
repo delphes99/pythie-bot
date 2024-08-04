@@ -35,6 +35,7 @@ import fr.delphes.features.twitch.gameDescription.GameDescriptionFeature
 import fr.delphes.features.twitch.gameReward.GameReward
 import fr.delphes.features.twitch.incomingRaid.IncomingRaidFeature
 import fr.delphes.features.twitch.newFollow.CustomNewFollow
+import fr.delphes.features.twitch.newSub.CustomMessageReceived
 import fr.delphes.features.twitch.newSub.CustomNewSub
 import fr.delphes.features.twitch.rewardRedeem.RewardRedeem
 import fr.delphes.features.twitch.streamOffline.CustomStreamOffline
@@ -517,6 +518,13 @@ val delphes99CustomFeatures = listOf<FeatureDefinition>(
                             "\uD83D\uDCB8 Dépensés : ${stats.totalCost}"
                 )
             )
+        }
+    },
+    CustomMessageReceived(
+        channel
+    ) {
+        if (event.data.text.contains("botte", ignoreCase = true)) {
+            executeOutgoingEvent(SendMessage(channel, "bot"))
         }
     },
     CustomCommand(

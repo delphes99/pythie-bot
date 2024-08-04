@@ -9,7 +9,7 @@ import kotlin.io.path.name
 import kotlin.io.path.writeBytes
 
 class MediasService(
-    private val botConfiguration: BotConfiguration
+    private val botConfiguration: BotConfiguration,
 ) {
     fun path(): String {
         return botConfiguration.pathOf("medias")

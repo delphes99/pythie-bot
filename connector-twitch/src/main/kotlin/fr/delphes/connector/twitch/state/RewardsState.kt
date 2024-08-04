@@ -8,7 +8,8 @@ import fr.delphes.connector.twitch.reward.RunTimeReward
 import fr.delphes.connector.twitch.reward.SynchronizedReward
 import fr.delphes.connector.twitch.reward.UnknownReward
 import fr.delphes.connector.twitch.reward.UnmanagedReward
-import fr.delphes.state.enumeration.EnumStateId
+import fr.delphes.state.StateId
+import fr.delphes.state.StateIdQualifier
 import fr.delphes.state.enumeration.EnumStateItem
 import fr.delphes.state.enumeration.EnumerationState
 import fr.delphes.twitch.TwitchChannel
@@ -16,7 +17,7 @@ import fr.delphes.twitch.TwitchChannel
 class RewardsState(
     private val connector: TwitchConnector,
 ) : EnumerationState<RewardId> {
-    override val id = EnumStateId("rewards")
+    override val id = StateId(this::class, StateIdQualifier("rewards"))
 
     override suspend fun getItems(): List<EnumStateItem> {
         return connector.rewardService.getRewards().map {

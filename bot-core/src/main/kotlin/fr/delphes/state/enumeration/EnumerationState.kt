@@ -1,7 +1,10 @@
 package fr.delphes.state.enumeration
 
-interface EnumerationState<T> {
-    val id: EnumStateId
+import fr.delphes.state.State
+import fr.delphes.state.StateId
+
+interface EnumerationState<T> : State {
+    override val id: StateId<out State>
 
     suspend fun getItems(): List<EnumStateItem>
 
