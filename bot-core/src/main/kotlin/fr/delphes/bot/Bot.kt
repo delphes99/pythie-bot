@@ -4,7 +4,6 @@ import fr.delphes.bot.configuration.BotConfiguration
 import fr.delphes.bot.connector.Connector
 import fr.delphes.bot.connector.ConnectorInitializer
 import fr.delphes.bot.connector.ConnectorType
-import fr.delphes.bot.event.EventsManager
 import fr.delphes.bot.event.incoming.BotStarted
 import fr.delphes.bot.event.incoming.IncomingEvent
 import fr.delphes.bot.event.incoming.IncomingEventWrapper
@@ -12,7 +11,6 @@ import fr.delphes.bot.event.outgoing.OutgoingEvent
 import fr.delphes.bot.monitoring.StatisticService
 import fr.delphes.bot.overlay.OverlayRepository
 import fr.delphes.dynamicForm.DynamicFormRegistry
-import fr.delphes.feature.FeatureConfigurationBuilderRegistry
 import fr.delphes.feature.FeaturesManager
 import fr.delphes.feature.FileFeatureConfigurationRepository
 import fr.delphes.feature.NonEditableFeature
@@ -31,7 +29,6 @@ class Bot(
     @Deprecated("Use featuresManager instead")
     val legacyfeatures: List<NonEditableFeature>,
     val features: List<FeatureDefinition>,
-    val featureConfigurationsType: List<FeatureConfigurationBuilderRegistry>,
     private val connectorInitializers: List<ConnectorInitializer>,
     featuresDynamicFormRegistry: DynamicFormRegistry,
     featureSerializersModule: SerializersModule,
@@ -46,7 +43,6 @@ class Bot(
             connectors: List<ConnectorInitializer>,
             nonEditableFeatures: List<NonEditableFeature>,
             featureDefinitions: List<FeatureDefinition>,
-            featureConfigurationBuilderRegistries: List<FeatureConfigurationBuilderRegistry>,
             featuresDynamicFormRegistry: DynamicFormRegistry,
             featureSerializerModule: SerializersModule,
         ) {
@@ -54,7 +50,6 @@ class Bot(
                 configuration,
                 nonEditableFeatures,
                 featureDefinitions,
-                featureConfigurationBuilderRegistries,
                 connectors,
                 //TODO features : connector initializer ?
                 featuresDynamicFormRegistry,
@@ -96,8 +91,6 @@ class Bot(
         connectors.forEach { it.handleForInternal(incomingEvent) }
         featuresManager.handle(incomingEvent, this)
     }
-
-    val eventsManager = EventsManager(connectorInitializers)
 
     override suspend fun processOutgoingEvent(event: OutgoingEvent) {
         connectors.forEach { connector ->

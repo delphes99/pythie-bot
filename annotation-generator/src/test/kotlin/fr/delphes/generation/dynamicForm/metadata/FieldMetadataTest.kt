@@ -1,8 +1,6 @@
 package fr.delphes.generation.dynamicForm.metadata
 
 import fr.delphes.generation.assertCompileResolver
-import fr.delphes.generation.dynamicForm.metada.FieldWithMapper
-import fr.delphes.generation.dynamicForm.metada.MetadataExtractor
 import fr.delphes.generation.utils.CompilationCheckException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ShouldSpec
@@ -16,11 +14,9 @@ class FieldMetadataTest : ShouldSpec({
         """
             import fr.delphes.annotation.dynamicForm.FieldDescription
             import fr.delphes.annotation.dynamicForm.FieldMapper
-            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
-            import fr.delphes.generation.outgoingEvent.CustomFieldTypeMapper
+            import fr.delphes.generation.dynamicForm.metadata.CustomFieldTypeMapper
             import fr.delphes.bot.event.outgoing.OutgoingEvent
 
-            @RegisterOutgoingEvent("serializeName")
             class MyEvent(
                 @FieldDescription("description")
                 @FieldMapper(CustomFieldTypeMapper::class)
@@ -40,11 +36,9 @@ class FieldMetadataTest : ShouldSpec({
     should("unable to extract informations from unknown type") {
         """
             import fr.delphes.annotation.dynamicForm.FieldDescription
-            import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEvent
             import fr.delphes.bot.event.outgoing.OutgoingEvent
             import fr.delphes.test.UnknownType
 
-            @RegisterOutgoingEvent("serializeName")
             class MyEvent(
                 @FieldDescription("description")
                 val myField: UnknownType,

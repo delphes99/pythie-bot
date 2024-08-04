@@ -13,11 +13,8 @@ import fr.delphes.configuration.loadProperties
 import fr.delphes.connector.discord.DiscordInitializer
 import fr.delphes.connector.obs.ObsInitializer
 import fr.delphes.connector.twitch.TwitchInitializer
-import fr.delphes.feature.FeatureConfigurationBuilderRegistry
-import fr.delphes.feature.FeatureConfigurationType
 import fr.delphes.features.featureSerializersModule
 import fr.delphes.features.generated.dynamicForm.featuresDynamicFormRegistry
-import fr.delphes.features.twitch.command.CustomCommandConfiguration
 import fr.delphes.overlay.OverlayInitializer
 import kotlinx.serialization.InternalSerializationApi
 import java.io.File
@@ -56,13 +53,6 @@ fun main() {
             delphes99Features,
         ).flatten(),
         delphes99CustomFeatures + delphestestCustomFeatures,
-        listOf(
-            FeatureConfigurationBuilderRegistry(
-                FeatureConfigurationType("TwitchCustomCommandConfiguration")
-            ) { featureId ->
-                CustomCommandConfiguration(id = featureId)
-            },
-        ),
         featuresDynamicFormRegistry,
         featureSerializersModule
     )

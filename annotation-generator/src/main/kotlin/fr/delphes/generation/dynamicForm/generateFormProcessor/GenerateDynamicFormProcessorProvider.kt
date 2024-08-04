@@ -28,9 +28,9 @@ import fr.delphes.annotation.dynamicForm.RegisterDynamicFormDto
 import fr.delphes.dynamicForm.DynamicFormDTO
 import fr.delphes.dynamicForm.DynamicFormDescription
 import fr.delphes.dynamicForm.DynamicFormType
-import fr.delphes.generation.dynamicForm.metada.FieldWithType
-import fr.delphes.generation.dynamicForm.metada.MetadataExtractor
-import fr.delphes.generation.dynamicForm.metada.getDescriptionFields
+import fr.delphes.generation.dynamicForm.metadata.FieldWithType
+import fr.delphes.generation.dynamicForm.metadata.MetadataExtractor
+import fr.delphes.generation.dynamicForm.metadata.getDescriptionFields
 import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.FieldDescriptionFactory
 import fr.delphes.generation.utils.CompilationCheckException
 import fr.delphes.generation.utils.GenerationUtils.baseGeneratedPackage

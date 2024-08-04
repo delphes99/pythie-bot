@@ -4,10 +4,10 @@ import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ksp.toClassName
 import fr.delphes.dynamicForm.DynamicFormDTO
-import fr.delphes.generation.dynamicForm.metada.FieldMetadata
-import fr.delphes.generation.dynamicForm.metada.FieldWithFormList
-import fr.delphes.generation.dynamicForm.metada.FieldWithMapper
-import fr.delphes.generation.dynamicForm.metada.FieldWithType
+import fr.delphes.generation.dynamicForm.metadata.FieldMetadata
+import fr.delphes.generation.dynamicForm.metadata.FieldWithFormList
+import fr.delphes.generation.dynamicForm.metadata.FieldWithMapper
+import fr.delphes.generation.dynamicForm.metadata.FieldWithType
 
 object FieldDescriptionFactory {
     fun buildDescription(builder: FunSpec.Builder, property: FieldMetadata) {

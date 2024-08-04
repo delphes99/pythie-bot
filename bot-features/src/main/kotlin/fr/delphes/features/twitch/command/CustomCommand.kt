@@ -15,6 +15,7 @@ import fr.delphes.twitch.TwitchChannel
 import fr.delphes.utils.uuid.uuid
 import java.time.Duration
 
+//TODO merge with NewCommand
 class CustomCommand(
     override val channel: TwitchChannel,
     val triggerCommand: Command,

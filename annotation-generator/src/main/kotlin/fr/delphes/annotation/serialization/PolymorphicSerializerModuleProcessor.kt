@@ -18,9 +18,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.ksp.writeTo
 import fr.delphes.annotation.dynamicForm.RegisterDynamicFormDto
 import fr.delphes.annotation.incomingEvent.RegisterIncomingEvent
-import fr.delphes.annotation.outgoingEvent.RegisterOutgoingEventBuilder
 import fr.delphes.bot.event.incoming.IncomingEvent
-import fr.delphes.bot.event.outgoing.OutgoingEventBuilder
 import fr.delphes.dynamicForm.DynamicFormDTO
 import fr.delphes.dynamicForm.DynamicFormDTOForSerialization
 import fr.delphes.generation.utils.GenerationUtils
@@ -31,10 +29,6 @@ private val serializerModules = listOf(
     RegisterPolymorphic(
         RegisterIncomingEvent::class,
         IncomingEvent::class,
-    ),
-    RegisterPolymorphic(
-        RegisterOutgoingEventBuilder::class,
-        OutgoingEventBuilder::class,
     ),
     RegisterPolymorphic(
         RegisterDynamicFormDto::class,

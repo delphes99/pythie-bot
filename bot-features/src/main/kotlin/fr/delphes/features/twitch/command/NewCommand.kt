@@ -30,7 +30,9 @@ data class NewCommand(
     override fun buildRuntime(stateManager: StateProvider): FeatureRuntime {
         return SimpleFeatureRuntime.whichHandle<CommandAsked>(id) {
             if (event.data.command.triggerMessage == command) {
-                //TODO retrieve action from data
+                actions.forEach { action ->
+                    executeOutgoingEvent(action)
+                }
             }
         }
     }

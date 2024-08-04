@@ -22,7 +22,7 @@ import fr.delphes.dynamicForm.DynamicFormRegistry
 import fr.delphes.dynamicForm.DynamicFormRegistryEntry
 import fr.delphes.dynamicForm.DynamicFormType
 import fr.delphes.generation.dynamicForm.generateFormProcessor.GenerateDynamicFormProcessor
-import fr.delphes.generation.dynamicForm.metada.MetadataExtractor
+import fr.delphes.generation.dynamicForm.metadata.MetadataExtractor
 import fr.delphes.generation.outgoingEvent.generateBuilderProcessor.FieldDescriptionFactory
 import fr.delphes.generation.utils.GenerationUtils
 import fr.delphes.generation.utils.getAllAnnotations

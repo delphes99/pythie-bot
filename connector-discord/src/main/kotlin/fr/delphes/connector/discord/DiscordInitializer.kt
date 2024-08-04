@@ -4,11 +4,9 @@ import fr.delphes.bot.Bot
 import fr.delphes.bot.connector.ConnectorInitializer
 import fr.delphes.discord.generated.discordPolymorphicSerializerModule
 import fr.delphes.discord.generated.dynamicForm.discordDynamicFormRegistry
-import fr.delphes.discord.generated.outgoingEvent.discordOutgoingEventRegistry
 
 class DiscordInitializer : ConnectorInitializer() {
     override val serializerModule = discordPolymorphicSerializerModule
-    override val outgoingEventRegistry = discordOutgoingEventRegistry
     override val dynamicFormRegistry = discordDynamicFormRegistry
 
     override fun buildConnector(bot: Bot) = DiscordConnector(
