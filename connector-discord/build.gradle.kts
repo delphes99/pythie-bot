@@ -10,7 +10,7 @@ dependencies {
     implementation(project(":bot-core"))
     implementation(libs.ktor.server.core)
     implementation(libs.kord)
-    implementation(project(":annotation-generator"))
+    implementation(project(":annotation"))
     ksp(project(":annotation-generator"))
 }
 

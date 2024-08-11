@@ -1,8 +1,8 @@
 package fr.delphes.connector.twitch.outgoingEvent.descriptionMapper
 
+import fr.delphes.annotation.dynamicForm.FieldDescriptorMapper
 import fr.delphes.connector.twitch.reward.RewardId
 import fr.delphes.connector.twitch.reward.RewardTitle
-import fr.delphes.generation.dynamicForm.FieldDescriptorMapper
 import fr.delphes.twitch.TwitchChannel
 
 object ChannelRewardIdMapper : FieldDescriptorMapper<RewardId> {

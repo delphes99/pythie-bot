@@ -1,4 +1,4 @@
-package fr.delphes.annotation.serialization
+package fr.delphes.generation.serialization
 
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger

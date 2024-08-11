@@ -1,6 +1,6 @@
 package fr.delphes.generation.dynamicForm.metadata
 
-import fr.delphes.generation.dynamicForm.FieldDescriptorMapper
+import fr.delphes.annotation.dynamicForm.FieldDescriptorMapper
 import java.time.Duration
 
 object DurationFixedTypeMapper : FieldDescriptorMapper<Duration> {

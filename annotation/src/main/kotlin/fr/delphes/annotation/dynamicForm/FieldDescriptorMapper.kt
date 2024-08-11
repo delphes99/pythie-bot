@@ -1,4 +1,4 @@
-package fr.delphes.generation.dynamicForm
+package fr.delphes.annotation.dynamicForm
 
 interface FieldDescriptorMapper<T> {
     fun mapFromDto(value: String): T

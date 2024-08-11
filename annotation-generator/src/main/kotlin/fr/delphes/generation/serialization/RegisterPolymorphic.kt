@@ -1,4 +1,4 @@
-package fr.delphes.annotation.serialization
+package fr.delphes.generation.serialization
 
 import kotlin.reflect.KClass
 
